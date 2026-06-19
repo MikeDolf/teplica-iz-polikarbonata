@@ -524,6 +524,25 @@ strong { font-weight: 700; }
 }
 .page-list a::before { content: "→"; color: var(--green); }
 
+/* === SVG-СХЕМЫ =========================================== */
+.svg-figure {
+  margin: 2rem 0;
+  padding: 1.25rem 1rem 1rem;
+  background: #f4f8fb;
+  border: 1px solid #d0e4ee;
+  border-radius: 8px;
+  text-align: center;
+}
+.svg-figure figcaption {
+  margin-top: .75rem;
+  font-size: .88rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  max-width: 520px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Аннотированный список (хаб-страницы) */
 .page-list--annotated { gap: 1.25rem; }
 .page-list--annotated li {
