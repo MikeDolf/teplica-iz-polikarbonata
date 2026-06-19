@@ -524,6 +524,22 @@ strong { font-weight: 700; }
 }
 .page-list a::before { content: "→"; color: var(--green); }
 
+/* Аннотированный список (хаб-страницы) */
+.page-list--annotated { gap: 1.25rem; }
+.page-list--annotated li {
+  padding-left: 1.4rem;
+  border-left: 2px solid var(--green);
+}
+.page-list--annotated a { align-items: baseline; font-weight: 600; }
+.page-list--annotated a::before { margin-left: -1.4rem; }
+.page-list__desc {
+  display: block;
+  margin-top: .3rem;
+  color: var(--text-muted);
+  font-size: .92rem;
+  line-height: 1.5;
+}
+
 /* === УТИЛИТЫ ============================================= */
 .visually-hidden {
   position: absolute;
