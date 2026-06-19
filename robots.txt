@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+
+Disallow: /docs/
+
+Sitemap: https://teplika.ru/sitemap.xml
