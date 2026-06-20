@@ -43,6 +43,9 @@ body {
   background: var(--bg);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  overflow-x: hidden;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 img { max-width: 100%; height: auto; display: block; }
@@ -61,9 +64,11 @@ h1, h2, h3, h4, h5 {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
   line-height: 1.25;
   color: var(--text);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
-h1 { font-size: clamp(1.55rem, 4.5vw, 2.15rem); margin-bottom: .75rem; }
-h2 { font-size: clamp(1.2rem,  3.5vw, 1.55rem); margin: 2.25rem 0 .7rem; }
+h1 { font-size: clamp(1.45rem, 4.5vw, 2.15rem); margin-bottom: .75rem; }
+h2 { font-size: clamp(1.15rem, 3.5vw, 1.55rem); margin: 2.25rem 0 .7rem; }
 h3 { font-size: clamp(1rem,    3vw,   1.2rem);  margin: 1.75rem 0 .5rem; }
 h4 { font-size: 1rem; margin: 1.25rem 0 .4rem; }
 
@@ -146,9 +151,8 @@ strong { font-weight: 700; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: .5rem 1.5rem;
-  padding: .7rem 1rem;
+  gap: .4rem 1rem;
+  padding: .65rem 1rem;
   max-width: var(--max-wide);
   margin: 0 auto;
 }
@@ -160,12 +164,14 @@ strong { font-weight: 700; }
   letter-spacing: -.03em;
   color: #fff;
   text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .site-logo span { color: var(--sun); }
 
 .site-nav {
   display: flex;
-  gap: .25rem .9rem;
+  gap: .2rem .7rem;
   flex-wrap: wrap;
   list-style: none;
   padding: 0;
@@ -175,12 +181,20 @@ strong { font-weight: 700; }
   color: rgba(255,255,255,.88);
   text-decoration: none;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-  font-size: .88rem;
+  font-size: .85rem;
   padding: .2rem 0;
+  white-space: nowrap;
 }
 .site-nav a:hover { color: #fff; text-decoration: underline; }
 .site-nav a[aria-current="page"] { color: #fff; font-weight: 600; }
 .site-nav a:focus-visible { outline-color: var(--sun); }
+
+@media (max-width: 580px) {
+  .header-inner { flex-direction: column; align-items: flex-start; gap: .3rem; }
+  .site-logo { font-size: 1.1rem; }
+  .site-nav { gap: .15rem .6rem; }
+  .site-nav a { font-size: .82rem; }
+}
 
 /* === ХЛЕБНЫЕ КРОШКИ ===================================== */
 .breadcrumbs {
@@ -201,7 +215,7 @@ strong { font-weight: 700; }
 }
 .breadcrumbs li + li::before { content: "›"; margin-right: .4rem; }
 .breadcrumbs a { color: var(--green-dark); }
-.breadcrumbs [aria-current="page"] { color: var(--text-muted); }
+.breadcrumbs [aria-current="page"] { color: var(--text-muted); overflow-wrap: break-word; word-break: break-word; }
 
 /* === TL;DR =============================================== */
 .tldr {
