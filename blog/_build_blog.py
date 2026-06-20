@@ -242,7 +242,13 @@ def A(**kw): ARTICLES.append(kw)
 
 # импортируем содержимое кластеров
 from _content_crops import register as reg_crops
+from _content_care import register as reg_care
+from _content_pests import register as reg_pests
+from _content_equip import register as reg_equip
 reg_crops(A, cta, sidebar)
+reg_care(A, cta, sidebar)
+reg_pests(A, cta, sidebar)
+reg_equip(A, cta, sidebar)
 
 if __name__ == "__main__":
     for a in ARTICLES:
