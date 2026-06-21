@@ -498,6 +498,11 @@ strong { font-weight: 700; }
 }
 .faq-body p:last-child { margin-bottom: 0; }
 
+/* === КАТАЛОГ ТОВАРОВ ==================================== */
+.catalog-cat { margin: 2rem 0; }
+.catalog-cat h2 { margin-bottom: .3rem; }
+.catalog-cat > p { color: var(--text-muted); margin: 0 0 1rem; font-size: .95rem; }
+
 /* === ЧИТАЙТЕ ТАКЖЕ — чипы сверху статьи ================= */
 .read-also {
   display: flex;
