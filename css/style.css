@@ -195,9 +195,12 @@ strong { font-weight: 700; }
 
 @media (max-width: 580px) {
   .header-inner { flex-direction: column; align-items: stretch; gap: .55rem; }
+  /* nav-обёртка должна уметь сжиматься, иначе nowrap-меню расширяет страницу */
+  .header-inner > nav { min-width: 0; max-width: 100%; }
   .site-logo { font-size: 1.15rem; }
   /* Навигация — аккуратная прокручиваемая строка в один ряд */
   .site-nav {
+    min-width: 0;
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: .4rem;
