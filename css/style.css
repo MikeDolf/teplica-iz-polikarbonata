@@ -726,8 +726,8 @@ strong { font-weight: 700; }
   .hero { padding: 2.25rem 1rem 2rem; }
   .hero h1 { font-size: 1.65rem; }
 
-  .cta-grid { grid-template-columns: 1fr 1fr; }
-  .cta-btn { font-size: .83rem; padding: .65rem .75rem; }
+  .cta-grid { grid-template-columns: 1fr; }
+  .cta-btn { font-size: .9rem; padding: .8rem 1rem; }
 
   .step-card {
     grid-template-columns: 2rem 1fr;
@@ -739,10 +739,6 @@ strong { font-weight: 700; }
   .tldr { padding: .85rem 1rem; }
 
   .article-wrap { padding: 1.25rem .75rem 2.5rem; }
-}
-
-@media (max-width: 360px) {
-  .cta-grid { grid-template-columns: 1fr; }
 }
 
 /* === УТИЛИТЫ ============================================= */
