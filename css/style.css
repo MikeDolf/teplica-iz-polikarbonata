@@ -85,7 +85,9 @@ strong { font-weight: 700; }
 }
 
 .content {
-  max-width: var(--max-read);
+  /* min(100%, …) не даёт колонке вырасти шире вьюпорта из-за
+     прокручиваемых блоков внутри (чипы «Читайте также», таблицы) */
+  max-width: min(100%, var(--max-read));
   margin: 0 auto;
 }
 
