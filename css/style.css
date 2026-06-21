@@ -498,6 +498,51 @@ strong { font-weight: 700; }
 }
 .faq-body p:last-child { margin-bottom: 0; }
 
+/* === ЧИТАЙТЕ ТАКЖЕ — чипы сверху статьи ================= */
+.read-also {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+  margin: .4rem 0 1.6rem;
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid var(--border);
+}
+.read-also__label {
+  font-size: .8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+  color: var(--text-muted);
+  margin-right: .15rem;
+}
+.read-also a {
+  display: inline-block;
+  font-size: .84rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: .4rem .85rem;
+  border-radius: 999px;
+  background: var(--green-light);
+  color: var(--green-dark);
+  text-decoration: none;
+  border: 1px solid transparent;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.read-also a:hover { background: var(--green); color: #fff; }
+.read-also a:focus-visible { outline: 2px solid var(--sun); outline-offset: 2px; }
+@media (max-width: 580px) {
+  .read-also {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .read-also::-webkit-scrollbar { display: none; }
+  .read-also__label { white-space: nowrap; }
+  .read-also a { white-space: nowrap; }
+}
+
 /* Альтернативная разметка FAQ (.faq-item / .faq-summary) без обёртки .faq-section */
 .faq-item { border-bottom: 1px solid var(--border); }
 .faq-item:first-of-type { border-top: 1px solid var(--border); }
