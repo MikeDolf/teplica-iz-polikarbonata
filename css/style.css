@@ -150,8 +150,8 @@ strong { font-weight: 700; }
 .header-inner {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: .4rem 1rem;
+  justify-content: flex-start;
+  gap: .4rem 1.5rem;
   padding: .65rem 1rem;
   max-width: var(--max-wide);
   margin: 0 auto;
