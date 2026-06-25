@@ -193,3 +193,46 @@ tbody tr:nth-child(even){background: rgba(0,0,0,.025)}
 .visually-hidden{ position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;}
 .text-muted{color: var(--text-muted)}
 .mt-0{margin-top: 0 !important}
+/* === АНИМАЦИИ И ИНТЕРАКТИВ (v2026-06-25) ====================
+   .js-anim ставится inline-скриптом в <head> до отрисовки.
+   Если JS выключен — класса нет, контент виден всегда. */
+
+/* Полоса прогресса чтения (создаётся в main.js) */
+.read-progress{position:fixed;top:0;left:0;height:3px;width:0;background:linear-gradient(90deg,var(--green),var(--sun));z-index:200;box-shadow:0 0 8px rgba(46,125,79,.5);border-radius:0 2px 2px 0;transition:width .08s linear;pointer-events:none}
+
+/* Кнопка «наверх» (создаётся в main.js) */
+.to-top{position:fixed;right:1.25rem;bottom:1.25rem;width:46px;height:46px;border:none;cursor:pointer;background:var(--green);color:#fff;border-radius:50%;font-size:1.25rem;line-height:1;box-shadow:0 4px 16px rgba(46,125,79,.45);opacity:0;visibility:hidden;transform:translateY(10px) scale(.85);transition:opacity .3s,transform .3s,visibility .3s,background .2s;z-index:150}
+.to-top.show{opacity:1;visibility:visible;transform:none}
+.to-top:hover{background:var(--green-dark);transform:translateY(-3px) scale(1.05)}
+.to-top:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+
+/* Появление блоков при скролле */
+.js-anim :is(.tldr,.svg-figure,.table-wrap,.step-card,.cta-block,.faq-section,.note-box,.warn-box,.related-links,.hub-card,.catalog-cat,.sidebar-block){transition:opacity .6s cubic-bezier(.22,.61,.36,1),transform .6s cubic-bezier(.22,.61,.36,1)}
+.js-anim :is(.tldr,.svg-figure,.table-wrap,.step-card,.cta-block,.faq-section,.note-box,.warn-box,.related-links,.hub-card,.catalog-cat,.sidebar-block):not(.visible){opacity:0;transform:translateY(28px)}
+
+/* Каскад карточек-хабов */
+.js-anim .hub-grid .hub-card:nth-child(1){transition-delay:0s}
+.js-anim .hub-grid .hub-card:nth-child(2){transition-delay:.08s}
+.js-anim .hub-grid .hub-card:nth-child(3){transition-delay:.16s}
+.js-anim .hub-grid .hub-card:nth-child(4){transition-delay:.24s}
+.js-anim .hub-grid .hub-card:nth-child(5){transition-delay:.32s}
+.js-anim .hub-grid .hub-card:nth-child(6){transition-delay:.4s}
+
+/* Усиленный hover карточек + поворот иконки */
+@media (prefers-reduced-motion:no-preference){
+  .hub-card{transition:transform .28s cubic-bezier(.22,.61,.36,1),box-shadow .28s,border-color .28s}
+  .hub-card:hover{transform:translateY(-7px);box-shadow:0 16px 32px rgba(46,125,79,.2)}
+  .hub-icon{transition:transform .28s cubic-bezier(.22,.61,.36,1)}
+  .hub-card:hover .hub-icon{transform:scale(1.1) rotate(-6deg)}
+}
+
+/* Живой сетчатый фон героя */
+.hero{position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:40px 40px;animation:heroGridDrift 25s linear infinite;pointer-events:none}
+.hero > *{position:relative;z-index:1}
+@keyframes heroGridDrift{from{background-position:0 0}to{background-position:0 40px}}
+
+@media (prefers-reduced-motion:reduce){
+  .hero::before{animation:none}
+  .js-anim :is(.tldr,.svg-figure,.table-wrap,.step-card,.cta-block,.faq-section,.note-box,.warn-box,.related-links,.hub-card,.catalog-cat,.sidebar-block):not(.visible){opacity:1;transform:none;transition:none}
+}
