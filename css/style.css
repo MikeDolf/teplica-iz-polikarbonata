@@ -236,3 +236,8 @@ tbody tr:nth-child(even){background: rgba(0,0,0,.025)}
   .hero::before{animation:none}
   .js-anim :is(.tldr,.svg-figure,.table-wrap,.step-card,.cta-block,.faq-section,.note-box,.warn-box,.related-links,.hub-card,.catalog-cat,.sidebar-block):not(.visible){opacity:1;transform:none;transition:none}
 }
+
+/* === ФОТО В СТАТЬЯХ ===================================== */
+.article-photo{margin:1.75rem 0}
+.article-photo img{width:100%;height:auto;display:block;border-radius:8px;border:1px solid var(--border)}
+.article-photo figcaption{margin-top:.6rem;font-size:.88rem;color:var(--text-muted);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;line-height:1.5;text-align:center}
