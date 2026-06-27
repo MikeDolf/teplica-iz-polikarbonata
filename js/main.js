@@ -44,6 +44,53 @@
     }, { passive: true });
     update();
 
+    // ── Увеличение схем по тапу ─────────────────────────────────────
+    (function () {
+      var overlay = null;
+      function close() {
+        if (!overlay) return;
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+        setTimeout(function () { overlay.style.display = 'none'; }, 200);
+      }
+      function build() {
+        overlay = document.createElement('div');
+        overlay.className = 'svg-zoom-overlay';
+        overlay.innerHTML =
+          '<button class="svg-zoom-close" type="button" aria-label="Закрыть">×</button>' +
+          '<div class="svg-zoom-scroll"><div class="svg-zoom-inner"></div></div>';
+        document.body.appendChild(overlay);
+        overlay.addEventListener('click', function (e) {
+          if (e.target === overlay ||
+              e.target.classList.contains('svg-zoom-scroll') ||
+              e.target.closest('.svg-zoom-close')) close();
+        });
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') close();
+        });
+        return overlay;
+      }
+      document.querySelectorAll('.svg-figure').forEach(function (fig) {
+        var svg = fig.querySelector('svg');
+        if (!svg) return;
+        fig.addEventListener('click', function () {
+          if (!overlay) build();
+          var inner = overlay.querySelector('.svg-zoom-inner');
+          inner.innerHTML = '';
+          inner.appendChild(svg.cloneNode(true));
+          var cap = fig.querySelector('figcaption');
+          if (cap) inner.appendChild(cap.cloneNode(true));
+          overlay.style.display = 'block';
+          document.body.style.overflow = 'hidden';
+          requestAnimationFrame(function () {
+            overlay.classList.add('open');
+            var sc = overlay.querySelector('.svg-zoom-scroll');
+            sc.scrollLeft = (inner.offsetWidth - sc.clientWidth) / 2;
+          });
+        });
+      });
+    }());
+
     // ── Появление блоков при скролле ────────────────────────────────
     if (reduced || !('IntersectionObserver' in window)) return;
 
