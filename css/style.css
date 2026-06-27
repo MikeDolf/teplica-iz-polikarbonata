@@ -159,10 +159,10 @@ span.faq-icon > svg{width: 100%;height: 100%;display: block}
 .page-list{ list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .65rem;}
 .page-list a{ font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: 1rem; display: flex; align-items: center; gap: .5rem;}
 .page-list a::before{content: "→";color: var(--green)}
-.svg-figure{ margin: 2rem 0; padding: 1.25rem 1rem 1rem; background: #f4f8fb; border: 1px solid #d0e4ee; border-radius: 8px; text-align: center; overflow-x: auto; -webkit-overflow-scrolling: touch;}
+.svg-figure{ margin: 2rem 0; padding: 1.5rem 1.1rem 1rem; background: linear-gradient(180deg,#ffffff 0%,#f1f7f4 100%); border: 1px solid #d4e4dc; border-radius: 14px; text-align: center; overflow-x: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 3px 14px rgba(46,125,79,.07);}
 .svg-figure svg{ display: block; margin: 0 auto; 
  width: 100%; max-width: 100%; height: auto;}
-.svg-figure figcaption{ margin-top: .75rem; font-size: .88rem; color: var(--text-muted); line-height: 1.5; max-width: 520px; margin-left: auto; margin-right: auto;}
+.svg-figure figcaption{ margin-top: 1rem; font-size: .92rem; color: #3a4f44; font-weight: 500; line-height: 1.55; max-width: 520px; margin-left: auto; margin-right: auto;}
 .table-wrap{ overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; border: 1px solid var(--border); border-radius: 8px;}
 table{ border-collapse: collapse; width: 100%; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; font-size: .93rem; line-height: 1.45;}
 .table-wrap > table{border: 0}
