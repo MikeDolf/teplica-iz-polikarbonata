@@ -969,4 +969,32 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://teplika.ru/teplicy/parnik-iz-polikarbonata.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://teplika.ru/teplicy/teplica-svoimi-rukami.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://teplika.ru/primenenie/krysha-iz-polikarbonata.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://teplika.ru/montazh/uhod-za-polikarbonatom.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
