@@ -913,4 +913,25 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://teplika.ru/blog/chto-vyrastit-v-teplice.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://teplika.ru/blog/bolezni-rasteniy-v-teplice.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://teplika.ru/blog/vrediteli-v-teplice.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
