@@ -248,3 +248,15 @@ tbody tr:nth-child(even){background: rgba(0,0,0,.025)}
 .svg-figure{margin-left:-1rem;margin-right:-1rem;border-radius:0;border-left:none;border-right:none;padding-left:.6rem;padding-right:.6rem}
 .svg-figure svg{width:100%;height:auto}
 }
+
+/* ── Калькуляторы ───────────────────────────────────────── */
+.calc{background:linear-gradient(180deg,#fff,#f1f7f4);border:1px solid #d4e4dc;border-radius:14px;padding:1.4rem 1.2rem;margin:1.8rem 0;box-shadow:0 3px 14px rgba(46,125,79,.07)}
+.calc-row{display:flex;flex-wrap:wrap;gap:1rem;margin-bottom:1rem}
+.calc-field{flex:1;min-width:140px}
+.calc-field label{display:block;font-size:.85rem;font-weight:600;color:#3a4f44;margin-bottom:.35rem}
+.calc-field input,.calc-field select{width:100%;box-sizing:border-box;padding:.6rem .7rem;border:1.5px solid #cdd9e1;border-radius:9px;font-size:1rem;background:#fff;color:#1a1a1a}
+.calc-field input:focus,.calc-field select:focus{outline:none;border-color:#2e7d4f}
+.calc-result{background:#eaf5ef;border:1.5px solid #b7ddc6;border-radius:11px;padding:1rem 1.1rem;margin-top:.4rem}
+.calc-result .big{font-size:1.5rem;font-weight:800;color:#1c5435}
+.calc-result ul{margin:.6rem 0 0;padding-left:1.1rem;font-size:.92rem;color:#3a4f44}
+.calc-note{font-size:.8rem;color:#5a6b61;margin-top:.7rem}

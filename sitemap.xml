@@ -878,4 +878,60 @@
     <priority>0.8</priority>
   </url>
 
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/teplicy/karkas-teplicy.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/teplicy/luchshie-proizvoditeli-teplic.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/kalkulyatory/</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/kalkulyatory/raschet-polikarbonata.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/kalkulyatory/snegovaya-nagruzka.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/blog/chto-vyrastit-v-teplice.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/blog/bolezni-rasteniy-v-teplice.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://mikedolf.github.io/teplica-iz-polikarbonata/blog/vrediteli-v-teplice.html</loc>
+    <lastmod>2026-06-28</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
 </urlset>
