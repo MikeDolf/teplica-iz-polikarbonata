@@ -264,3 +264,12 @@ tbody tr:nth-child(even){background: rgba(0,0,0,.025)}
 /* ── Ссылка на пиллар ───────────────────────────────────── */
 .pillar-link{margin:.2rem 0 1.2rem;padding:.6rem .9rem;background:#eef6f1;border-left:3px solid #2e7d4f;border-radius:0 8px 8px 0;font-size:.92rem;color:#3a4f44}
 .pillar-link a{font-weight:600}
+
+/* ── Оглавление ─────────────────────────────────────────── */
+.toc{background:#f4f8fb;border:1px solid #d0e4ee;border-radius:11px;padding:1rem 1.2rem 1rem 1.4rem;margin:1.4rem 0}
+.toc__title{font-weight:700;color:#1c5435;margin:0 0 .5rem;font-size:1rem}
+.toc ol{margin:0;padding-left:1.2rem;columns:2;column-gap:1.6rem}
+.toc li{margin:.25rem 0;break-inside:avoid}
+.toc a{color:#2c7bb6;text-decoration:none}
+.toc a:hover{text-decoration:underline}
+@media (max-width:580px){.toc ol{columns:1}}
