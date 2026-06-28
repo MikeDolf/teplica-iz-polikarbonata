@@ -260,3 +260,7 @@ tbody tr:nth-child(even){background: rgba(0,0,0,.025)}
 .calc-result .big{font-size:1.5rem;font-weight:800;color:#1c5435}
 .calc-result ul{margin:.6rem 0 0;padding-left:1.1rem;font-size:.92rem;color:#3a4f44}
 .calc-note{font-size:.8rem;color:#5a6b61;margin-top:.7rem}
+
+/* ── Ссылка на пиллар ───────────────────────────────────── */
+.pillar-link{margin:.2rem 0 1.2rem;padding:.6rem .9rem;background:#eef6f1;border-left:3px solid #2e7d4f;border-radius:0 8px 8px 0;font-size:.92rem;color:#3a4f44}
+.pillar-link a{font-weight:600}
