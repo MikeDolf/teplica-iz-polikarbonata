@@ -187,7 +187,7 @@ def build(slug, title, h1, desc, og_desc, body, faq_items, side, howto=None):
 
 <header class="site-header">
   <div class="header-inner">
-    <a href="/" class="site-logo">Tepli<span>ka</span>.ru</a>
+    <a href="/" class="site-logo">Fanli<span>ne</span>.su</a>
     <nav aria-label="Основная навигация">
       <ul class="site-nav">
         <li><a href="/montazh/">Монтаж</a></li>
