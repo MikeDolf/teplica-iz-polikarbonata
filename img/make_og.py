@@ -48,7 +48,7 @@ f_main = ImageFont.truetype(FONT_REG, 40)
 f_tag = ImageFont.truetype(FONT_REG, 34)
 
 lines = [
-    (f_logo, "Teplika.ru", GREEN, 24),
+    (f_logo, "Fanline.su", GREEN, 24),
     (f_main, "Поликарбонат и теплицы:", DARK, 14),
     (f_main, "монтаж · выбор · комплектующие", DARK, 30),
     (f_tag, "Справочник дачника", MUTED, 0),
