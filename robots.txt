@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /docs/
 
-Sitemap: https://teplika.ru/sitemap.xml
+Sitemap: https://fanline.su/sitemap.xml
