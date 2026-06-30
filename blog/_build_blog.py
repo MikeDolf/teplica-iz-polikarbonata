@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Генератор статей блога Teplika.ru.
+Генератор статей блога Fanline.su.
 Каждая статья — единая разметка (Schema.org @graph, шапка, подвал, FAQ .faq-section).
 CTA-кнопки содержат data-product="KEY" и href="#" — плейсхолдеры под партнёрские
 ссылки Яндекс.Маркета, которые подставляются массово позже.
@@ -106,7 +106,7 @@ FOOTER = """<footer class="site-footer">
     </div>
   </div>
   <div class="footer-bottom">
-    <p>© 2026 Teplika.ru &nbsp;·&nbsp; <a href="/politika-konfidentsialnosti.html">Политика конфиденциальности</a></p>
+    <p>© 2026 Fanline.su &nbsp;·&nbsp; <a href="/politika-konfidentsialnosti.html">Политика конфиденциальности</a></p>
   </div>
 </footer>"""
 
@@ -140,16 +140,16 @@ ICON_SPRITE = """<svg style="display:none" aria-hidden="true">
 </svg>"""
 
 def build(slug, title, h1, desc, og_desc, body, faq_items, side, howto=None):
-    url = f"https://teplika.ru/blog/{slug}.html"
+    url = f"https://fanline.su/blog/{slug}.html"
     graph = [
         {"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://teplika.ru/"},
-            {"@type": "ListItem", "position": 2, "name": "Дача и огород", "item": "https://teplika.ru/blog/"},
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://fanline.su/"},
+            {"@type": "ListItem", "position": 2, "name": "Дача и огород", "item": "https://fanline.su/blog/"},
             {"@type": "ListItem", "position": 3, "name": h1, "item": url},
         ]},
         {"@type": "Article", "headline": h1, "description": _strip(og_desc),
-         "author": {"@type": "Organization", "name": "Teplika.ru"},
-         "publisher": {"@type": "Organization", "name": "Teplika.ru", "url": "https://teplika.ru/"},
+         "author": {"@type": "Organization", "name": "Fanline.su"},
+         "publisher": {"@type": "Organization", "name": "Fanline.su", "url": "https://fanline.su/"},
          "datePublished": DATE, "dateModified": DATE, "mainEntityOfPage": url},
     ]
     if howto:
@@ -171,11 +171,11 @@ def build(slug, title, h1, desc, og_desc, body, faq_items, side, howto=None):
   <link rel="canonical" href="{url}">
   <meta property="og:type"        content="article">
   <meta property="og:locale"      content="ru_RU">
-  <meta property="og:site_name"   content="Teplika.ru">
+  <meta property="og:site_name"   content="Fanline.su">
   <meta property="og:title"       content="{esc(h1)}">
   <meta property="og:description" content="{esc(og_desc)}">
   <meta property="og:url"         content="{url}">
-  <meta property="og:image"       content="https://teplika.ru/img/og-cover.png">
+  <meta property="og:image"       content="https://fanline.su/img/og-cover.png">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="stylesheet" href="../css/style.css">
