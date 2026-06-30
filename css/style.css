@@ -102,7 +102,7 @@ strong{font-weight: 700}
 .faq-section{margin: 2rem 0}
 .faq-section details{ border-bottom: 1px solid var(--border);}
 .faq-section details:first-of-type{ border-top: 1px solid var(--border);}
-.faq-section summary{ cursor: pointer; padding: .9rem 0; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-weight: 600; font-size: .97rem; list-style: none; display: flex; justify-content: space-between; align-items: flex-start; gap: .75rem; user-select: none;}
+.faq-section summary{ cursor: pointer; padding: .9rem 0; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-weight: 600; font-size: .97rem; list-style: none; display: flex; justify-content: flex-start; align-items: flex-start; gap: .75rem; user-select: none;}
 .faq-section summary::-webkit-details-marker{display: none}
 .faq-summary-icon,
 .faq-icon{ width: 1.3rem; height: 1.3rem; flex-shrink: 0; color: var(--green); margin-top: .05rem;}
