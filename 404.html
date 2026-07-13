@@ -66,7 +66,9 @@
 <script>
 (function(){
   var root = document.getElementById('pnf-root');
-  var path = decodeURIComponent(location.pathname).toLowerCase();
+  var path;
+  try { path = decodeURIComponent(location.pathname).toLowerCase(); }
+  catch (e) { path = location.pathname.toLowerCase(); } // битая %-последовательность в URL
   var isOldItem = /^\/(item|catalog)\//.test(path);
 
   // партнёрские ссылки Яндекс.Маркета по конкретным моделям (проставляются по мере поступления)
