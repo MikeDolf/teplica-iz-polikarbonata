@@ -76,6 +76,13 @@
     've400-2':   'https://market.yandex.ru/cc/A9hioy',
     've200-4uf': 'https://market.yandex.ru/cc/A9hqg5'
   };
+  // для моделей без собственной партнёрской ссылки — используем ближайшую по семейству из уже полученных
+  AFFIL['ve400-1']   = AFFIL['ve400-8'];
+  AFFIL['ve-400-1']  = AFFIL['ve400-3'];
+  AFFIL['ve400']     = AFFIL['ve400-2'];
+  AFFIL['jr5500']    = AFFIL['ve400-8'];
+  AFFIL['jr-3000-k1']= AFFIL['ve400-3'];
+  AFFIL['jr-2000lv'] = AFFIL['ve400-2'];
   // для моделей без партнёрской ссылки — обычная ссылка на поиск Маркета
   function marketLink(q, modelKey){
     if (modelKey && AFFIL[modelKey]) return AFFIL[modelKey];
