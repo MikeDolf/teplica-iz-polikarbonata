@@ -170,6 +170,7 @@ span.faq-icon > svg{width: 100%;height: 100%;display: block}
 .table-wrap{ overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 1.5rem 0; border: 1px solid var(--border); border-radius: 8px;}
 table{ border-collapse: collapse; width: 100%; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; font-size: .93rem; line-height: 1.45;}
 .table-wrap > table{border: 0}
+table caption{ caption-side: top; text-align: left; padding: .7rem 1rem .5rem; font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif; font-size: .85rem; font-weight: 700; color: var(--green); background: var(--poly);}
 th,
 td{ padding: .6rem .85rem; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); 
  word-break: normal; overflow-wrap: normal; hyphens: none;}
