@@ -69,8 +69,18 @@
   var path = decodeURIComponent(location.pathname).toLowerCase();
   var isOldItem = /^\/(item|catalog)\//.test(path);
 
-  // TODO: заменить query-ссылки на партнёрские (market.yandex.ru/cc/...), когда будут получены
-  function marketLink(q){ return 'https://market.yandex.ru/search?text=' + encodeURIComponent(q); }
+  // партнёрские ссылки Яндекс.Маркета по конкретным моделям (проставляются по мере поступления)
+  var AFFIL = {
+    've400-8':   'https://market.yandex.ru/cc/A9hcve',
+    've400-3':   'https://market.yandex.ru/cc/A9hfke',
+    've400-2':   'https://market.yandex.ru/cc/A9hioy',
+    've200-4uf': 'https://market.yandex.ru/cc/A9hqg5'
+  };
+  // для моделей без партнёрской ссылки — обычная ссылка на поиск Маркета
+  function marketLink(q, modelKey){
+    if (modelKey && AFFIL[modelKey]) return AFFIL[modelKey];
+    return 'https://market.yandex.ru/search?text=' + encodeURIComponent(q);
+  }
 
   // простые иконки-якоря в стиле сайта (viewBox 32x32, stroke currentColor)
   var svgOpen = '<svg width="32" height="32" viewBox="0 0 32 32" fill="none">';
@@ -184,7 +194,7 @@
     {k:'shlang',         name:'Шланг для душа',                q:'шланг для душа на дачу',       d:'shlang'}
   ];
 
-  function render(title, query, descKey){
+  function render(title, query, descKey, modelKey){
     document.title = title + ' — Fanline.su';
     var paras = (DESC[descKey] || DESC.generic).map(function(t){ return '<p>' + t + '</p>'; }).join('');
     var icon = ICONS[descKey] || ICONS.generic;
@@ -195,7 +205,7 @@
       paras +
       '<div class="cta-block cta-block--shop">' +
         '<div class="cta-grid">' +
-          '<a class="cta-btn" href="' + marketLink(query) + '" rel="nofollow noopener" target="_blank">Смотреть цены и наличие</a>' +
+          '<a class="cta-btn" href="' + marketLink(query, modelKey) + '" rel="nofollow noopener" target="_blank">Смотреть цены и наличие</a>' +
         '</div>' +
         '<p style="font-size:.82rem;color:var(--text-muted);margin:.7rem 0 0;">Откроется в новой вкладке — актуальные предложения от разных продавцов.</p>' +
       '</div>' +
@@ -221,7 +231,7 @@
       for (var j=0;j<CATEGORIES.length;j++){ if (path.indexOf(CATEGORIES[j].k)!==-1){ hit={name:CATEGORIES[j].name,q:CATEGORIES[j].q,d:CATEGORIES[j].d}; break; } }
     }
     if (!hit){ hit = {name:'Товары Fanline', q:'fanline', d:'generic'}; }
-    render(hit.name, hit.q, hit.d);
+    render(hit.name, hit.q, hit.d, hit.m);
   } else {
     renderGeneric();
   }
