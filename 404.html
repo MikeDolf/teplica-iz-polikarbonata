@@ -16,7 +16,6 @@
   <!-- /Yandex.Metrika counter -->
 
   <meta charset="UTF-8">
-  <script>document.documentElement.classList.add("js-anim")</script>
   <meta name="robots" content="noindex, follow">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#2e7d4f">
@@ -26,7 +25,16 @@
   <link rel="canonical" href="https://fanline.su/404.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/css/style.css?v=20260713notfound4">
+  <link rel="stylesheet" href="/css/style.css?v=20260713notfound5">
+  <style>
+    /* Прижимаем подвал к низу окна на короткой странице 404 — без белого разрыва */
+    html,body{min-height:100%;}
+    body{display:flex;flex-direction:column;min-height:100vh;}
+    main{flex:1 0 auto;}
+    .site-footer{flex-shrink:0;margin-top:0;}
+    #pnf-root .cta-block{opacity:1 !important;transform:none !important;}
+    #pnf-root .hub-icon{color:var(--accent,#2e7d4f);}
+  </style>
 </head>
 <body>
 
