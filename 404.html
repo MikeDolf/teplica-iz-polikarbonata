@@ -26,7 +26,7 @@
   <link rel="canonical" href="https://fanline.su/404.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/css/style.css?v=20260713notfound2">
+  <link rel="stylesheet" href="/css/style.css?v=20260713notfound3">
 </head>
 <body>
 
@@ -64,43 +64,102 @@
   // TODO: заменить query-ссылки на партнёрские (market.yandex.ru/cc/...), когда будут получены
   function marketLink(q){ return 'https://market.yandex.ru/search?text=' + encodeURIComponent(q); }
 
+  // развёрнутые описания по товарным семействам (общие, без выдуманных ТТХ конкретной модели)
+  var DESC = {
+    aqua: [
+      'Увлажнитель-очиститель воздуха (мойка воздуха) мокрого типа: воздух прогоняется через воду, попутно увлажняясь и очищаясь от пыли и части аллергенов.',
+      'Не требует сменных HEPA-фильтров — расходный материал только вода. Подходит для квартиры, дома и офиса, работает тихо, часто используют в спальне и детской.'
+    ],
+    jr: [
+      'Летний накопительный душ для дачи: бак нагревает воду от солнца (и/или от встроенного ТЭНа), вода подаётся самотёком через леечную насадку.',
+      'Не требует подключения к центральному водоснабжению и канализации — устанавливается отдельно на участке или у хозблока.'
+    ],
+    gippokrat: [
+      'Очиститель воздуха бытовой: улавливает пыль, шерсть, пыльцу и часть аллергенов, прогоняя воздух через систему фильтрации.',
+      'Подходит для помещений с животными и аллергиками, работает в фоновом режиме.'
+    ],
+    obluch: [
+      'Бактерицидный облучатель — ультрафиолетовая лампа для обеззараживания воздуха и поверхностей в помещении.',
+      'Используется по нормам СанПиН для профилактической дезинфекции дома, в кабинетах и подсобных помещениях.'
+    ],
+    vodonagr: [
+      'Накопительный водонагреватель: нагревает и хранит запас горячей воды для дома или дачи.',
+      'Выручает при перебоях с центральным горячим водоснабжением или там, где ГВС нет вообще.'
+    ],
+    dush:[
+      'Летний накопительный душ для дачи: бак нагревает воду на солнце, вода подаётся самотёком через леечную насадку.',
+      'Автономный — не требует подключения к центральному водопроводу, устанавливается в любом месте участка.'
+    ],
+    uvlazhnitel:[
+      'Увлажнитель повышает влажность воздуха до комфортного уровня — особенно актуально зимой, когда отопление сильно сушит воздух в квартире.',
+      'Модели такого типа часто работают по принципу мокрого фильтра — без образования белого налёта от солевых отложений.'
+    ],
+    ochistitel:[
+      'Очиститель (мойка) воздуха на водной основе улавливает пыль, шерсть и часть аллергенов, прогоняя воздух через воду.',
+      'Не требует замены дорогих HEPA-картриджей — достаточно менять воду в резервуаре.'
+    ],
+    nasos:[
+      'Насос для дачи — набор воды из скважины, колодца или бочки, полив огорода, подача воды в летний душ.',
+      'Компактный, для сезонного использования на участке.'
+    ],
+    recirkulyator:[
+      'Бактерицидный рециркулятор обеззараживает воздух ультрафиолетом в закрытом корпусе — в отличие от открытых кварцевых ламп, безопасен для работы в помещении с людьми.',
+      'Используют в жилых комнатах, офисах и общественных помещениях.'
+    ],
+    ionizator:[
+      'Ионизатор насыщает воздух лёгкими отрицательными ионами — как после грозы или у водопада.',
+      'Применяется как дополнение к увлажнению и очистке воздуха в помещении.'
+    ],
+    filtr:[
+      'Сменный картридж (угольный/поролоновый) для мойки воздуха или очистителя — расходный материал.',
+      'Регулярная замена продлевает эффективную работу основного устройства.'
+    ],
+    shlang:[
+      'Шланг для летнего дачного душа — подключается к накопительному баку, обеспечивает подачу воды к леечной насадке.'
+    ],
+    generic:[
+      'Климатическая техника и товары для дома и дачи под брендом Fanline: увлажнители и очистители воздуха, летние души, водонагреватели и сопутствующие товары.'
+    ]
+  };
+
   // точечные совпадения по самым частотным моделям (из Метрики)
   var MODELS = [
-    {m:'ve400-8',        name:'Fanline Aqua VE400-8',        q:'Fanline Aqua VE400-8'},
-    {m:'ve400-3',        name:'Fanline Aqua VE400-3',        q:'Fanline Aqua VE400-3'},
-    {m:'ve400-2',        name:'Fanline Aqua VE400-2',        q:'Fanline Aqua VE400-2'},
-    {m:'ve400-1',        name:'Fanline Aqua VE400-1',        q:'Fanline Aqua VE400-1'},
-    {m:'ve200-4uf',      name:'Fanline Aqua VE200-4UF',       q:'Fanline Aqua VE200-4UF'},
-    {m:'ve-400-1',       name:'Fanline Aqua VE-400-1',        q:'Fanline Aqua VE-400-1'},
-    {m:'ve400',          name:'Fanline Aqua VE400',           q:'Fanline Aqua VE400'},
-    {m:'jr5500',         name:'Fanline JR5500',               q:'Fanline JR5500'},
-    {m:'jr-3000-k1',     name:'Fanline JR-3000-K1',           q:'Fanline JR-3000-K1'},
-    {m:'jr-2000lv',      name:'Fanline JR-2000LV',            q:'Fanline JR-2000LV'},
-    {m:'gippokrat',      name:'Очиститель воздуха Гиппократ', q:'Очиститель воздуха Гиппократ'},
-    {m:'obn-150',        name:'Облучатель бактерицидный ОБН-150', q:'Облучатель бактерицидный ОБН-150'},
-    {m:'obrn-1',         name:'Облучатель-рециркулятор ОБРН', q:'Облучатель рециркулятор ОБРН'},
-    {m:'energiya-2000',  name:'Водонагреватель Энергия 2000', q:'Водонагреватель Энергия 2000'}
+    {m:'ve400-8',        name:'Fanline Aqua VE400-8',        q:'Fanline Aqua VE400-8',        d:'aqua'},
+    {m:'ve400-3',        name:'Fanline Aqua VE400-3',        q:'Fanline Aqua VE400-3',        d:'aqua'},
+    {m:'ve400-2',        name:'Fanline Aqua VE400-2',        q:'Fanline Aqua VE400-2',        d:'aqua'},
+    {m:'ve400-1',        name:'Fanline Aqua VE400-1',        q:'Fanline Aqua VE400-1',        d:'aqua'},
+    {m:'ve200-4uf',      name:'Fanline Aqua VE200-4UF',       q:'Fanline Aqua VE200-4UF',      d:'aqua'},
+    {m:'ve-400-1',       name:'Fanline Aqua VE-400-1',        q:'Fanline Aqua VE-400-1',       d:'aqua'},
+    {m:'ve400',          name:'Fanline Aqua VE400',           q:'Fanline Aqua VE400',          d:'aqua'},
+    {m:'jr5500',         name:'Fanline JR5500',               q:'Fanline JR5500',              d:'jr'},
+    {m:'jr-3000-k1',     name:'Fanline JR-3000-K1',           q:'Fanline JR-3000-K1',          d:'jr'},
+    {m:'jr-2000lv',      name:'Fanline JR-2000LV',            q:'Fanline JR-2000LV',           d:'jr'},
+    {m:'gippokrat',      name:'Очиститель воздуха Гиппократ', q:'Очиститель воздуха Гиппократ', d:'gippokrat'},
+    {m:'obn-150',        name:'Облучатель бактерицидный ОБН-150', q:'Облучатель бактерицидный ОБН-150', d:'obluch'},
+    {m:'obrn-1',         name:'Облучатель-рециркулятор ОБРН', q:'Облучатель рециркулятор ОБРН', d:'obluch'},
+    {m:'energiya-2000',  name:'Водонагреватель Энергия 2000', q:'Водонагреватель Энергия 2000', d:'vodonagr'}
   ];
 
   // категории по ключевым словам — покрывают почти весь длинный хвост
   var CATEGORIES = [
-    {k:'dush',           name:'Душ для дачи',                  q:'душ для дачи'},
-    {k:'uvlazhnitel',    name:'Увлажнители воздуха',           q:'увлажнитель воздуха'},
-    {k:'ochistitel',     name:'Очистители воздуха',            q:'очиститель воздуха'},
-    {k:'nasos',          name:'Насосы для дачи',               q:'насос для воды дача'},
-    {k:'vodonagrevatel', name:'Водонагреватели',               q:'водонагреватель наливной'},
-    {k:'recirkulyator',  name:'Бактерицидные рециркуляторы',   q:'бактерицидный рециркулятор'},
-    {k:'obluchatel',     name:'Бактерицидные облучатели',      q:'бактерицидный облучатель'},
-    {k:'ionizator',      name:'Ионизаторы воздуха',            q:'ионизатор воздуха'},
-    {k:'filtr',          name:'Фильтры для мойки воздуха',     q:'фильтр для мойки воздуха'},
-    {k:'shlang',         name:'Шланг для душа',                q:'шланг для душа на дачу'}
+    {k:'dush',           name:'Душ для дачи',                  q:'душ для дачи',                d:'dush'},
+    {k:'uvlazhnitel',    name:'Увлажнители воздуха',           q:'увлажнитель воздуха',          d:'uvlazhnitel'},
+    {k:'ochistitel',     name:'Очистители воздуха',            q:'очиститель воздуха',           d:'ochistitel'},
+    {k:'nasos',          name:'Насосы для дачи',               q:'насос для воды дача',          d:'nasos'},
+    {k:'vodonagrevatel', name:'Водонагреватели',               q:'водонагреватель наливной',     d:'vodonagr'},
+    {k:'recirkulyator',  name:'Бактерицидные рециркуляторы',   q:'бактерицидный рециркулятор',   d:'recirkulyator'},
+    {k:'obluchatel',     name:'Бактерицидные облучатели',      q:'бактерицидный облучатель',      d:'obluch'},
+    {k:'ionizator',      name:'Ионизаторы воздуха',            q:'ионизатор воздуха',            d:'ionizator'},
+    {k:'filtr',          name:'Фильтры для мойки воздуха',     q:'фильтр для мойки воздуха',      d:'filtr'},
+    {k:'shlang',         name:'Шланг для душа',                q:'шланг для душа на дачу',       d:'shlang'}
   ];
 
-  function render(title, query){
+  function render(title, query, descKey){
     document.title = title + ' — Fanline.su';
+    var paras = (DESC[descKey] || DESC.generic).map(function(t){ return '<p>' + t + '</p>'; }).join('');
     root.innerHTML =
       '<h1>' + title + '</h1>' +
-      '<p>Климатическая техника и товары для дачи Fanline.</p>' +
+      paras +
       '<div class="cta-block cta-block--shop">' +
         '<div class="cta-grid">' +
           '<a class="cta-btn" href="' + marketLink(query) + '" rel="nofollow noopener" target="_blank">Купить</a>' +
@@ -124,10 +183,10 @@
     var hit = null;
     for (var i=0;i<MODELS.length;i++){ if (path.indexOf(MODELS[i].m)!==-1){ hit=MODELS[i]; break; } }
     if (!hit){
-      for (var j=0;j<CATEGORIES.length;j++){ if (path.indexOf(CATEGORIES[j].k)!==-1){ hit={name:CATEGORIES[j].name,q:CATEGORIES[j].q}; break; } }
+      for (var j=0;j<CATEGORIES.length;j++){ if (path.indexOf(CATEGORIES[j].k)!==-1){ hit={name:CATEGORIES[j].name,q:CATEGORIES[j].q,d:CATEGORIES[j].d}; break; } }
     }
-    if (!hit){ hit = {name:'Товары Fanline', q:'fanline'}; }
-    render(hit.name, hit.q);
+    if (!hit){ hit = {name:'Товары Fanline', q:'fanline', d:'generic'}; }
+    render(hit.name, hit.q, hit.d);
   } else {
     renderGeneric();
   }
@@ -135,35 +194,6 @@
 </script>
 
 <footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-col">
-      <h3>Теплицы</h3>
-      <ul>
-        <li><a href="/teplicy/kak-vybrat-teplicu-iz-polikarbonata.html">Как выбрать теплицу</a></li>
-        <li><a href="/teplicy/razmery-teplic.html">Размеры теплиц</a></li>
-        <li><a href="/teplicy/vidy-teplic.html">Виды теплиц</a></li>
-        <li><a href="/teplicy/karkas-teplicy.html">Каркас теплицы</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h3>Поликарбонат</h3>
-      <ul>
-        <li><a href="/vybor/kakoy-polikarbonat-vybrat-dlya-teplicy.html">Какой выбрать</a></li>
-        <li><a href="/vybor/tolschina-polikarbonata-dlya-teplicy.html">Толщина для теплицы</a></li>
-        <li><a href="/primenenie/">Применение: навесы, заборы</a></li>
-        <li><a href="/komplektuyushchie/">Комплектующие</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h3>Расчёты и блог</h3>
-      <ul>
-        <li><a href="/kalkulyatory/raschet-polikarbonata.html">Калькулятор поликарбоната</a></li>
-        <li><a href="/kalkulyatory/snegovaya-nagruzka.html">Калькулятор снеговой нагрузки</a></li>
-        <li><a href="/blog/chto-vyrastit-v-teplice.html">Что выращивать в теплице</a></li>
-        <li><a href="/blog/">Все статьи блога</a></li>
-      </ul>
-    </div>
-  </div>
   <div class="footer-bottom">
     <p>© 2026 Fanline.su &nbsp;·&nbsp; <a href="/politika-konfidentsialnosti.html">Политика конфиденциальности</a> &nbsp;·&nbsp; <a href="/karta-sajta.html">Карта сайта</a></p>
   </div>
