@@ -26,7 +26,7 @@
   <link rel="canonical" href="https://fanline.su/404.html">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/css/style.css?v=20260713notfound">
+  <link rel="stylesheet" href="/css/style.css?v=20260713notfound2">
 </head>
 <body>
 
@@ -39,34 +39,100 @@
 <main>
   <div class="article-wrap">
     <div class="content">
-      <div style="text-align:center;padding:2.5rem 0 1rem;">
-        <h1>404: страница не найдена</h1>
-        <p>Такой страницы нет. Возможно, адрес изменился, или вы искали что-то другое.</p>
-        <p><a href="/" class="cta-btn" style="display:inline-block;margin-top:.5rem;">На главную Fanline.su</a></p>
+      <div id="pnf-root">
+        <noscript>
+          <h1>Популярное на сайте</h1>
+          <ul class="page-list">
+            <li><a href="/vybor/tolschina-polikarbonata-dlya-teplicy.html">Какую толщину поликарбоната выбрать для теплицы</a></li>
+            <li><a href="/kalkulyatory/raschet-polikarbonata.html">Калькулятор: сколько листов поликарбоната нужно</a></li>
+            <li><a href="/montazh/chem-i-kak-krepit-polikarbonat-k-teplice.html">Как крепить поликарбонат к теплице</a></li>
+            <li><a href="/teplicy/kak-vybrat-teplicu-iz-polikarbonata.html">Как выбрать теплицу из поликарбоната</a></li>
+            <li><a href="/karta-sajta.html">Вся карта сайта</a></li>
+          </ul>
+        </noscript>
       </div>
-
-      <!-- TODO: заменить 3 ссылки ниже на партнёрские (market.yandex.ru/cc/...) после получения от пользователя -->
-      <div class="cta-block cta-block--shop" id="klimat">
-        <p class="cta-block__title">Искали технику Fanline — увлажнитель, очиститель воздуха, душ для дачи?</p>
-        <p class="cta-block__intro">Раньше на этом домене был интернет-магазин климатической техники Fanline. Каталог переехал — актуальные модели и цены теперь на Яндекс.Маркете:</p>
-        <div class="cta-grid">
-          <a class="cta-btn" href="https://market.yandex.ru/search?text=fanline" rel="nofollow noopener" target="_blank">Вся техника Fanline на Маркете</a>
-          <a class="cta-btn cta-btn-secondary" href="https://market.yandex.ru/search?text=%D1%83%D0%B2%D0%BB%D0%B0%D0%B6%D0%BD%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%20%D0%BE%D1%87%D0%B8%D1%81%D1%82%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%20%D0%B2%D0%BE%D0%B7%D0%B4%D1%83%D1%85%D0%B0" rel="nofollow noopener" target="_blank">Увлажнители и очистители воздуха</a>
-          <a class="cta-btn cta-btn-secondary" href="https://market.yandex.ru/search?text=%D0%B4%D1%83%D1%88%20%D0%B4%D0%BB%D1%8F%20%D0%B4%D0%B0%D1%87%D0%B8" rel="nofollow noopener" target="_blank">Душ для дачи</a>
-        </div>
-      </div>
-
-      <h2 style="font-size:1.1rem;">Или вам сюда — популярное на сайте о теплицах</h2>
-      <ul class="page-list">
-        <li><a href="/vybor/tolschina-polikarbonata-dlya-teplicy.html">Какую толщину поликарбоната выбрать для теплицы</a></li>
-        <li><a href="/kalkulyatory/raschet-polikarbonata.html">Калькулятор: сколько листов поликарбоната нужно</a></li>
-        <li><a href="/montazh/chem-i-kak-krepit-polikarbonat-k-teplice.html">Как крепить поликарбонат к теплице</a></li>
-        <li><a href="/teplicy/kak-vybrat-teplicu-iz-polikarbonata.html">Как выбрать теплицу из поликарбоната</a></li>
-        <li><a href="/karta-sajta.html">Вся карта сайта</a></li>
-      </ul>
     </div>
   </div>
 </main>
+
+<script>
+(function(){
+  var root = document.getElementById('pnf-root');
+  var path = decodeURIComponent(location.pathname).toLowerCase();
+  var isOldItem = /^\/(item|catalog)\//.test(path);
+
+  // TODO: заменить query-ссылки на партнёрские (market.yandex.ru/cc/...), когда будут получены
+  function marketLink(q){ return 'https://market.yandex.ru/search?text=' + encodeURIComponent(q); }
+
+  // точечные совпадения по самым частотным моделям (из Метрики)
+  var MODELS = [
+    {m:'ve400-8',        name:'Fanline Aqua VE400-8',        q:'Fanline Aqua VE400-8'},
+    {m:'ve400-3',        name:'Fanline Aqua VE400-3',        q:'Fanline Aqua VE400-3'},
+    {m:'ve400-2',        name:'Fanline Aqua VE400-2',        q:'Fanline Aqua VE400-2'},
+    {m:'ve400-1',        name:'Fanline Aqua VE400-1',        q:'Fanline Aqua VE400-1'},
+    {m:'ve200-4uf',      name:'Fanline Aqua VE200-4UF',       q:'Fanline Aqua VE200-4UF'},
+    {m:'ve-400-1',       name:'Fanline Aqua VE-400-1',        q:'Fanline Aqua VE-400-1'},
+    {m:'ve400',          name:'Fanline Aqua VE400',           q:'Fanline Aqua VE400'},
+    {m:'jr5500',         name:'Fanline JR5500',               q:'Fanline JR5500'},
+    {m:'jr-3000-k1',     name:'Fanline JR-3000-K1',           q:'Fanline JR-3000-K1'},
+    {m:'jr-2000lv',      name:'Fanline JR-2000LV',            q:'Fanline JR-2000LV'},
+    {m:'gippokrat',      name:'Очиститель воздуха Гиппократ', q:'Очиститель воздуха Гиппократ'},
+    {m:'obn-150',        name:'Облучатель бактерицидный ОБН-150', q:'Облучатель бактерицидный ОБН-150'},
+    {m:'obrn-1',         name:'Облучатель-рециркулятор ОБРН', q:'Облучатель рециркулятор ОБРН'},
+    {m:'energiya-2000',  name:'Водонагреватель Энергия 2000', q:'Водонагреватель Энергия 2000'}
+  ];
+
+  // категории по ключевым словам — покрывают почти весь длинный хвост
+  var CATEGORIES = [
+    {k:'dush',           name:'Душ для дачи',                  q:'душ для дачи'},
+    {k:'uvlazhnitel',    name:'Увлажнители воздуха',           q:'увлажнитель воздуха'},
+    {k:'ochistitel',     name:'Очистители воздуха',            q:'очиститель воздуха'},
+    {k:'nasos',          name:'Насосы для дачи',               q:'насос для воды дача'},
+    {k:'vodonagrevatel', name:'Водонагреватели',               q:'водонагреватель наливной'},
+    {k:'recirkulyator',  name:'Бактерицидные рециркуляторы',   q:'бактерицидный рециркулятор'},
+    {k:'obluchatel',     name:'Бактерицидные облучатели',      q:'бактерицидный облучатель'},
+    {k:'ionizator',      name:'Ионизаторы воздуха',            q:'ионизатор воздуха'},
+    {k:'filtr',          name:'Фильтры для мойки воздуха',     q:'фильтр для мойки воздуха'},
+    {k:'shlang',         name:'Шланг для душа',                q:'шланг для душа на дачу'}
+  ];
+
+  function render(title, query){
+    document.title = title + ' — Fanline.su';
+    root.innerHTML =
+      '<h1>' + title + '</h1>' +
+      '<p>Климатическая техника и товары для дачи Fanline.</p>' +
+      '<div class="cta-block cta-block--shop">' +
+        '<div class="cta-grid">' +
+          '<a class="cta-btn" href="' + marketLink(query) + '" rel="nofollow noopener" target="_blank">Купить</a>' +
+        '</div>' +
+      '</div>';
+  }
+
+  function renderGeneric(){
+    root.innerHTML =
+      '<h1>Популярное на сайте</h1>' +
+      '<ul class="page-list">' +
+        '<li><a href="/vybor/tolschina-polikarbonata-dlya-teplicy.html">Какую толщину поликарбоната выбрать для теплицы</a></li>' +
+        '<li><a href="/kalkulyatory/raschet-polikarbonata.html">Калькулятор: сколько листов поликарбоната нужно</a></li>' +
+        '<li><a href="/montazh/chem-i-kak-krepit-polikarbonat-k-teplice.html">Как крепить поликарбонат к теплице</a></li>' +
+        '<li><a href="/teplicy/kak-vybrat-teplicu-iz-polikarbonata.html">Как выбрать теплицу из поликарбоната</a></li>' +
+        '<li><a href="/karta-sajta.html">Вся карта сайта</a></li>' +
+      '</ul>';
+  }
+
+  if (isOldItem){
+    var hit = null;
+    for (var i=0;i<MODELS.length;i++){ if (path.indexOf(MODELS[i].m)!==-1){ hit=MODELS[i]; break; } }
+    if (!hit){
+      for (var j=0;j<CATEGORIES.length;j++){ if (path.indexOf(CATEGORIES[j].k)!==-1){ hit={name:CATEGORIES[j].name,q:CATEGORIES[j].q}; break; } }
+    }
+    if (!hit){ hit = {name:'Товары Fanline', q:'fanline'}; }
+    render(hit.name, hit.q);
+  } else {
+    renderGeneric();
+  }
+})();
+</script>
 
 <footer class="site-footer">
   <div class="footer-inner">
