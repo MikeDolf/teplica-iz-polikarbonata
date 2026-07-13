@@ -87,6 +87,16 @@
   AFFIL['obn-150']       = 'https://market.yandex.ru/cc/A9oPgr';
   AFFIL['obrn-1']        = AFFIL['obn-150'];
   AFFIL['energiya-2000'] = 'https://market.yandex.ru/cc/A9oT9r';
+  // партнёрские ссылки по категориям (для длинного хвоста без точного совпадения модели)
+  AFFIL['dush']           = 'https://market.yandex.ru/cc/A9oeSD';
+  AFFIL['uvlazhnitel']    = 'https://market.yandex.ru/cc/A9oiN8';
+  AFFIL['ochistitel']     = 'https://market.yandex.ru/cc/A9oiN8';
+  AFFIL['nasos']          = 'https://market.yandex.ru/cc/A9om3w';
+  AFFIL['vodonagrevatel'] = 'https://market.yandex.ru/cc/A9opXF';
+  AFFIL['recirkulyator']  = 'https://market.yandex.ru/cc/A9p22m';
+  AFFIL['obluchatel']     = 'https://market.yandex.ru/cc/A9p3jK';
+  AFFIL['ionizator']      = 'https://market.yandex.ru/cc/A9p6hh';
+  AFFIL['shlang']         = 'https://market.yandex.ru/cc/A9pCcx';
   // для моделей без партнёрской ссылки — обычная ссылка на поиск Маркета
   function marketLink(q, modelKey){
     if (modelKey && AFFIL[modelKey]) return AFFIL[modelKey];
@@ -193,6 +203,7 @@
 
   // категории по ключевым словам — покрывают почти весь длинный хвост
   var CATEGORIES = [
+    {k:'shlang',         name:'Шланг для душа',                q:'шланг для душа на дачу',       d:'shlang'},
     {k:'dush',           name:'Душ для дачи',                  q:'душ для дачи',                d:'dush'},
     {k:'uvlazhnitel',    name:'Увлажнители воздуха',           q:'увлажнитель воздуха',          d:'uvlazhnitel'},
     {k:'ochistitel',     name:'Очистители воздуха',            q:'очиститель воздуха',           d:'ochistitel'},
@@ -201,8 +212,7 @@
     {k:'recirkulyator',  name:'Бактерицидные рециркуляторы',   q:'бактерицидный рециркулятор',   d:'recirkulyator'},
     {k:'obluchatel',     name:'Бактерицидные облучатели',      q:'бактерицидный облучатель',      d:'obluch'},
     {k:'ionizator',      name:'Ионизаторы воздуха',            q:'ионизатор воздуха',            d:'ionizator'},
-    {k:'filtr',          name:'Фильтры для мойки воздуха',     q:'фильтр для мойки воздуха',      d:'filtr'},
-    {k:'shlang',         name:'Шланг для душа',                q:'шланг для душа на дачу',       d:'shlang'}
+    {k:'filtr',          name:'Фильтры для мойки воздуха',     q:'фильтр для мойки воздуха',      d:'filtr'}
   ];
 
   function render(title, query, descKey, modelKey){
@@ -239,7 +249,7 @@
     var hit = null;
     for (var i=0;i<MODELS.length;i++){ if (path.indexOf(MODELS[i].m)!==-1){ hit=MODELS[i]; break; } }
     if (!hit){
-      for (var j=0;j<CATEGORIES.length;j++){ if (path.indexOf(CATEGORIES[j].k)!==-1){ hit={name:CATEGORIES[j].name,q:CATEGORIES[j].q,d:CATEGORIES[j].d}; break; } }
+      for (var j=0;j<CATEGORIES.length;j++){ if (path.indexOf(CATEGORIES[j].k)!==-1){ hit={name:CATEGORIES[j].name,q:CATEGORIES[j].q,d:CATEGORIES[j].d,m:CATEGORIES[j].k}; break; } }
     }
     if (!hit){ hit = {name:'Товары Fanline', q:'fanline', d:'generic'}; }
     render(hit.name, hit.q, hit.d, hit.m);
