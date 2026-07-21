@@ -15,6 +15,9 @@
         <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
+        {%- if price %}
+        <p class="hero__price">Ориентировочно от <b>{{ price.m3 }} руб/м³</b>, от <b>{{ price.bag }} руб/мешок</b>. Точную цену назовём под ваш объём и район.</p>
+        {%- endif %}
         <div class="hero__cta">
           <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
           <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
