@@ -20,6 +20,12 @@ env = Environment(
     trim_blocks=False, lstrip_blocks=False,
 )
 
+
+NOINDEX = {
+    "chernozem-nizhniy-tagil", "chernozem-revda", "chernozem-verhnyaya-pyshma",
+    "chernozem-sysert", "chernozem-sredneuralsk", "peregnoy-aramil",
+}
+
 FOOTER_LINKS = [
     {"url": "/dostavka-grunta/", "text": "Доставка грунта"},
     {"url": "/chernozem-ekaterinburg/", "text": "Чернозём, Екатеринбург"},
@@ -79,6 +85,27 @@ def compose_geo(product_key, city_key):
         "faq": faq,
     }
 
+
+def attach_related(pages):
+    """Проставляет каждой странице перелинковку: другие города того же продукта + другие продукты того же города."""
+    by_slug = {p["slug"]: p for p in pages}
+    for p in pages:
+        rel = []
+        prod = p.get("product")
+        city_key = p.get("city")
+        city_name = CITIES[city_key]["name"] if city_key in CITIES else ""
+        # другие города того же продукта
+        for q in pages:
+            if q is p: continue
+            if q.get("product") == prod and q.get("city") != city_key:
+                rel.append({"url": f'/{q["slug"]}/', "text": f'{prod}, {CITIES[q["city"]]["name"]}'})
+        # другие продукты в том же городе
+        for q in pages:
+            if q is p: continue
+            if q.get("city") == city_key and q.get("product") != prod:
+                rel.append({"url": f'/{q["slug"]}/', "text": f'{q["product"]}, {city_name}'})
+        p["related"] = rel[:8]
+
 def render(page):
     city = CITIES[page["city"]]
     canonical = f'{SITE["domain"]}/{page["slug"]}/'
@@ -92,17 +119,59 @@ def render(page):
         footer_links=FOOTER_LINKS,
         schema_json=build_schema(page, canonical),
         metrika_placeholder=True,
+        robots=("noindex, follow" if page["slug"] in NOINDEX else "index, follow"),
+        related=page.get("related", []),
     )
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as f:
         f.write(html)
-    return page["slug"], canonical
+    return page["slug"], canonical, page["slug"] not in NOINDEX
+
+
+def render_hub(all_pages):
+    canonical = f'{SITE["domain"]}/dostavka-grunta/'
+    catalog = [
+        {"name": "Чернозём", "note": "под грядки, газон и теплицу", "url": "/chernozem-ekaterinburg/"},
+        {"name": "Перегной", "note": "перепревший, под посадку", "url": "/peregnoy-ekaterinburg/"},
+        {"name": "Навоз коровий", "note": "перепревший и свежий", "url": "/navoz-koroviy-ekaterinburg/"},
+        {"name": "Навоз конский", "note": "для тёплых грядок и теплиц", "url": "/navoz-konskiy-ekaterinburg/"},
+    ]
+    geo = [{"url": f'/{p["slug"]}/', "text": f'{p["product"]}, {CITIES[p["city"]]["name"]}'}
+           for p in all_pages if p["slug"] not in NOINDEX]
+    faq = [
+        ("Какие города вы обслуживаете?", "Возим по Екатеринбургу и всей Свердловской области. По городу и ближнему пригороду чаще всего успеваем в день заказа, в дальние города планируем доставку на ближайшие дни."),
+        ("В каком объёме возите?", "И мешками для точечных работ, и кубами или самосвалом под отсыпку участка целиком. Подскажем, что выгоднее под вашу задачу и район."),
+        ("Как узнать цену?", "Назовите продукт, объём и адрес по телефону или в заявке, назовём точную цену за куб и за мешок с доставкой в ваш район. Скрытых доплат нет."),
+    ]
+    schema = json.dumps({"@context": "https://schema.org", "@graph": [
+        build_localbusiness(),
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": canonical}]},
+        {"@type": "FAQPage", "mainEntity": [
+            {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]},
+    ]}, ensure_ascii=False, indent=2)
+    html = env.get_template("hub.html").render(
+        site=SITE, canonical=canonical, robots="index, follow",
+        title="Доставка чернозёма, перегноя и навоза по Екатеринбургу и области",
+        description="Доставка чернозёма, перегноя, коровьего и конского навоза по Екатеринбургу и Свердловской области. Мешками и самосвалом, цену называем под ваш объём и район. Оставьте заявку.",
+        h1="Доставка грунта, перегноя и навоза по Екатеринбургу",
+        hero_sub="Чернозём, перегной и навоз с доставкой по городу и области. В мешках и самосвалом, в день заказа. Скажите объём и адрес, назовём точную цену.",
+        catalog=catalog, geo=geo, faq=faq, preselect_product="Пока не решил",
+        district_ph="Напр. Академический, Верхняя Пышма, Сысерть",
+        footer_links=FOOTER_LINKS, schema_json=schema, metrika_placeholder=True, related=[])
+    outdir = os.path.join(ROOT, "dostavka-grunta")
+    os.makedirs(outdir, exist_ok=True)
+    with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
+        fh.write(html)
+    return canonical
 
 if __name__ == "__main__":
     only = sys.argv[1:] or None
     done = []
     all_pages = list(PAGES) + [compose_geo(pk, ck) for pk, ck in GEO_PAGES]
+    attach_related(all_pages)
     seen = set()
     for p in all_pages:
         if p["slug"] in seen:
@@ -111,6 +180,12 @@ if __name__ == "__main__":
         if only and p["slug"] not in only:
             continue
         done.append(render(p))
-    for slug, url in done:
-        print("built:", slug, "->", url)
-    print(f"Готово: {len(done)} страниц")
+    hub_url = render_hub(all_pages) if not only else None
+    index_urls = [u for (sl, u, idx) in done if idx]
+    if hub_url: index_urls.insert(0, hub_url)
+    for slug, url, idx in done:
+        print(("index " if idx else "NOIDX "), slug, "->", url)
+    print(f"Готово: {len(done)} страниц, в индекс: {len(index_urls)}")
+    # список индексируемых URL для sitemap (Фаза 4)
+    with open(os.path.join(HERE, "index_urls.txt"), "w", encoding="utf-8") as fh:
+        fh.write("\n".join(index_urls))

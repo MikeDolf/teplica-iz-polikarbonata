@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">
+  {{ schema_json|safe }}
+  </script>
+{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
+        <h1>{{ h1 }}</h1>
+        <p class="hero__sub">{{ hero_sub }}</p>
+        <div class="hero__cta">
+          <a class="btn btn--call" href="tel:{{ site.phone_href }}">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.24 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.46.57 3.6a1 1 0 0 1-.25 1z"/></svg>
+            {{ site.phone_display }}
+          </a>
+          <a class="btn btn--ghost" href="#zayavka">Оставить заявку</a>
+        </div>
+        <p class="hero__note">{{ site.callback_promise|capitalize }}. {{ site.hours }}.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hubcat wrap">
+    <h2>Что возим</h2>
+    <div class="hubcat__grid">
+      {%- for c in catalog %}
+      <a class="hubcat__card" href="{{ c.url }}">
+        <b>{{ c.name }}</b>
+        <span>{{ c.note }}</span>
+      </a>
+      {%- endfor %}
+    </div>
+  </section>
+
+  <section class="hubgeo wrap">
+    <h2>Города доставки</h2>
+    <ul class="hubgeo__list">
+      {%- for g in geo %}
+      <li><a href="{{ g.url }}">{{ g.text }}</a></li>
+      {%- endfor %}
+    </ul>
+    <p class="hubgeo__note">Возим по всей Свердловской области. Не нашли свой город, позвоните, посчитаем доставку под ваш адрес.</p>
+  </section>
+
+  {% include "partials/lead_form.html" %}
+
+  {% include "partials/faq.html" %}
+{% endblock %}
