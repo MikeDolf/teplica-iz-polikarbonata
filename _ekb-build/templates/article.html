@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">
+  {{ schema_json|safe }}
+  </script>
+{% endblock %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="/">Главная</a></li>
+    <li><a href="/dostavka-grunta/">Доставка грунта</a></li>
+    <li><span aria-current="page">{{ short }}</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  <article class="art wrap">
+    <h1>{{ h1 }}</h1>
+    <p class="art__lede">{{ lede }}</p>
+
+    {%- for sec in body %}
+    <h2>{{ sec.h }}</h2>
+    {%- for p in sec.p %}
+    <p>{{ p }}</p>
+    {%- endfor %}
+    {%- if sec.list %}
+    <ul class="art__list">
+      {%- for li in sec.list %}
+      <li>{{ li }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+    {%- endfor %}
+
+    <aside class="art__cta">
+      <div>
+        <b>{{ cta.title }}</b>
+        <p>{{ cta.text }}</p>
+      </div>
+      <div class="art__cta-actions">
+        <a class="btn btn--call" href="tel:{{ site.phone_href }}">{{ site.phone_display }}</a>
+        <a class="btn btn--ghost art__cta-link" href="{{ cta.url }}">{{ cta.link }}</a>
+      </div>
+    </aside>
+  </article>
+
+  {% include "partials/faq.html" %}
+
+  {% include "partials/related.html" %}
+{% endblock %}

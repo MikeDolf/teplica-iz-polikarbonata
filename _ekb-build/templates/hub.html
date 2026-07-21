@@ -45,6 +45,15 @@
     <p class="hubgeo__note">Возим по всей Свердловской области. Не нашли свой город, позвоните, посчитаем доставку под ваш адрес.</p>
   </section>
 
+  <section class="hubgeo wrap">
+    <h2>Полезные статьи</h2>
+    <ul class="hubgeo__list">
+      {%- for a in articles %}
+      <li><a href="{{ a.url }}">{{ a.text }}</a></li>
+      {%- endfor %}
+    </ul>
+  </section>
+
   {% include "partials/lead_form.html" %}
 
   {% include "partials/faq.html" %}

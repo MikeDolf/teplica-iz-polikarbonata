@@ -12,6 +12,7 @@ from site_config import SITE  # noqa
 from cities import CITIES      # noqa
 from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
+from articles import ARTICLES  # noqa
 
 ROOT = os.path.dirname(HERE)   # корень репо
 env = Environment(
@@ -130,6 +131,8 @@ def render(page):
 
 
 def render_hub(all_pages):
+    from articles import ARTICLES as _A
+    hub_articles = [{"url": f'/dostavka-grunta/{a["slug"]}/', "text": a["short"]} for a in _A]
     canonical = f'{SITE["domain"]}/dostavka-grunta/'
     catalog = [
         {"name": "Чернозём", "note": "под грядки, газон и теплицу", "url": "/chernozem-ekaterinburg/"},
@@ -158,7 +161,7 @@ def render_hub(all_pages):
         description="Доставка чернозёма, перегноя, коровьего и конского навоза по Екатеринбургу и Свердловской области. Мешками и самосвалом, цену называем под ваш объём и район. Оставьте заявку.",
         h1="Доставка грунта, перегноя и навоза по Екатеринбургу",
         hero_sub="Чернозём, перегной и навоз с доставкой по городу и области. В мешках и самосвалом, в день заказа. Скажите объём и адрес, назовём точную цену.",
-        catalog=catalog, geo=geo, faq=faq, preselect_product="Пока не решил",
+        catalog=catalog, geo=geo, faq=faq, articles=hub_articles, preselect_product="Пока не решил",
         district_ph="Напр. Академический, Верхняя Пышма, Сысерть",
         footer_links=FOOTER_LINKS, schema_json=schema, metrika_placeholder=True, related=[])
     outdir = os.path.join(ROOT, "dostavka-grunta")
@@ -166,6 +169,45 @@ def render_hub(all_pages):
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(html)
     return canonical
+
+
+def render_articles():
+    """Инфо-статьи из articles.py под /dostavka-grunta/<slug>/. Все index/follow."""
+    urls = []
+    base = "dostavka-grunta"
+    # перелинковка между статьями
+    for a in ARTICLES:
+        related = []
+        for b in ARTICLES:
+            if b is a: continue
+            related.append({"url": f'/{base}/{b["slug"]}/', "text": b["short"]})
+        a["_related"] = related[:6]
+    for a in ARTICLES:
+        canonical = f'{SITE["domain"]}/{base}/{a["slug"]}/'
+        schema = json.dumps({"@context": "https://schema.org", "@graph": [
+            {"@type": "Article", "headline": a["h1"], "description": a["description"],
+             "inLanguage": "ru-RU", "mainEntityOfPage": canonical,
+             "publisher": {"@type": "Organization", "name": SITE["brand"], "url": SITE["domain"] + "/dostavka-grunta/"}},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
+                {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
+                {"@type": "ListItem", "position": 3, "name": a["short"], "item": canonical}]},
+            {"@type": "FAQPage", "mainEntity": [
+                {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in a["faq"]]},
+        ]}, ensure_ascii=False, indent=2)
+        html = env.get_template("article.html").render(
+            site=SITE, canonical=canonical, robots="index, follow",
+            title=a["title"], description=a["description"], h1=a["h1"], short=a["short"],
+            lede=a["lede"], body=a["body"], faq=a["faq"], cta=a["cta"],
+            related=a["_related"], footer_links=FOOTER_LINKS,
+            preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
+            schema_json=schema, metrika_placeholder=True)
+        outdir = os.path.join(ROOT, base, a["slug"])
+        os.makedirs(outdir, exist_ok=True)
+        with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
+            fh.write(html)
+        urls.append(canonical)
+    return urls
 
 if __name__ == "__main__":
     only = sys.argv[1:] or None
@@ -181,8 +223,10 @@ if __name__ == "__main__":
             continue
         done.append(render(p))
     hub_url = render_hub(all_pages) if not only else None
+    article_urls = render_articles() if not only else []
     index_urls = [u for (sl, u, idx) in done if idx]
     if hub_url: index_urls.insert(0, hub_url)
+    index_urls += article_urls
     for slug, url, idx in done:
         print(("index " if idx else "NOIDX "), slug, "->", url)
     print(f"Готово: {len(done)} страниц, в индекс: {len(index_urls)}")
