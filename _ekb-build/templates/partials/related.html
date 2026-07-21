@@ -1,10 +1,12 @@
 {%- if related %}
-<section class="related wrap" aria-labelledby="related-title">
-  <h2 id="related-title">Ещё возим</h2>
-  <ul class="related__list">
-    {%- for r in related %}
-    <li><a href="{{ r.url }}">{{ r.text }}</a></li>
-    {%- endfor %}
-  </ul>
+<section class="related band band--white" aria-labelledby="related-title">
+  <div class="wrap">
+    <h2 id="related-title" class="sec-h">Ещё возим</h2>
+    <ul class="related__list">
+      {%- for r in related %}
+      <li><a href="{{ r.url }}">{{ r.text }}</a></li>
+      {%- endfor %}
+    </ul>
+  </div>
 </section>
 {%- endif %}

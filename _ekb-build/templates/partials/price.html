@@ -1,13 +1,16 @@
-<section class="pricebox" aria-labelledby="price-title">
+<section class="pricebox band band--white" aria-labelledby="price-title">
   <div class="wrap pricebox__in">
-    <div>
-      <h2 id="price-title">Сколько это стоит</h2>
+    <div class="pricebox__text">
+      <h2 id="price-title" class="sec-h">Сколько это стоит</h2>
       {%- if price %}
-      <p class="pricebox__price">Ориентировочно от <b>{{ price.m3 }} руб</b> за куб, от <b>{{ price.bag }} руб</b> за мешок с доставкой.</p>
+      <div class="pricebox__nums">
+        <div class="pricebox__num"><span>от {{ price.m3 }} ₽</span><small>за куб с доставкой</small></div>
+        <div class="pricebox__num"><span>от {{ price.bag }} ₽</span><small>за мешок с доставкой</small></div>
+      </div>
       {%- endif %}
-      <p>Цена зависит от объёма, района доставки и способа выгрузки. Чем больше объём и ближе участок, тем дешевле выходит куб. Мешки удобнее, но за куб дороже самосвала.</p>
-      <p class="pricebox__honest">Цены ориентировочные, точную стоимость за куб и за мешок с доставкой в ваш район называем сразу по заявке. Скрытых доплат на месте нет.</p>
+      <p>Цена зависит от объёма, района доставки и способа выгрузки. Чем больше объём и ближе участок, тем дешевле выходит куб.</p>
+      <p class="pricebox__honest">Цены ориентировочные. Точную стоимость за куб и за мешок с доставкой в ваш район называем сразу по заявке, без скрытых доплат.</p>
     </div>
-    <a class="btn btn--call" href="#zayavka">Узнать точную цену</a>
+    <a class="btn btn--call pricebox__btn" href="#zayavka">Узнать точную цену</a>
   </div>
 </section>
