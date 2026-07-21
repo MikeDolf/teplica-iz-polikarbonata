@@ -22,6 +22,8 @@ env = Environment(
 )
 
 
+PRODUCT_GEN = {"Чернозём":"чернозём","Перегной":"перегной","Навоз конский":"конский навоз","Навоз коровий":"коровий навоз"}
+
 NOINDEX = {
     "chernozem-nizhniy-tagil", "chernozem-revda", "chernozem-verhnyaya-pyshma",
     "chernozem-sysert", "chernozem-sredneuralsk", "peregnoy-aramil",
@@ -122,6 +124,7 @@ def render(page):
         metrika_placeholder=True,
         robots=("noindex, follow" if page["slug"] in NOINDEX else "index, follow"),
         related=page.get("related", []),
+        product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
     )
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)

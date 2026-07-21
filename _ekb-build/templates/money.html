@@ -24,10 +24,12 @@
     </div>
   </section>
 
+  {% include "partials/advantages.html" %}
+
   <section class="steps wrap" aria-labelledby="steps-title">
     <h2 id="steps-title">Как заказать</h2>
     <ol class="steps__list">
-      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка или звонок</b><p>Скажите продукт, объём и район. Можно кнопкой, можно голосом.</p></div></li>
+      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите на почту. Укажите продукт, объём и район.</p></div></li>
       <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем точную цену с доставкой в ваш район. Скрытых доплат нет.</p></div></li>
       <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к участку, мешки к воротам.</p></div></li>
     </ol>
@@ -52,11 +54,17 @@
     <p class="delivery__unique">{{ city.unique }}</p>
   </section>
 
+  {% include "partials/uses.html" %}
+
   <section class="about wrap">
     {%- for p in about %}
     <p>{{ p }}</p>
     {%- endfor %}
   </section>
+
+  {% include "partials/fleet.html" %}
+
+  {% include "partials/price.html" %}
 
   {% include "partials/related.html" %}
 
