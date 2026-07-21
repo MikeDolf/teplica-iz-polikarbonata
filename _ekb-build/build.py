@@ -162,8 +162,8 @@ def render_hub(all_pages):
     ]}, ensure_ascii=False, indent=2)
     html = env.get_template("hub.html").render(
         site=SITE, canonical=canonical, robots="index, follow",
-        title="Доставка чернозёма, перегноя и навоза по Екатеринбургу и области",
-        description="Доставка чернозёма, перегноя, коровьего и конского навоза по Екатеринбургу и Свердловской области. Мешками и самосвалом, цену называем под ваш объём и район. Оставьте заявку.",
+        title="Доставка грунта, перегноя и навоза по Екатеринбургу",
+        description="Доставка чернозёма, перегноя и навоза по Екатеринбургу и Свердловской области. Мешками и самосвалом, цену называем под ваш объём и район.",
         h1="Доставка грунта, перегноя и навоза по Екатеринбургу",
         hero_sub="Чернозём, перегной и навоз с доставкой по городу и области. В мешках и самосвалом, в день заказа. Скажите объём и адрес, назовём точную цену.",
         catalog=catalog, geo=geo, faq=faq, articles=hub_articles, preselect_product="Пока не решил",
@@ -206,7 +206,7 @@ def render_articles():
             lede=a["lede"], body=a["body"], faq=a["faq"], cta=a["cta"],
             related=a["_related"], footer_links=FOOTER_LINKS,
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
-            schema_json=schema, metrika_placeholder=True)
+            schema_json=schema, metrika_placeholder=True, og_type="article")
         outdir = os.path.join(ROOT, base, a["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
