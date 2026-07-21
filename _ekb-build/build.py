@@ -11,6 +11,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from site_config import SITE  # noqa
 from cities import CITIES      # noqa
 from pages import PAGES        # noqa
+from products import PRODUCTS, GEO_PAGES  # noqa
 
 ROOT = os.path.dirname(HERE)   # корень репо
 env = Environment(
@@ -54,6 +55,30 @@ def build_schema(page, canonical):
         })
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=2)
 
+
+def compose_geo(product_key, city_key):
+    pr = PRODUCTS[product_key]
+    city = CITIES[city_key]
+    if city_key == "ekaterinburg":
+        slug = f'{product_key}-ekaterinburg'
+    else:
+        slug = f'{product_key}-{city_key}'
+    h1 = f'{pr["name"]} {city["prep"]} с доставкой'
+    # город-специфичный вопрос впереди общих: уникальность FAQ
+    hint = city.get("order_hint", "По объёму возим и мешками, и самосвалом, срок согласуем при заявке.")
+    city_q = (f'Сколько стоит доставка {city["to"]}?',
+              f'{hint} Точную цену за куб и за мешок с доставкой называем по телефону под ваш объём и адрес.')
+    faq = [city_q] + pr["faq_base"]
+    return {
+        "slug": slug, "city": city_key, "product": pr["chip"], "kind": "geo",
+        "h1": h1,
+        "title": pr["title_tpl"].format(prep=city["prep"], to=city["to"]),
+        "description": pr["desc_tpl"].format(prep=city["prep"], to=city["to"]),
+        "hero_sub": pr["hero_sub"],
+        "about": pr["intro"],
+        "faq": faq,
+    }
+
 def render(page):
     city = CITIES[page["city"]]
     canonical = f'{SITE["domain"]}/{page["slug"]}/'
@@ -77,7 +102,12 @@ def render(page):
 if __name__ == "__main__":
     only = sys.argv[1:] or None
     done = []
-    for p in PAGES:
+    all_pages = list(PAGES) + [compose_geo(pk, ck) for pk, ck in GEO_PAGES]
+    seen = set()
+    for p in all_pages:
+        if p["slug"] in seen:
+            raise SystemExit(f'ДУБЛЬ слага: {p["slug"]}')
+        seen.add(p["slug"])
         if only and p["slug"] not in only:
             continue
         done.append(render(p))
