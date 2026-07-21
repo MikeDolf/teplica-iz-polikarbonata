@@ -180,6 +180,13 @@ def render_articles():
     """Инфо-статьи из articles.py под /dostavka-grunta/<slug>/. Все index/follow."""
     urls = []
     base = "dostavka-grunta"
+    PRICE_BY_URL = {
+        "/chernozem-ekaterinburg/": PRICES.get("Чернозём"),
+        "/peregnoy-ekaterinburg/": PRICES.get("Перегной"),
+        "/navoz-konskiy-ekaterinburg/": PRICES.get("Навоз конский"),
+        "/navoz-koroviy-ekaterinburg/": PRICES.get("Навоз коровий"),
+    }
+
     # перелинковка между статьями
     for a in ARTICLES:
         related = []
@@ -205,6 +212,7 @@ def render_articles():
             title=a["title"], description=a["description"], h1=a["h1"], short=a["short"],
             lede=a["lede"], body=a["body"], faq=a["faq"], cta=a["cta"],
             related=a["_related"], footer_links=FOOTER_LINKS,
+            cta_price=PRICE_BY_URL.get(a["cta"]["url"]),
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article")
         outdir = os.path.join(ROOT, base, a["slug"])
