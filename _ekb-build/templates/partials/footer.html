@@ -1,0 +1,15 @@
+<footer class="ftr">
+  <div class="ftr__in">
+    <div>
+      <a class="ftr__phone" href="tel:{{ site.phone_href }}">{{ site.phone_display }}</a>
+      <p class="ftr__hours">{{ site.hours }}. {{ site.callback_promise|capitalize }}.</p>
+    </div>
+    <ul class="ftr__links">
+      {%- for l in footer_links %}
+      <li><a href="{{ l.url }}">{{ l.text }}</a></li>
+      {%- endfor %}
+      <li><a href="{{ site.privacy_url }}">Обработка данных</a></li>
+    </ul>
+    <p class="ftr__legal">Доставка чернозёма, перегноя и навоза по {{ site.region_po }}. Цены рассчитываются под объём и район, точную стоимость называем по телефону.</p>
+  </div>
+</footer>

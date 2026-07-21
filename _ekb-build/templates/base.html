@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#12331f">
+  <title>{{ title }}</title>
+  <meta name="description" content="{{ description }}">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="{{ canonical }}">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="{{ site.css }}">
+{%- if metrika_placeholder %}
+  {# место под счётчик Метрики: подключить при запуске, id в site.metrika_id #}
+{%- endif %}
+{%- block schema %}{% endblock %}
+</head>
+<body class="ekb">
+
+{% include "partials/header.html" %}
+
+{%- block breadcrumbs %}{% endblock %}
+
+<main id="top">
+{%- block content %}{% endblock %}
+</main>
+
+{% include "partials/footer.html" %}
+{% include "partials/callbar.html" %}
+
+</body>
+</html>
