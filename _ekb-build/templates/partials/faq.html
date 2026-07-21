@@ -1,0 +1,11 @@
+<section class="faq wrap" aria-labelledby="faq-title">
+  <h2 id="faq-title">Частые вопросы</h2>
+  <div class="faq__list">
+  {%- for q, a in faq %}
+    <details class="faq__item">
+      <summary>{{ q }}</summary>
+      <div class="faq__ans"><p>{{ a }}</p></div>
+    </details>
+  {%- endfor %}
+  </div>
+</section>

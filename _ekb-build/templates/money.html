@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block schema %}
+  <script type="application/ld+json">
+  {{ schema_json|safe }}
+  </script>
+{% endblock %}
+
+{% block breadcrumbs %}{% include "partials/breadcrumbs.html" %}{% endblock %}
+
+{% block content %}
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
+        <h1>{{ h1 }}</h1>
+        <p class="hero__sub">{{ hero_sub }}</p>
+        <div class="hero__cta">
+          <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+          <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
+        </div>
+        <p class="hero__note">Ответим на заявку и {{ site.callback_promise }}. {{ site.hours }}.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="steps wrap" aria-labelledby="steps-title">
+    <h2 id="steps-title">Как заказать</h2>
+    <ol class="steps__list">
+      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка или звонок</b><p>Скажите продукт, объём и район. Можно кнопкой, можно голосом.</p></div></li>
+      <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем точную цену с доставкой в ваш район. Скрытых доплат нет.</p></div></li>
+      <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к участку, мешки к воротам.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="delivery wrap" aria-labelledby="delivery-title">
+    <h2 id="delivery-title">Доставка {{ city.prep }}</h2>
+    <div class="delivery__grid">
+      <div class="delivery__card">
+        <h3>Куда возим</h3>
+        <p>{{ city.zone }}.</p>
+      </div>
+      <div class="delivery__card">
+        <h3>Чем возим</h3>
+        <p>Мешками для точечных работ, кубами и самосвалом под отсыпку участка целиком. Подберём объём под задачу.</p>
+      </div>
+      <div class="delivery__card">
+        <h3>Сроки</h3>
+        <p>{{ city.delivery }}.</p>
+      </div>
+    </div>
+    <p class="delivery__unique">{{ city.unique }}</p>
+  </section>
+
+  <section class="about wrap">
+    {%- for p in about %}
+    <p>{{ p }}</p>
+    {%- endfor %}
+  </section>
+
+  {% include "partials/related.html" %}
+
+  {% include "partials/lead_form.html" %}
+
+  {% include "partials/faq.html" %}
+{% endblock %}

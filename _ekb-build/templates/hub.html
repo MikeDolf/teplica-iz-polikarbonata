@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">
+  {{ schema_json|safe }}
+  </script>
+{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
+        <h1>{{ h1 }}</h1>
+        <p class="hero__sub">{{ hero_sub }}</p>
+        <div class="hero__cta">
+          <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+          <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
+        </div>
+        <p class="hero__note">Ответим на заявку и {{ site.callback_promise }}. {{ site.hours }}.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="hubcat wrap">
+    <h2>Что возим</h2>
+    <div class="hubcat__grid">
+      {%- for c in catalog %}
+      <a class="hubcat__card" href="{{ c.url }}">
+        <b>{{ c.name }}</b>
+        <span>{{ c.note }}</span>
+      </a>
+      {%- endfor %}
+    </div>
+  </section>
+
+  <section class="hubgeo wrap">
+    <h2>Города доставки</h2>
+    <ul class="hubgeo__list">
+      {%- for g in geo %}
+      <li><a href="{{ g.url }}">{{ g.text }}</a></li>
+      {%- endfor %}
+    </ul>
+    <p class="hubgeo__note">Возим по всей Свердловской области. Не нашли свой город, позвоните, посчитаем доставку под ваш адрес.</p>
+  </section>
+
+  <section class="hubgeo wrap">
+    <h2>Полезные статьи</h2>
+    <ul class="hubgeo__list">
+      {%- for a in articles %}
+      <li><a href="{{ a.url }}">{{ a.text }}</a></li>
+      {%- endfor %}
+    </ul>
+  </section>
+
+  {% include "partials/lead_form.html" %}
+
+  {% include "partials/faq.html" %}
+{% endblock %}
