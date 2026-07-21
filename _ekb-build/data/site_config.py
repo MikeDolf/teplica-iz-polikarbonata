@@ -11,7 +11,7 @@ SITE = {
     "hours": "Пн-Сб, 8:00-20:00",
     "callback_promise": "перезвоним за 15 минут",
     "form_endpoint": "https://api.web3forms.com/submit",
-    "web3forms_key": "REPLACE-WITH-WEB3FORMS-ACCESS-KEY",  # бесплатный ключ на web3forms.com, привязать к mezdudelom73@gmail.com
+    "web3forms_key": "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",  # бесплатный ключ на web3forms.com, привязать к mezdudelom73@gmail.com
     "privacy_url": "/politika-konfidentsialnosti.html",
     "metrika_id": "",                      # оставлено пустым намеренно (место под счётчик)
     "css": "/assets/ekb/style.css?v=3",
