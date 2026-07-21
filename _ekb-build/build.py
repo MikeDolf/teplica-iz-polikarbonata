@@ -13,6 +13,7 @@ from cities import CITIES      # noqa
 from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
+from prices import PRICES, MATERIALS_PRICE  # noqa
 
 ROOT = os.path.dirname(HERE)   # корень репо
 env = Environment(
@@ -125,6 +126,7 @@ def render(page):
         robots=("noindex, follow" if page["slug"] in NOINDEX else "index, follow"),
         related=page.get("related", []),
         product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
+        price=PRICES.get(page.get("product","")),
     )
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)

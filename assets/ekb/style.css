@@ -212,3 +212,11 @@
 .terms__list li{position:relative;padding-left:28px;font-size:16px}
 .terms__list li::before{content:"✓";position:absolute;left:0;top:1px;color:var(--accent);font-weight:800}
 .terms__list b{font-weight:700}
+
+/* цены */
+.hero__price{margin:14px 0 0;font-size:15.5px;color:#dbe8dd;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 14px;display:inline-block}
+.hero__price b{color:#fff;white-space:nowrap}
+.pricebox__price{font-size:19px;margin:0 0 10px}
+.pricebox__price b{color:var(--accent)}
+.mats__card em{display:block;margin-top:8px;font-style:normal;font-weight:700;color:var(--accent);font-size:14.5px}
+.mats__note{margin:0 0 14px;font-size:13px;color:var(--ink-soft)}
