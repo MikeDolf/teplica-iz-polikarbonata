@@ -37,7 +37,7 @@ def build_localbusiness():
         "@type": "LocalBusiness",
         "name": SITE["brand"],
         "url": SITE["domain"] + "/dostavka-grunta/",
-        "telephone": SITE["phone_display"],
+        "email": SITE["contact_email"],
         "areaServed": SITE["region"],
         "openingHours": "Mo-Sa 08:00-20:00",
     }

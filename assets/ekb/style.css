@@ -88,8 +88,8 @@
 /* sticky mobile callbar */
 .callbar{position:fixed;left:0;right:0;bottom:0;z-index:30;display:none;gap:8px;padding:8px;background:rgba(13,40,26,.96);backdrop-filter:blur(6px)}
 .callbar a{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:13px;border-radius:11px;font-weight:700;font-size:15px;text-decoration:none}
-.ekb .callbar__call{background:var(--accent);color:#fff}
-.ekb .callbar__form{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.ekb .callbar__mail{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.2);flex:0 0 auto;padding-left:16px;padding-right:16px}
+.ekb .callbar__form{background:var(--accent);color:#fff}
 @media (max-width:720px){.callbar{display:flex}}
 
 /* ---- форма заявок (из zayavka.html, вынесена в общий стиль) ---- */

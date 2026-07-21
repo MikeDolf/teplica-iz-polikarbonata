@@ -7,12 +7,12 @@ SITE = {
     "domain": "https://fanline.su",
     "region": "Екатеринбург и Свердловская область",
     "region_po": "Екатеринбургу и Свердловской области",   # форма после предлога "по"
-    "phone_display": "+7 343 000-00-00",   # плейсхолдер
-    "phone_href": "+73430000000",          # плейсхолдер (для tel:)
+    "contact_email": "mezdudelom73@gmail.com",
     "hours": "Пн-Сб, 8:00-20:00",
     "callback_promise": "перезвоним за 15 минут",
-    "form_endpoint": "https://REPLACE-WITH-YOUR-WORKER.workers.dev/lead",  # плейсхолдер
+    "form_endpoint": "https://api.web3forms.com/submit",
+    "web3forms_key": "REPLACE-WITH-WEB3FORMS-ACCESS-KEY",  # бесплатный ключ на web3forms.com, привязать к mezdudelom73@gmail.com
     "privacy_url": "/politika-konfidentsialnosti.html",
     "metrika_id": "",                      # оставлено пустым намеренно (место под счётчик)
-    "css": "/assets/ekb/style.css?v=2",
+    "css": "/assets/ekb/style.css?v=3",
 }
