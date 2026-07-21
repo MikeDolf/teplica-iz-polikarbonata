@@ -1,11 +1,13 @@
-<section class="faq wrap" aria-labelledby="faq-title">
-  <h2 id="faq-title">Частые вопросы</h2>
-  <div class="faq__list">
-  {%- for q, a in faq %}
-    <details class="faq__item">
-      <summary>{{ q }}</summary>
-      <div class="faq__ans"><p>{{ a }}</p></div>
-    </details>
-  {%- endfor %}
+<section class="faq band band--tint" aria-labelledby="faq-title">
+  <div class="wrap">
+    <h2 id="faq-title" class="sec-h">Частые вопросы</h2>
+    <div class="faq__list">
+    {%- for q, a in faq %}
+      <details class="faq__item">
+        <summary>{{ q }}</summary>
+        <div class="faq__ans"><p>{{ a }}</p></div>
+      </details>
+    {%- endfor %}
+    </div>
   </div>
 </section>

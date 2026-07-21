@@ -20,8 +20,9 @@
     </div>
   </section>
 
-  <section class="hubcat wrap">
-    <h2>Что возим</h2>
+  <section class="hubcat band band--tint">
+    <div class="wrap">
+    <h2 class="sec-h">Что возим</h2>
     <div class="hubcat__grid">
       {%- for c in catalog %}
       <a class="hubcat__card" href="{{ c.url }}">
@@ -30,25 +31,30 @@
       </a>
       {%- endfor %}
     </div>
+    </div>
   </section>
 
-  <section class="hubgeo wrap">
-    <h2>Города доставки</h2>
+  <section class="hubgeo band band--white">
+    <div class="wrap">
+    <h2 class="sec-h">Города доставки</h2>
     <ul class="hubgeo__list">
       {%- for g in geo %}
       <li><a href="{{ g.url }}">{{ g.text }}</a></li>
       {%- endfor %}
     </ul>
     <p class="hubgeo__note">Возим по всей Свердловской области. Не нашли свой город, оставьте заявку, посчитаем доставку под ваш адрес.</p>
+    </div>
   </section>
 
-  <section class="hubgeo wrap">
-    <h2>Полезные статьи</h2>
+  <section class="hubgeo band band--tint">
+    <div class="wrap">
+    <h2 class="sec-h">Полезные статьи</h2>
     <ul class="hubgeo__list">
       {%- for a in articles %}
       <li><a href="{{ a.url }}">{{ a.text }}</a></li>
       {%- endfor %}
     </ul>
+    </div>
   </section>
 
   {% include "partials/lead_form.html" %}
