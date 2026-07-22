@@ -293,3 +293,6 @@
 /* ценовой бейдж в CTA статьи */
 .ekb .art__cta-price{margin:10px 0 0;font-size:14px;color:#c3d6c8;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:9px 12px}
 .ekb .art__cta-price b{color:#fff;white-space:nowrap}
+
+/* H3 в статьях */
+.ekb .art h3{font-size:clamp(17px,2.2vw,20px);font-weight:700;margin:22px 0 8px;color:var(--ink)}

@@ -30,6 +30,19 @@
       {%- endfor %}
     </ul>
     {%- endif %}
+    {%- for ss in sec.sub %}
+    <h3>{{ ss.h3 }}</h3>
+    {%- for p in ss.p %}
+    <p>{{ p }}</p>
+    {%- endfor %}
+    {%- if ss.list %}
+    <ul class="art__list">
+      {%- for li in ss.list %}
+      <li>{{ li }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+    {%- endfor %}
     {%- endfor %}
 
     <aside class="art__cta">
