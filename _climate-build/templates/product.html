@@ -113,6 +113,11 @@
       <ul class="page-list">{%- for r in related %}<li><a href="{{ r.url }}">{{ r.text }}</a></li>{%- endfor %}</ul>
       {%- endif %}
 
+      {%- if read_also %}
+      <h2>Полезное для дачи и теплицы</h2>
+      <ul class="page-list">{%- for r in read_also %}<li><a href="{{ r.url }}">{{ r.text }}</a></li>{%- endfor %}</ul>
+      {%- endif %}
+
       <p style="font-size:.88rem;color:var(--text-muted);">Вопрос по товару, <a href="/kontakty.html">напишите нам</a>.</p>
     </div>
   </div>

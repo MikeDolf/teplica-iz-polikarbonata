@@ -18,6 +18,21 @@ by_fam={}
 for url,kind,fam,name,model,affil,canon in PAGES:
     if kind=="product": by_fam.setdefault(fam,[]).append((url,name))
 
+# Тематические мостики на материалы по теплицам: связываем климат-тему с садовой
+# аудиторией через релевантные статьи (влажность, полив, обеззараживание, свет).
+BRIDGE={
+ "mojka":[("/blog/vlazhnost-v-teplice.html","Влажность в теплице: норма и как её держать"),
+          ("/blog/poliv-i-provetrivanie.html","Полив и проветривание теплицы")],
+ "gippokrat":[("/blog/vlazhnost-v-teplice.html","Влажность в теплице: норма и как её держать"),
+              ("/blog/biologicheskaya-zashchita-teplicy.html","Биологическая защита теплицы")],
+ "obluchatel":[("/blog/obrabotka-teplicy-osenyu.html","Обработка теплицы осенью от болезней"),
+               ("/blog/fitolampy-dlya-teplicy.html","Фитолампы для теплицы: как досвечивать")],
+ "vodonagrevatel":[("/blog/kapelnyy-poliv-v-teplice.html","Капельный полив в теплице"),
+                   ("/blog/poliv-i-provetrivanie.html","Полив и проветривание теплицы")],
+ "dush":[("/blog/kapelnyy-poliv-v-teplice.html","Капельный полив в теплице"),
+         ("/blog/poliv-i-provetrivanie.html","Полив и проветривание теплицы")],
+}
+
 def build_schema(kind, h1, desc, self_url, faq, breadcrumb2, specs_rows=None):
     graph=[{"@type":"BreadcrumbList","itemListElement":[
         {"@type":"ListItem","position":1,"name":"Главная","item":D},
@@ -82,10 +97,11 @@ def render(url,kind,fam,name,model,affil,canon):
         rel=[{"url":"/"+u+"/","text":n} for u,n in by_fam.get(fam,[])][:4]
     bc2="Климатическая техника"
     schema=build_schema(kind,h1,desc,self_url,faq,bc2,specs_rows)
+    read_also=[{"url":u,"text":t} for u,t in BRIDGE.get(fam,[])]
     out=env.get_template("product.html").render(
         title=title, description=desc, h1=h1, intro=intro, canonical=canonical, self_url=self_url,
         affil=affil, cta_text=F["cta_text"], sections=sections, faq=faq, related=rel, kind=kind,
-        specs_rows=specs_rows, schema_json=schema)
+        specs_rows=specs_rows, read_also=read_also, schema_json=schema)
     d=os.path.join(ROOT,url); os.makedirs(d,exist_ok=True)
     open(os.path.join(d,"index.html"),"w",encoding="utf-8").write(out)
     return url, (canonical==self_url)
