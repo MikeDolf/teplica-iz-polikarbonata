@@ -8,10 +8,13 @@
       </div>
       <div class="callblock__act">
         <a class="callblock__phone" href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a>
-        {%- if site.phone_wa %}
+        {%- if site.has_max %}
         <div class="callblock__msgs">
-          <a class="callblock__msg callblock__msg--wa" href="https://wa.me/{{ site.phone_wa }}" target="_blank" rel="nofollow noopener">WhatsApp</a>
-          <a class="callblock__msg callblock__msg--tg" href="https://t.me/+{{ site.phone_wa }}" target="_blank" rel="nofollow noopener">Telegram</a>
+          {%- if site.max_url %}
+          <a class="callblock__msg callblock__msg--max" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          {%- else %}
+          <span class="callblock__msg callblock__msg--max" title="Напишите нам в мессенджере MAX на номер {{ site.phone_display }}">Есть в MAX</span>
+          {%- endif %}
         </div>
         {%- endif %}
       </div>
