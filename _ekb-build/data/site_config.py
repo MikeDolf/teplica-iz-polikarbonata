@@ -11,7 +11,7 @@ SITE = {
     "phone_display": "+7 950 646-09-53",
     "phone_tel": "+79506460953",
     "has_max": True,                    # мессенджер MAX подключён на этом номере
-    "max_url": "",                      # ссылка-профиль MAX (в приложении: Профиль -> Поделиться, вид max.ru/u/...). Пусто -> бейдж без ссылки
+    "max_url": "https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10",  # ссылка-профиль MAX
     "legal_status": "Работаю официально как самозанятый, чек после оплаты через «Мой налог».",
     "payment": "Оплата любая: наличными, картой или переводом, после выгрузки.",
     "samovyvoz": True,
@@ -22,5 +22,5 @@ SITE = {
     "web3forms_key": "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",  # бесплатный ключ на web3forms.com, привязать к mezdudelom73@gmail.com
     "privacy_url": "/politika-konfidentsialnosti.html",
     "metrika_id": "110303165",                      # оставлено пустым намеренно (место под счётчик)
-    "css": "/assets/ekb/style.css?v=13",
+    "css": "/assets/ekb/style.css?v=15",
 }

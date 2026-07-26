@@ -331,3 +331,15 @@
 .review__meta{font-size:12.5px;color:var(--ink-soft)}
 .review__stars{color:#f0a500;font-size:14px;letter-spacing:1px}
 .review__text{margin:0;font-size:14.5px;color:var(--ink)}
+
+/* CTA сбора отзывов (когда реальных ещё нет) */
+.revcta{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
+.revcta__l{flex:1 1 380px}
+.revcta__l p{margin:0;color:var(--ink-soft);font-size:15px;max-width:60ch}
+.revcta__act{display:flex;flex-wrap:wrap;gap:10px}
+.reviews__cta-line{margin:16px 0 0;font-size:14.5px;color:var(--ink-soft)}
+.reviews__cta-line a{color:var(--accent);font-weight:600}
+
+/* ghost-кнопка на светлом блоке отзывов (чинит контраст) */
+.ekb .revcta .btn--ghost{background:#fff;color:var(--accent);border-color:var(--line)}
+.ekb .revcta .btn--ghost:hover{background:var(--paper)}

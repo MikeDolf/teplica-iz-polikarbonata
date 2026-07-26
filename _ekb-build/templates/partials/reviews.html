@@ -14,6 +14,22 @@
       </div>
       {%- endfor %}
     </div>
+    <p class="reviews__cta-line">Заказывали у нас? <a href="mailto:{{ site.contact_email }}?subject=Отзыв о доставке">Оставьте отзыв</a>, это поможет другим дачникам выбрать.</p>
+  </div>
+</section>
+{%- else %}
+<section class="band band--tint" aria-labelledby="rev-title">
+  <div class="wrap">
+    <div class="revcta">
+      <div class="revcta__l">
+        <h2 id="rev-title" class="sec-h" style="margin-bottom:6px">Оставьте отзыв о доставке</h2>
+        <p>Собираем честные отзывы реальных клиентов. Заказывали у нас грунт, щебень или навоз? Расскажите, как прошло, это поможет другим выбрать без риска.</p>
+      </div>
+      <div class="revcta__act">
+        <a class="btn btn--call" href="mailto:{{ site.contact_email }}?subject=Отзыв о доставке">Написать отзыв</a>
+        {%- if site.phone_display %}<a class="btn btn--ghost" href="tel:{{ site.phone_tel }}">Позвонить {{ site.phone_display }}</a>{%- endif %}
+      </div>
+    </div>
   </div>
 </section>
 {%- endif %}
