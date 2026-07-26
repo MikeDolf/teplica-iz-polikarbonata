@@ -12,7 +12,7 @@ SITE = {
     "phone_tel": "+79506460953",
     "has_max": True,                    # мессенджер MAX подключён на этом номере
     "max_url": "https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10",  # ссылка-профиль MAX
-    "legal_status": "Работаю официально как самозанятый, чек после оплаты через «Мой налог».",
+    "legal_status": "",
     "payment": "Оплата любая: наличными, картой или переводом, после выгрузки.",
     "samovyvoz": True,
     "skidki_obem": True,
