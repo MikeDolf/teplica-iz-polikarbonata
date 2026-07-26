@@ -50,7 +50,12 @@
         <b>{{ cta.title }}</b>
         <p>{{ cta.text }}</p>
         {%- if cta_price %}
-        <p class="art__cta-price">Ориентировочно от <b>{{ cta_price.m3 }} ₽/м³</b>, от <b>{{ cta_price.bag }} ₽/мешок</b>. Точную цену назовём по заявке.</p>
+        <div class="art__cta-price">
+          <span class="art__cta-price__label">Ориентировочно</span>
+          <b class="art__cta-price__num">от {{ cta_price.m3 }} ₽/м³</b>
+          <b class="art__cta-price__num">от {{ cta_price.bag }} ₽/мешок</b>
+          <span class="art__cta-price__note">Точную цену назовём по заявке</span>
+        </div>
         {%- endif %}
       </div>
       <div class="art__cta-actions">
