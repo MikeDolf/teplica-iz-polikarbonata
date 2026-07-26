@@ -14,6 +14,10 @@ from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
 from prices import PRICES, MATERIALS_PRICE  # noqa
+try:
+    from reviews import REVIEWS  # noqa
+except ImportError:
+    REVIEWS = []
 
 ROOT = os.path.dirname(HERE)   # корень репо
 env = Environment(
@@ -36,14 +40,18 @@ FOOTER_LINKS = [
 ]
 
 def build_localbusiness():
-    return {
+    lb = {
         "@type": "LocalBusiness",
         "name": SITE["brand"],
         "url": SITE["domain"] + "/dostavka-grunta/",
         "email": SITE["contact_email"],
         "areaServed": SITE["region"],
         "openingHours": "Mo-Sa 08:00-20:00",
+        "priceRange": "₽₽",
     }
+    if SITE.get("phone_tel"):
+        lb["telephone"] = SITE["phone_tel"]
+    return lb
 
 def build_schema(page, canonical):
     graph = [build_localbusiness(), {
@@ -127,6 +135,7 @@ def render(page):
         related=page.get("related", []),
         product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
         price=PRICES.get(page.get("product","")),
+        reviews=REVIEWS,
     )
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)

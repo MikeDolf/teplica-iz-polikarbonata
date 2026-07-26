@@ -1,0 +1,21 @@
+{%- if site.phone_display %}
+<section class="band band--white" aria-labelledby="call-title">
+  <div class="wrap">
+    <div class="callblock">
+      <div class="callblock__l">
+        <b id="call-title">Проще позвонить? Звоните напрямую</b>
+        <p>Подскажем цену под ваш объём и район, поможем выбрать материал. {{ site.callback_promise|capitalize }}, если оставите заявку.</p>
+      </div>
+      <div class="callblock__act">
+        <a class="callblock__phone" href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a>
+        {%- if site.phone_wa %}
+        <div class="callblock__msgs">
+          <a class="callblock__msg callblock__msg--wa" href="https://wa.me/{{ site.phone_wa }}" target="_blank" rel="nofollow noopener">WhatsApp</a>
+          <a class="callblock__msg callblock__msg--tg" href="https://t.me/+{{ site.phone_wa }}" target="_blank" rel="nofollow noopener">Telegram</a>
+        </div>
+        {%- endif %}
+      </div>
+    </div>
+  </div>
+</section>
+{%- endif %}
