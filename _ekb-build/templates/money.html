@@ -93,6 +93,16 @@
 
   {% include "partials/reviews.html" %}
 
+  {%- if partner %}
+  <section class="band band--white" aria-labelledby="partner-title">
+    <div class="wrap">
+      <h2 id="partner-title" class="sec-h">Планируете стройку?</h2>
+      <p class="partner__text">{{ partner.text }}</p>
+      <p><a class="partner__link" href="{{ partner.url }}" target="_blank" rel="noopener">{{ partner.anchor }}</a></p>
+    </div>
+  </section>
+  {%- endif %}
+
   {% include "partials/materials.html" %}
 
   {% include "partials/related.html" %}
