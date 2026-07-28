@@ -37,6 +37,18 @@
     </div>
   </section>
 
+  {%- if moved_to %}
+  <section class="band band--white">
+    <div class="wrap">
+      <div class="moved">
+        <b>{{ moved_to.title }}</b>
+        <p>{{ moved_to.text }}</p>
+        <a class="btn btn--call" href="{{ moved_to.url }}" target="_blank" rel="noopener">{{ moved_to.anchor }}</a>
+      </div>
+    </div>
+  </section>
+  {%- endif %}
+
   {% include "partials/advantages.html" %}
 
   {% include "partials/price.html" %}
