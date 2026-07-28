@@ -16,7 +16,7 @@
       <div class="field field--full">
         <span class="field__label">Что нужно</span>
         <div class="chips" role="group" aria-label="Что нужно">
-          {%- set products = ["Чернозём","Перегной","Навоз конский","Навоз коровий","Плодородный грунт","Пока не решил"] %}
+          {%- set products = ["Чернозём","Перегной","Навоз коровий","Навоз конский","Плодородный грунт","Торф","Щебень","Песок","Отсев","ПГС","Пока не решил"] %}
           {%- for p in products %}
           <label class="chip"><input type="radio" name="product" value="{{ p }}"{% if p == preselect_product %} checked{% endif %}><span>{{ p }}</span></label>
           {%- endfor %}
