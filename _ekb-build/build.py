@@ -32,6 +32,12 @@ PRODUCT_GEN = {"Чернозём":"чернозём","Перегной":"пер�
 NOINDEX = {
     "chernozem-nizhniy-tagil", "chernozem-revda", "chernozem-verhnyaya-pyshma",
     "chernozem-sysert", "chernozem-sredneuralsk", "peregnoy-aramil",
+    # Нерудные материалы ведёт отдельный сайт владельца (ursdom.ru).
+    # Держим страницы живыми для прямых заходов, но вне индекса, чтобы два
+    # сайта одного владельца не конкурировали за одни запросы в одном регионе
+    # (риск аффилиат-фильтра Яндекса).
+    "shcheben-ekaterinburg", "pesok-ekaterinburg",
+    "otsev-ekaterinburg", "pgs-ekaterinburg",
 }
 
 FOOTER_LINKS = [
