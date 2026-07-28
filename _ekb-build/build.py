@@ -40,6 +40,19 @@ NOINDEX = {
     "otsev-ekaterinburg", "pgs-ekaterinburg",
 }
 
+# Точечные внешние ссылки на профильный проект: только на 2 страницах,
+# чтобы не создавать сквозной шаблонный линк со всего раздела.
+CROSSLINK = {
+    "chernozem-ekaterinburg": {"title":"Участок подтапливает?","text":"Если весной на участке стоит вода, плодородный слой в ней просто закиснет. Сначала делают водоотвод, потом завозят чернозём. Как устроить дренаж, разобрано в отдельном справочнике.","url":"https://ursdom.ru/drenazh/","anchor":"Дренаж участка: трубы, колодцы, укладка"},
+}
+
+MOVED_TO = {
+    "shcheben-ekaterinburg": {"title":"Щебень возит наш профильный проект","text":"Мы сосредоточились на органике: чернозём, перегной, навоз и торф. Щебень всех фракций, песок, ПГС и отсев с доставкой по Екатеринбургу и области возит наш второй проект «Щебень-Урал».","url":"https://ursdom.ru/dostavka/shcheben/","anchor":"Цены на щебень за куб"},
+    "pesok-ekaterinburg": {"title":"Песок возит наш профильный проект","text":"На этом сайте мы возим органику для грядок и газона. Карьерный и мытый речной песок с доставкой смотрите у нашего проекта «Щебень-Урал».","url":"https://ursdom.ru/dostavka/","anchor":"Песок и другие нерудные материалы"},
+    "otsev-ekaterinburg": {"title":"Отсев возит наш профильный проект","text":"Мы возим чернозём, перегной, навоз и торф. Отсев под дорожки и площадки с доставкой по области возит наш проект «Щебень-Урал».","url":"https://ursdom.ru/dostavka/","anchor":"Отсев и нерудные материалы"},
+    "pgs-ekaterinburg": {"title":"ПГС возит наш профильный проект","text":"На этом сайте органика для участка. Песчано-гравийную смесь под основания и отсыпку возит наш проект «Щебень-Урал».","url":"https://ursdom.ru/dostavka/","anchor":"ПГС и нерудные материалы"},
+}
+
 FOOTER_LINKS = [
     {"url": "/dostavka-grunta/", "text": "Доставка грунта"},
     {"url": "/chernozem-ekaterinburg/", "text": "Чернозём, Екатеринбург"},
@@ -142,7 +155,7 @@ def render(page):
         related=page.get("related", []),
         product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
         price=PRICES.get(page.get("product","")),
-        reviews=REVIEWS,
+        reviews=REVIEWS, moved_to=MOVED_TO.get(page["slug"]) or CROSSLINK.get(page["slug"]),
     )
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)

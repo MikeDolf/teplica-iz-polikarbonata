@@ -343,3 +343,9 @@
 /* ghost-кнопка на светлом блоке отзывов (чинит контраст) */
 .ekb .revcta .btn--ghost{background:#fff;color:var(--accent);border-color:var(--line)}
 .ekb .revcta .btn--ghost:hover{background:var(--paper)}
+
+/* указатель на профильный проект */
+.moved{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:20px 22px}
+.moved b{display:block;font-size:19px;margin-bottom:8px}
+.moved p{margin:0 0 14px;color:var(--ink-soft);font-size:16.5px;max-width:70ch}
+.mats__out{font-weight:700}
