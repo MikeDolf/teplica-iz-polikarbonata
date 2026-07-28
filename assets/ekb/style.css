@@ -343,8 +343,3 @@
 /* ghost-кнопка на светлом блоке отзывов (чинит контраст) */
 .ekb .revcta .btn--ghost{background:#fff;color:var(--accent);border-color:var(--line)}
 .ekb .revcta .btn--ghost:hover{background:var(--paper)}
-
-/* блок партнёра */
-.partner__text{margin:0 0 12px;font-size:17px;max-width:70ch}
-.ekb .partner__link{display:inline-flex;align-items:center;gap:8px;font-weight:700;font-size:16px;color:var(--accent);text-decoration:none;border-bottom:2px solid rgba(47,125,70,.3);padding-bottom:2px}
-.ekb .partner__link:hover{border-bottom-color:var(--accent)}

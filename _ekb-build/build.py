@@ -95,7 +95,6 @@ def compose_geo(product_key, city_key):
         "hero_sub": pr["hero_sub"],
         # уникальный городской текст идёт первым: он задаёт непохожесть страниц
         "about": city.get("about_extra", []) + pr["intro"],
-        "partner": pr.get("partner") if city_key=="ekaterinburg" else None,
         "faq": faq,
     }
 
@@ -137,7 +136,7 @@ def render(page):
         related=page.get("related", []),
         product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
         price=PRICES.get(page.get("product","")),
-        reviews=REVIEWS, partner=page.get("partner"),
+        reviews=REVIEWS,
     )
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)
