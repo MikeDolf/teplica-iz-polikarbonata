@@ -19,7 +19,7 @@
         <div class="hero__price">
           <span class="hero__price__label">Ориентировочно</span>
           <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
-          <b class="hero__price__num">от {{ price.bag }} руб/мешок</b>
+          {% if price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
           <span class="hero__price__note">Точную цену назовём под ваш объём и район</span>
         </div>
         {%- endif %}
