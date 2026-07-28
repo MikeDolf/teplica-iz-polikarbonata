@@ -93,7 +93,8 @@ def compose_geo(product_key, city_key):
         "title": pr["title_tpl"].format(prep=city["prep"], to=city["to"]),
         "description": pr["desc_tpl"].format(prep=city["prep"], to=city["to"]),
         "hero_sub": pr["hero_sub"],
-        "about": pr["intro"],
+        # уникальный городской текст идёт первым: он задаёт непохожесть страниц
+        "about": city.get("about_extra", []) + pr["intro"],
         "faq": faq,
     }
 
