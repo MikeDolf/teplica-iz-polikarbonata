@@ -13,7 +13,7 @@ from cities import CITIES      # noqa
 from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
-from prices import PRICES, MATERIALS_PRICE  # noqa
+from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ  # noqa
 from tail_cities import TAIL_CITIES  # noqa
 try:
     from reviews import REVIEWS  # noqa
@@ -104,6 +104,18 @@ def build_schema(page, canonical):
     return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=2)
 
 
+
+def product_genitive(page):
+    """Родительный падеж товара для заголовков. Берём по ключу товара, а не по
+    чипу формы: у земли в мешках и общего навоза чип общий с соседним товаром,
+    и по чипу подставлялся чужой материал."""
+    slug = page["slug"]
+    for key in sorted(PRODUCTS, key=len, reverse=True):
+        if slug == key or slug.startswith(key + "-"):
+            return PRODUCTS[key]["gen"]
+    return "грунта"
+
+
 def compose_geo(product_key, city_key):
     pr = PRODUCTS[product_key]
     city = CITIES[city_key]
@@ -168,6 +180,8 @@ def render(page):
         price=PRICES.get(page.get("product","")),
         reviews=REVIEWS, moved_to=MOVED_TO.get(page["slug"]) or CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
+        fleet_viz=FLEET_VIZ,
+        product_genitive=product_genitive(page),
         tail_name=TAIL_NAME.get(page["slug"][:-len("-ekaterinburg")] if page["slug"].endswith("-ekaterinburg") else ""),
     )
     outdir = os.path.join(ROOT, page["slug"])

@@ -349,3 +349,15 @@
 .moved b{display:block;font-size:19px;margin-bottom:8px}
 .moved p{margin:0 0 14px;color:var(--ink-soft);font-size:16.5px;max-width:70ch}
 .mats__out{font-weight:700}
+
+/* схема «сколько влезает в машину» */
+.fleetviz__lede{margin:0 0 22px;font-size:17px;color:var(--ink-soft);max-width:62ch}
+.fleetviz__grid{display:grid;gap:18px;grid-template-columns:repeat(3,1fr)}
+.fv{margin:0;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 18px}
+.fv__svg{display:block;width:100%;height:auto;color:var(--ink);margin-bottom:10px}
+.fv__cap{display:block}
+.fv__name{display:block;font-size:17px}
+.fv__vol{display:block;font-size:22px;font-weight:800;color:var(--accent);margin:2px 0 6px;letter-spacing:-.02em}
+.fv__note{display:block;font-size:15px;color:var(--ink-soft);line-height:1.45}
+.fleetviz__foot{margin:20px 0 14px;font-size:16.5px;color:var(--ink-soft);max-width:64ch}
+@media (max-width:760px){.fleetviz__grid{grid-template-columns:1fr}}

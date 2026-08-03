@@ -1,0 +1,33 @@
+<section class="fleetviz band band--white" aria-labelledby="fleetviz-title">
+  <div class="wrap">
+    <h2 id="fleetviz-title" class="sec-h">Сколько {{ product_genitive }} влезает в машину</h2>
+    <p class="fleetviz__lede">Чтобы прикинуть, что заказывать. Кузов заполняем полностью, объём считаем по факту загрузки, а не «на глаз».</p>
+
+    <div class="fleetviz__grid">
+      {%- for v in fleet_viz %}
+      <figure class="fv">
+        <svg class="fv__svg" viewBox="0 0 190 96" role="img" aria-label="{{ v.name }}, объём {{ v.vol }}">
+          <line x1="2" y1="88" x2="188" y2="88" stroke="var(--line)" stroke-width="2.5" stroke-linecap="round"/>
+          <rect x="{{ v.bx }}" y="{{ v.by }}" width="{{ v.bw }}" height="{{ v.bh }}" rx="2"
+                fill="var(--accent)" opacity=".9"/>
+          <rect x="{{ v.bx }}" y="{{ v.by }}" width="{{ v.bw }}" height="{{ v.bh }}" rx="2"
+                fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <path d="{{ v.cab }}" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="{{ v.w1 }}" cy="80" r="8.5" fill="#fff" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="{{ v.w2 }}" cy="80" r="8.5" fill="#fff" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="{{ v.w1 }}" cy="80" r="2.6" fill="currentColor"/>
+          <circle cx="{{ v.w2 }}" cy="80" r="2.6" fill="currentColor"/>
+        </svg>
+        <figcaption class="fv__cap">
+          <b class="fv__name">{{ v.name }}</b>
+          <span class="fv__vol">{{ v.vol }}</span>
+          <span class="fv__note">{{ v.note }}</span>
+        </figcaption>
+      </figure>
+      {%- endfor %}
+    </div>
+
+    <p class="fleetviz__foot">Не уверены в объёме? Скажите площадь и нужный слой, посчитаем сами и подскажем, какая машина выгоднее.</p>
+    <a class="btn btn--call" href="#zayavka">Посчитать объём под участок</a>
+  </div>
+</section>
