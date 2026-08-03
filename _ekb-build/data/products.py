@@ -173,7 +173,8 @@ GEO_PAGES = [
     ("pesok", "ekaterinburg"),
     ("otsev", "ekaterinburg"),
     ("pgs", "ekaterinburg"),
-    ("torf", "ekaterinburg"),
+    # торф по Екатеринбургу вынесен в pages.py: там раскрыты виды
+    ("torf", "nizhniy-tagil"),   # 63 по частотности, второй город по торфу
     # === ближний пояс до 60 км: 5 городов x 4 материала ===
     ("chernozem", "polevskoy"),      ("peregnoy", "polevskoy"),
     ("navoz-koroviy", "polevskoy"),  ("navoz-konskiy", "polevskoy"),

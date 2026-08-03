@@ -43,6 +43,8 @@ NOINDEX = {
 # Точечные внешние ссылки на профильный проект: только на 2 страницах,
 # чтобы не создавать сквозной шаблонный линк со всего раздела.
 CROSSLINK = {
+    "torf-ekaterinburg": {"title":"Сажаете голубику?","text":"Голубике нужен верховой торф с кислотностью pH 2,6-3,5, низинный ей не подходит. Под эту задачу у нас отдельная страница: там состав смеси, размер ямы и расчёт объёма на куст.","url":"/torf-dlya-golubiki/","anchor":"Кислый торф для голубики"},
+    "torf-dlya-golubiki": {"title":"Нужен торф под другие задачи?","text":"Под грядки, теплицы и почвосмеси берут низинный торф, он почти нейтральный. Виды, кислотность и цены за куб собраны на общей странице торфа.","url":"/torf-ekaterinburg/","anchor":"Весь торф в Екатеринбурге"},
     "chernozem-ekaterinburg": {"title":"Участок подтапливает?","text":"Если весной на участке стоит вода, плодородный слой в ней просто закиснет. Сначала делают водоотвод, потом завозят чернозём. Как устроить дренаж, разобрано в отдельном справочнике.","url":"https://ursdom.ru/drenazh/","anchor":"Дренаж участка: трубы, колодцы, укладка"},
 }
 
@@ -173,6 +175,8 @@ def render_hub(all_pages):
         {"name": "Перегной", "note": "перепревший, под посадку", "url": "/peregnoy-ekaterinburg/"},
         {"name": "Навоз коровий", "note": "перепревший и свежий", "url": "/navoz-koroviy-ekaterinburg/"},
         {"name": "Навоз конский", "note": "для тёплых грядок и теплиц", "url": "/navoz-konskiy-ekaterinburg/"},
+        {"name": "Торф", "note": "верховой кислый и низинный", "url": "/torf-ekaterinburg/"},
+        {"name": "Торф для голубики", "note": "верховой, pH 2,6-3,5", "url": "/torf-dlya-golubiki/"},
     ]
     geo = [{"url": f'/{p["slug"]}/', "text": f'{p["product"]}, {CITIES[p["city"]]["name"]}'}
            for p in all_pages if p["slug"] not in NOINDEX]
@@ -214,6 +218,8 @@ def render_articles():
         "/peregnoy-ekaterinburg/": PRICES.get("Перегной"),
         "/navoz-konskiy-ekaterinburg/": PRICES.get("Навоз конский"),
         "/navoz-koroviy-ekaterinburg/": PRICES.get("Навоз коровий"),
+        "/torf-ekaterinburg/": PRICES.get("Торф"),
+        "/torf-dlya-golubiki/": PRICES.get("Торф"),
     }
 
     # перелинковка между статьями
