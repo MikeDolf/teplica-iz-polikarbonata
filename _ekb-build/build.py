@@ -14,6 +14,7 @@ from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
 from prices import PRICES, MATERIALS_PRICE  # noqa
+from tail_cities import TAIL_CITIES  # noqa
 try:
     from reviews import REVIEWS  # noqa
 except ImportError:
@@ -28,10 +29,18 @@ env = Environment(
 
 
 PRODUCT_GEN = {"Чернозём":"чернозём","Перегной":"перегной","Навоз конский":"конский навоз","Навоз коровий":"коровий навоз"}
+# в блоке хвостовых городов нужно имя самого товара, а не чипа формы:
+# у земли в мешках и кислого торфа чип общий с соседним товаром
+TAIL_NAME = {
+    "chernozem":"чернозём", "peregnoy":"перегной", "torf":"торф", "opilki":"опилки",
+    "navoz":"навоз", "navoz-koroviy":"коровий навоз", "navoz-konskiy":"конский навоз",
+    "plodorodnyy-grunt":"плодородный грунт", "torfogrunt":"торфогрунт",
+    "kislyy-torf":"кислый торф", "zemlya-v-meshkah":"землю в мешках",
+}
 
 NOINDEX = {
-    "chernozem-nizhniy-tagil", "chernozem-revda", "chernozem-verhnyaya-pyshma",
-    "chernozem-sysert", "chernozem-sredneuralsk", "peregnoy-aramil",
+    # Тагил 53, Сысерть 48, Ревда 21, Арамиль 23, Пышма 5, Среднеуральск 9 по
+    # Вордстату: спрос подтверждён, страницы возвращены в индекс.
     # Нерудные материалы ведёт отдельный сайт владельца (ursdom.ru).
     # Держим страницы живыми для прямых заходов, но вне индекса, чтобы два
     # сайта одного владельца не конкурировали за одни запросы в одном регионе
@@ -158,6 +167,8 @@ def render(page):
         product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
         price=PRICES.get(page.get("product","")),
         reviews=REVIEWS, moved_to=MOVED_TO.get(page["slug"]) or CROSSLINK.get(page["slug"]),
+        tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
+        tail_name=TAIL_NAME.get(page["slug"][:-len("-ekaterinburg")] if page["slug"].endswith("-ekaterinburg") else ""),
     )
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)
