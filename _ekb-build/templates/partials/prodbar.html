@@ -1,0 +1,14 @@
+<nav class="prodbar" aria-label="Материалы и цены">
+  <div class="wrap prodbar__in">
+    {%- for p in prodbar %}
+    <a class="pb{% if p.slug == current_slug %} pb--on{% endif %}" href="{{ p.url }}">
+      <img class="pb__tex" src="/assets/ekb/mat/{{ p.tex }}.svg" width="46" height="46"
+           alt="" aria-hidden="true" loading="lazy">
+      <span class="pb__txt">
+        <b class="pb__name">{{ p.name }}</b>
+        <span class="pb__price">{{ p.price }}</span>
+      </span>
+    </a>
+    {%- endfor %}
+  </div>
+</nav>

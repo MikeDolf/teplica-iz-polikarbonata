@@ -40,3 +40,19 @@ FLEET_VIZ = [
      "bx": 8, "by": 30, "bw": 124, "bh": 48,
      "cab": "M132 78 V50 H156 L172 68 V78 Z", "w1": 42, "w2": 152},
 ]
+
+# Полоса товаров под шапкой: витрина с ценами на всех страницах раздела.
+# Приём с эталона mosnerud.ru, даёт навигацию и вид каталога вместо
+# одинокой страницы.
+PRODBAR = [
+    {"slug": "chernozem-ekaterinburg",        "tex": "chernozem",         "name": "Чернозём",     "price": "от 850 ₽/м³"},
+    {"slug": "peregnoy-ekaterinburg",         "tex": "peregnoy",          "name": "Перегной",     "price": "от 1100 ₽/м³"},
+    {"slug": "torf-ekaterinburg",             "tex": "torf",              "name": "Торф",         "price": "от 950 ₽/м³"},
+    {"slug": "navoz-ekaterinburg",            "tex": "navoz",             "name": "Навоз",        "price": "от 900 ₽/м³"},
+    {"slug": "opilki-ekaterinburg",           "tex": "opilki",            "name": "Опилки",       "price": "от 600 ₽/м³"},
+    {"slug": "plodorodnyy-grunt-ekaterinburg","tex": "plodorodnyy-grunt", "name": "Плодородный грунт", "price": "от 750 ₽/м³"},
+    {"slug": "torfogrunt-ekaterinburg",       "tex": "torfogrunt",        "name": "Торфогрунт",   "price": "от 900 ₽/м³"},
+    {"slug": "zemlya-v-meshkah-ekaterinburg", "tex": "zemlya-v-meshkah",  "name": "Земля в мешках", "price": "от 110 ₽/мешок"},
+]
+for _p in PRODBAR:
+    _p["url"] = "/" + _p["slug"] + "/"

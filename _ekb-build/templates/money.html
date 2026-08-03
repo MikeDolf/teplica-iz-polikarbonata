@@ -9,6 +9,7 @@
 {% block breadcrumbs %}{% include "partials/breadcrumbs.html" %}{% endblock %}
 
 {% block content %}
+  {% include "partials/prodbar.html" %}
   <section class="hero">
     <div class="wrap hero__in">
       <div class="hero__text">
@@ -52,6 +53,8 @@
   {% include "partials/advantages.html" %}
 
   {% include "partials/price.html" %}
+
+  {% include "partials/terms_bar.html" %}
 
   <section class="steps band band--tint" aria-labelledby="steps-title">
     <div class="wrap">

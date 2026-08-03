@@ -5,6 +5,7 @@
   </script>
 {% endblock %}
 {% block content %}
+  {% include "partials/prodbar.html" %}
   <section class="hero">
     <div class="wrap hero__in">
       <div class="hero__text">
@@ -63,6 +64,22 @@
         <b>Нужны нерудные материалы?</b>
         <p>Мы возим органику: чернозём, перегной, навоз и торф. Щебень, песок, ПГС и отсев под отсыпку и основания возит наш профильный проект, там своя техника и цены за куб.</p>
         <a class="btn btn--call" href="https://ursdom.ru/dostavka/" target="_blank" rel="noopener">Щебень-Урал, доставка нерудных</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="cat band band--white" aria-labelledby="cat-title">
+    <div class="wrap">
+      <h2 id="cat-title" class="sec-h">Что возим</h2>
+      <div class="cat__grid">
+        {%- for p in prodbar %}
+        <a class="cc" href="{{ p.url }}">
+          <img class="cc__tex" src="/assets/ekb/mat/{{ p.tex }}.svg" width="88" height="88" alt="" aria-hidden="true" loading="lazy">
+          <b class="cc__name">{{ p.name }}</b>
+          <span class="cc__price">{{ p.price }}</span>
+          <span class="cc__btn">Заказать</span>
+        </a>
+        {%- endfor %}
       </div>
     </div>
   </section>

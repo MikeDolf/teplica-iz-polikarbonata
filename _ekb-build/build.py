@@ -13,7 +13,7 @@ from cities import CITIES      # noqa
 from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
-from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ  # noqa
+from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR  # noqa
 from tail_cities import TAIL_CITIES  # noqa
 try:
     from reviews import REVIEWS  # noqa
@@ -180,7 +180,7 @@ def render(page):
         price=PRICES.get(page.get("product","")),
         reviews=REVIEWS, moved_to=MOVED_TO.get(page["slug"]) or CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
-        fleet_viz=FLEET_VIZ,
+        fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"],
         product_genitive=product_genitive(page),
         tail_name=TAIL_NAME.get(page["slug"][:-len("-ekaterinburg")] if page["slug"].endswith("-ekaterinburg") else ""),
     )
@@ -226,7 +226,8 @@ def render_hub(all_pages):
         hero_sub="Чернозём, перегной и навоз с доставкой по городу и области. В мешках и самосвалом, в день заказа. Скажите объём и адрес, назовём точную цену.",
         catalog=catalog, geo=geo, faq=faq, articles=hub_articles, preselect_product="Пока не решил",
         district_ph="Напр. Академический, Верхняя Пышма, Сысерть",
-        footer_links=FOOTER_LINKS, schema_json=schema, metrika_placeholder=True, related=[])
+        footer_links=FOOTER_LINKS, schema_json=schema, metrika_placeholder=True, related=[],
+        prodbar=PRODBAR, current_slug="")
     outdir = os.path.join(ROOT, "dostavka-grunta")
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
@@ -274,7 +275,8 @@ def render_articles():
             related=a["_related"], footer_links=FOOTER_LINKS,
             cta_price=PRICE_BY_URL.get(a["cta"]["url"]),
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
-            schema_json=schema, metrika_placeholder=True, og_type="article")
+            schema_json=schema, metrika_placeholder=True, og_type="article",
+            prodbar=PRODBAR, current_slug="")
         outdir = os.path.join(ROOT, base, a["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
