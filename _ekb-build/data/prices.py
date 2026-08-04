@@ -52,6 +52,7 @@ PRODBAR = [
     {"slug": "opilki-ekaterinburg",           "tex": "opilki",            "name": "Опилки",       "price": "от 600 ₽/м³"},
     {"slug": "plodorodnyy-grunt-ekaterinburg","tex": "plodorodnyy-grunt", "name": "Плодородный грунт", "price": "от 750 ₽/м³"},
     {"slug": "torfogrunt-ekaterinburg",       "tex": "torfogrunt",        "name": "Торфогрунт",   "price": "от 900 ₽/м³"},
+    {"slug": "kislyy-torf-ekaterinburg",      "tex": "kislyy-torf",       "name": "Кислый торф",  "price": "от 950 ₽/м³"},
     {"slug": "zemlya-v-meshkah-ekaterinburg", "tex": "zemlya-v-meshkah",  "name": "Земля в мешках", "price": "от 110 ₽/мешок"},
 ]
 for _p in PRODBAR:
