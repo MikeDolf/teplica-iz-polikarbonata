@@ -88,7 +88,7 @@ def build_localbusiness():
         "url": SITE["domain"] + "/dostavka-grunta/",
         "email": SITE["contact_email"],
         "areaServed": SITE["region"],
-        "openingHours": "Mo-Sa 08:00-20:00",
+        "openingHours": "Mo-Su 00:00-23:59",   # круглосуточно, без выходных
         "priceRange": "₽₽",
     }
     if SITE.get("phone_tel"):
