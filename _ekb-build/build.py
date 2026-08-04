@@ -28,6 +28,18 @@ env = Environment(
 )
 
 
+
+def available_photos():
+    """Какие фото уже загружены. Шаблоны берут фото, если оно есть,
+    иначе показывают SVG-текстуру, поэтому можно подключать по одной."""
+    d = os.path.join(ROOT, "assets", "ekb", "photo")
+    if not os.path.isdir(d):
+        return set()
+    return {f.rsplit("-", 1)[0] for f in os.listdir(d) if f.endswith(".webp")}
+
+
+PHOTOS = available_photos()
+
 PRODUCT_GEN = {"Чернозём":"чернозём","Перегной":"перегной","Навоз конский":"конский навоз","Навоз коровий":"коровий навоз"}
 # в блоке хвостовых городов нужно имя самого товара, а не чипа формы:
 # у земли в мешках и кислого торфа чип общий с соседним товаром
@@ -180,7 +192,7 @@ def render(page):
         price=PRICES.get(page.get("product","")),
         reviews=REVIEWS, moved_to=MOVED_TO.get(page["slug"]) or CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
-        fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"],
+        fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
         product_genitive=product_genitive(page),
         tail_name=TAIL_NAME.get(page["slug"][:-len("-ekaterinburg")] if page["slug"].endswith("-ekaterinburg") else ""),
     )
@@ -227,7 +239,7 @@ def render_hub(all_pages):
         catalog=catalog, geo=geo, faq=faq, articles=hub_articles, preselect_product="Пока не решил",
         district_ph="Напр. Академический, Верхняя Пышма, Сысерть",
         footer_links=FOOTER_LINKS, schema_json=schema, metrika_placeholder=True, related=[],
-        prodbar=PRODBAR, current_slug="")
+        prodbar=PRODBAR, current_slug="", photos=PHOTOS)
     outdir = os.path.join(ROOT, "dostavka-grunta")
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
@@ -276,7 +288,7 @@ def render_articles():
             cta_price=PRICE_BY_URL.get(a["cta"]["url"]),
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
-            prodbar=PRODBAR, current_slug="")
+            prodbar=PRODBAR, current_slug="", photos=PHOTOS)
         outdir = os.path.join(ROOT, base, a["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:

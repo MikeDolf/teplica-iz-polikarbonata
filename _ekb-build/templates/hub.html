@@ -75,7 +75,12 @@
       <div class="cat__grid">
         {%- for p in prodbar %}
         <a class="cc" href="{{ p.url }}">
+          {%- if p.tex in photos %}
+          <img class="cc__tex" src="/assets/ekb/photo/{{ p.tex }}-200.webp" width="88" height="88"
+               alt="{{ p.name }} с доставкой" loading="lazy" decoding="async">
+          {%- else %}
           <img class="cc__tex" src="/assets/ekb/mat/{{ p.tex }}.svg" width="88" height="88" alt="" aria-hidden="true" loading="lazy">
+          {%- endif %}
           <b class="cc__name">{{ p.name }}</b>
           <span class="cc__price">{{ p.price }}</span>
           <span class="cc__btn">Заказать</span>

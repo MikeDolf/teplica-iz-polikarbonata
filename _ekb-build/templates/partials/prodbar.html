@@ -2,8 +2,13 @@
   <div class="wrap prodbar__in">
     {%- for p in prodbar %}
     <a class="pb{% if p.slug == current_slug %} pb--on{% endif %}" href="{{ p.url }}">
+      {%- if p.tex in photos %}
+      <img class="pb__tex" src="/assets/ekb/photo/{{ p.tex }}-96.webp" width="46" height="46"
+           alt="" aria-hidden="true" loading="lazy" decoding="async">
+      {%- else %}
       <img class="pb__tex" src="/assets/ekb/mat/{{ p.tex }}.svg" width="46" height="46"
            alt="" aria-hidden="true" loading="lazy">
+      {%- endif %}
       <span class="pb__txt">
         <b class="pb__name">{{ p.name }}</b>
         <span class="pb__price">{{ p.price }}</span>
