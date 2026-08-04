@@ -104,6 +104,34 @@ def build_schema(page, canonical):
             {"@type": "ListItem", "position": 3, "name": page["h1"], "item": canonical},
         ],
     }]
+    # Product с ценой: без него цена не попадает в сниппет выдачи.
+    # Цены на сайте вида «от N», поэтому AggregateOffer с lowPrice, а не
+    # фиксированный Offer: так разметка не обещает точную стоимость.
+    pr = PRICES.get(page.get("product"))
+    if pr and page["kind"] in ("money", "geo"):
+        img = None
+        for key in sorted(PRODUCTS, key=len, reverse=True):
+            if page["slug"] == key or page["slug"].startswith(key + "-"):
+                if key in PHOTOS: img = f'{SITE["domain"]}/assets/ekb/photo/{key}-400.jpg'
+                break
+        offer = {
+            "@type": "AggregateOffer",
+            "priceCurrency": "RUB",
+            "lowPrice": pr["m3"],
+            "availability": "https://schema.org/InStock",
+            "areaServed": CITIES[page["city"]]["name"],
+            "seller": {"@type": "LocalBusiness", "name": SITE["brand"]},
+        }
+        prod = {
+            "@type": "Product",
+            "name": page["h1"],
+            "description": page["description"],
+            "category": "Грунт и органические удобрения",
+            "offers": offer,
+        }
+        if img: prod["image"] = img
+        graph.append(prod)
+
     if page.get("faq"):
         graph.append({
             "@type": "FAQPage",
@@ -187,7 +215,11 @@ def attach_related(pages):
             if q is p: continue
             if q.get("city") == city_key and q.get("product") != prod:
                 rel.append({"url": f'/{q["slug"]}/', "text": f'{q["product"]}, {city_name}'})
-        p["related"] = rel[:8]
+        # Раньше связи резались до 8 и новые страницы получали по одной
+        # входящей ссылке. Показываем больше и перемешиваем порядок по слугу,
+        # чтобы ссылочный вес расходился равномерно, а не на первые по алфавиту.
+        rel.sort(key=lambda r: hash(p["slug"] + r["url"]) & 0xffff)
+        p["related"] = rel[:14]
 
 def render(page):
     city = CITIES[page["city"]]
@@ -332,7 +364,8 @@ def render_articles():
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
             prodbar=PRODBAR, current_slug="", photos=PHOTOS,
-            cover=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])))
+            cover=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])),
+            hero_photo=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])))
         outdir = os.path.join(ROOT, base, a["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:

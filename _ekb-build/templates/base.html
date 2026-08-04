@@ -7,6 +7,14 @@
   <title>{{ title }}</title>
   <meta name="description" content="{{ description }}">
   <meta name="robots" content="{{ robots }}">
+  {%- if hero_photo %}
+  <!-- Картинка шапки это LCP-элемент страницы: предзагрузка ускоряет
+       отрисовку и влияет на оценку Core Web Vitals. -->
+  <link rel="preload" as="image" fetchpriority="high"
+        href="/assets/ekb/photo/{{ hero_photo }}-1400.webp"
+        imagesrcset="/assets/ekb/photo/{{ hero_photo }}-800.webp 800w, /assets/ekb/photo/{{ hero_photo }}-1400.webp 1400w"
+        imagesizes="100vw" type="image/webp">
+  {%- endif %}
   <link rel="canonical" href="{{ canonical }}">
   <meta property="og:type" content="{{ og_type|default('website') }}">
   <meta property="og:locale" content="ru_RU">
