@@ -125,8 +125,12 @@ def hero_photo_for(page):
     for key in sorted(PRODUCTS, key=len, reverse=True):
         if slug == key or slug.startswith(key + "-"):
             name = "hero-" + key
-            return name if name in PHOTOS else None
-    return None
+            if name in PHOTOS:
+                return name
+            break
+    # у товара своего кадра нет: ставим общий с самосвалом, он честно
+    # показывает услугу и лучше векторной заглушки
+    return "hero-default" if "hero-default" in PHOTOS else None
 
 
 def product_genitive(page):

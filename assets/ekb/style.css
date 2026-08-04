@@ -443,3 +443,9 @@
   .heropic::after{background:linear-gradient(180deg,
     rgba(13,40,26,.95) 0%, rgba(13,40,26,.91) 55%, rgba(13,40,26,.80) 100%)}
 }
+
+/* фото техники в блоке объёмов */
+.fv{padding:0;overflow:hidden}
+.fv__pic{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
+.fv .fv__svg{margin:16px 18px 4px;width:calc(100% - 36px)}
+.fv__cap{display:block;padding:14px 18px 18px}
