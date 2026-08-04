@@ -430,3 +430,16 @@
 /* ===== ритм секций ===== */
 .band--tint{background:linear-gradient(180deg,#f4f8f4 0%,#eef4ee 100%)}
 .sec-h{position:relative}
+
+/* ===== фотография в шапке ===== */
+.heropic{position:absolute;inset:0;z-index:0;overflow:hidden}
+.heropic img{width:100%;height:100%;object-fit:cover;display:block}
+/* затемнение слева, чтобы текст читался поверх любого кадра */
+.heropic::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(100deg,
+    rgba(13,40,26,.97) 0%, rgba(13,40,26,.94) 30%,
+    rgba(13,40,26,.84) 52%, rgba(13,40,26,.64) 76%, rgba(13,40,26,.50) 100%)}
+@media (max-width:900px){
+  .heropic::after{background:linear-gradient(180deg,
+    rgba(13,40,26,.95) 0%, rgba(13,40,26,.91) 55%, rgba(13,40,26,.80) 100%)}
+}

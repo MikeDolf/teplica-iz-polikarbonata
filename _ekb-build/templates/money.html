@@ -11,7 +11,11 @@
 {% block content %}
   {% include "partials/prodbar.html" %}
   <section class="hero">
+    {%- if hero_photo %}
+    {% include "partials/hero_photo.html" %}
+    {%- else %}
     {% include "partials/hero_scene.html" %}
+    {%- endif %}
     <div class="wrap hero__in">
       <div class="hero__text">
         <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>

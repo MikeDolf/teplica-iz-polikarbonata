@@ -117,6 +117,18 @@ def build_schema(page, canonical):
 
 
 
+
+def hero_photo_for(page):
+    """Фото в шапку подбираем по ключу товара, а не по слугу страницы:
+    у торфа по Берёзовскому и по Екатеринбургу материал один и тот же."""
+    slug = page["slug"]
+    for key in sorted(PRODUCTS, key=len, reverse=True):
+        if slug == key or slug.startswith(key + "-"):
+            name = "hero-" + key
+            return name if name in PHOTOS else None
+    return None
+
+
 def product_genitive(page):
     """Родительный падеж товара для заголовков. Берём по ключу товара, а не по
     чипу формы: у земли в мешках и общего навоза чип общий с соседним товаром,
@@ -193,6 +205,7 @@ def render(page):
         reviews=REVIEWS, moved_to=MOVED_TO.get(page["slug"]) or CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
+        hero_photo=hero_photo_for(page),
         product_genitive=product_genitive(page),
         tail_name=TAIL_NAME.get(page["slug"][:-len("-ekaterinburg")] if page["slug"].endswith("-ekaterinburg") else ""),
     )

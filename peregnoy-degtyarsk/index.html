@@ -21,7 +21,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.png">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=25">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=27">
   <script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -229,48 +229,14 @@
   </div>
 </nav>
   <section class="hero">
-    <svg class="heroscene" viewBox="0 0 1200 420" preserveAspectRatio="xMaxYMid slice" aria-hidden="true" focusable="false">
-  <defs>
-    <!-- В SVG-маске видимость задаёт яркость: белое видно, чёрное скрыто.
-         Градиент гасит сцену слева, чтобы она не спорила с заголовком. -->
-    <linearGradient id="hsFade" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0"   stop-color="#fff" stop-opacity="0"/>
-      <stop offset=".52" stop-color="#fff" stop-opacity="0"/>
-      <stop offset=".78" stop-color="#fff" stop-opacity=".7"/>
-      <stop offset="1"   stop-color="#fff" stop-opacity="1"/>
-    </linearGradient>
-    <mask id="hsMask"><rect width="1200" height="420" fill="url(#hsFade)"/></mask>
-  </defs>
-
-  <g mask="url(#hsMask)">
-    <!-- горизонт и сопки -->
-    <path d="M600 284 L720 248 L830 278 L940 242 L1060 272 L1200 254 L1200 386 L600 386 Z"
-          fill="#8fcaa1" opacity=".13"/>
-    <g fill="#8fcaa1" opacity=".14">
-      <path d="M742 246 l8 20 h-16 z"/><path d="M762 250 l6 16 h-12 z"/>
-      <path d="M952 240 l8 20 h-16 z"/>
-    </g>
-    <!-- земля -->
-    <path d="M600 310 L1200 296 L1200 386 L600 386 Z" fill="#8fcaa1" opacity=".16"/>
-
-    <!-- кучи материала -->
-    <path d="M620 310 L676 266 L732 310 Z" fill="#8fcaa1" opacity=".20"/>
-    <path d="M1088 306 L1136 268 L1184 306 Z" fill="#8fcaa1" opacity=".18"/>
-
-    <!-- самосвал с поднятым кузовом -->
-    <g fill="none" stroke="#c3e6ce" stroke-width="3.4" stroke-linejoin="round" stroke-linecap="round" opacity=".42">
-      <path d="M812 294 L830 216 L988 200 L1002 268 Z"/>
-      <path d="M812 294 L1030 294"/>
-      <path d="M1030 294 L1030 246 L1072 246 L1094 274 L1094 294 Z"/>
-      <path d="M1038 254 L1066 254 L1066 272 L1038 272 Z"/>
-      <circle cx="866" cy="304" r="16"/><circle cx="916" cy="304" r="16"/><circle cx="1064" cy="304" r="16"/>
-    </g>
-    <!-- поток выгружаемого материала -->
-    <path d="M816 296 C806 316 800 326 796 338 L842 338 C836 324 828 310 822 296 Z"
-          fill="#c3e6ce" opacity=".22"/>
-    <path d="M792 340 L846 340 L864 358 L774 358 Z" fill="#c3e6ce" opacity=".17"/>
-  </g>
-</svg>
+    <div class="heropic" aria-hidden="true">
+  <picture>
+    <source type="image/webp" media="(min-width:900px)" srcset="/assets/ekb/photo/hero-peregnoy-1400.webp">
+    <source type="image/webp" srcset="/assets/ekb/photo/hero-peregnoy-800.webp">
+    <img src="/assets/ekb/photo/hero-peregnoy-1400.jpg" alt="" loading="eager" decoding="async"
+         width="1400" height="788">
+  </picture>
+</div>
     <div class="wrap hero__in">
       <div class="hero__text">
         <p class="hero__eyebrow">Доставка по Екатеринбургу и Свердловской области</p>
