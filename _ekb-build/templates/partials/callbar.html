@@ -1,8 +1,8 @@
 <div class="callbar">
-  {%- if site.phone_display %}
-  <a class="callbar__phone" href="tel:{{ site.phone_tel }}" aria-label="Позвонить">
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M6.6 10.8a15.5 15.5 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1 11.4 11.4 0 0 0 .57 3.6 1 1 0 0 1-.25 1z"/></svg>
-    Позвонить
+  {%- if site.max_url %}
+  <a class="callbar__phone" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener" aria-label="Написать в MAX">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+    Написать в MAX
   </a>
   {%- endif %}
   <a class="callbar__form" href="#zayavka">Оставить заявку</a>

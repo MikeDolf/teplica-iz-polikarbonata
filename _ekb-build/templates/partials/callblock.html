@@ -1,22 +1,16 @@
-{%- if site.phone_display %}
+{%- if site.max_url %}
 <section class="band band--white" aria-labelledby="call-title">
   <div class="wrap">
     <div class="callblock">
       <div class="callblock__l">
-        <b id="call-title">Проще позвонить? Звоните напрямую</b>
-        <p>Подскажем цену под ваш объём и район, поможем выбрать материал. {{ site.callback_promise|capitalize }}, если оставите заявку.</p>
+        <b id="call-title">Проще написать? Мы в MAX</b>
+        <p>Опишите задачу в мессенджере: подскажем цену под ваш объём и район, поможем выбрать материал. {{ site.callback_promise|capitalize }} в рабочие часы, {{ site.hours }}.</p>
       </div>
       <div class="callblock__act">
-        <a class="callblock__phone" href="tel:{{ site.phone_tel }}">{{ site.phone_display }}</a>
-        {%- if site.has_max %}
+        <a class="callblock__phone" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
         <div class="callblock__msgs">
-          {%- if site.max_url %}
-          <a class="callblock__msg callblock__msg--max" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
-          {%- else %}
-          <span class="callblock__msg callblock__msg--max" title="Напишите нам в мессенджере MAX на номер {{ site.phone_display }}">Есть в MAX</span>
-          {%- endif %}
+          <a class="callblock__msg callblock__msg--max" href="mailto:{{ site.contact_email }}">Или на почту</a>
         </div>
-        {%- endif %}
       </div>
     </div>
   </div>

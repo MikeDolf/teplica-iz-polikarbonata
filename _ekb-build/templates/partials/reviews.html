@@ -27,7 +27,7 @@
       </div>
       <div class="revcta__act">
         <a class="btn btn--call" href="mailto:{{ site.contact_email }}?subject=Отзыв о доставке">Написать отзыв</a>
-        {%- if site.phone_display %}<a class="btn btn--ghost" href="tel:{{ site.phone_tel }}">Позвонить {{ site.phone_display }}</a>{%- endif %}
+        {%- if site.max_url %}<a class="btn btn--ghost" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>{%- endif %}
       </div>
     </div>
   </div>
