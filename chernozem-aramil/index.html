@@ -27,7 +27,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=37">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=38">
   <script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -349,6 +349,68 @@
   </div>
 </section>
 
+  <section class="ctamid" aria-labelledby="ctamid-title">
+  <div class="wrap ctamid__in">
+    <div class="ctamid__l">
+      <p class="ctamid__eyebrow">Цена под ваш объём</p>
+      <h2 class="ctamid__title" id="ctamid-title">Посчитаем чернозёма с доставкой в Арамили</h2>
+      <p class="ctamid__sub">Оставьте номер или напишите в MAX: скажем точную цену за куб с доставкой в ваш район. Работаем круглосуточно, без выходных, ответим в MAX за 15 минут.</p>
+    </div>
+
+    <form class="ctamid__form" id="ctamid-form" novalidate>
+      <input type="text" name="company" tabindex="-1" autocomplete="off" class="ctamid__trap" aria-hidden="true">
+      <label class="ctamid__label" for="ctamid-phone">Ваш телефон</label>
+      <div class="ctamid__row">
+        <input class="ctamid__input" id="ctamid-phone" name="phone" type="tel" inputmode="tel" required
+               placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
+        <button class="ctamid__submit" type="submit">Узнать цену</button>
+      </div>
+      <span class="ctamid__error" id="ctamid-error" hidden>Впишите номер, по которому ответить</span>
+      <label class="ctamid__consent">
+        <input type="checkbox" id="ctamid-consent" required>
+        <span>Согласен на обработку контактных данных. <a href="/politika-konfidentsialnosti.html" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
+      </label>
+      <p class="ctamid__alt">Проще в мессенджере? <a href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">Написать в MAX</a></p>
+      <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p>
+    </form>
+  </div>
+</section>
+<script>
+(function(){
+  var form = document.getElementById('ctamid-form'); if(!form) return;
+  var phone = document.getElementById('ctamid-phone');
+  var err = document.getElementById('ctamid-error');
+  var btn = form.querySelector('.ctamid__submit');
+  var done = document.getElementById('ctamid-done');
+  function digits(s){ return (s.match(/\d/g)||[]).length; }
+  phone.addEventListener('input', function(){ if(digits(phone.value) >= 10) err.hidden = true; });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(form.company.value){ return; }
+    if(digits(phone.value) < 10){ err.hidden = false; phone.focus(); return; }
+    if(!document.getElementById('ctamid-consent').checked){ document.getElementById('ctamid-consent').focus(); return; }
+    var data = {
+      access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
+      subject: "Быстрая заявка: Чернозём",
+      from_name: "Сайт доставки грунта",
+      product: "Чернозём", volume: "не указан", district: "Арамиль",
+      when: "не указано", name: "", phone: phone.value.trim(),
+      note: "Короткая форма в середине страницы",
+      page: location.pathname, ref: document.referrer||'', ts: new Date().toISOString()
+    };
+    btn.disabled = true;
+    fetch("https://api.web3forms.com/submit", { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    .then(function(){
+      form.querySelectorAll('.ctamid__row, .ctamid__label, .ctamid__consent').forEach(function(el){ el.style.display='none'; });
+      done.hidden = false;
+      if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead'); }
+    })
+    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на mezdudelom73@gmail.com'); });
+  });
+})();
+</script>
+
   <section class="steps band band--tint" aria-labelledby="steps-title">
     <div class="wrap">
     <h2 id="steps-title" class="sec-h">Как заказать</h2>
@@ -513,7 +575,7 @@
     <div class="callblock">
       <div class="callblock__l">
         <b id="call-title">Проще написать? Мы в MAX</b>
-        <p>Опишите задачу в мессенджере: подскажем цену под ваш объём и район, поможем выбрать материал. Ответим в max за 15 минут. Круглосуточно, без выходных.</p>
+        <p>Опишите задачу в мессенджере: подскажем цену под ваш объём и район, поможем выбрать материал. Работаем круглосуточно, без выходных, ответим в MAX за 15 минут.</p>
       </div>
       <div class="callblock__act">
         <a class="callblock__phone" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">Написать в MAX</a>
@@ -559,20 +621,20 @@
   <div class="wrap">
     <h2 id="related-title" class="sec-h">Ещё возим</h2>
     <ul class="related__list">
-      <li><a href="/chernozem-kamensk-uralskiy/">Чернозём, Каменск-Уральский</a></li>
-      <li><a href="/navoz-aramil/">Навоз коровий, Арамиль</a></li>
-      <li><a href="/chernozem-zarechnyy/">Чернозём, Заречный</a></li>
-      <li><a href="/chernozem-verhnyaya-pyshma/">Чернозём, Верхняя Пышма</a></li>
-      <li><a href="/chernozem-pervouralsk/">Чернозём, Первоуральск</a></li>
-      <li><a href="/peregnoy-aramil/">Перегной, Арамиль</a></li>
-      <li><a href="/torf-aramil/">Торф, Арамиль</a></li>
-      <li><a href="/zemlya-v-meshkah-aramil/">Плодородный грунт, Арамиль</a></li>
-      <li><a href="/chernozem-berezovskiy/">Чернозём, Берёзовский</a></li>
-      <li><a href="/opilki-aramil/">Опилки, Арамиль</a></li>
+      <li><a href="/chernozem-polevskoy/">Чернозём, Полевской</a></li>
       <li><a href="/chernozem-verhnee-dubrovo/">Чернозём, Верхнее Дуброво</a></li>
-      <li><a href="/chernozem-revda/">Чернозём, Ревда</a></li>
+      <li><a href="/chernozem-sysert/">Чернозём, Сысерть</a></li>
+      <li><a href="/peregnoy-aramil/">Перегной, Арамиль</a></li>
+      <li><a href="/navoz-aramil/">Навоз коровий, Арамиль</a></li>
+      <li><a href="/chernozem-sredneuralsk/">Чернозём, Среднеуральск</a></li>
       <li><a href="/chernozem-ekaterinburg/">Чернозём, Екатеринбург</a></li>
-      <li><a href="/chernozem-nizhniy-tagil/">Чернозём, Нижний Тагил</a></li>
+      <li><a href="/chernozem-berezovskiy/">Чернозём, Берёзовский</a></li>
+      <li><a href="/chernozem-zarechnyy/">Чернозём, Заречный</a></li>
+      <li><a href="/chernozem-pervouralsk/">Чернозём, Первоуральск</a></li>
+      <li><a href="/chernozem-degtyarsk/">Чернозём, Дегтярск</a></li>
+      <li><a href="/chernozem-verhnyaya-pyshma/">Чернозём, Верхняя Пышма</a></li>
+      <li><a href="/torf-aramil/">Торф, Арамиль</a></li>
+      <li><a href="/chernozem-revda/">Чернозём, Ревда</a></li>
     </ul>
   </div>
 </section>
@@ -582,7 +644,7 @@
     <div class="lead__pitch">
       <p class="lead__eyebrow">Доставка по Екатеринбургу и Свердловской области</p>
       <h2 class="lead__title" id="lead-title">Рассчитаем стоимость и привезём в день заказа</h2>
-      <p class="lead__lede">Скажите, что нужно и куда везти. Перезвоним в течение 15 минут в рабочее время, назовём точную цену за куб или мешок с доставкой в ваш район.</p>
+      <p class="lead__lede">Скажите, что нужно и куда везти. Ответим в течение 15 минут в любое время суток, назовём точную цену за куб или мешок с доставкой в ваш район.</p>
       <a class="lead__call" href="mailto:mezdudelom73@gmail.com">
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm8 7L5 7v1l7 5 7-5V7l-7 5z"/></svg>
         <span>Написать: <b>mezdudelom73@gmail.com</b></span>
@@ -736,7 +798,7 @@
     <div>
       <a class="ftr__phone" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">Написать в MAX</a>
       <a class="ftr__mail" href="mailto:mezdudelom73@gmail.com">mezdudelom73@gmail.com</a>
-      <p class="ftr__hours">Круглосуточно, без выходных. Ответим в max за 15 минут.</p>
+      <p class="ftr__hours">Круглосуточно, без выходных, ответим в MAX за 15 минут.</p>
     </div>
     <ul class="ftr__links">
       <li><a href="/dostavka-grunta/">Доставка грунта</a></li>
@@ -748,10 +810,9 @@
 </footer>
 <div class="callbar">
   <a class="callbar__phone" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener" aria-label="Написать в MAX">
-    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
-    Написать в MAX
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg><span class="callbar__long">Написать в MAX</span><span class="callbar__short">MAX</span>
   </a>
-  <a class="callbar__form" href="#zayavka">Оставить заявку</a>
+  <a class="callbar__form" href="#zayavka"><span class="callbar__long">Оставить заявку</span><span class="callbar__short">Заявка</span></a>
   <a class="callbar__mail" href="mailto:mezdudelom73@gmail.com" aria-label="Написать на почту">
     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm8 7L5 7v1l7 5 7-5V7l-7 5z"/></svg>
     <span>Почта</span>

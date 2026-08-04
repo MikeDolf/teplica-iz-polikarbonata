@@ -556,3 +556,51 @@
   .ekb .callbar__mail{padding:0 12px}
   .ekb .callbar__mail span{display:none}   /* на узких оставляем только иконку почты */
 }
+
+/* ===== короткая заявка в середине страницы =====
+   Полная форма стоит внизу, до неё доходит меньшинство. Этот блок ловит
+   тех, кто уже посмотрел цену и условия и готов спросить. */
+.ctamid{background:radial-gradient(120% 160% at 0% 0%, var(--bg) 0%, var(--bg2) 75%);color:#eaf1ea;padding:clamp(28px,4.4vw,48px) 0}
+.ctamid__in{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(20px,3.5vw,44px);align-items:center}
+.ctamid__l{min-width:0}
+.ctamid__eyebrow{margin:0 0 8px;font-size:12.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:700;color:#8fcaa1}
+.ekb .ctamid__title{margin:0 0 10px;font-size:clamp(21px,2.6vw,29px);color:#fff;line-height:1.2}
+.ctamid__sub{margin:0;font-size:16px;line-height:1.5;color:#bcd2c2;max-width:46ch}
+.ctamid__form{min-width:0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14);border-radius:var(--radius);padding:clamp(16px,2.2vw,22px)}
+.ctamid__trap{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.ctamid__label{display:block;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#a8c2b0;margin-bottom:8px}
+.ctamid__row{display:flex;gap:10px;flex-wrap:wrap}
+.ctamid__input{flex:1 1 190px;min-width:0;font:inherit;font-size:16.5px;color:var(--ink);background:#fff;border:1.5px solid transparent;border-radius:11px;padding:13px 14px}
+.ctamid__input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.ctamid__submit{flex:0 0 auto;font:inherit;font-size:16px;font-weight:800;color:var(--accent-ink);background:var(--accent);border:none;border-radius:11px;padding:13px 22px;min-height:50px;cursor:pointer;transition:filter .15s,transform .05s}
+.ctamid__submit:hover{filter:brightness(1.08)}
+.ctamid__submit:active{transform:translateY(1px)}
+.ctamid__submit:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.ctamid__submit[disabled]{opacity:.7;cursor:progress}
+.ctamid__error{display:block;margin-top:8px;font-size:14px;color:#ffc9c2}
+.ctamid__error[hidden]{display:none}
+.ctamid__consent{display:flex;gap:9px;align-items:flex-start;margin-top:12px;font-size:12.5px;line-height:1.45;color:#a8c2b0;cursor:pointer}
+.ctamid__consent input{margin-top:2px;width:17px;height:17px;flex:none;accent-color:var(--accent)}
+.ctamid__consent a{color:#c3e6ce;text-decoration:underline}
+.ctamid__alt{margin:14px 0 0;font-size:14.5px;color:#a8c2b0}
+.ctamid__alt a{color:#fff;font-weight:700}
+.ctamid__done{margin:0;font-size:16px;line-height:1.5;color:#c3e6ce}
+.ctamid__done[hidden]{display:none}
+.ctamid__done b{color:#fff}
+@media (max-width:820px){.ctamid__in{grid-template-columns:1fr;gap:20px}}
+@media (max-width:480px){.ctamid__submit{flex:1 1 100%}}
+
+/* ===== узкие экраны: 320-360px =====
+   Три кнопки нижней панели не влезали в строку, третья уезжала за край.
+   Сокращаем подписи, смысл держат иконка и aria-label. */
+.callbar__short{display:none}
+@media (max-width:360px){
+  .callbar{gap:6px;padding:8px 6px}
+  .callbar__long{display:none}
+  .callbar__short{display:inline}
+  .callbar a{padding:0 8px;gap:6px}
+}
+/* Колонки формы заявки не сжимались ниже min-content и вылезали за экран:
+   у grid-элементов min-width по умолчанию auto. */
+.lead__inner > *{min-width:0}
+.ekb .lead__call{max-width:100%;flex-wrap:wrap;word-break:break-word}

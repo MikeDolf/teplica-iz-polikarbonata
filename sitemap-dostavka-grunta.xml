@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://fanline.su/chernozem-aramil/</loc>
+    <loc>https://fanline.su/dostavka-grunta/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://fanline.su/chernozem-beloyarskiy/</loc>
+    <loc>https://fanline.su/chernozem-aramil/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -28,7 +28,7 @@
     <loc>https://fanline.su/chernozem-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/chernozem-kamensk-uralskiy/</loc>
@@ -91,96 +91,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fanline.su/dostavka-grunta/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/chernozem-ili-plodorodnyy-grunt/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/granulirovannyy-navoz/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/kak-primenyat-konskiy-navoz/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/kak-primenyat-koroviy-navoz/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/kakoy-grunt-nuzhen-dlya-teplicy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/kakoy-navoz-luchshe/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/kogda-vnosit-navoz/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/konskiy-navoz-dlya-klubniki/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/kuriny-pomet-kak-udobrenie/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/nastoy-iz-navoza/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/navoz-ili-peregnoy-chto-luchshe/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/skolko-stoit-chernozem/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/skolko-stoit-navoz/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/dostavka-grunta/skolko-stoit-peregnoy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fanline.su/kislyy-torf-berezovskiy/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -190,7 +100,7 @@
     <loc>https://fanline.su/kislyy-torf-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/kislyy-torf-kamensk-uralskiy/</loc>
@@ -226,7 +136,7 @@
     <loc>https://fanline.su/navoz-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/navoz-kamensk-uralskiy/</loc>
@@ -235,73 +145,13 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fanline.su/navoz-konskiy-beloyarskiy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-konskiy-degtyarsk/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fanline.su/navoz-konskiy-ekaterinburg/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-konskiy-polevskoy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-konskiy-verhnee-dubrovo/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-konskiy-zarechnyy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-koroviy-beloyarskiy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-koroviy-degtyarsk/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/navoz-koroviy-ekaterinburg/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-koroviy-polevskoy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-koroviy-verhnee-dubrovo/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/navoz-koroviy-zarechnyy/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -358,7 +208,7 @@
     <loc>https://fanline.su/opilki-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/opilki-kamensk-uralskiy/</loc>
@@ -430,7 +280,7 @@
     <loc>https://fanline.su/peregnoy-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/peregnoy-kamensk-uralskiy/</loc>
@@ -469,12 +319,6 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://fanline.su/peregnoy-verhnee-dubrovo/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://fanline.su/peregnoy-verhnyaya-pyshma/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
@@ -490,12 +334,6 @@
     <loc>https://fanline.su/plodorodnyy-grunt-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/plodorodnyy-grunt-kamensk-uralskiy/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
@@ -506,12 +344,6 @@
   </url>
   <url>
     <loc>https://fanline.su/plodorodnyy-grunt-pervouralsk/</loc>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
-    <loc>https://fanline.su/plodorodnyy-grunt-polevskoy/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
@@ -544,13 +376,13 @@
     <loc>https://fanline.su/torf-dlya-golubiki/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/torf-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/torf-kamensk-uralskiy/</loc>
@@ -604,7 +436,7 @@
     <loc>https://fanline.su/torfogrunt-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/torfogrunt-pervouralsk/</loc>
@@ -628,7 +460,7 @@
     <loc>https://fanline.su/zemlya-v-meshkah-ekaterinburg/</loc>
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
-    <priority>0.9</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://fanline.su/zemlya-v-meshkah-nizhniy-tagil/</loc>
@@ -659,5 +491,89 @@
     <lastmod>2026-08-04</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/kak-primenyat-konskiy-navoz/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/kak-primenyat-koroviy-navoz/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/navoz-ili-peregnoy-chto-luchshe/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/kakoy-navoz-luchshe/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/chernozem-ili-plodorodnyy-grunt/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/skolko-stoit-chernozem/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/kakoy-grunt-nuzhen-dlya-teplicy/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/skolko-stoit-navoz/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/kuriny-pomet-kak-udobrenie/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/konskiy-navoz-dlya-klubniki/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/granulirovannyy-navoz/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/kogda-vnosit-navoz/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/skolko-stoit-peregnoy/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/nastoy-iz-navoza/</loc>
+    <lastmod>2026-08-04</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

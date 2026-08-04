@@ -1,0 +1,66 @@
+{#- Короткая заявка сразу после цены и условий. Полная форма стоит внизу,
+    на 79% высоты страницы: до неё доходит меньшинство. Здесь спрашиваем
+    только телефон, остальное выясняем при ответе. -#}
+<section class="ctamid" aria-labelledby="ctamid-title">
+  <div class="wrap ctamid__in">
+    <div class="ctamid__l">
+      <p class="ctamid__eyebrow">Цена под ваш объём</p>
+      <h2 class="ctamid__title" id="ctamid-title">Посчитаем {{ product_genitive }} с доставкой {{ city.prep }}</h2>
+      <p class="ctamid__sub">Оставьте номер или напишите в MAX: скажем точную цену за куб с доставкой в ваш район. Работаем {{ site.hours|lower }}, {{ site.callback_promise }}.</p>
+    </div>
+
+    <form class="ctamid__form" id="ctamid-form" novalidate>
+      <input type="text" name="company" tabindex="-1" autocomplete="off" class="ctamid__trap" aria-hidden="true">
+      <label class="ctamid__label" for="ctamid-phone">Ваш телефон</label>
+      <div class="ctamid__row">
+        <input class="ctamid__input" id="ctamid-phone" name="phone" type="tel" inputmode="tel" required
+               placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
+        <button class="ctamid__submit" type="submit">Узнать цену</button>
+      </div>
+      <span class="ctamid__error" id="ctamid-error" hidden>Впишите номер, по которому ответить</span>
+      <label class="ctamid__consent">
+        <input type="checkbox" id="ctamid-consent" required>
+        <span>Согласен на обработку контактных данных. <a href="{{ site.privacy_url }}" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
+      </label>
+      {%- if site.max_url %}
+      <p class="ctamid__alt">Проще в мессенджере? <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a></p>
+      {%- endif %}
+      <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p>
+    </form>
+  </div>
+</section>
+<script>
+(function(){
+  var form = document.getElementById('ctamid-form'); if(!form) return;
+  var phone = document.getElementById('ctamid-phone');
+  var err = document.getElementById('ctamid-error');
+  var btn = form.querySelector('.ctamid__submit');
+  var done = document.getElementById('ctamid-done');
+  function digits(s){ return (s.match(/\d/g)||[]).length; }
+  phone.addEventListener('input', function(){ if(digits(phone.value) >= 10) err.hidden = true; });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(form.company.value){ return; }
+    if(digits(phone.value) < 10){ err.hidden = false; phone.focus(); return; }
+    if(!document.getElementById('ctamid-consent').checked){ document.getElementById('ctamid-consent').focus(); return; }
+    var data = {
+      access_key: "{{ site.web3forms_key }}",
+      subject: "Быстрая заявка: {{ preselect_product }}",
+      from_name: "Сайт доставки грунта",
+      product: "{{ preselect_product }}", volume: "не указан", district: "{{ city.name }}",
+      when: "не указано", name: "", phone: phone.value.trim(),
+      note: "Короткая форма в середине страницы",
+      page: location.pathname, ref: document.referrer||'', ts: new Date().toISOString()
+    };
+    btn.disabled = true;
+    fetch("{{ site.form_endpoint }}", { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
+    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    .then(function(){
+      form.querySelectorAll('.ctamid__row, .ctamid__label, .ctamid__consent').forEach(function(el){ el.style.display='none'; });
+      done.hidden = false;
+      if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead'); }
+    })
+    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на {{ site.contact_email }}'); });
+  });
+})();
+</script>
