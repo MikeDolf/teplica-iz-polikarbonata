@@ -48,5 +48,31 @@
 {% include "partials/footer.html" %}
 {% include "partials/callbar.html" %}
 
+  {% include "partials/floatcta.html" %}
+  <script>
+  // Всплывающий блок связи: появляется, когда шапка ушла из виду,
+  // и прячется у формы заявки, чтобы не перекрывать её собой.
+  (function(){
+    var el=document.getElementById('fcta'); if(!el) return;
+    if (localStorage.getItem('fctaHidden')==='1') return;
+    var hero=document.querySelector('.hero'), form=document.getElementById('zayavka');
+    el.hidden=false;
+    var shown=false;
+    function upd(){
+      var past = hero ? (hero.getBoundingClientRect().bottom < 0) : (window.scrollY > 700);
+      var atForm = form && form.getBoundingClientRect().top < window.innerHeight*0.9
+                        && form.getBoundingClientRect().bottom > 0;
+      var want = past && !atForm;
+      if (want!==shown){ shown=want; el.classList.toggle('is-on', want); }
+    }
+    var tick=false;
+    addEventListener('scroll', function(){ if(!tick){ tick=true; requestAnimationFrame(function(){ upd(); tick=false; }); } }, {passive:true});
+    addEventListener('resize', upd, {passive:true});
+    el.querySelector('.fcta__close').addEventListener('click', function(){
+      el.classList.remove('is-on'); localStorage.setItem('fctaHidden','1');
+    });
+    upd();
+  })();
+  </script>
 </body>
 </html>

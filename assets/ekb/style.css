@@ -514,3 +514,45 @@
   .ekb .hdr__logo span{font-size:15px}
   .ekb .hdr__phone,.ekb .hdr__max{font-size:14.5px}
 }
+
+/* ===== всплывающий блок связи (десктоп) ===== */
+.fcta{position:fixed;right:20px;bottom:20px;z-index:40;width:290px;
+  background:linear-gradient(160deg,#17402a 0%,#0d281a 100%);
+  border:1px solid rgba(143,202,161,.28);border-radius:16px;
+  box-shadow:0 18px 44px -12px rgba(8,26,16,.55), 0 4px 12px rgba(8,26,16,.25);
+  padding:18px 18px 16px;color:#eaf1ea;
+  opacity:0;transform:translateY(14px) scale(.98);pointer-events:none;
+  transition:opacity .28s ease, transform .28s cubic-bezier(.2,.8,.3,1)}
+.fcta[hidden]{display:none}
+.fcta.is-on{opacity:1;transform:none;pointer-events:auto}
+.fcta__title{margin:0 0 4px;font-size:17px;font-weight:800;color:#fff;letter-spacing:-.01em}
+.fcta__sub{margin:0 0 14px;font-size:14px;line-height:1.4;color:#a8c2b0}
+.ekb .fcta__btn{display:flex;align-items:center;justify-content:center;gap:9px;
+  font-weight:700;font-size:16px;text-decoration:none;border-radius:11px;padding:13px 16px;
+  transition:filter .15s, background .15s, transform .05s}
+.ekb .fcta__btn:active{transform:translateY(1px)}
+.ekb .fcta__btn--main{background:var(--accent);color:#fff;margin-bottom:8px}
+.ekb .fcta__btn--main:hover{filter:brightness(1.09)}
+.ekb .fcta__btn--alt{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.2)}
+.ekb .fcta__btn--alt:hover{background:rgba(255,255,255,.16)}
+.fcta__close{position:absolute;top:8px;right:8px;width:32px;height:32px;display:grid;place-items:center;
+  background:transparent;border:0;color:#8fb69c;cursor:pointer;border-radius:8px}
+.fcta__close:hover{background:rgba(255,255,255,.1);color:#fff}
+@media (max-width:720px){.fcta{display:none}}
+@media (prefers-reduced-motion:reduce){.fcta{transition:none}}
+
+/* ===== мобильная панель: крупнее и заметнее ===== */
+@media (max-width:720px){
+  .callbar{padding:8px 10px;gap:8px;
+    background:rgba(13,40,26,.98);box-shadow:0 -6px 20px -6px rgba(8,26,16,.5)}
+  /* одна строка на кнопку: перенос делал панель вдвое выше нужного */
+  .callbar a{padding:0 12px;min-height:52px;font-size:16px;border-radius:12px;white-space:nowrap}
+  .ekb .callbar__form{font-weight:800}
+  .ekb .callbar__mail{flex:0 0 auto;padding:0 16px}
+  .callbar a svg{width:20px;height:20px;flex:none}
+}
+@media (max-width:400px){
+  .callbar a{font-size:15px;padding:0 9px;gap:7px}
+  .ekb .callbar__mail{padding:0 12px}
+  .ekb .callbar__mail span{display:none}   /* на узких оставляем только иконку почты */
+}
