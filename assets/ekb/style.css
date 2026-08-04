@@ -449,3 +449,7 @@
 .fv__pic{display:block;width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .fv .fv__svg{margin:16px 18px 4px;width:calc(100% - 36px)}
 .fv__cap{display:block;padding:14px 18px 18px}
+
+/* обложка статьи */
+.artcover{margin:0 0 26px;border-radius:var(--radius);overflow:hidden;background:var(--paper)}
+.artcover img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}

@@ -17,6 +17,16 @@
   {% include "partials/prodbar.html" %}
   <article class="art wrap">
     <h1>{{ h1 }}</h1>
+      {%- if cover %}
+      <figure class="artcover">
+        <picture>
+          <source type="image/webp" media="(min-width:760px)" srcset="/assets/ekb/photo/{{ cover }}-1400.webp">
+          <source type="image/webp" srcset="/assets/ekb/photo/{{ cover }}-800.webp">
+          <img src="/assets/ekb/photo/{{ cover }}-1400.jpg" alt="{{ short }}" width="1400" height="788"
+               loading="eager" decoding="async">
+        </picture>
+      </figure>
+      {%- endif %}
     <p class="art__lede">{{ lede }}</p>
 
     {%- for sec in body %}

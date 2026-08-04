@@ -256,6 +256,7 @@ def render_hub(all_pages):
         catalog=catalog, geo=geo, faq=faq, articles=hub_articles, preselect_product="Пока не решил",
         district_ph="Напр. Академический, Верхняя Пышма, Сысерть",
         footer_links=FOOTER_LINKS, schema_json=schema, metrika_placeholder=True, related=[],
+        hero_photo=("yard" if "yard" in PHOTOS else None),
         prodbar=PRODBAR, current_slug="", photos=PHOTOS)
     outdir = os.path.join(ROOT, "dostavka-grunta")
     os.makedirs(outdir, exist_ok=True)
@@ -263,6 +264,26 @@ def render_hub(all_pages):
         fh.write(html)
     return canonical
 
+
+
+# Обложки статей: берём уже загруженные фотографии по теме, отдельная
+# съёмка под каждую статью не нужна. Ключ — слуг статьи.
+ARTICLE_COVER = {
+    "kak-primenyat-konskiy-navoz":   "hero-navoz-konskiy",
+    "konskiy-navoz-dlya-klubniki":   "hero-navoz-konskiy",
+    "kak-primenyat-koroviy-navoz":   "hero-navoz-koroviy",
+    "kakoy-navoz-luchshe":           "hero-navoz",
+    "kogda-vnosit-navoz":            "hero-navoz",
+    "granulirovannyy-navoz":         "hero-navoz",
+    "nastoy-iz-navoza":              "hero-navoz-koroviy",
+    "kuriny-pomet-kak-udobrenie":    "hero-navoz",
+    "navoz-ili-peregnoy-chto-luchshe":"hero-peregnoy",
+    "skolko-stoit-peregnoy":         "loading",
+    "skolko-stoit-navoz":            "loading",
+    "skolko-stoit-chernozem":        "loading",
+    "chernozem-ili-plodorodnyy-grunt":"hero-chernozem",
+    "kakoy-grunt-nuzhen-dlya-teplicy":"hero-plodorodnyy-grunt",
+}
 
 def render_articles():
     """Инфо-статьи из articles.py под /dostavka-grunta/<slug>/. Все index/follow."""
@@ -305,7 +326,8 @@ def render_articles():
             cta_price=PRICE_BY_URL.get(a["cta"]["url"]),
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
-            prodbar=PRODBAR, current_slug="", photos=PHOTOS)
+            prodbar=PRODBAR, current_slug="", photos=PHOTOS,
+            cover=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])))
         outdir = os.path.join(ROOT, base, a["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
