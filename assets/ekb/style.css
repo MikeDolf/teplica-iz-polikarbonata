@@ -453,3 +453,41 @@
 /* обложка статьи */
 .artcover{margin:0 0 26px;border-radius:var(--radius);overflow:hidden;background:var(--paper)}
 .artcover img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+
+/* ===== узкие экраны: не даём содержимому распирать сетку ===== */
+/* элементы грид-сетки по умолчанию не сжимаются уже своего самого
+   длинного слова, из-за чего «Плодородный грунт» ломал вёрстку на 320px */
+.cat__grid > *, .fleetviz__grid > *, .tbar__grid > *,
+.steps__list > *, .delivery__grid > *, .mats__grid > *{min-width:0}
+.cc__name,.cc__price,.fv__name,.tbar__val{overflow-wrap:anywhere}
+
+@media (max-width:360px){
+  .ekb .wrap{padding:0 14px}
+  .ekb .cc{padding:16px 10px 14px}
+  .cc__name{font-size:15.5px}
+  .cc__price{font-size:14.5px}
+  .cc__btn{padding:8px 14px;font-size:14px}
+  /* нижняя панель: три кнопки в 320px помещаются только на сжатых отступах */
+  .callbar{padding:6px;gap:6px}
+  .callbar a{padding:11px 8px;font-size:14.5px;gap:6px}
+  .ekb .callbar__mail{padding-left:10px;padding-right:10px}
+  .callbar a svg{width:17px;height:17px}
+}
+
+/* ===== цели касания не меньше 44px по мобильным рекомендациям ===== */
+.ekb .hdr__logo,.ekb .hdr__phone,.ekb .hdr__max{padding:9px 4px}
+.ekb .hdr__mail{padding:12px 8px;min-width:44px;min-height:44px;justify-content:center}
+.crumbs a{display:inline-block;padding:7px 2px}
+.crumbs li{display:flex;align-items:center}
+.ekb .callblock__phone{padding:10px 18px}
+.ekb .ftr__links a{display:inline-block;padding:6px 0}
+.ekb .ftr__phone{display:inline-block;padding:6px 0}
+@media (max-width:720px){
+  .hdr__in{min-height:52px}
+  .ekb .hdr__logo{padding:8px 2px}
+}
+
+/* остаток мелких ссылок: внутри текста блоков и в подвале */
+.mats__card em a{display:inline-block;padding:6px 0}
+.lead__consent a,.lead__note a,.lead__priv a,.lead label a{display:inline-block;padding:7px 0}
+.ekb .ftr__mail{display:inline-block;padding:8px 0}
