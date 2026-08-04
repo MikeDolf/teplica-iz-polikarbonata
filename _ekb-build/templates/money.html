@@ -43,6 +43,8 @@
     </div>
   </section>
 
+
+
   {%- if moved_to %}
   <section class="band band--white">
     <div class="wrap">
@@ -126,4 +128,19 @@
   {% include "partials/lead_form.html" %}
 
   {% include "partials/faq.html" %}
+
+  {%- if crosslink %}
+  <section class="band band--white">
+    <div class="wrap">
+      <div class="moved">
+        <b>{{ crosslink.title }}</b>
+        <p>{{ crosslink.text }}</p>
+        <a class="btn btn--call" href="{{ crosslink.url }}" target="_blank" rel="noopener">{{ crosslink.anchor }}</a>
+      </div>
+    </div>
+  </section>
+  {%- endif %}
+
+
+
 {% endblock %}

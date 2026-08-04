@@ -206,7 +206,12 @@ def render(page):
         related=page.get("related", []),
         product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
         price=PRICES.get(page.get("product","")),
-        reviews=REVIEWS, moved_to=MOVED_TO.get(page["slug"]) or CROSSLINK.get(page["slug"]),
+        reviews=REVIEWS,
+        # «переехало» остаётся вверху: на странице щебня посетителю надо
+        # сразу сказать, что мы это не возим. Тематическая же ссылка
+        # уходит вниз, чтобы не уводить покупателя до знакомства с товаром.
+        moved_to=MOVED_TO.get(page["slug"]),
+        crosslink=CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
         hero_photo=hero_photo_for(page),
