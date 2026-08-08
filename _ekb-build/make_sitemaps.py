@@ -72,10 +72,10 @@ def main():
     with open(MAIN, "w", encoding="utf-8") as fh:
         fh.write(head + "\n".join(foreign + [block(u, priority_of(u)) for u in index]) + "\n</urlset>\n")
 
-    dropped = len(blocks) - len(foreign) - len(index)
+    was = len(blocks) - len(foreign)
     print(f"sitemap-dostavka-grunta.xml: {len(index)} URL")
     print(f"sitemap.xml: {len(foreign)} чужих + {len(index)} раздела = {len(foreign) + len(index)}")
-    print(f"вне индекса: {len(every) - len(index)} страниц, из общей карты убрано {dropped}")
+    print(f"вне индекса: {len(every) - len(index)} страниц; в общей карте раздел был {was} URL, стал {len(index)}")
 
 
 if __name__ == "__main__":

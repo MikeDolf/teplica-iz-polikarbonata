@@ -277,79 +277,34 @@ PRODUCTS = {
 }
 
 # Гео-страницы: (продукт, город). ЕКБ у чернозёма и перегноя уже есть как денежные, тут не дублируем.
-GEO_PAGES = [
-    ("navoz-koroviy", "ekaterinburg"),
-    ("navoz-konskiy", "ekaterinburg"),
-    ("chernozem", "kamensk-uralskiy"),
-    ("chernozem", "pervouralsk"),
-    ("chernozem", "nizhniy-tagil"),
-    ("chernozem", "revda"),
-    ("chernozem", "verhnyaya-pyshma"),
-    ("chernozem", "sysert"),
-    ("chernozem", "sredneuralsk"),
-    ("peregnoy", "kamensk-uralskiy"),
-    ("peregnoy", "nizhniy-tagil"),
-    ("peregnoy", "berezovskiy"),
-    ("peregnoy", "revda"),
-    ("peregnoy", "pervouralsk"),
-    ("peregnoy", "aramil"),
-    # === нерудные материалы и торф, Екатеринбург ===
-    ("shcheben", "ekaterinburg"),
-    ("pesok", "ekaterinburg"),
-    ("otsev", "ekaterinburg"),
-    ("pgs", "ekaterinburg"),
-    # торф по Екатеринбургу вынесен в pages.py: там раскрыты виды
-    ("torf", "nizhniy-tagil"),   # 63 по частотности, второй город по торфу
-    # === ближний пояс до 60 км: 5 городов x 4 материала ===
-    ("chernozem", "polevskoy"),      ("peregnoy", "polevskoy"),
-    ("navoz-koroviy", "polevskoy"),  ("navoz-konskiy", "polevskoy"),
-    ("chernozem", "zarechnyy"),      ("peregnoy", "zarechnyy"),
-    ("navoz-koroviy", "zarechnyy"),  ("navoz-konskiy", "zarechnyy"),
-    ("chernozem", "beloyarskiy"),    ("peregnoy", "beloyarskiy"),
-    ("navoz-koroviy", "beloyarskiy"),("navoz-konskiy", "beloyarskiy"),
-    ("chernozem", "degtyarsk"),      ("peregnoy", "degtyarsk"),
-    ("navoz-koroviy", "degtyarsk"),  ("navoz-konskiy", "degtyarsk"),
-    ("chernozem", "verhnee-dubrovo"),("peregnoy", "verhnee-dubrovo"),
-    ("navoz-koroviy", "verhnee-dubrovo"),("navoz-konskiy", "verhnee-dubrovo"),
+# ==== Полная сетка: 11 органических товаров x 15 городов ====
+# Решение владельца от 08.08.2026: закрываем все сочетания, а не только
+# те, где Вордстат показал спрос. Уникальность каждой страницы держит
+# третий слой текста из city_product.py (пара «город + товар»).
+#
+# Щебень, песок, отсев и ПГС в сетку НЕ входят: их ведёт второй сайт
+# владельца (ursdom.ru), и размножать их по городам значит собирать
+# риск аффилиат-фильтра. Они остаются только по Екатеринбургу.
 
-    # ==== расширение по данным Мутагена ====
-    # opilki: 11 стр., суммарный спрос 392
-    ("opilki", "ekaterinburg"),  ("opilki", "nizhniy-tagil"),
-    ("opilki", "kamensk-uralskiy"),  ("opilki", "berezovskiy"),
-    ("opilki", "aramil"),  ("opilki", "polevskoy"),
-    ("opilki", "sredneuralsk"),  ("opilki", "beloyarskiy"),
-    ("opilki", "revda"),  ("opilki", "verhnyaya-pyshma"),
-    ("opilki", "pervouralsk"),
-    # torf: 9 стр., суммарный спрос 300
-    ("torf", "berezovskiy"),  ("torf", "pervouralsk"),
-    ("torf", "sysert"),  ("torf", "revda"),
-    ("torf", "kamensk-uralskiy"),  ("torf", "aramil"),
-    ("torf", "polevskoy"),  ("torf", "verhnyaya-pyshma"),
-    ("torf", "sredneuralsk"),
-    # zemlya-v-meshkah: 8 стр., суммарный спрос 275
-    ("zemlya-v-meshkah", "ekaterinburg"),  ("zemlya-v-meshkah", "nizhniy-tagil"),
-    ("zemlya-v-meshkah", "verhnyaya-pyshma"),  ("zemlya-v-meshkah", "polevskoy"),
-    ("zemlya-v-meshkah", "berezovskiy"),  ("zemlya-v-meshkah", "pervouralsk"),
-    ("zemlya-v-meshkah", "aramil"),  ("zemlya-v-meshkah", "revda"),
-    # plodorodnyy-grunt: 7 стр., суммарный спрос 272
-    ("plodorodnyy-grunt", "ekaterinburg"),  ("plodorodnyy-grunt", "pervouralsk"),
-    ("plodorodnyy-grunt", "kamensk-uralskiy"),  ("plodorodnyy-grunt", "nizhniy-tagil"),
-    ("plodorodnyy-grunt", "verhnyaya-pyshma"),  ("plodorodnyy-grunt", "revda"),
-    ("plodorodnyy-grunt", "polevskoy"),
-    # navoz: 9 стр., суммарный спрос 207
-    ("navoz", "ekaterinburg"),  ("navoz", "verhnyaya-pyshma"),
-    ("navoz", "pervouralsk"),  ("navoz", "nizhniy-tagil"),
-    ("navoz", "berezovskiy"),  ("navoz", "aramil"),
-    ("navoz", "polevskoy"),  ("navoz", "revda"),
-    ("navoz", "kamensk-uralskiy"),
-    # chernozem: 2 стр., суммарный спрос 164
-    ("chernozem", "berezovskiy"),  ("chernozem", "aramil"),
-    # kislyy-torf: 5 стр., суммарный спрос 115
-    ("kislyy-torf", "ekaterinburg"),  ("kislyy-torf", "polevskoy"),
-    ("kislyy-torf", "pervouralsk"),  ("kislyy-torf", "berezovskiy"),
-    ("kislyy-torf", "kamensk-uralskiy"),
-    # torfogrunt: 2 стр., суммарный спрос 68
-    ("torfogrunt", "ekaterinburg"),  ("torfogrunt", "pervouralsk"),
-    # peregnoy: 2 стр., суммарный спрос 54
-    ("peregnoy", "sysert"),  ("peregnoy", "verhnyaya-pyshma"),
+ORGANIC = [
+    "chernozem", "peregnoy", "torf", "opilki", "navoz",
+    "navoz-koroviy", "navoz-konskiy", "plodorodnyy-grunt",
+    "zemlya-v-meshkah", "kislyy-torf", "torfogrunt",
 ]
+
+CITY_ORDER = [
+    "ekaterinburg", "berezovskiy", "verhnyaya-pyshma", "sredneuralsk", "aramil",
+    "verhnee-dubrovo", "pervouralsk", "zarechnyy", "beloyarskiy", "revda",
+    "sysert", "polevskoy", "degtyarsk", "kamensk-uralskiy", "nizhniy-tagil",
+]
+
+# у этих сочетаний своя рукописная страница в pages.py
+HANDWRITTEN = {("chernozem", "ekaterinburg"), ("peregnoy", "ekaterinburg"),
+               ("torf", "ekaterinburg")}
+
+GEO_PAGES = [(pr, c) for c in CITY_ORDER for pr in ORGANIC
+             if (pr, c) not in HANDWRITTEN]
+
+# нерудные материалы: только Екатеринбург, вне индекса, ведут на ursdom.ru
+GEO_PAGES += [("shcheben", "ekaterinburg"), ("pesok", "ekaterinburg"),
+              ("otsev", "ekaterinburg"), ("pgs", "ekaterinburg")]

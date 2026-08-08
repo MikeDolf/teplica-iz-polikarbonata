@@ -14,7 +14,8 @@ from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR  # noqa
-from tail_cities import TAIL_CITIES  # noqa
+from tail_cities import TAIL_CITIES
+from city_product import CP  # noqa
 try:
     from reviews import REVIEWS  # noqa
 except ImportError:
@@ -59,28 +60,11 @@ OTHER_SITE = {
     "otsev-ekaterinburg", "pgs-ekaterinburg",
 }
 
-# Спроса нет: базовая частота по Вордстату указана в скобках. Девять страниц
-# с нулём, остальные 1-4 показа в месяц. Страницы остаются живыми (прямые
-# заходы, переходы по перелинковке с других городов), но в индекс и в
-# sitemap не идут: доля пустых страниц тянет вниз оценку хоста.
-# Тагил 53, Сысерть 48, Ревда 21, Арамиль 23, Пышма 5, Среднеуральск 9 —
-# спрос подтверждён, эти в индексе.
-LOW_DEMAND = {
-    "navoz-konskiy-beloyarskiy",        # 0
-    "navoz-konskiy-degtyarsk",          # 0
-    "navoz-konskiy-verhnee-dubrovo",    # 0
-    "navoz-konskiy-zarechnyy",          # 0
-    "navoz-koroviy-beloyarskiy",        # 0
-    "navoz-koroviy-degtyarsk",          # 0
-    "navoz-koroviy-polevskoy",          # 0
-    "navoz-koroviy-verhnee-dubrovo",    # 0
-    "navoz-koroviy-zarechnyy",          # 0
-    "peregnoy-verhnee-dubrovo",         # 1
-    "plodorodnyy-grunt-kamensk-uralskiy",  # 1
-    "navoz-konskiy-polevskoy",          # 2
-    "plodorodnyy-grunt-polevskoy",      # 2
-    "chernozem-beloyarskiy",            # 4
-}
+# Пусто по решению владельца от 08.08.2026: раздел доводится до полной
+# сетки 11 товаров x 15 городов, включая сочетания с нулевым спросом по
+# Вордстату. Прежняя чистка (14 страниц) отменена. Список слугов и причин
+# сохранён в истории git, коммит d4c0d56.
+LOW_DEMAND = set()
 
 NOINDEX = OTHER_SITE | LOW_DEMAND
 
@@ -215,7 +199,11 @@ def compose_geo(product_key, city_key):
         "description": pr["desc_tpl"].format(prep=city["prep"], to=city["to"]),
         "hero_sub": pr["hero_sub"],
         # уникальный городской текст идёт первым: он задаёт непохожесть страниц
-        "about": city.get("about_extra", []) + pr["intro"],
+        # Уникальный для пары «город + товар» абзац идёт первым: именно он
+        # отличает эту страницу от одиннадцати соседних по городу и от
+        # четырнадцати соседних по товару.
+        "about": ([CP[(city_key, product_key)]] if (city_key, product_key) in CP else [])
+                 + city.get("about_extra", []) + pr["intro"],
         "faq": faq,
     }
 
