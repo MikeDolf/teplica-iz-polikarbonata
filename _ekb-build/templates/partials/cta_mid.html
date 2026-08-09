@@ -23,7 +23,7 @@
         <span>Согласен на обработку контактных данных. <a href="{{ site.privacy_url }}" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
       </label>
       {%- if site.max_url %}
-      <p class="ctamid__alt">Проще в мессенджере? <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a></p>
+      <p class="ctamid__alt">Проще в мессенджере? <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">MAX</a>{%- if site.whatsapp_url %} или <a href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">WhatsApp</a>{%- endif %}</p>
       {%- endif %}
       <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p>
     </form>

@@ -15,18 +15,23 @@ SITE = {
     "phone_tel": "",
     "phone_internal": "+7 950 646-09-53",   # для прайса и своих нужд, на сайт не идёт
     "has_max": True,                    # мессенджер MAX подключён на этом номере
+    # WhatsApp: номер в ссылке виден по определению, скрыть его нельзя.
+    # Тот же номер стоит на ursdom.ru — это заметный признак аффилиата,
+    # решение владельца от 08.08.2026 принято с учётом этого.
+    "has_whatsapp": True,
+    "whatsapp_url": "https://wa.me/79506460953",
     "max_url": "https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10",  # ссылка-профиль MAX
     "legal_status": "",
     "payment": "Оплата любая: наличными, картой или переводом, после выгрузки.",
     "samovyvoz": True,
     "skidki_obem": True,
     "hours": "Круглосуточно, без выходных",
-    "callback_promise": "ответим в MAX за 15 минут",
+    "callback_promise": "ответим за 15 минут",
     "min_volume": "3 м\u00b3",              # минимальный объём заказа
     "min_volume_note": "меньше не возим, рейс не окупается",
     "form_endpoint": "https://api.web3forms.com/submit",
     "web3forms_key": "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",  # бесплатный ключ на web3forms.com, привязать к mezdudelom73@gmail.com
     "privacy_url": "/politika-konfidentsialnosti.html",
     "metrika_id": "110303165",                      # оставлено пустым намеренно (место под счётчик)
-    "css": "/assets/ekb/style.css?v=40",
+    "css": "/assets/ekb/style.css?v=41",
 }

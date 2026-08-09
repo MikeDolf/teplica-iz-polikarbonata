@@ -32,6 +32,9 @@
         <div class="hero__cta">
           {%- if site.max_url %}
           <a class="btn btn--call" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          {%- if site.whatsapp_url %}
+          <a class="btn btn--wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
+          {%- endif %}
           <a class="btn btn--ghost" href="#zayavka">Оставить заявку</a>
           {%- else %}
           <a class="btn btn--call" href="#zayavka">Оставить заявку</a>

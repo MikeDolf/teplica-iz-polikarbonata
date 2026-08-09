@@ -3,6 +3,9 @@
     <div>
       {%- if site.max_url %}
       <a class="ftr__phone" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+      {%- if site.whatsapp_url %}
+      <a class="ftr__wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
+      {%- endif %}
       {%- endif %}
       <a class="ftr__mail" href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a>
       <p class="ftr__hours">{{ site.hours }}, {{ site.callback_promise }}.</p>

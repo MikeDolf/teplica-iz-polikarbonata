@@ -11,6 +11,9 @@
       Написать в MAX
     </a>
     {%- endif %}
+    {%- if site.whatsapp_url %}
+    <a class="fcta__btn fcta__btn--wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
+    {%- endif %}
     <a class="fcta__btn fcta__btn--alt" href="#zayavka">Узнать цену</a>
   </div>
 </div>
