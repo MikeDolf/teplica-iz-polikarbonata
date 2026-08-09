@@ -5,11 +5,11 @@
       {%- if price %}
       <div class="pricebox__nums">
         <div class="pricebox__num"><span>от {{ price.m3 }} ₽</span><small>за куб с доставкой</small></div>
-        <div class="pricebox__num"><span>от {{ price.bag }} ₽</span><small>за мешок с доставкой</small></div>
+        <div class="pricebox__num"><span>от {{ price.bag }} ₽</span><small>за мешок{% if bag_kg %} 40-50 л, около {{ bag_kg }} кг{% else %} 40-50 л{% endif %}</small></div>
       </div>
       {%- endif %}
       <p>Цена зависит от объёма, района доставки и способа выгрузки. Чем больше объём и ближе участок, тем дешевле выходит куб.</p>
-      <p class="pricebox__honest">Цены ориентировочные. Точную стоимость за куб и за мешок с доставкой в ваш район называем сразу по заявке, без скрытых доплат.</p>
+      <p class="pricebox__honest">Минимальный заказ 3 м³, {{ bag_note }}, меньше не возим. Цены ориентировочные. Точную стоимость за куб и за мешок с доставкой в ваш район называем сразу по заявке, без скрытых доплат.</p>
     </div>
     <a class="btn btn--call pricebox__btn" href="#zayavka">Узнать точную цену</a>
   </div>

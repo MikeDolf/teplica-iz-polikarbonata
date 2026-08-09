@@ -179,6 +179,14 @@ def product_genitive(page):
     return "грунта"
 
 
+def product_key_of(page):
+    slug = page["slug"]
+    for key in sorted(PRODUCTS, key=len, reverse=True):
+        if slug == key or slug.startswith(key + "-"):
+            return key
+    return ""
+
+
 def product_rates(page):
     """Таблица норм внесения, если она у товара описана. Ключ берём по слугу,
     как и фото с падежом: чип формы для этого не годится."""
@@ -187,6 +195,38 @@ def product_rates(page):
         if slug == key or slug.startswith(key + "-"):
             return PRODUCTS[key].get("rates")
     return None
+
+
+def bag_note(product_key):
+    """Расшифровка минимального заказа в мешках. Вес пишем только там, где он
+    известен: у торфа и опилок плотность в разы ниже, и 40 кг было бы враньём."""
+    kg = PRODUCTS.get(product_key, {}).get("bag_kg")
+    tail = f", около {kg} кг каждый" if kg else ""
+    return f"это 60-75 мешков по 40-50 л{tail}"
+
+
+def money_meta(product_key, city_key):
+    """Title и description с ценой. По Вебмастеру запросы со словом «недорого»
+    дают показы и ноль кликов: в сниппете стояло обещание назвать цену, а не
+    сама цена. Цифру ставим в title, слово «недорого» уводим в description,
+    чтобы не занимать место в заголовке."""
+    pr = PRODUCTS[product_key]
+    city = CITIES[city_key]
+    price = PRICES.get(pr["chip"])
+    if not price:
+        return None, None
+    title = f'{pr["name"]} {city["prep"]} — от {price["m3"]} ₽/м³'
+    if price.get("bag"):
+        wide = f'{title} и {price["bag"]} ₽/мешок'
+        title = wide if len(wide) <= 68 else f"{title} с доставкой"
+    else:
+        title = f"{title} с доставкой"
+    bag = f' и {price["bag"]} ₽/мешок' if price.get("bag") else ""
+    kg = PRODUCTS[product_key].get("bag_kg")
+    mini = f'Минимальный заказ 3 м³ — 60-75 мешков' + (f' по {kg} кг.' if kg else ' по 40-50 л.')
+    desc = (f'{pr["name"]} с доставкой {city["to"]} недорого: от {price["m3"]} ₽/м³{bag}, '
+            f'{pr.get("desc_hook", "")}. {mini}')
+    return title, " ".join(desc.split())
 
 
 def compose_geo(product_key, city_key):
@@ -205,11 +245,12 @@ def compose_geo(product_key, city_key):
     # общие по товару: так уникальный текст стоит в начале блока.
     cpf = CPF.get((city_key, product_key))
     faq = ([cpf] if cpf else []) + [city_q] + pr["faq_base"]
+    mt, md = money_meta(product_key, city_key)
     return {
         "slug": slug, "city": city_key, "product": pr["chip"], "kind": "geo",
         "h1": h1,
-        "title": pr["title_tpl"].format(prep=city["prep"], to=city["to"]),
-        "description": pr["desc_tpl"].format(prep=city["prep"], to=city["to"]),
+        "title": mt or pr["title_tpl"].format(prep=city["prep"], to=city["to"]),
+        "description": md or pr["desc_tpl"].format(prep=city["prep"], to=city["to"]),
         "hero_sub": pr["hero_sub"],
         # уникальный городской текст идёт первым: он задаёт непохожесть страниц
         # Уникальный для пары «город + товар» абзац идёт первым: именно он
@@ -270,6 +311,8 @@ def render(page):
         crosslink=CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
         rates=product_rates(page),
+        bag_note=bag_note(product_key_of(page)),
+        bag_kg=PRODUCTS.get(product_key_of(page), {}).get("bag_kg"),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
         hero_photo=hero_photo_for(page),
         product_genitive=product_genitive(page),
