@@ -99,6 +99,10 @@
 
   {% include "partials/uses.html" %}
 
+  {%- if rates %}
+  {% include "partials/rates.html" %}
+  {%- endif %}
+
   <section class="about band band--white">
     <div class="wrap">
     {%- for p in about %}

@@ -1,0 +1,24 @@
+{#- Таблица норм внесения. Рендерится, только если у товара есть rates. -#}
+<section class="rates band band--tint" aria-labelledby="rates-title">
+  <div class="wrap">
+    <h2 id="rates-title" class="sec-h">{{ rates.title }}</h2>
+    <p class="rates__lede">{{ rates.lede }}</p>
+    <div class="rates__scroll">
+      <table class="rates__table">
+        <thead>
+          <tr><th scope="col">Задача</th><th scope="col">Норма</th><th scope="col">Как это на глаз</th></tr>
+        </thead>
+        <tbody>
+          {%- for task, norm, hint in rates.rows %}
+          <tr>
+            <th scope="row">{{ task }}</th>
+            <td class="rates__norm">{{ norm }}</td>
+            <td class="rates__hint">{{ hint }}</td>
+          </tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="rates__foot">{{ rates.foot }} <a class="rates__link" href="#zayavka">Посчитать под мой участок</a></p>
+  </div>
+</section>

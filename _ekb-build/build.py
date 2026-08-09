@@ -15,7 +15,7 @@ from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR  # noqa
 from tail_cities import TAIL_CITIES
-from city_product import CP  # noqa
+from city_product import CP, CPF  # noqa
 try:
     from reviews import REVIEWS  # noqa
 except ImportError:
@@ -179,6 +179,16 @@ def product_genitive(page):
     return "грунта"
 
 
+def product_rates(page):
+    """Таблица норм внесения, если она у товара описана. Ключ берём по слугу,
+    как и фото с падежом: чип формы для этого не годится."""
+    slug = page["slug"]
+    for key in sorted(PRODUCTS, key=len, reverse=True):
+        if slug == key or slug.startswith(key + "-"):
+            return PRODUCTS[key].get("rates")
+    return None
+
+
 def compose_geo(product_key, city_key):
     pr = PRODUCTS[product_key]
     city = CITIES[city_key]
@@ -191,7 +201,10 @@ def compose_geo(product_key, city_key):
     hint = city.get("order_hint", "По объёму возим и мешками, и самосвалом, срок согласуем при заявке.")
     city_q = (f'Сколько стоит доставка {city["to"]}?',
               f'{hint} Точную цену за куб и за мешок с доставкой называем по телефону под ваш объём и адрес.')
-    faq = [city_q] + pr["faq_base"]
+    # Вопрос под пару «город + товар» идёт первым, за ним городской, дальше
+    # общие по товару: так уникальный текст стоит в начале блока.
+    cpf = CPF.get((city_key, product_key))
+    faq = ([cpf] if cpf else []) + [city_q] + pr["faq_base"]
     return {
         "slug": slug, "city": city_key, "product": pr["chip"], "kind": "geo",
         "h1": h1,
@@ -256,6 +269,7 @@ def render(page):
         moved_to=MOVED_TO.get(page["slug"]),
         crosslink=CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
+        rates=product_rates(page),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
         hero_photo=hero_photo_for(page),
         product_genitive=product_genitive(page),
