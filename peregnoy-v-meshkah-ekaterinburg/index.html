@@ -187,7 +187,7 @@
       <div class="adv__card"><span class="adv__ic">⚡</span><b>Доставка в день заказа</b><p>По городу и ближней области привозим быстро, срочные заявки берём в приоритет.</p></div>
       <div class="adv__card"><span class="adv__ic">⚖️</span><b>Честный объём</b><p>Привозим ровно столько, сколько заказали. Не разбавляем грунт землёй и мусором.</p></div>
       <div class="adv__card"><span class="adv__ic">🤝</span><b>Оплата после выгрузки</b><p>Рассчитываетесь, когда машина выгрузила заказ. Предоплата не нужна.</p></div>
-      <div class="adv__card"><span class="adv__ic">📦</span><b>Любой объём</b><p>От нескольких мешков до самосвала. Подберём объём под задачу и подскажем, как выгоднее.</p></div>
+      <div class="adv__card"><span class="adv__ic">📦</span><b>Мешками и навалом</b><p>От минимальных 3 кубов, это 60-75 мешков, до полного самосвала. Подберём объём под задачу и подскажем, как выгоднее.</p></div>
       <div class="adv__card"><span class="adv__ic">🧾</span><b>Физлицам и организациям</b><p>Работаем с частными участками и подрядчиками, наличный и безналичный расчёт.</p></div>
       <div class="adv__card"><span class="adv__ic">📐</span><b>Поможем рассчитать</b><p>Скажете площадь и слой, посчитаем объём, чтобы вы не переплатили за лишнее.</p></div>
       <div class="adv__card"><span class="adv__ic">💰</span><b>Скидки за объём</b><p>Чем больше заказ, тем ниже цена за куб. Для больших объёмов и подрядчиков считаем отдельно.</p></div>
@@ -474,16 +474,24 @@
     var dens = parseFloat(o.dataset.d), price = parseFloat(o.dataset.p);
     var m3 = a * (d / 100);
     if(shrink.checked) m3 *= 1.2;
-    if(!(m3 > 0)){ oM3.textContent = '0'; return; }
-    oM3.textContent = ru(round(m3));
+    // При пустом, нулевом или отрицательном вводе раньше обнулялись только
+    // кубы, а мешки, вес и цена оставались от прошлого расчёта.
+    if(!(m3 > 0)){
+      oM3.textContent = '0'; oUnit.textContent = 'кубометров';
+      oBags.textContent = oW.textContent = oT.textContent = oC.textContent = '—';
+      oMin.hidden = true;
+      return;
+    }
+    var shown = round(m3);                 // строка, дробная часть через запятую
+    oM3.textContent = ru(shown);
+    // Склоняем по тому числу, которое видит человек: «3,6 кубометра»,
+    // но «12 кубометров», а не по дробности исходного значения.
+    oUnit.textContent = (shown.indexOf(',') >= 0 ? 'кубометра'
+      : plural(parseInt(shown, 10), 'кубометр', 'кубометра', 'кубометров'));
     oBags.textContent = ru(Math.round(m3 * 20)) + '-' + ru(Math.round(m3 * 25));
     var t = m3 * dens;
-    oW.textContent = (t < 1 ? ru(Math.round(t * 1000)) + ' кг' : round(t) + ' т');
+    oW.textContent = (t < 1 ? ru(Math.round(t * 1000)) + ' кг' : ru(round(t)) + ' т');
     oT.textContent = trucks(m3);
-    // «1 кубометр», «4 кубометра», «12 кубометров»: целое число склоняем,
-    // дробное всегда идёт в родительном («3,6 кубометра»).
-    oUnit.textContent = (m3 % 1 ? 'кубометра'
-      : plural(Math.round(m3), 'кубометр', 'кубометра', 'кубометров'));
     oC.textContent = 'от ' + ru(Math.round(m3 * price / 100) * 100) + ' ₽';
     oMin.hidden = m3 >= 3;
   }
@@ -711,20 +719,20 @@
   <div class="wrap">
     <h2 id="related-title" class="sec-h">Ещё возим</h2>
     <ul class="related__list">
-      <li><a href="/torfogrunt-ekaterinburg/">Торфогрунт, Екатеринбург</a></li>
-      <li><a href="/zemlya-pod-gazon-ekaterinburg/">Земля под газон, Екатеринбург</a></li>
-      <li><a href="/navoz-ekaterinburg/">Навоз, Екатеринбург</a></li>
-      <li><a href="/navoz-konskiy-ekaterinburg/">Конский навоз, Екатеринбург</a></li>
-      <li><a href="/peregnoy-sysert/">Перегной, Сысерть</a></li>
-      <li><a href="/chernozem-ekaterinburg/">Чернозём, Екатеринбург</a></li>
-      <li><a href="/zemlya-v-meshkah-ekaterinburg/">Землю в мешках, Екатеринбург</a></li>
       <li><a href="/peregnoy-kamensk-uralskiy/">Перегной, Каменск-Уральский</a></li>
-      <li><a href="/peregnoy-nizhniy-tagil/">Перегной, Нижний Тагил</a></li>
-      <li><a href="/peregnoy-aramil/">Перегной, Арамиль</a></li>
+      <li><a href="/opilki-ekaterinburg/">Опилки, Екатеринбург</a></li>
+      <li><a href="/peregnoy-sredneuralsk/">Перегной, Среднеуральск</a></li>
+      <li><a href="/zemlya-v-meshkah-ekaterinburg/">Землю в мешках, Екатеринбург</a></li>
+      <li><a href="/grunt-dlya-teplicy-ekaterinburg/">Грунт для теплицы, Екатеринбург</a></li>
+      <li><a href="/torf-dlya-golubiki/">Грунт для голубики, Екатеринбург</a></li>
+      <li><a href="/zemlya-pod-gazon-ekaterinburg/">Земля под газон, Екатеринбург</a></li>
+      <li><a href="/opilki-v-meshkah-ekaterinburg/">Опил в мешках, Екатеринбург</a></li>
       <li><a href="/peregnoy-beloyarskiy/">Перегной, Белоярский</a></li>
-      <li><a href="/peregnoy-berezovskiy/">Перегной, Берёзовский</a></li>
+      <li><a href="/navoz-koroviy-ekaterinburg/">Коровий навоз, Екатеринбург</a></li>
+      <li><a href="/kislyy-torf-ekaterinburg/">Кислый торф, Екатеринбург</a></li>
+      <li><a href="/peregnoy-polevskoy/">Перегной, Полевской</a></li>
       <li><a href="/plodorodnyy-grunt-ekaterinburg/">Плодородный грунт, Екатеринбург</a></li>
-      <li><a href="/peregnoy-pervouralsk/">Перегной, Первоуральск</a></li>
+      <li><a href="/peregnoy-revda/">Перегной, Ревда</a></li>
     </ul>
   </div>
 </section>
@@ -952,7 +960,7 @@
       <li><a href="/dostavka-grunta/blog/">Блог</a></li>
       <li><a href="/dostavka-grunta/politika/">Обработка данных</a></li>
     </ul>
-    <p class="ftr__legal">Доставка чернозёма, перегноя и навоза по Екатеринбургу и Свердловской области. Цены рассчитываются под объём и район, точную стоимость называем по телефону.</p>
+    <p class="ftr__legal">Доставка чернозёма, перегноя и навоза по Екатеринбургу и Свердловской области. Цены рассчитываются под объём и район, точную стоимость называем в ответ на заявку.</p>
   </div>
 </footer>
 <div class="callbar">

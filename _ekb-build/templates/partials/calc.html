@@ -84,16 +84,24 @@
     var dens = parseFloat(o.dataset.d), price = parseFloat(o.dataset.p);
     var m3 = a * (d / 100);
     if(shrink.checked) m3 *= 1.2;
-    if(!(m3 > 0)){ oM3.textContent = '0'; return; }
-    oM3.textContent = ru(round(m3));
+    // При пустом, нулевом или отрицательном вводе раньше обнулялись только
+    // кубы, а мешки, вес и цена оставались от прошлого расчёта.
+    if(!(m3 > 0)){
+      oM3.textContent = '0'; oUnit.textContent = 'кубометров';
+      oBags.textContent = oW.textContent = oT.textContent = oC.textContent = '—';
+      oMin.hidden = true;
+      return;
+    }
+    var shown = round(m3);                 // строка, дробная часть через запятую
+    oM3.textContent = ru(shown);
+    // Склоняем по тому числу, которое видит человек: «3,6 кубометра»,
+    // но «12 кубометров», а не по дробности исходного значения.
+    oUnit.textContent = (shown.indexOf(',') >= 0 ? 'кубометра'
+      : plural(parseInt(shown, 10), 'кубометр', 'кубометра', 'кубометров'));
     oBags.textContent = ru(Math.round(m3 * 20)) + '-' + ru(Math.round(m3 * 25));
     var t = m3 * dens;
-    oW.textContent = (t < 1 ? ru(Math.round(t * 1000)) + ' кг' : round(t) + ' т');
+    oW.textContent = (t < 1 ? ru(Math.round(t * 1000)) + ' кг' : ru(round(t)) + ' т');
     oT.textContent = trucks(m3);
-    // «1 кубометр», «4 кубометра», «12 кубометров»: целое число склоняем,
-    // дробное всегда идёт в родительном («3,6 кубометра»).
-    oUnit.textContent = (m3 % 1 ? 'кубометра'
-      : plural(Math.round(m3), 'кубометр', 'кубометра', 'кубометров'));
     oC.textContent = 'от ' + ru(Math.round(m3 * price / 100) * 100) + ' ₽';
     oMin.hidden = m3 >= 3;
   }
