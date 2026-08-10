@@ -154,7 +154,7 @@ def build_schema(page, canonical):
                 for q, a in page["faq"]
             ],
         })
-    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, indent=2)
+    return json.dumps({"@context": "https://schema.org", "@graph": graph}, ensure_ascii=False, separators=(",", ":"))
 
 
 
@@ -353,17 +353,35 @@ def render_hub(all_pages):
         ("В каком объёме возите?", "И мешками для точечных работ, и кубами или самосвалом под отсыпку участка целиком. Подскажем, что выгоднее под вашу задачу и район."),
         ("Как узнать цену?", "Назовите продукт, объём и адрес по телефону или в заявке, назовём точную цену за куб и за мешок с доставкой в ваш район. Скрытых доплат нет."),
     ]
-    schema = json.dumps({"@context": "https://schema.org", "@graph": [
+    org = {
+        "@type": "Organization",
+        "@id": SITE["domain"] + "/dostavka-grunta/#org",
+        "name": SITE["brand"],
+        "url": SITE["domain"] + "/dostavka-grunta/",
+        "email": SITE["contact_email"],
+        "areaServed": SITE["region"],
+    }
+    catalog_list = {
+        "@type": "ItemList",
+        "name": "Материалы с доставкой",
+        "numberOfItems": len(PRODBAR),
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": p["name"],
+             "url": SITE["domain"] + p["url"]}
+            for i, p in enumerate(PRODBAR)
+        ],
+    }
+    schema = json.dumps({"@context": "https://schema.org", "@graph": [org, catalog_list,
         build_localbusiness(),
         {"@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
             {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": canonical}]},
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]},
-    ]}, ensure_ascii=False, indent=2)
+    ]}, ensure_ascii=False, separators=(",", ":"))
     html = env.get_template("hub.html").render(
         site=SITE, canonical=canonical, robots="index, follow",
-        title="Доставка грунта, перегноя и навоза по Екатеринбургу",
+        title="Доставка грунта по Екатеринбургу — чернозём от 850 ₽/м³",
         description="Доставка чернозёма, перегноя и навоза по Екатеринбургу и Свердловской области. Мешками и самосвалом, цену называем под ваш объём и район.",
         h1="Доставка грунта, перегноя и навоза по Екатеринбургу",
         hero_sub="Чернозём, перегной и навоз с доставкой по городу и области. В мешках и самосвалом, в день заказа. Скажите объём и адрес, назовём точную цену.",
@@ -418,6 +436,10 @@ def render_articles():
         for b in ARTICLES:
             if b is a: continue
             related.append({"url": f'/{base}/{b["slug"]}/', "text": b["short"]})
+        # Раньше брали первые шесть по порядку списка, и ссылки доставались
+        # одним и тем же статьям: шесть штук собирали по 14 входящих, а семь
+        # получали одну, только из хаба. Перемешиваем детерминированно.
+        related.sort(key=lambda r: hash(a["slug"] + r["url"]) & 0xffff)
         a["_related"] = related[:6]
     for a in ARTICLES:
         canonical = f'{SITE["domain"]}/{base}/{a["slug"]}/'
@@ -431,7 +453,7 @@ def render_articles():
                 {"@type": "ListItem", "position": 3, "name": a["short"], "item": canonical}]},
             {"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in a["faq"]]},
-        ]}, ensure_ascii=False, indent=2)
+        ]}, ensure_ascii=False, separators=(",", ":"))
         html = env.get_template("article.html").render(
             site=SITE, canonical=canonical, robots="index, follow",
             title=a["title"], description=a["description"], h1=a["h1"], short=a["short"],

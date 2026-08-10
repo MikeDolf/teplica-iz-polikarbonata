@@ -5,3 +5,4 @@ Disallow: /docs/
 Disallow: /_ekb-build/
 
 Sitemap: https://fanline.su/sitemap.xml
+Sitemap: https://fanline.su/sitemap-dostavka-grunta.xml

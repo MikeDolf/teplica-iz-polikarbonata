@@ -9,7 +9,8 @@
 }
 .ekb *{box-sizing:border-box}
 .ekb .wrap{max-width:var(--wrap);margin:0 auto;padding:0 20px}
-.ekb h1,.ekb h2,.ekb h3{letter-spacing:-.02em;line-height:1.15;color:var(--ink)}
+.ekb h1,.ekb h2,.ekb h3{letter-spacing:-.02em;line-height:1.15}
+:where(.ekb h1,.ekb h2,.ekb h3){color:var(--ink)}
 .ekb a{color:var(--accent)}
 .ekb :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.ekb *{transition:none!important;animation:none!important}}
@@ -21,8 +22,7 @@
 .hdr__logo svg{color:#8fcaa1}
 .ekb .hdr__phone{margin-left:auto;display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:700;font-size:17px;white-space:nowrap}
 .hdr__phone svg{color:#8fcaa1}
-.hdr__promise{font-size:12.5px;color:#9fb6a5;white-space:nowrap}
-@media (max-width:560px){.hdr__promise{display:none}.ekb .hdr__phone{font-size:16px}}
+@media (max-width:560px){.ekb .hdr__phone{font-size:16px}}
 
 /* hero */
 .hero{background:radial-gradient(120% 140% at 100% 0%, var(--bg) 0%, var(--bg2) 70%);color:#eaf1ea;padding:clamp(30px,5vw,60px) 0}
@@ -218,8 +218,6 @@
 .hero__price__label{opacity:.85}
 .hero__price__num{color:#fff;font-weight:800;white-space:nowrap}
 .hero__price__note{flex-basis:100%;font-size:13px;opacity:.85;margin-top:4px}
-.pricebox__price{font-size:19px;margin:0 0 10px}
-.pricebox__price b{color:var(--accent)}
 .mats__card em{display:block;margin-top:8px;font-style:normal;font-weight:700;color:var(--accent);font-size:14.5px}
 .mats__note{margin:0 0 14px;font-size:13px;color:var(--ink-soft)}
 
@@ -271,12 +269,12 @@
 
 /* таблица (в ekb-стиле не было, отсюда «скомканный» вид) */
 .ekb .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 10px 26px -20px rgba(16,36,27,.3);margin:0 0 12px}
-.ekb table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:420px}
+:where(.ekb table){border-collapse:collapse;width:100%;font-size:14.5px;min-width:420px}
 .ekb table caption{caption-side:top;text-align:left;padding:14px 18px 4px;font-weight:800;color:var(--ink);font-size:15px}
-.ekb thead th{text-align:left;background:var(--paper);color:var(--ink);font-weight:700;padding:12px 18px;border-bottom:1px solid var(--line);font-size:13.5px}
-.ekb tbody td{padding:12px 18px;border-bottom:1px solid var(--line);color:var(--ink)}
-.ekb tbody tr:last-child td{border-bottom:0}
-.ekb tbody tr:nth-child(even){background:#fafcfa}
+:where(.ekb thead th){text-align:left;background:var(--paper);color:var(--ink);font-weight:700;padding:12px 18px;border-bottom:1px solid var(--line);font-size:13.5px}
+:where(.ekb tbody td){padding:12px 18px;border-bottom:1px solid var(--line);color:var(--ink)}
+:where(.ekb tbody tr:last-child td){border-bottom:0}
+:where(.ekb tbody tr:nth-child(even)){background:#fafcfa}
 
 /* uses: карточки-плитки вместо голого списка */
 .ekb .uses__list{gap:12px}
@@ -310,7 +308,6 @@
 .ekb .callbar__form{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
 .ekb .ftr__mail{display:block;color:#c3d6c8;text-decoration:none;font-size:14px;margin-top:6px}
 .ekb .ftr__mail:hover{color:#fff}
-.ftr__status{margin:8px 0 0;font-size:12.5px;color:#9fb6a5}
 
 /* блок «Проще позвонить» */
 .callblock{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:clamp(20px,3vw,30px);display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
@@ -325,23 +322,13 @@
 .ekb .callblock__msg--max{background:transparent;color:var(--ink-soft);border:1px solid var(--line);font-weight:600}
 .ekb .callblock__msg--max:hover{border-color:var(--accent);color:var(--accent)}
 .callblock__msg--max[title]{cursor:default}
-
-/* отзывы */
-.reviews__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:8px}
 .review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
-.review__head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
-.review__name{font-weight:800}
-.review__meta{font-size:12.5px;color:var(--ink-soft)}
-.review__stars{color:#f0a500;font-size:14px;letter-spacing:1px}
-.review__text{margin:0;font-size:14.5px;color:var(--ink)}
 
 /* CTA сбора отзывов (когда реальных ещё нет) */
 .revcta{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
 .revcta__l{flex:1 1 380px}
 .revcta__l p{margin:0;color:var(--ink-soft);font-size:16px;max-width:60ch}
 .revcta__act{display:flex;flex-wrap:wrap;gap:10px}
-.reviews__cta-line{margin:16px 0 0;font-size:14.5px;color:var(--ink-soft)}
-.reviews__cta-line a{color:var(--accent);font-weight:600}
 
 /* ghost-кнопка на светлом блоке отзывов (чинит контраст) */
 .ekb .revcta .btn--ghost{background:#fff;color:var(--accent);border-color:var(--line)}
@@ -351,7 +338,6 @@
 .moved{background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:14px;padding:20px 22px}
 .moved b{display:block;font-size:19px;margin-bottom:8px}
 .moved p{margin:0 0 14px;color:var(--ink-soft);font-size:16.5px;max-width:70ch}
-.mats__out{font-weight:700}
 
 /* схема «сколько влезает в машину» */
 .fleetviz__lede{margin:0 0 22px;font-size:17px;color:var(--ink-soft);max-width:62ch}
@@ -420,7 +406,6 @@
 .ekb{--warm:#e0a33a;--warm-ink:#7a5310}
 .hero__price{border-color:rgba(224,163,58,.35);background:rgba(224,163,58,.10)}
 .hero__price__num{color:#f3c46f}
-.price__num{color:var(--warm-ink)}
 .pb__price,.cc__price{color:var(--warm-ink)}
 .cc__price{font-size:16.5px}
 
@@ -670,3 +655,10 @@
   /* в шапке мессенджеры дублируются нижней панелью, оставляем только логотип */
   .ekb .hdr__wa{display:none}
 }
+
+/* Ссылка «к содержанию»: не видна мышью, всплывает при табуляции. */
+.skiplink{position:absolute;left:-9999px;top:0;z-index:100;background:var(--accent);color:#fff;
+  padding:12px 18px;border-radius:0 0 10px 0;font-weight:700;text-decoration:none}
+.skiplink:focus{left:0}
+/* Крестик плавающей панели был 31px, для пальца мало. */
+.fcta__close{width:44px;height:44px;top:4px;right:4px}
