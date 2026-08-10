@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">
+  {{ schema_json|safe }}
+  </script>
+{% endblock %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="/">Главная</a></li>
+    <li><a href="/dostavka-grunta/">Доставка грунта</a></li>
+    <li><span aria-current="page">Блог</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  {% include "partials/prodbar.html" %}
+  <article class="art wrap">
+    <h1>{{ h1 }}</h1>
+    <p class="art__lede">{{ lede }}</p>
+  </article>
+
+  <section class="hubgeo band band--tint">
+    <div class="wrap">
+    <h2 class="sec-h">Расчёты и справочники</h2>
+    <ul class="hubgeo__list">
+      {%- for a in posts %}
+      <li><a href="{{ a.url }}">{{ a.text }}</a></li>
+      {%- endfor %}
+    </ul>
+    </div>
+  </section>
+
+  <section class="hubgeo band band--white">
+    <div class="wrap">
+    <h2 class="sec-h">Как применять материалы</h2>
+    <ul class="hubgeo__list">
+      {%- for a in articles %}
+      <li><a href="{{ a.url }}">{{ a.text }}</a></li>
+      {%- endfor %}
+    </ul>
+    </div>
+  </section>
+
+  {% include "partials/lead_form.html" %}
+{% endblock %}

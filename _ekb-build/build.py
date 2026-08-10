@@ -13,6 +13,7 @@ from cities import CITIES      # noqa
 from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES  # noqa
 from articles import ARTICLES  # noqa
+from blog import BLOG  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR  # noqa
 from tail_cities import TAIL_CITIES
 from city_product import CP, CPF  # noqa
@@ -92,6 +93,7 @@ MOVED_TO = {
 FOOTER_LINKS = [
     {"url": "/dostavka-grunta/", "text": "Доставка грунта"},
     {"url": "/chernozem-ekaterinburg/", "text": "Чернозём, Екатеринбург"},
+    {"url": "/dostavka-grunta/blog/", "text": "Блог"},
 ]
 
 def build_localbusiness():
@@ -335,7 +337,10 @@ def render(page):
 
 def render_hub(all_pages):
     from articles import ARTICLES as _A
-    hub_articles = [{"url": f'/dostavka-grunta/{a["slug"]}/', "text": a["short"]} for a in _A]
+    from blog import BLOG as _B
+    hub_articles = [{"url": "/dostavka-grunta/blog/", "text": "Блог: расчёт объёмов, вес куба, вместимость машины"}]
+    hub_articles += [{"url": f'/dostavka-grunta/blog/{b["slug"]}/', "text": b["short"]} for b in _B]
+    hub_articles += [{"url": f'/dostavka-grunta/{a["slug"]}/', "text": a["short"]} for a in _A]
     canonical = f'{SITE["domain"]}/dostavka-grunta/'
     catalog = [
         {"name": "Чернозём", "note": "под грядки, газон и теплицу", "url": "/chernozem-ekaterinburg/"},
@@ -471,6 +476,90 @@ def render_articles():
         urls.append(canonical)
     return urls
 
+def render_blog():
+    """Блог под /dostavka-grunta/blog/: хаб плюс посты /dostavka-grunta/blog/<slug>/.
+
+    Корневой /blog/ занят блогом сайта про теплицы, поэтому наш раздел живёт
+    внутри /dostavka-grunta/.
+
+    Статьи из articles.py остаются на своих URL под /dostavka-grunta/, у них
+    уже есть позиции, переезд их обнулит. Блог, это отдельная ветка под
+    информационные запросы, связаны разделы перекрёстными ссылками.
+    """
+    urls = []
+    posts_nav = [{"url": f'/dostavka-grunta/blog/{p["slug"]}/', "text": p["short"]} for p in BLOG]
+    art_nav = [{"url": f'/dostavka-grunta/{a["slug"]}/', "text": a["short"]} for a in ARTICLES]
+
+    hub_canonical = f'{SITE["domain"]}/dostavka-grunta/blog/'
+    hub_schema = json.dumps({"@context": "https://schema.org", "@graph": [
+        {"@type": "Blog", "name": "Блог о грунте и органике", "url": hub_canonical,
+         "inLanguage": "ru-RU",
+         "publisher": {"@type": "Organization", "name": SITE["brand"], "url": SITE["domain"] + "/dostavka-grunta/"}},
+        {"@type": "ItemList", "numberOfItems": len(BLOG) + len(ARTICLES),
+         "itemListElement": [{"@type": "ListItem", "position": i + 1, "name": x["text"],
+                              "url": SITE["domain"] + x["url"]}
+                             for i, x in enumerate(posts_nav + art_nav)]},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
+            {"@type": "ListItem", "position": 3, "name": "Блог", "item": hub_canonical}]},
+    ]}, ensure_ascii=False, separators=(",", ":"))
+    html = env.get_template("blog_index.html").render(
+        site=SITE, canonical=hub_canonical, robots="index, follow",
+        title="Блог: расчёт объёмов грунта, вес куба, доставка",
+        description="Справочник по грунту и органике: сколько весит куб земли, чернозёма и торфа, сколько кубов в КамАЗе, как посчитать объём на сотку и на грядку.",
+        h1="Блог о грунте, органике и расчёте объёмов",
+        lede="Собрали здесь то, что спрашивают до заказа: сколько весит кубометр каждого материала, "
+             "как перевести кубы в тонны и мешки, сколько входит в машину и сколько нужно на сотку. "
+             "Всё с таблицами и готовыми примерами расчёта.",
+        posts=posts_nav, articles=art_nav, footer_links=FOOTER_LINKS,
+        preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
+        schema_json=hub_schema, metrika_placeholder=True, related=[],
+        prodbar=PRODBAR, current_slug="", photos=PHOTOS, hero_photo=None)
+    outdir = os.path.join(ROOT, "dostavka-grunta", "blog")
+    os.makedirs(outdir, exist_ok=True)
+    with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
+        fh.write(html)
+    urls.append(hub_canonical)
+
+    for p in BLOG:
+        canonical = f'{SITE["domain"]}/dostavka-grunta/blog/{p["slug"]}/'
+        # Родственное: остальные посты блога плюс статьи по применению,
+        # чтобы информационный трафик уходил в сторону товарных страниц.
+        related = [x for x in posts_nav if x["url"] != f'/dostavka-grunta/blog/{p["slug"]}/']
+        pool = list(art_nav)
+        pool.sort(key=lambda r: hash(p["slug"] + r["url"]) & 0xffff)
+        related += pool[: max(0, 6 - len(related))]
+        schema = json.dumps({"@context": "https://schema.org", "@graph": [
+            {"@type": "Article", "headline": p["h1"], "description": p["description"],
+             "inLanguage": "ru-RU", "mainEntityOfPage": canonical,
+             "isPartOf": {"@type": "Blog", "name": "Блог о грунте и органике", "url": hub_canonical},
+             "publisher": {"@type": "Organization", "name": SITE["brand"], "url": SITE["domain"] + "/dostavka-grunta/"}},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
+                {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
+                {"@type": "ListItem", "position": 3, "name": "Блог", "item": hub_canonical},
+                {"@type": "ListItem", "position": 4, "name": p["short"], "item": canonical}]},
+            {"@type": "FAQPage", "mainEntity": [
+                {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]},
+        ]}, ensure_ascii=False, separators=(",", ":"))
+        html = env.get_template("article.html").render(
+            site=SITE, canonical=canonical, robots="index, follow",
+            section_url="/dostavka-grunta/blog/", section_name="Блог",
+            title=p["title"], description=p["description"], h1=p["h1"], short=p["short"],
+            lede=p["lede"], body=p["body"], faq=p["faq"], cta=p["cta"],
+            related=related, footer_links=FOOTER_LINKS, cta_price=None,
+            preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
+            schema_json=schema, metrika_placeholder=True, og_type="article",
+            prodbar=PRODBAR, current_slug="", photos=PHOTOS, cover=None, hero_photo=None)
+        outdir = os.path.join(ROOT, "dostavka-grunta", "blog", p["slug"])
+        os.makedirs(outdir, exist_ok=True)
+        with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
+            fh.write(html)
+        urls.append(canonical)
+    return urls
+
+
 if __name__ == "__main__":
     only = sys.argv[1:] or None
     done = []
@@ -486,6 +575,7 @@ if __name__ == "__main__":
         done.append(render(p))
     hub_url = render_hub(all_pages) if not only else None
     article_urls = render_articles() if not only else []
+    article_urls += render_blog() if not only else []
     index_urls = [u for (sl, u, idx) in done if idx]
     if hub_url: index_urls.insert(0, hub_url)
     index_urls += article_urls

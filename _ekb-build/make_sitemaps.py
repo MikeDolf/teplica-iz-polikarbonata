@@ -42,6 +42,10 @@ def section_urls():
         u = f'{B.SITE["domain"]}/dostavka-grunta/{a["slug"]}/'
         every.append(u)
         index.append(u)
+    from blog import BLOG
+    for u in [f'{B.SITE["domain"]}/dostavka-grunta/blog/'] + [f'{B.SITE["domain"]}/dostavka-grunta/blog/{b["slug"]}/' for b in BLOG]:
+        every.append(u)
+        index.append(u)
     return set(every), index
 
 
@@ -52,6 +56,7 @@ def block(url, priority):
 
 def priority_of(url):
     if url.endswith("/dostavka-grunta/"): return "0.9"
+    if url.endswith("/dostavka-grunta/blog/"): return "0.8"
     if "/dostavka-grunta/" in url: return "0.6"
     return "0.7"
 

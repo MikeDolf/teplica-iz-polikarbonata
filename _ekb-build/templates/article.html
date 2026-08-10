@@ -8,12 +8,25 @@
 <nav class="crumbs wrap" aria-label="Хлебные крошки">
   <ol>
     <li><a href="/">Главная</a></li>
-    <li><a href="/dostavka-grunta/">Доставка грунта</a></li>
+    <li><a href="{{ section_url|default('/dostavka-grunta/') }}">{{ section_name|default('Доставка грунта') }}</a></li>
     <li><span aria-current="page">{{ short }}</span></li>
   </ol>
 </nav>
 {% endblock %}
 {% block content %}
+{%- macro tbl(t) %}
+    <div class="table-wrap">
+      <table>
+        {%- if t.caption %}<caption>{{ t.caption }}</caption>{% endif %}
+        <thead><tr>{% for h in t.head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+        <tbody>
+          {%- for row in t.rows %}
+          <tr>{% for c in row %}<td>{{ c }}</td>{% endfor %}</tr>
+          {%- endfor %}
+        </tbody>
+      </table>
+    </div>
+{%- endmacro %}
   {% include "partials/prodbar.html" %}
   <article class="art wrap">
     <h1>{{ h1 }}</h1>
@@ -34,6 +47,7 @@
     {%- for p in sec.p %}
     <p>{{ p }}</p>
     {%- endfor %}
+    {%- if sec.table %}{{ tbl(sec.table) }}{% endif %}
     {%- if sec.list %}
     <ul class="art__list">
       {%- for li in sec.list %}
@@ -46,6 +60,7 @@
     {%- for p in ss.p %}
     <p>{{ p }}</p>
     {%- endfor %}
+    {%- if ss.table %}{{ tbl(ss.table) }}{% endif %}
     {%- if ss.list %}
     <ul class="art__list">
       {%- for li in ss.list %}
