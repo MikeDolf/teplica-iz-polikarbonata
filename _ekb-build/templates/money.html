@@ -144,7 +144,7 @@
       <div class="moved">
         <b>{{ crosslink.title }}</b>
         <p>{{ crosslink.text }}</p>
-        <a class="btn btn--call" href="{{ crosslink.url }}" target="_blank" rel="noopener">{{ crosslink.anchor }}</a>
+        <a class="btn btn--call" href="{{ crosslink.url }}"{% if crosslink.url.startswith("http") %} target="_blank" rel="noopener"{% endif %}>{{ crosslink.anchor }}</a>
       </div>
     </div>
   </section>
