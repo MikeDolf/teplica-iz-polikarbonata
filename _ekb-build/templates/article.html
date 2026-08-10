@@ -89,6 +89,17 @@
         <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
       </div>
     </aside>
+  {%- if crosslink %}
+    <aside class="art__cta">
+      <div>
+        <b>{{ crosslink.title }}</b>
+        <p>{{ crosslink.text }}</p>
+      </div>
+      <div class="art__cta-actions">
+        <a class="btn btn--ghost" href="{{ crosslink.url }}"{% if crosslink.url.startswith("http") %} target="_blank" rel="noopener"{% endif %}>{{ crosslink.anchor }}</a>
+      </div>
+    </aside>
+  {%- endif %}
   </article>
 
   {% include "partials/lead_form.html" %}

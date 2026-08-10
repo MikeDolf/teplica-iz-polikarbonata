@@ -1,11 +1,12 @@
-Новые и изменённые URL для переобхода в Яндекс.Вебмастере
+Новые URL
 
-=== НОВЫЕ (раздел блога) ===
 https://fanline.su/dostavka-grunta/blog/
 https://fanline.su/dostavka-grunta/blog/skolko-vesit-kub-zemli/
 https://fanline.su/dostavka-grunta/blog/skolko-kubov-v-kamaze/
+https://fanline.su/dostavka-grunta/blog/chem-podnyat-uchastok/
 
-=== ИЗМЕНЁННЫЕ (добавлены «3 куба», «кубометр», КамАЗ, ссылка на блог) ===
+Изменённые
+
 https://fanline.su/dostavka-grunta/
 https://fanline.su/chernozem-aramil/
 https://fanline.su/chernozem-beloyarskiy/

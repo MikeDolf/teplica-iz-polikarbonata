@@ -11,7 +11,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from site_config import SITE  # noqa
 from cities import CITIES      # noqa
 from pages import PAGES        # noqa
-from products import PRODUCTS, GEO_PAGES  # noqa
+from products import PRODUCTS, GEO_PAGES, USES, USES_DEFAULT  # noqa
 from articles import ARTICLES  # noqa
 from blog import BLOG  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR  # noqa
@@ -321,6 +321,10 @@ def render(page):
         crosslink=CROSSLINK.get(page["slug"]),
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
         rates=product_rates(page),
+        # у страниц-исключений слаг не отражает товар: torf-dlya-golubiki
+        # по префиксу попадает в обычный торф, поэтому список можно
+        # переопределить прямо в pages.py
+        uses=page.get("uses") or USES.get(product_key_of(page), USES_DEFAULT),
         bag_note=bag_note(product_key_of(page)),
         bag_kg=PRODUCTS.get(product_key_of(page), {}).get("bag_kg"),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
@@ -551,6 +555,7 @@ def render_blog():
             related=related, footer_links=FOOTER_LINKS, cta_price=None,
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
+            crosslink=p.get("crosslink"),
             prodbar=PRODBAR, current_slug="", photos=PHOTOS, cover=None, hero_photo=None)
         outdir = os.path.join(ROOT, "dostavka-grunta", "blog", p["slug"])
         os.makedirs(outdir, exist_ok=True)
