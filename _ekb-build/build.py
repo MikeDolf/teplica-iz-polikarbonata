@@ -151,6 +151,28 @@ def build_schema(page, canonical):
             "offers": offer,
         }
         if img: prod["image"] = img
+        # Рейтинг и отзывы. Разметка появляется ТОЛЬКО если в reviews.py есть
+        # настоящие отзывы: размечать выдуманные нельзя, это и нарушение
+        # правил Яндекса о достоверности разметки, и статья 5 ФЗ «О рекламе».
+        # Сейчас REVIEWS пуст, поэтому блок не выводится, но проводка готова:
+        # как только владелец добавит реальные отзывы, звёзды поедут в сниппет
+        # сами, без правки шаблонов.
+        rated = [r for r in REVIEWS if r.get("stars")]
+        if rated:
+            prod["aggregateRating"] = {
+                "@type": "AggregateRating",
+                "ratingValue": round(sum(r["stars"] for r in rated) / len(rated), 1),
+                "reviewCount": len(rated),
+                "bestRating": 5, "worstRating": 1,
+            }
+            prod["review"] = [{
+                "@type": "Review",
+                "author": {"@type": "Person", "name": r["name"]},
+                "datePublished": r.get("date_iso", ""),
+                "reviewBody": r["text"],
+                "reviewRating": {"@type": "Rating", "ratingValue": r["stars"],
+                                 "bestRating": 5, "worstRating": 1},
+            } for r in rated]
         graph.append(prod)
 
     if page.get("faq"):
@@ -191,6 +213,18 @@ def product_genitive(page):
         if slug == key or slug.startswith(key + "-"):
             return PRODUCTS[key]["gen"]
     return "грунта"
+
+
+def hero_alt_for(page):
+    """Осмысленный alt для фото в шапке: «Чернозём с доставкой в Нижнем Тагиле».
+    Берём имя товара по ключу, а не чип формы: у пары навоз/навоз коровий
+    чип общий."""
+    key = product_key_of(page)
+    name = TAIL_NAME.get(key) or page.get("product", "грунт")
+    name = name[0].upper() + name[1:]
+    city = CITIES.get(page.get("city"), {})
+    where = city.get("prep") or ""
+    return f"{name} с доставкой {where}".strip()
 
 
 def product_key_of(page):
@@ -278,24 +312,44 @@ def compose_geo(product_key, city_key):
     }
 
 
+def nav_label(page):
+    """Подпись ссылки на страницу: «Коровий навоз, Берёзовский».
+
+    Раньше и хаб, и перелинковка брали page["product"], а это чип формы —
+    он общий у пар навоз/навоз коровий, торф/кислый торф, плодородный
+    грунт/земля в мешках. В итоге ссылка на /navoz-berezovskiy/ (навоз
+    вообще) подписывалась «Навоз коровий», то есть анкорный текст
+    отправлял поисковику неверный сигнал и стравливал два своих URL за
+    одну фразу. Имя берём по ключу товара.
+    """
+    if page.get("nav_text"):
+        return page["nav_text"]
+    name = TAIL_NAME.get(product_key_of(page))
+    name = (name[0].upper() + name[1:]) if name else page.get("product", "Грунт")
+    city = CITIES.get(page.get("city"), {}).get("name", "")
+    return f"{name}, {city}" if city else name
+
+
 def attach_related(pages):
     """Проставляет каждой странице перелинковку: другие города того же продукта + другие продукты того же города."""
     by_slug = {p["slug"]: p for p in pages}
     for p in pages:
         rel = []
-        prod = p.get("product")
+        # Группируем по ключу товара, а не по чипу формы: иначе навоз и
+        # навоз коровий считались одним товаром и не ссылались друг на друга,
+        # зато получали одинаковые анкоры.
+        prod = product_key_of(p)
         city_key = p.get("city")
-        city_name = CITIES[city_key]["name"] if city_key in CITIES else ""
-        # другие города того же продукта
+        # другие города того же товара
         for q in pages:
             if q is p or q["slug"] in NOINDEX: continue
-            if q.get("product") == prod and q.get("city") != city_key:
-                rel.append({"url": f'/{q["slug"]}/', "text": f'{prod}, {CITIES[q["city"]]["name"]}'})
-        # другие продукты в том же городе
+            if product_key_of(q) == prod and q.get("city") != city_key:
+                rel.append({"url": f'/{q["slug"]}/', "text": nav_label(q)})
+        # другие товары в том же городе
         for q in pages:
             if q is p or q["slug"] in NOINDEX: continue
-            if q.get("city") == city_key and q.get("product") != prod:
-                rel.append({"url": f'/{q["slug"]}/', "text": f'{q["product"]}, {city_name}'})
+            if q.get("city") == city_key and product_key_of(q) != prod:
+                rel.append({"url": f'/{q["slug"]}/', "text": nav_label(q)})
         # Раньше связи резались до 8 и новые страницы получали по одной
         # входящей ссылке. Показываем больше и перемешиваем порядок по слугу,
         # чтобы ссылочный вес расходился равномерно, а не на первые по алфавиту.
@@ -335,6 +389,7 @@ def render(page):
         bag_kg=PRODUCTS.get(product_key_of(page), {}).get("bag_kg"),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
         hero_photo=hero_photo_for(page),
+        hero_alt=hero_alt_for(page),
         product_genitive=product_genitive(page),
         tail_name=TAIL_NAME.get(page["slug"][:-len("-ekaterinburg")] if page["slug"].endswith("-ekaterinburg") else ""),
     )
@@ -367,17 +422,7 @@ def render_hub(all_pages):
     # навоз/навоз коровий, торф/кислый торф, плодородный грунт/земля в
     # мешках, поэтому в списке получались одинаковые на вид пункты,
     # ведущие на разные страницы, и так по всем 15 городам.
-    def nav_of(p):
-        if p.get("nav_text"):
-            return p["nav_text"]
-        name = TAIL_NAME.get(product_key_of(p))
-        if name:
-            name = name[0].upper() + name[1:]
-        else:
-            name = p["product"]
-        return f'{name}, {CITIES[p["city"]]["name"]}'
-
-    geo = [{"url": f'/{p["slug"]}/', "text": nav_of(p)}
+    geo = [{"url": f'/{p["slug"]}/', "text": nav_label(p)}
            for p in all_pages if p["slug"] not in NOINDEX]
     faq = [
         ("Какие города вы обслуживаете?", "Екатеринбург и ближняя область, примерно до 100 км от города: Берёзовский, Верхняя Пышма, Среднеуральск, Арамиль, Верхнее Дуброво, Белоярский, Заречный, Сысерть, Первоуральск, Ревда, Дегтярск, Полевской, а из дальних, Каменск-Уральский и Нижний Тагил. По городу и ближнему пригороду чаще всего успеваем в день заказа, в дальние города планируем доставку на ближайшие дни. Дальше по области доставку не берём: плечо съедает смысл заказа."),

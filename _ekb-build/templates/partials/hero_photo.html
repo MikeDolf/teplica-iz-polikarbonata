@@ -1,8 +1,11 @@
-<div class="heropic" aria-hidden="true">
+{#- Фото материала в шапке. Раньше стояло aria-hidden с пустым alt, то есть
+    самая крупная и самая тематичная картинка страницы не участвовала в
+    поиске по картинкам. Теперь у неё осмысленный alt. -#}
+<div class="heropic">
   <picture>
     <source type="image/webp" media="(min-width:900px)" srcset="/assets/ekb/photo/{{ hero_photo }}-1400.webp">
     <source type="image/webp" srcset="/assets/ekb/photo/{{ hero_photo }}-800.webp">
-    <img src="/assets/ekb/photo/{{ hero_photo }}-1400.jpg" alt="" loading="eager" decoding="async"
-         width="1400" height="788">
+    <img src="/assets/ekb/photo/{{ hero_photo }}-1400.jpg" alt="{{ hero_alt|default('Доставка грунта и органики') }}"
+         loading="eager" decoding="async" width="1400" height="788">
   </picture>
 </div>
