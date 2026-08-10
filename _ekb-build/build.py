@@ -252,8 +252,7 @@ def compose_geo(product_key, city_key):
               f'{hint} Точную цену за куб и за мешок с доставкой называем по телефону под ваш объём и адрес.')
     # Вопрос под пару «город + товар» идёт первым, за ним городской, дальше
     # общие по товару: так уникальный текст стоит в начале блока.
-    cpf = CPF.get((city_key, product_key))
-    faq = ([cpf] if cpf else []) + [city_q] + pr["faq_base"]
+    faq = CPF.get((city_key, product_key), []) + [city_q] + pr["faq_base"]
     mt, md = money_meta(product_key, city_key)
     return {
         "slug": slug, "city": city_key, "product": pr["chip"], "kind": "geo",
