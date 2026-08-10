@@ -57,3 +57,17 @@ PRODBAR = [
 ]
 for _p in PRODBAR:
     _p["url"] = "/" + _p["slug"] + "/"
+
+
+# Плотность т/м³ для калькулятора объёма. Цифры те же, что в статье
+# «Сколько весит куб земли», берём середину рабочего диапазона.
+DENSITY = {
+    "chernozem": 1.2, "plodorodnyy-grunt": 1.3, "zemlya-v-meshkah": 1.3,
+    "torfogrunt": 0.9, "peregnoy": 0.65, "navoz": 0.8, "navoz-koroviy": 0.8,
+    "navoz-konskiy": 0.6, "torf": 0.7, "kislyy-torf": 0.32, "opilki": 0.2,
+}
+
+# Порядок в выпадающем списке калькулятора: сначала то, что берут чаще.
+CALC_ORDER = ["chernozem", "plodorodnyy-grunt", "peregnoy", "torfogrunt",
+              "torf", "kislyy-torf", "navoz-koroviy", "navoz-konskiy",
+              "navoz", "opilki", "zemlya-v-meshkah"]

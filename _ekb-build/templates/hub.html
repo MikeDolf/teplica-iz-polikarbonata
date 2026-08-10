@@ -48,6 +48,17 @@
     </div>
   </section>
 
+  <section class="about band band--white" aria-labelledby="about-title">
+    <div class="wrap">
+    <h2 id="about-title" class="sec-h">Какой грунт брать под вашу задачу</h2>
+    {%- for p in about %}
+    <p>{{ p }}</p>
+    {%- endfor %}
+    </div>
+  </section>
+
+  {% include "partials/calc.html" %}
+
   <section class="hubgeo band band--white">
     <div class="wrap">
     <h2 class="sec-h">Города доставки</h2>

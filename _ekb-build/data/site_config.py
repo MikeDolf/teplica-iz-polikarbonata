@@ -35,5 +35,5 @@ SITE = {
     # формы есть, поэтому у раздела своя политика.
     "privacy_url": "/dostavka-grunta/politika/",
     "metrika_id": "110303165",                      # оставлено пустым намеренно (место под счётчик)
-    "css": "/assets/ekb/style.css?v=43",
+    "css": "/assets/ekb/style.css?v=44",
 }
