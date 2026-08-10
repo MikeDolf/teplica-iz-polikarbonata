@@ -31,7 +31,9 @@ SITE = {
     "min_volume_note": "меньше не возим, рейс не окупается",
     "form_endpoint": "https://api.web3forms.com/submit",
     "web3forms_key": "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",  # бесплатный ключ на web3forms.com, привязать к mezdudelom73@gmail.com
-    "privacy_url": "/politika-konfidentsialnosti.html",
+    # Политика основного сайта утверждает, что форм нет; в этом разделе
+    # формы есть, поэтому у раздела своя политика.
+    "privacy_url": "/dostavka-grunta/politika/",
     "metrika_id": "110303165",                      # оставлено пустым намеренно (место под счётчик)
-    "css": "/assets/ekb/style.css?v=42",
+    "css": "/assets/ekb/style.css?v=43",
 }

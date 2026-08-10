@@ -1,4 +1,6 @@
 /* ЕКБ лид-ген раздел. Дизайн-токены + вёрстка. Изолирован классом .ekb, чтобы не влиять на основной сайт. */
+/* hidden всегда сильнее классовых display: см. .lead__done */
+[hidden]{display:none!important}
 .ekb{
   --bg:#12331f; --bg2:#0d281a; --ink:#16241b; --ink-soft:#5b6b60;
   --line:#e2e8e2; --accent:#2f7d46; --accent-ink:#fff; --focus:#f0a814;

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="/">Главная</a></li>
+    <li><a href="/dostavka-grunta/">Доставка грунта</a></li>
+    <li><span aria-current="page">{{ short }}</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  <article class="art wrap">
+    <h1>{{ h1 }}</h1>
+    <p class="art__lede">{{ lede }}</p>
+    {%- for sec in body %}
+    <h2>{{ sec.h }}</h2>
+    {%- for p in sec.p %}
+    <p>{{ p }}</p>
+    {%- endfor %}
+    {%- if sec.list %}
+    <ul class="art__list">
+      {%- for li in sec.list %}
+      <li>{{ li }}</li>
+      {%- endfor %}
+    </ul>
+    {%- endif %}
+    {%- endfor %}
+  </article>
+{% endblock %}

@@ -27,7 +27,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=42">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=43">
   <script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -265,9 +265,10 @@
         <button class="ctamid__submit" type="submit">Узнать цену</button>
       </div>
       <span class="ctamid__error" id="ctamid-error" hidden>Впишите номер, по которому ответить</span>
+      <span class="ctamid__error" id="ctamid-consent-error" hidden>Без согласия на обработку данных заявку отправить нельзя</span>
       <label class="ctamid__consent">
         <input type="checkbox" id="ctamid-consent" required>
-        <span>Согласен на обработку контактных данных. <a href="/politika-konfidentsialnosti.html" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
+        <span>Согласен на обработку контактных данных. <a href="/dostavka-grunta/politika/" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
       </label>
       <p class="ctamid__alt">Проще в мессенджере? <a href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">MAX</a> или <a href="https://wa.me/79506460953" target="_blank" rel="nofollow noopener">WhatsApp</a></p>
       <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p>
@@ -281,13 +282,42 @@
   var err = document.getElementById('ctamid-error');
   var btn = form.querySelector('.ctamid__submit');
   var done = document.getElementById('ctamid-done');
+  var consent = document.getElementById('ctamid-consent');
+  var consentErr = document.getElementById('ctamid-consent-error');
   function digits(s){ return (s.match(/\d/g)||[]).length; }
+  // Маска +7 999 111-22-33: плейсхолдер обещал формат, но ввод не форматировался.
+  function mask(el){
+    function fmt(v){
+      var d = (v.match(/\d/g)||[]).join('');
+      if(d[0] === '8') d = '7' + d.slice(1);
+      if(d[0] !== '7') d = '7' + d;
+      d = d.slice(0, 11);
+      var r = '+7';
+      if(d.length > 1) r += ' ' + d.slice(1, 4);
+      if(d.length > 4) r += ' ' + d.slice(4, 7);
+      if(d.length > 7) r += '-' + d.slice(7, 9);
+      if(d.length > 9) r += '-' + d.slice(9, 11);
+      return r;
+    }
+    el.addEventListener('input', function(){
+      // Пустое поле не трогаем, иначе нельзя стереть всё до конца.
+      if(!el.value.replace(/\D/g,'')){ el.value=''; return; }
+      var atEnd = el.selectionStart === el.value.length;
+      el.value = fmt(el.value);
+      if(atEnd){ try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){} }
+    });
+    el.addEventListener('blur', function(){ if(el.value === '+7') el.value = ''; });
+  }
+  mask(phone);
   phone.addEventListener('input', function(){ if(digits(phone.value) >= 10) err.hidden = true; });
+  consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(form.company.value){ return; }
     if(digits(phone.value) < 10){ err.hidden = false; phone.focus(); return; }
-    if(!document.getElementById('ctamid-consent').checked){ document.getElementById('ctamid-consent').focus(); return; }
+    // Молчаливый выход по неотмеченному согласию выглядел как сломанная кнопка.
+    if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
+    consentErr.hidden = true;
     var data = {
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
       subject: "Быстрая заявка: Навоз коровий",
@@ -522,20 +552,20 @@
   <div class="wrap">
     <h2 id="related-title" class="sec-h">Ещё возим</h2>
     <ul class="related__list">
-      <li><a href="/opilki-degtyarsk/">Опилки, Дегтярск</a></li>
       <li><a href="/navoz-koroviy-sredneuralsk/">Навоз коровий, Среднеуральск</a></li>
-      <li><a href="/navoz-ekaterinburg/">Навоз коровий, Екатеринбург</a></li>
-      <li><a href="/navoz-nizhniy-tagil/">Навоз коровий, Нижний Тагил</a></li>
-      <li><a href="/navoz-koroviy-sysert/">Навоз коровий, Сысерть</a></li>
-      <li><a href="/navoz-aramil/">Навоз коровий, Арамиль</a></li>
-      <li><a href="/navoz-polevskoy/">Навоз коровий, Полевской</a></li>
-      <li><a href="/navoz-koroviy-verhnee-dubrovo/">Навоз коровий, Верхнее Дуброво</a></li>
       <li><a href="/navoz-koroviy-zarechnyy/">Навоз коровий, Заречный</a></li>
-      <li><a href="/navoz-konskiy-degtyarsk/">Навоз конский, Дегтярск</a></li>
-      <li><a href="/navoz-revda/">Навоз коровий, Ревда</a></li>
-      <li><a href="/navoz-koroviy-kamensk-uralskiy/">Навоз коровий, Каменск-Уральский</a></li>
-      <li><a href="/navoz-koroviy-revda/">Навоз коровий, Ревда</a></li>
+      <li><a href="/navoz-koroviy-nizhniy-tagil/">Навоз коровий, Нижний Тагил</a></li>
+      <li><a href="/navoz-sysert/">Навоз коровий, Сысерть</a></li>
       <li><a href="/navoz-kamensk-uralskiy/">Навоз коровий, Каменск-Уральский</a></li>
+      <li><a href="/navoz-beloyarskiy/">Навоз коровий, Белоярский</a></li>
+      <li><a href="/torf-degtyarsk/">Торф, Дегтярск</a></li>
+      <li><a href="/navoz-koroviy-polevskoy/">Навоз коровий, Полевской</a></li>
+      <li><a href="/navoz-koroviy-revda/">Навоз коровий, Ревда</a></li>
+      <li><a href="/navoz-koroviy-pervouralsk/">Навоз коровий, Первоуральск</a></li>
+      <li><a href="/navoz-nizhniy-tagil/">Навоз коровий, Нижний Тагил</a></li>
+      <li><a href="/zemlya-v-meshkah-degtyarsk/">Плодородный грунт, Дегтярск</a></li>
+      <li><a href="/kislyy-torf-degtyarsk/">Торф, Дегтярск</a></li>
+      <li><a href="/navoz-koroviy-kamensk-uralskiy/">Навоз коровий, Каменск-Уральский</a></li>
     </ul>
   </div>
 </section>
@@ -597,7 +627,7 @@
       <div class="field field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
-        <span class="field__error" data-for="phone" hidden>Впишите номер, по которому перезвонить</span>
+        <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому перезвонить</span>
       </div>
       <div class="field field--full">
         <label class="field__label" for="lead-note">Комментарий <span class="field__opt">не обязательно</span></label>
@@ -606,8 +636,9 @@
       <div class="field field--full consent">
         <label class="consent__row">
           <input type="checkbox" id="lead-consent" required>
-          <span>Отправляя заявку, соглашаюсь на обработку контактных данных для ответа на обращение. <a href="/politika-konfidentsialnosti.html" target="_blank" rel="noopener">Как мы обрабатываем данные</a></span>
+          <span>Отправляя заявку, соглашаюсь на обработку контактных данных для ответа на обращение. <a href="/dostavka-grunta/politika/" target="_blank" rel="noopener">Как мы обрабатываем данные</a></span>
         </label>
+        <span class="field__error" id="lead-consent-error" hidden>Без согласия на обработку данных заявку отправить нельзя</span>
       </div>
       <button class="lead__submit" type="submit">
         <span class="lead__submit-label">Оставить заявку</span>
@@ -627,15 +658,48 @@
   var form = document.getElementById('lead-form'); if(!form) return;
   var phone = document.getElementById('lead-phone');
   var phoneField = phone.closest('.field--req');
+  var phoneErr = document.getElementById('lead-phone-error');
+  var consent = document.getElementById('lead-consent');
+  var consentErr = document.getElementById('lead-consent-error');
   var btn = form.querySelector('.lead__submit');
   var done = document.getElementById('lead-done');
   function digits(s){ return (s.match(/\d/g)||[]).length; }
-  phone.addEventListener('input', function(){ if(digits(phone.value) >= 10) phoneField.classList.remove('invalid'); });
+  // Маска +7 999 111-22-33: плейсхолдер обещал формат, но ввод не форматировался.
+  function mask(el){
+    function fmt(v){
+      var d = (v.match(/\d/g)||[]).join('');
+      if(d[0] === '8') d = '7' + d.slice(1);
+      if(d[0] !== '7') d = '7' + d;
+      d = d.slice(0, 11);
+      var r = '+7';
+      if(d.length > 1) r += ' ' + d.slice(1, 4);
+      if(d.length > 4) r += ' ' + d.slice(4, 7);
+      if(d.length > 7) r += '-' + d.slice(7, 9);
+      if(d.length > 9) r += '-' + d.slice(9, 11);
+      return r;
+    }
+    el.addEventListener('input', function(){
+      // Пустое поле не трогаем, иначе нельзя стереть всё до конца.
+      if(!el.value.replace(/\D/g,'')){ el.value=''; return; }
+      var atEnd = el.selectionStart === el.value.length;
+      el.value = fmt(el.value);
+      if(atEnd){ try{ el.setSelectionRange(el.value.length, el.value.length); }catch(e){} }
+    });
+    el.addEventListener('blur', function(){ if(el.value === '+7') el.value = ''; });
+  }
+  mask(phone);
+  phone.addEventListener('input', function(){
+    if(digits(phone.value) >= 10){ phoneField.classList.remove('invalid'); phoneErr.hidden = true; }
+  });
+  consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(form.company.value){ return; }
-    if(digits(phone.value) < 10){ phoneField.classList.add('invalid'); phone.focus(); return; }
-    if(!document.getElementById('lead-consent').checked){ document.getElementById('lead-consent').focus(); return; }
+    if(digits(phone.value) < 10){ phoneField.classList.add('invalid'); phoneErr.hidden = false; phone.focus(); return; }
+    // Раньше при неотмеченном согласии просто уводили фокус на чекбокс:
+    // визуально не менялось ничего, и кнопка выглядела нерабочей.
+    if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
+    consentErr.hidden = true;
     var data = {
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
       subject: "Новая заявка: " + (form.product.value||"грунт"),
@@ -718,7 +782,7 @@
       <li><a href="/dostavka-grunta/">Доставка грунта</a></li>
       <li><a href="/chernozem-ekaterinburg/">Чернозём, Екатеринбург</a></li>
       <li><a href="/dostavka-grunta/blog/">Блог</a></li>
-      <li><a href="/politika-konfidentsialnosti.html">Обработка данных</a></li>
+      <li><a href="/dostavka-grunta/politika/">Обработка данных</a></li>
     </ul>
     <p class="ftr__legal">Доставка чернозёма, перегноя и навоза по Екатеринбургу и Свердловской области. Цены рассчитываются под объём и район, точную стоимость называем по телефону.</p>
   </div>
