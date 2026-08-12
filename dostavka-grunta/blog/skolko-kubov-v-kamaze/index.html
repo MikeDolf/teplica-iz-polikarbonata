@@ -244,6 +244,13 @@
         </div>
       </div>
       <div class="field">
+        <span class="field__label">Кто заказывает</span>
+        <div class="chips" role="group" aria-label="Кто заказывает">
+          <label class="chip"><input type="radio" name="buyer" value="Частное лицо" checked><span>Частное лицо</span></label>
+          <label class="chip"><input type="radio" name="buyer" value="Организация, нужен безнал"><span>Организация</span></label>
+        </div>
+      </div>
+      <div class="field">
         <label class="field__label" for="lead-district">Район или город доставки</label>
         <input class="field__input" id="lead-district" name="district" type="text" inputmode="text" placeholder="Напр. Академический, Верхняя Пышма" autocomplete="off">
       </div>
@@ -337,9 +344,11 @@
     consentErr.hidden = true;
     var data = {
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
-      subject: "Новая заявка: " + (form.product.value||"грунт"),
+      subject: (form.buyer.value.indexOf("Организация") === 0 ? "ЮРЛИЦО. " : "")
+        + "Новая заявка: " + (form.product.value||"грунт"),
       from_name: "Сайт доставки грунта",
       product:(form.product.value||''), volume:(form.volume.value||''), district:form.district.value.trim(),
+      buyer:(form.buyer.value||''),
       when:(form.when.value||''), name:form.name.value.trim(), phone:phone.value.trim(), note:form.note.value.trim(),
       page:location.pathname, ref:document.referrer||'', ts:new Date().toISOString()
     };
@@ -396,9 +405,9 @@
       <li><a href="/dostavka-grunta/blog/skolko-vesit-kub-zemli/">Сколько весит куб земли</a></li>
       <li><a href="/dostavka-grunta/blog/chem-podnyat-uchastok/">Чем поднять участок</a></li>
       <li><a href="/dostavka-grunta/chernozem-ili-plodorodnyy-grunt/">Чернозём или плодородный грунт</a></li>
-      <li><a href="/dostavka-grunta/kak-primenyat-konskiy-navoz/">Конский навоз как удобрение</a></li>
+      <li><a href="/dostavka-grunta/skolko-stoit-navoz/">Сколько стоит навоз</a></li>
+      <li><a href="/dostavka-grunta/kogda-vnosit-navoz/">Когда вносить навоз</a></li>
       <li><a href="/dostavka-grunta/navoz-ili-peregnoy-chto-luchshe/">Навоз или перегной</a></li>
-      <li><a href="/dostavka-grunta/kak-primenyat-koroviy-navoz/">Коровий навоз как удобрение</a></li>
     </ul>
   </div>
 </section>

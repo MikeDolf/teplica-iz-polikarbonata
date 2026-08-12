@@ -32,6 +32,13 @@
         </div>
       </div>
       <div class="field">
+        <span class="field__label">Кто заказывает</span>
+        <div class="chips" role="group" aria-label="Кто заказывает">
+          <label class="chip"><input type="radio" name="buyer" value="Частное лицо" checked><span>Частное лицо</span></label>
+          <label class="chip"><input type="radio" name="buyer" value="Организация, нужен безнал"><span>Организация</span></label>
+        </div>
+      </div>
+      <div class="field">
         <label class="field__label" for="lead-district">Район или город доставки</label>
         <input class="field__input" id="lead-district" name="district" type="text" inputmode="text" placeholder="{{ district_ph }}" autocomplete="off">
       </div>
@@ -125,9 +132,11 @@
     consentErr.hidden = true;
     var data = {
       access_key: "{{ site.web3forms_key }}",
-      subject: "Новая заявка: " + (form.product.value||"грунт"),
+      subject: (form.buyer.value.indexOf("Организация") === 0 ? "ЮРЛИЦО. " : "")
+        + "Новая заявка: " + (form.product.value||"грунт"),
       from_name: "Сайт доставки грунта",
       product:(form.product.value||''), volume:(form.volume.value||''), district:form.district.value.trim(),
+      buyer:(form.buyer.value||''),
       when:(form.when.value||''), name:form.name.value.trim(), phone:phone.value.trim(), note:form.note.value.trim(),
       page:location.pathname, ref:document.referrer||'', ts:new Date().toISOString()
     };
