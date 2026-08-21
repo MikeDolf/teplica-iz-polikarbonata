@@ -652,7 +652,7 @@ def render_blog():
         # чтобы информационный трафик уходил в сторону товарных страниц.
         related = [x for x in posts_nav if x["url"] != f'/dostavka-grunta/blog/{p["slug"]}/']
         pool = list(art_nav)
-        pool.sort(key=lambda r: hash(p["slug"] + r["url"]) & 0xffff)
+        pool.sort(key=lambda r: stable_hash(p["slug"] + r["url"]))
         related += pool[: max(0, 6 - len(related))]
         schema = json.dumps({"@context": "https://schema.org", "@graph": [
             {"@type": "Article", "headline": p["h1"], "description": p["description"],
