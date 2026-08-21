@@ -4,7 +4,7 @@
 Рендерит страницы из data/pages.py в корень репозитория (папки /slug/index.html).
 Генератор нужен только для пересборки, сам сайт работает без него.
 """
-import os, sys, json
+import os, sys, json, zlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "data"))
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -348,6 +348,16 @@ def nav_label(page):
     return f"{name}, {city}" if city else name
 
 
+def stable_hash(s):
+    """Хеш, стабильный между запусками.
+
+    Встроенный hash() для строк солится случайным PYTHONHASHSEED, поэтому
+    порядок перелинковки менялся при каждой сборке: все 174 страницы
+    попадали в diff, хотя контент оставался тем же.
+    """
+    return zlib.crc32(s.encode("utf-8"))
+
+
 def attach_related(pages):
     """Проставляет каждой странице перелинковку: другие города того же продукта + другие продукты того же города."""
     by_slug = {p["slug"]: p for p in pages}
@@ -371,7 +381,7 @@ def attach_related(pages):
         # Раньше связи резались до 8 и новые страницы получали по одной
         # входящей ссылке. Показываем больше и перемешиваем порядок по слугу,
         # чтобы ссылочный вес расходился равномерно, а не на первые по алфавиту.
-        rel.sort(key=lambda r: hash(p["slug"] + r["url"]) & 0xffff)
+        rel.sort(key=lambda r: stable_hash(p["slug"] + r["url"]))
         p["related"] = rel[:14]
 
 def render(page):
@@ -557,7 +567,7 @@ def render_articles():
         # Раньше брали первые шесть по порядку списка, и ссылки доставались
         # одним и тем же статьям: шесть штук собирали по 14 входящих, а семь
         # получали одну, только из хаба. Перемешиваем детерминированно.
-        related.sort(key=lambda r: hash(a["slug"] + r["url"]) & 0xffff)
+        related.sort(key=lambda r: stable_hash(a["slug"] + r["url"]))
         a["_related"] = related[:6]
     for a in ARTICLES:
         canonical = f'{SITE["domain"]}/{base}/{a["slug"]}/'
