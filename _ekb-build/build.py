@@ -30,6 +30,17 @@ env = Environment(
 )
 
 
+def ru_number(n):
+    """Разряды через неразрывный тонкий пробел: 13 300, а не 13300.
+
+    Тот же формат, что у калькулятора в JS, иначе на одной странице цифры
+    выглядели бы по-разному."""
+    return f"{int(n):,}".replace(",", "\u2009")
+
+
+env.filters["ru"] = ru_number
+
+
 
 def available_photos():
     """Какие фото уже загружены. Шаблоны берут фото, если оно есть,
@@ -101,6 +112,11 @@ MOVED_TO = {
 FOOTER_LINKS = [
     {"url": "/dostavka-grunta/", "text": "Доставка грунта"},
     {"url": "/chernozem-ekaterinburg/", "text": "Чернозём, Екатеринбург"},
+    # Страницы направлений в подвале: иначе входящих ссылок у них было бы
+    # только две, из хаба. По этим двум трактам идёт основной поток рейсов,
+    # и сквозная ссылка тут оправдана.
+    {"url": "/dostavka-grunta-chelyabinskiy-trakt/", "text": "Челябинский тракт"},
+    {"url": "/dostavka-grunta-polevskoy-trakt/", "text": "Полевской тракт"},
     {"url": "/dostavka-grunta/blog/", "text": "Блог"},
 ]
 
@@ -311,6 +327,22 @@ def money_meta(product_key, city_key):
     return title, " ".join(desc.split())
 
 
+def direction_cities(page):
+    """Список пунктов направления для страницы тракта.
+
+    Ссылку ведём на чернозём: это самый частый товарный запрос по каждому
+    посёлку, и с него человек попадает во всю сетку через перелинковку.
+    """
+    keys = page.get("direction")
+    if not keys:
+        return []
+    out = []
+    for k in keys:
+        out.append({"name": CITIES[k]["name"], "km": CITIES[k]["base_km"],
+                    "ride": delivery_min_rub(k), "url": f"/chernozem-{k}/"})
+    return sorted(out, key=lambda d: d["km"])
+
+
 def compose_geo(product_key, city_key):
     pr = PRODUCTS[product_key]
     city = CITIES[city_key]
@@ -464,6 +496,7 @@ def render(page):
         uses=page.get("uses") or USES.get(product_key_of(page), USES_DEFAULT),
         calc_materials=CALC_MATERIALS,
         calc_preselect=product_key_of(page),
+        direction_cities=direction_cities(page), direction_name=page.get("direction_name", ""),
         calc_cities=CALC_CITIES, calc_city=page.get("city", "ekaterinburg"),
         calc_km=CITIES[page.get("city", "ekaterinburg")]["base_km"],
         delivery_min=delivery_min_rub(page.get("city", "ekaterinburg")),

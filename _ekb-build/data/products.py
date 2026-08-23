@@ -353,6 +353,13 @@ CITY_ORDER = [
     "ekaterinburg", "berezovskiy", "verhnyaya-pyshma", "sredneuralsk", "aramil",
     "verhnee-dubrovo", "pervouralsk", "zarechnyy", "beloyarskiy", "revda",
     "sysert", "polevskoy", "degtyarsk", "kamensk-uralskiy", "nizhniy-tagil",
+    # Полевское и Челябинское направления: по данным партнёров именно туда
+    # идёт больше всего рейсов, а держались они на трёх городах (Полевской,
+    # Сысерть, Арамиль). Ниже пункты вдоль обоих трактов с реальным частным
+    # сектором; совсем мелкие сёла в сетку не берём, они в TAIL_CITIES.
+    "gornyy-shchit", "kurganovo", "severskiy",
+    "bolshoy-istok", "patrushi", "bobrovskiy", "kashino", "dvurechensk",
+    "verhnyaya-sysert",
 ]
 
 # у этих сочетаний своя рукописная страница в pages.py

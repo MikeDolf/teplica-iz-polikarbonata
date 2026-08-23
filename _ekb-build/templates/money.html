@@ -64,6 +64,10 @@
   </section>
   {%- endif %}
 
+  {%- if direction_cities %}
+  {% include "partials/direction.html" %}
+  {%- endif %}
+
   {% include "partials/advantages.html" %}
 
   {% include "partials/price.html" %}
