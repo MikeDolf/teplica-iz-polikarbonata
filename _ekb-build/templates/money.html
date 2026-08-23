@@ -39,7 +39,7 @@
           {%- if site.whatsapp_url %}
           <a class="btn btn--wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
           {%- endif %}
-          <a class="btn btn--ghost" href="#calc-title">Посчитать объём</a>
+          <a class="btn btn--ghost" href="#calc-title">Рассчитать доставку</a>
           {%- else %}
           <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
           <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
@@ -62,8 +62,12 @@
   </section>
   {%- endif %}
 
+  {% include "partials/trustbar.html" %}
+
   {#- 1. Сколько стоит -#}
   {% include "partials/price.html" %}
+
+  {% include "partials/pricetable.html" %}
 
   {#- 2. Сколько нужно и во что обойдётся рейс. Калькулятор стоит сразу за
       ценой: это главный инструмент страницы, из-за него человек и остаётся. -#}

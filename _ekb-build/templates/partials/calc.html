@@ -66,6 +66,10 @@
           <li><span>Материал</span><b id="calc-mprice">от 10 200 ₽</b></li>
           <li><span id="calc-dlabel">Доставка</span><b id="calc-delivery">2 850 ₽</b></li>
           <li class="calc__price"><span>Итого ориентировочно</span><b id="calc-cost">от 13 050 ₽</b></li>
+          {#- Строка «за куб с доставкой» нужна для сравнения: у части
+              конкурентов доставка вшита в цену куба, и наши раздельные
+              цифры на первый взгляд выглядят дороже, хотя это не так. -#}
+          <li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
         </ul>
         <p class="calc__note" id="calc-min" hidden>Меньше {{ site.min_volume }} не возим: {{ site.min_volume_note }}. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p>
         <p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка по {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс считается туда и обратно{% endif %}. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
@@ -85,6 +89,7 @@
   var oMp = document.getElementById('calc-mprice'), oD = document.getElementById('calc-delivery');
   var oDl = document.getElementById('calc-dlabel');
   var oC = document.getElementById('calc-cost'), oMin = document.getElementById('calc-min');
+  var oPer = document.getElementById('calc-per');
   var oUnit = document.getElementById('calc-unit');
   var KM_PRICE = {{ site.km_price }}, LEGS = {{ 2 if site.km_round_trip else 1 }}, MIN_M3 = 3;
   function ru(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
@@ -134,6 +139,7 @@
       oM3.textContent = '0'; oUnit.textContent = 'кубометров';
       if(oBags) oBags.textContent = '—';
       oW.textContent = oT.textContent = oMp.textContent = oD.textContent = oC.textContent = '—';
+      oPer.textContent = '—';
       oMin.hidden = true;
       return;
     }
@@ -155,6 +161,9 @@
     oDl.textContent = 'Доставка, ' + ru(distance) + ' км' + (LEGS > 1 ? ' в один конец' : '');
     oD.textContent = ride ? ru(ride) + ' ₽' : '—';
     oC.textContent = 'от ' + ru(material + ride) + ' ₽';
+    // Делим на оплачиваемый объём, а не на введённый: при заказе меньше
+    // минимума человек платит за три куба, и честная цифра именно такая.
+    oPer.textContent = ru(Math.round((material + ride) / billed)) + ' ₽';
     oMin.hidden = m3 >= MIN_M3;
   }
   [mat, area, depth, shrink].forEach(function(el){

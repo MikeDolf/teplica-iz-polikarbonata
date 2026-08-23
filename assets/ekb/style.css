@@ -719,3 +719,33 @@
   .hero__cta,.revcta__act,.art__cta-actions{display:grid;gap:10px}
   .hero__cta .btn,.revcta__act .btn,.art__cta-actions .btn{width:100%}
 }
+
+
+/* Полоса доверия под первым экраном (приём с торф24). Не карточки, а
+   тонкая лента: её задача не рассказать, а снять типовые опасения одним
+   взглядом, до того как человек начнёт их формулировать. */
+.tstrip{background:var(--paper);border-bottom:1px solid var(--line)}
+.tstrip__in{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 24px;padding-top:16px;padding-bottom:16px}
+.tstrip__i{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
+  column-gap:10px;align-items:center;font-size:14px}
+.tstrip__ic{grid-row:1 / 3;width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  background:rgba(47,125,70,.1);color:var(--accent)}
+.tstrip__ic svg{width:19px;height:19px}
+.tstrip__i b{font-size:14.5px;line-height:1.25}
+.tstrip__i span:not(.tstrip__ic){color:var(--ink-soft);font-size:13px;line-height:1.3}
+@media (max-width:900px){.tstrip__in{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:480px){.tstrip__in{grid-template-columns:1fr}}
+
+/* Прайс-таблица: текущий товар подсвечен, чтобы человек видел, где он. */
+.ptab__on{background:rgba(47,125,70,.07)}
+.ptab__on td{font-weight:700}
+.ekb .ptab table td:nth-child(2),.ekb .ptab table th:nth-child(2),
+.ekb .ptab table td:nth-child(3),.ekb .ptab table th:nth-child(3){white-space:nowrap}
+
+/* Строка «за куб с доставкой» в калькуляторе: тем же весом, что и итог,
+   но без верхней линии, они читаются парой. */
+.ekb .calc__per{color:#c7ddd0}
+.ekb .calc__per b{font-size:17px}
+
+.ftr__pay{margin:8px 0 0;font-size:13px;color:#9fb6a5}
+.ftr__pay span{color:#c3d6c8;font-weight:600}

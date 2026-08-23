@@ -327,6 +327,27 @@ def money_meta(product_key, city_key):
     return title, " ".join(desc.split())
 
 
+def price_rows(page):
+    """Строки прайс-таблицы: цена за куб и полная сумма минимального заказа.
+
+    Последняя колонка считается под город страницы, поэтому таблица у
+    каждого города своя и отвечает на вопрос «сколько это будет стоить
+    мне», а не «сколько стоит куб вообще».
+    """
+    city_key = page.get("city", "ekaterinburg")
+    ride = delivery_min_rub(city_key)
+    cur = product_key_of(page)
+    rows = []
+    for p in PRODBAR:
+        key = p["tex"]
+        pr = PRICES.get(PRODUCTS.get(key, {}).get("chip"))
+        if not pr:
+            continue
+        rows.append({"name": p["name"], "url": p["url"], "m3": pr["m3"],
+                     "min_total": pr["m3"] * 3 + ride, "current": key == cur})
+    return rows
+
+
 def direction_cities(page):
     """Список пунктов направления для страницы тракта.
 
@@ -497,6 +518,7 @@ def render(page):
         calc_materials=CALC_MATERIALS,
         calc_preselect=product_key_of(page),
         direction_cities=direction_cities(page), direction_name=page.get("direction_name", ""),
+        price_rows=price_rows(page),
         calc_cities=CALC_CITIES, calc_city=page.get("city", "ekaterinburg"),
         calc_km=CITIES[page.get("city", "ekaterinburg")]["base_km"],
         delivery_min=delivery_min_rub(page.get("city", "ekaterinburg")),
