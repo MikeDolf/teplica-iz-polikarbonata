@@ -39,8 +39,11 @@
 .hero__min b{color:#ffc978}
 .hero__cta{display:flex;flex-wrap:wrap;gap:12px}
 .hero__note{margin:16px 0 0;font-size:13.5px;color:#9fb6a5}
+/* Базовая геометрия кнопки. min-height фиксирует высоту независимо от того,
+   есть ли внутри иконка: без неё кнопка с svg была на пару пикселей выше
+   соседней и ряд выглядел неровным. */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font:inherit;font-weight:700;font-size:17px;
-  padding:14px 22px;border-radius:12px;text-decoration:none;cursor:pointer;border:1.5px solid transparent;transition:filter .15s,transform .05s,background .15s}
+  min-height:54px;line-height:1.2;padding:13px 22px;border-radius:12px;text-decoration:none;cursor:pointer;border:1.5px solid transparent;transition:filter .15s,transform .05s,background .15s}
 .btn:active{transform:translateY(1px)}
 .ekb .btn--call{background:var(--accent);color:var(--accent-ink)}
 .ekb .btn--call:hover{filter:brightness(1.07)}
@@ -138,7 +141,7 @@
 .consent__row{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;line-height:1.45;color:var(--l-ink-soft);cursor:pointer}
 .consent__row input{margin-top:2px;width:17px;height:17px;flex:none;accent-color:var(--l-accent)}
 .consent__row a{color:var(--l-accent);text-decoration:underline}
-.lead__submit{grid-column:1 / -1;position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;font:inherit;font-size:16px;font-weight:700;color:var(--l-accent-ink);background:var(--l-accent);border:none;border-radius:12px;padding:15px 18px;cursor:pointer;transition:filter .15s,transform .05s}
+.lead__submit{grid-column:1 / -1;position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;font:inherit;font-size:16px;font-weight:700;color:var(--l-accent-ink);background:var(--l-accent);border:none;border-radius:12px;min-height:54px;line-height:1.2;padding:13px 18px;cursor:pointer;transition:filter .15s,transform .05s}
 .lead__submit:hover{filter:brightness(1.06)}
 .lead__submit:active{transform:translateY(1px)}
 .lead__submit:focus-visible{outline:3px solid var(--l-focus);outline-offset:2px}
@@ -322,13 +325,19 @@
 .callblock{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:clamp(20px,3vw,30px);display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
 .callblock__l b{display:block;font-size:clamp(19px,2.4vw,23px);margin:0 0 4px}
 .callblock__l p{margin:0;color:var(--ink-soft);font-size:16px;max-width:52ch}
-.callblock__act{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.ekb .callblock__phone{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-size:17px;font-weight:800;color:var(--accent-ink);background:var(--accent);text-decoration:none;white-space:nowrap;border-radius:12px;padding:14px 20px;min-height:52px;transition:filter .15s,transform .05s}
+.callblock__act{display:grid;gap:10px;align-content:center;flex:1 1 300px;max-width:360px}
+.callblock__act > *{width:100%}
+/* Три кнопки блока делят одну геометрию: разъезжались именно они. */
+.ekb .callblock__phone,.ekb .callblock__wa,.ekb .callblock__msg{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  min-height:54px;padding:13px 20px;border-radius:12px;
+  border:1.5px solid transparent;line-height:1.2;
+  font-size:17px;font-weight:800;text-decoration:none;white-space:nowrap;
+  transition:filter .15s,background .15s,border-color .15s,color .15s,transform .05s}
+.ekb .callblock__phone{color:var(--accent-ink);background:var(--accent)}
 .ekb .callblock__phone:hover{filter:brightness(1.08)}
 .ekb .callblock__phone:active{transform:translateY(1px)}
-.callblock__msgs{display:flex;gap:8px}
-.ekb .callblock__msg{display:inline-flex;align-items:center;gap:6px;padding:9px 14px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;color:#fff}
-.ekb .callblock__msg--max{background:transparent;color:var(--ink-soft);border:1px solid var(--line);font-weight:600}
+.ekb .callblock__msg--max{background:transparent;color:var(--ink-soft);border-color:var(--line);font-weight:700}
 .ekb .callblock__msg--max:hover{border-color:var(--accent);color:var(--accent)}
 .callblock__msg--max[title]{cursor:default}
 .review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
@@ -640,9 +649,7 @@
 .ekb .btn--wa:hover{background:#2ee06f}
 .ekb .btn--wa svg{flex:none}
 /* блок «проще написать» */
-.ekb .callblock__wa{display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  background:var(--wa);color:#08301a;font-weight:800;font-size:17px;text-decoration:none;
-  border-radius:12px;padding:14px 20px;min-height:52px;transition:background .15s,transform .05s}
+.ekb .callblock__wa{background:var(--wa);color:#08301a}
 .ekb .callblock__wa:hover{background:#2ee06f}
 .ekb .callblock__wa:active{transform:translateY(1px)}
 /* шапка */
@@ -702,4 +709,13 @@
 @media (max-width:760px){
   .ekb .calc__grid{grid-template-columns:1fr}
   .ekb .calc__num{font-size:38px}
+}
+
+
+/* Кнопки в ряд помещаются не всегда: на узком экране ряд переносился, и
+   плашки вставали разной ширины по длине подписи. Ниже 560px они просто
+   тянутся на всю ширину, тогда колонка выглядит ровной. */
+@media (max-width:560px){
+  .hero__cta,.revcta__act,.art__cta-actions{display:grid;gap:10px}
+  .hero__cta .btn,.revcta__act .btn,.art__cta-actions .btn{width:100%}
 }

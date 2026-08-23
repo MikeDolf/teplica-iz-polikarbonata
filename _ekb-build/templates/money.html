@@ -22,9 +22,9 @@
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
         {#- Минимальный объём стоит выше цены и кнопок намеренно: заявки на
-            «пару мешков» приходили именно потому, что условие лежало ниже
-            середины страницы, и до него не доходили. -#}
-        <p class="hero__min"><b>Минимальный заказ {{ site.min_volume }}</b>{% if not site.bags %} — возим только навалом, самосвалом. Мешками и меньшим объёмом не возим{% else %} — {{ site.min_volume_note }}{% endif %}.</p>
+            слишком малый объём приходили именно потому, что условие лежало
+            ниже середины страницы, и до него не доходили. -#}
+        <p class="hero__min"><b>Минимальный заказ {{ site.min_volume }}</b> — только навалом, самосвалом. Меньше не возим, {{ site.min_volume_note }}.</p>
         {%- if price %}
         <div class="hero__price">
           <span class="hero__price__label">Ориентировочно</span>
@@ -39,7 +39,7 @@
           {%- if site.whatsapp_url %}
           <a class="btn btn--wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
           {%- endif %}
-          <a class="btn btn--ghost" href="#zayavka">Оставить заявку</a>
+          <a class="btn btn--ghost" href="#calc-title">Посчитать объём</a>
           {%- else %}
           <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
           <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
@@ -49,8 +49,6 @@
       </div>
     </div>
   </section>
-
-
 
   {%- if moved_to %}
   <section class="band band--white">
@@ -64,15 +62,21 @@
   </section>
   {%- endif %}
 
+  {#- 1. Сколько стоит -#}
+  {% include "partials/price.html" %}
+
+  {#- 2. Сколько нужно и во что обойдётся рейс. Калькулятор стоит сразу за
+      ценой: это главный инструмент страницы, из-за него человек и остаётся. -#}
+  {% include "partials/calc.html" %}
+
+  {#- 3. На каких условиях -#}
+  {% include "partials/terms_bar.html" %}
+
   {%- if direction_cities %}
   {% include "partials/direction.html" %}
   {%- endif %}
 
   {% include "partials/advantages.html" %}
-
-  {% include "partials/price.html" %}
-
-  {% include "partials/terms_bar.html" %}
 
   {% include "partials/cta_mid.html" %}
 
@@ -80,7 +84,7 @@
     <div class="wrap">
     <h2 id="steps-title" class="sec-h">Как заказать</h2>
     <ol class="steps__list">
-      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите на почту. Укажите продукт, объём и район.</p></div></li>
+      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите в мессенджер. Укажите продукт, объём и район.</p></div></li>
       <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем цену материала и рейса отдельными цифрами. Скрытых доплат нет.</p></div></li>
       <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к месту выгрузки.</p></div></li>
     </ol>
@@ -97,7 +101,7 @@
       </div>
       <div class="delivery__card">
         <h3>Чем возим</h3>
-        <p>Только навалом, самосвалом: от трёх кубов под грядки и теплицу до полного КамАЗа под отсыпку участка. Фасовки в мешках у нас нет.</p>
+        <p>Самосвалом: от трёх кубов под грядки и теплицу до полного КамАЗа под отсыпку участка целиком.</p>
       </div>
       <div class="delivery__card">
         <h3>Сроки</h3>
@@ -108,13 +112,16 @@
     </div>
   </section>
 
+  {#- 4. Детали по товару и технике -#}
   {% include "partials/uses.html" %}
-
-  {% include "partials/calc.html" %}
 
   {%- if rates %}
   {% include "partials/rates.html" %}
   {%- endif %}
+
+  {% include "partials/fleet_viz.html" %}
+
+  {% include "partials/fleet.html" %}
 
   <section class="about band band--white">
     <div class="wrap">
@@ -124,26 +131,16 @@
     </div>
   </section>
 
-  {% include "partials/fleet_viz.html" %}
-
-  {% include "partials/fleet.html" %}
-
+  {#- 5. Доверие -#}
   {% include "partials/terms.html" %}
 
   {% include "partials/guarantees.html" %}
 
-  {% include "partials/callblock.html" %}
-
   {% include "partials/reviews.html" %}
 
-  {% include "partials/materials.html" %}
+  {% include "partials/callblock.html" %}
 
-  {% include "partials/related.html" %}
-
-  {%- if tail_cities %}
-  {% include "partials/tail_cities.html" %}
-  {%- endif %}
-
+  {#- 6. Заказать -#}
   {% include "partials/lead_form.html" %}
 
   {% include "partials/faq.html" %}
@@ -160,6 +157,13 @@
   </section>
   {%- endif %}
 
+  {#- 7. Навигация. Списки перелинковки в самом низу: они для того, кто
+      дочитал и не нашёл своего, а не для того, кто пришёл считать. -#}
+  {% include "partials/related.html" %}
 
+  {%- if tail_cities %}
+  {% include "partials/tail_cities.html" %}
+  {%- endif %}
 
+  {% include "partials/materials.html" %}
 {% endblock %}
