@@ -21,7 +21,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=44">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=45">
   <script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
@@ -140,8 +140,8 @@
       <img class="pb__tex" src="/assets/ekb/photo/zemlya-v-meshkah-96.webp" width="46" height="46"
            alt="" aria-hidden="true" loading="lazy" decoding="async">
       <span class="pb__txt">
-        <b class="pb__name">Земля в мешках</b>
-        <span class="pb__price">от 110 ₽/мешок</span>
+        <b class="pb__name">Земля навалом</b>
+        <span class="pb__price">от 750 ₽/м³</span>
       </span>
     </a>
   </div>
@@ -242,14 +242,186 @@
         <a class="btn btn--ghost" href="mailto:mezdudelom73@gmail.com">Написать на почту</a>
       </div>
     </aside>
-  </article>
+  </article><section class="calc band band--white" aria-labelledby="calc-title">
+  <div class="wrap">
+    <h2 id="calc-title" class="sec-h">Калькулятор объёма и доставки</h2>
+    <p class="calc__lede">Посчитайте объём по площади и толщине слоя, а заодно стоимость рейса до вашего адреса. Минимальный заказ 3 м³, меньше не возим, рейс не окупается.</p>
+
+    <div class="calc__grid">
+      <div class="calc__form">
+        <div class="calc__field">
+          <label class="calc__label" for="calc-mat">Материал</label>
+          <select class="calc__input" id="calc-mat">
+            <option value="chernozem" data-d="1.2" data-p="850" selected>Чернозём</option>
+            <option value="plodorodnyy-grunt" data-d="1.3" data-p="750">Плодородный грунт</option>
+            <option value="peregnoy" data-d="0.65" data-p="1100">Перегной</option>
+            <option value="torfogrunt" data-d="0.9" data-p="900">Торфогрунт</option>
+            <option value="torf" data-d="0.7" data-p="950">Торф</option>
+            <option value="kislyy-torf" data-d="0.32" data-p="950">Кислый торф</option>
+            <option value="navoz-koroviy" data-d="0.8" data-p="900">Коровий навоз</option>
+            <option value="navoz-konskiy" data-d="0.6" data-p="1200">Конский навоз</option>
+            <option value="navoz" data-d="0.8" data-p="900">Навоз</option>
+            <option value="opilki" data-d="0.2" data-p="600">Опилки</option>
+            <option value="zemlya-v-meshkah" data-d="1.3" data-p="750">Земля в мешках</option>
+          </select>
+        </div>
+        <div class="calc__field">
+          <label class="calc__label" for="calc-area">Площадь, м²</label>
+          <input class="calc__input" id="calc-area" type="number" inputmode="decimal" min="1" step="1" value="100">
+          <span class="calc__hint">Сотка это 100 м². Теплица 3×6 это 18 м².</span>
+        </div>
+        <div class="calc__field">
+          <label class="calc__label" for="calc-depth">Толщина слоя, см</label>
+          <input class="calc__input" id="calc-depth" type="number" inputmode="decimal" min="1" step="1" value="10">
+          <span class="calc__hint">Под газон 10-15, замена слоя в теплице 15-20, подсыпка 3-5.</span>
+        </div>
+        <label class="calc__check">
+          <input type="checkbox" id="calc-shrink" checked>
+          <span>Добавить 20% на усадку</span>
+        </label>
+        <div class="calc__field">
+          <label class="calc__label" for="calc-city">Куда везти</label>
+          <select class="calc__input" id="calc-city">
+            <option value="verhnyaya-pyshma" data-km="5">Верхняя Пышма, 5 км</option>
+            <option value="sredneuralsk" data-km="10">Среднеуральск, 10 км</option>
+            <option value="ekaterinburg" data-km="15" selected>Екатеринбург, 15 км</option>
+            <option value="berezovskiy" data-km="25">Берёзовский, 25 км</option>
+            <option value="aramil" data-km="40">Арамиль, 40 км</option>
+            <option value="verhnee-dubrovo" data-km="45">Верхнее Дуброво, 45 км</option>
+            <option value="beloyarskiy" data-km="50">Белоярский, 50 км</option>
+            <option value="pervouralsk" data-km="55">Первоуральск, 55 км</option>
+            <option value="zarechnyy" data-km="55">Заречный, 55 км</option>
+            <option value="revda" data-km="65">Ревда, 65 км</option>
+            <option value="sysert" data-km="65">Сысерть, 65 км</option>
+            <option value="polevskoy" data-km="70">Полевской, 70 км</option>
+            <option value="degtyarsk" data-km="70">Дегтярск, 70 км</option>
+            <option value="kamensk-uralskiy" data-km="110">Каменск-Уральский, 110 км</option>
+            <option value="nizhniy-tagil" data-km="125">Нижний Тагил, 125 км</option>
+            <option value="other" data-km="">Другой адрес</option>
+          </select>
+        </div>
+        <div class="calc__field">
+          <label class="calc__label" for="calc-km">Расстояние от базы, км</label>
+          <input class="calc__input" id="calc-km" type="number" inputmode="numeric" min="1" step="1" value="15">
+          <span class="calc__hint">База в Верхней Пышме. Если вашего адреса нет в списке, впишите километры вручную.</span>
+        </div>
+      </div>
+
+      <div class="calc__out" role="status" aria-live="polite">
+        <div class="calc__main">
+          <b class="calc__num" id="calc-m3">12</b>
+          <span class="calc__unit" id="calc-unit">кубометров</span>
+        </div>
+        <ul class="calc__rows">
+          <li><span>Примерный вес</span><b id="calc-weight">14 т</b></li>
+          <li><span>Это машин</span><b id="calc-truck">1 КамАЗ</b></li>
+          <li><span>Материал</span><b id="calc-mprice">от 10 200 ₽</b></li>
+          <li><span id="calc-dlabel">Доставка</span><b id="calc-delivery">2 850 ₽</b></li>
+          <li class="calc__price"><span>Итого ориентировочно</span><b id="calc-cost">от 13 050 ₽</b></li>
+        </ul>
+        <p class="calc__note" id="calc-min" hidden>Меньше 3 м³ не возим: меньше не возим, рейс не окупается. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p>
+        <p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка по 95 ₽ за километр, рейс считается туда и обратно. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
+        <a class="btn btn--call calc__btn" href="#zayavka">Посчитать точно</a>
+      </div>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var mat = document.getElementById('calc-mat'); if(!mat) return;
+  var area = document.getElementById('calc-area'), depth = document.getElementById('calc-depth');
+  var shrink = document.getElementById('calc-shrink');
+  var city = document.getElementById('calc-city'), km = document.getElementById('calc-km');
+  var oM3 = document.getElementById('calc-m3'), oBags = document.getElementById('calc-bags');
+  var oW = document.getElementById('calc-weight'), oT = document.getElementById('calc-truck');
+  var oMp = document.getElementById('calc-mprice'), oD = document.getElementById('calc-delivery');
+  var oDl = document.getElementById('calc-dlabel');
+  var oC = document.getElementById('calc-cost'), oMin = document.getElementById('calc-min');
+  var oUnit = document.getElementById('calc-unit');
+  var KM_PRICE = 95, LEGS = 2, MIN_M3 = 3;
+  function ru(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  // Дробные значения по-русски пишутся через запятую.
+  function round(v){ return String(v < 10 ? Math.round(v * 10) / 10 : Math.round(v)).replace('.', ','); }
+  function plural(n, one, few, many){
+    var m10 = n % 10, m100 = n % 100;
+    if(m10 === 1 && m100 !== 11) return one;
+    if(m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
+    return many;
+  }
+  function trucks(v){
+    if(v <= 3) return 'малый самосвал';
+    if(v <= 7) return 'средний самосвал';
+    if(v <= 12) return '1 КамАЗ';
+    var n = Math.ceil(v / 12);
+    return n + ' ' + plural(n, 'рейс', 'рейса', 'рейсов') + ' КамАЗа';
+  }
+  // Список городов и поле километров ведут одно значение: выбор города
+  // подставляет плечо, ручная правка километров переводит выбор в
+  // «Другой адрес», иначе подпись врала бы про расстояние.
+  city.addEventListener('change', function(){
+    var v = city.options[city.selectedIndex].dataset.km;
+    if(v) km.value = v;
+    calc();
+  });
+  km.addEventListener('input', function(){
+    var v = km.value;
+    var found = '';
+    for(var i = 0; i < city.options.length; i++){
+      if(city.options[i].dataset.km === v){ found = city.options[i].value; break; }
+    }
+    city.value = found || 'other';
+    calc();
+  });
+  function calc(){
+    var a = parseFloat(area.value) || 0, d = parseFloat(depth.value) || 0;
+    var o = mat.options[mat.selectedIndex];
+    var dens = parseFloat(o.dataset.d), price = parseFloat(o.dataset.p);
+    var m3 = a * (d / 100);
+    if(shrink.checked) m3 *= 1.2;
+    var distance = parseFloat(km.value) || 0;
+    var ride = Math.round(distance * KM_PRICE * LEGS);
+    // При пустом, нулевом или отрицательном вводе обнуляем всё разом:
+    // иначе вес и цена оставались бы от прошлого расчёта.
+    if(!(m3 > 0)){
+      oM3.textContent = '0'; oUnit.textContent = 'кубометров';
+      if(oBags) oBags.textContent = '—';
+      oW.textContent = oT.textContent = oMp.textContent = oD.textContent = oC.textContent = '—';
+      oMin.hidden = true;
+      return;
+    }
+    var shown = round(m3);                 // строка, дробная часть через запятую
+    oM3.textContent = ru(shown);
+    // Склоняем по тому числу, которое видит человек: «3,6 кубометра»,
+    // но «12 кубометров», а не по дробности исходного значения.
+    oUnit.textContent = (shown.indexOf(',') >= 0 ? 'кубометра'
+      : plural(parseInt(shown, 10), 'кубометр', 'кубометра', 'кубометров'));
+    if(oBags) oBags.textContent = ru(Math.round(m3 * 20)) + '-' + ru(Math.round(m3 * 25));
+    var t = m3 * dens;
+    oW.textContent = (t < 1 ? ru(Math.round(t * 1000)) + ' кг' : ru(round(t)) + ' т');
+    oT.textContent = trucks(Math.max(m3, MIN_M3));
+    // Считаем по минимальному объёму: заказ на полкуба всё равно оплачивается
+    // как три, и увидеть это человек должен здесь, а не в переписке.
+    var billed = Math.max(m3, MIN_M3);
+    var material = Math.round(billed * price / 100) * 100;
+    oMp.textContent = 'от ' + ru(material) + ' ₽';
+    oDl.textContent = 'Доставка, ' + ru(distance) + ' км' + (LEGS > 1 ? ' в один конец' : '');
+    oD.textContent = ride ? ru(ride) + ' ₽' : '—';
+    oC.textContent = 'от ' + ru(material + ride) + ' ₽';
+    oMin.hidden = m3 >= MIN_M3;
+  }
+  [mat, area, depth, shrink].forEach(function(el){
+    el.addEventListener('input', calc); el.addEventListener('change', calc);
+  });
+  calc();
+})();
+</script>
 
   <section class="lead" id="zayavka" aria-labelledby="lead-title">
   <div class="lead__inner">
     <div class="lead__pitch">
       <p class="lead__eyebrow">Доставка по Екатеринбургу и Свердловской области</p>
       <h2 class="lead__title" id="lead-title">Рассчитаем стоимость и привезём в день заказа</h2>
-      <p class="lead__lede">Скажите, что нужно и куда везти. Ответим в течение 15 минут в любое время суток, назовём точную цену за куб или мешок с доставкой в ваш район.</p>
+      <p class="lead__lede">Скажите, что нужно и куда везти. Ответим в течение 15 минут в любое время суток, назовём цену за куб и стоимость рейса до вашего адреса. Минимальный заказ 3 м³, возим навалом.</p>
       <a class="lead__call" href="mailto:mezdudelom73@gmail.com">
         <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm8 7L5 7v1l7 5 7-5V7l-7 5z"/></svg>
         <span>Написать: <b>mezdudelom73@gmail.com</b></span>
@@ -274,13 +446,13 @@
         </div>
       </div>
       <div class="field">
-        <span class="field__label">Объём</span>
-        <div class="chips" role="group" aria-label="Объём">
-          <label class="chip"><input type="radio" name="volume" value="Мешки" checked><span>Мешки</span></label>
-          <label class="chip"><input type="radio" name="volume" value="Куб / несколько кубов"><span>Кубами</span></label>
-          <label class="chip"><input type="radio" name="volume" value="Машина / самосвал"><span>Машина</span></label>
+        <span class="field__label">Объём</span><div class="chips" role="group" aria-label="Объём">
+          <label class="chip"><input type="radio" name="volume" value="3-4 м³, минимальный заказ" checked><span>3-4 м³</span></label>
+          <label class="chip"><input type="radio" name="volume" value="5-7 м³, средний самосвал"><span>5-7 м³</span></label>
+          <label class="chip"><input type="radio" name="volume" value="От 10 м³, КамАЗ"><span>От 10 м³</span></label>
           <label class="chip"><input type="radio" name="volume" value="Не знаю, подскажите"><span>Не знаю</span></label>
         </div>
+        <span class="field__hint">Минимальный заказ 3 м³, меньше не возим.</span>
       </div>
       <div class="field">
         <span class="field__label">Кто заказывает</span>

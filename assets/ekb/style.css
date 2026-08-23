@@ -31,6 +31,12 @@
 .hero__eyebrow{margin:0 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8fcaa1;font-weight:700}
 .hero h1{margin:0 0 14px;font-size:clamp(27px,4.4vw,42px);font-weight:800;color:#fff}
 .hero__sub{margin:0 0 22px;font-size:clamp(17px,2.2vw,20px);color:#c3d6c8;max-width:52ch}
+/* Минимальный объём в первом экране. Заметная плашка, а не строчка мелким:
+   на неё должен наткнуться взгляд раньше, чем на кнопку заявки. */
+.hero__min{margin:0 0 20px;padding:11px 15px;border-radius:11px;max-width:52ch;
+  font-size:15px;line-height:1.45;color:#ffe9c7;
+  background:rgba(255,170,60,.13);border:1.5px solid rgba(255,170,60,.42)}
+.hero__min b{color:#ffc978}
 .hero__cta{display:flex;flex-wrap:wrap;gap:12px}
 .hero__note{margin:16px 0 0;font-size:13.5px;color:#9fb6a5}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font:inherit;font-weight:700;font-size:17px;
@@ -115,6 +121,7 @@
 .field__label{font-size:13px;font-weight:600;color:var(--l-ink)}
 .field__req{color:var(--l-accent);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-left:2px}
 .field__opt{color:var(--l-ink-soft);font-weight:500;font-size:11px;margin-left:2px}
+.field__hint{display:block;margin-top:7px;font-size:12.5px;color:var(--l-ink-soft)}
 .field__input{width:100%;font:inherit;font-size:16.5px;color:var(--l-ink);background:#fff;border:1.5px solid var(--l-line);border-radius:10px;padding:11px 13px;transition:border-color .15s,box-shadow .15s}
 .field__input::placeholder{color:#9aa79e}
 .field__input:focus{outline:none;border-color:var(--l-accent);box-shadow:0 0 0 3px rgba(47,125,70,.16)}

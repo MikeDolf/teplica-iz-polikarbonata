@@ -5,7 +5,7 @@
       <div class="tbar__item">
         <span class="tbar__label">Минимальный заказ</span>
         <b class="tbar__val">от 3 кубов</b>
-        <span class="tbar__note">{{ bag_note }}, меньше не возим</span>
+        <span class="tbar__note">{{ bag_note }}, меньше не возим{% if not site.bags %}. Мешками не возим{% endif %}</span>
       </div>
       <div class="tbar__item">
         <span class="tbar__label">Наличие</span>
@@ -17,7 +17,7 @@
       <div class="tbar__item">
         <span class="tbar__label">Как получить</span>
         <b class="tbar__val">Доставка на участок</b>
-        <span class="tbar__note">самосвал к участку, мешки к воротам</span>
+        <span class="tbar__note">самосвал подаём к месту выгрузки</span>
       </div>
       <div class="tbar__item">
         <span class="tbar__label">Оплата</span>
@@ -30,7 +30,7 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Скачать прайс-лист
       </a>
-      <span class="tbar__dlnote">XLSX, все материалы и цены за куб и мешок</span>
+      <span class="tbar__dlnote">XLSX, все материалы и цены за куб</span>
     </p>
   </div>
 </section>

@@ -21,12 +21,16 @@
         <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
+        {#- Минимальный объём стоит выше цены и кнопок намеренно: заявки на
+            «пару мешков» приходили именно потому, что условие лежало ниже
+            середины страницы, и до него не доходили. -#}
+        <p class="hero__min"><b>Минимальный заказ {{ site.min_volume }}</b>{% if not site.bags %} — возим только навалом, самосвалом. Мешками и меньшим объёмом не возим{% else %} — {{ site.min_volume_note }}{% endif %}.</p>
         {%- if price %}
         <div class="hero__price">
           <span class="hero__price__label">Ориентировочно</span>
           <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
-          {% if price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
-          <span class="hero__price__note">Точную цену назовём под ваш объём и район</span>
+          {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
+          <span class="hero__price__note">Цена за материал. Доставка {{ site.km_price }} ₽/км {{ site.base_city_iz }}{% if site.km_round_trip %}, туда и обратно{% endif %}</span>
         </div>
         {%- endif %}
         <div class="hero__cta">
@@ -73,8 +77,8 @@
     <h2 id="steps-title" class="sec-h">Как заказать</h2>
     <ol class="steps__list">
       <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите на почту. Укажите продукт, объём и район.</p></div></li>
-      <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем точную цену с доставкой в ваш район. Скрытых доплат нет.</p></div></li>
-      <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к участку, мешки к воротам.</p></div></li>
+      <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем цену материала и рейса отдельными цифрами. Скрытых доплат нет.</p></div></li>
+      <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к месту выгрузки.</p></div></li>
     </ol>
     </div>
   </section>
@@ -89,7 +93,7 @@
       </div>
       <div class="delivery__card">
         <h3>Чем возим</h3>
-        <p>Мешками для точечных работ, кубами и самосвалом под отсыпку участка целиком. Подберём объём под задачу.</p>
+        <p>Только навалом, самосвалом: от трёх кубов под грядки и теплицу до полного КамАЗа под отсыпку участка. Фасовки в мешках у нас нет.</p>
       </div>
       <div class="delivery__card">
         <h3>Сроки</h3>
