@@ -676,6 +676,10 @@ def render_articles():
             lede=a["lede"], body=a["body"], faq=a["faq"], cta=a["cta"],
             related=a["_related"], footer_links=FOOTER_LINKS,
             cta_price=PRICE_BY_URL.get(a["cta"]["url"]),
+            # Блок «переход к соседней статье» был только у блога, хотя
+            # шаблон общий. Он нужен там, где две статьи стоят рядом по
+            # теме и их надо развести, чтобы они не тянули один запрос.
+            crosslink=a.get("crosslink"),
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
             prodbar=PRODBAR, current_slug="", photos=PHOTOS,
