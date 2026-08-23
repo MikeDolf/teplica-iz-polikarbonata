@@ -4,7 +4,7 @@
 Рендерит страницы из data/pages.py в корень репозитория (папки /slug/index.html).
 Генератор нужен только для пересборки, сам сайт работает без него.
 """
-import os, sys, json, zlib
+import os, sys, json, re, zlib
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "data"))
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -327,6 +327,29 @@ def money_meta(product_key, city_key):
     return title, " ".join(desc.split())
 
 
+REPEAT_SEEN = set()
+
+
+def check_repeats(html, slug, seen=REPEAT_SEEN):
+    """Ищем задвоенные фразы в готовой странице.
+
+    Ловушка возникает, когда значение из конфига уже содержит фразу, а
+    шаблон дописывает её ещё раз: «меньше не возим, меньше не возим, рейс
+    не окупается». В шаблоне это не видно, потому что подстановка одна.
+    Проверяем результат, а не исходник, и печатаем предупреждение: правило
+    не должно ронять сборку, но и молчать о таком нельзя.
+    """
+    text = re.sub(r"<script.*?</script>|<style.*?</style>", " ", html, flags=re.S)
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))
+    for m in re.finditer(r"\b([А-Яа-яЁё\w]+(?:\s+[А-Яа-яЁё\w]+){2,})\s*[.,;:!?—-]?\s+\1\b",
+                         text, re.IGNORECASE):
+        phrase = " ".join(m.group(1).split())
+        if phrase in seen:
+            continue
+        seen.add(phrase)
+        print(f"ПОВТОР ФРАЗЫ: «{phrase}» — {slug}")
+
+
 def price_rows(page):
     """Строки прайс-таблицы: цена за куб и полная сумма минимального заказа.
 
@@ -534,6 +557,7 @@ def render(page):
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as f:
         f.write(html)
+        check_repeats(html, canonical)
     return page["slug"], canonical, page["slug"] not in NOINDEX
 
 
@@ -632,6 +656,7 @@ def render_hub(all_pages):
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(html)
+        check_repeats(html, canonical)
     return canonical
 
 
@@ -714,6 +739,7 @@ def render_articles():
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
             fh.write(html)
+            check_repeats(html, canonical)
         urls.append(canonical)
     return urls
 
@@ -764,6 +790,7 @@ def render_blog():
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(html)
+        check_repeats(html, hub_canonical)
     urls.append(hub_canonical)
 
     for p in BLOG:
@@ -804,6 +831,7 @@ def render_blog():
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
             fh.write(html)
+            check_repeats(html, canonical)
         urls.append(canonical)
     return urls
 
@@ -870,6 +898,7 @@ def render_privacy():
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
         fh.write(html)
+        check_repeats(html, canonical)
     return canonical
 
 

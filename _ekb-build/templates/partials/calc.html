@@ -71,7 +71,7 @@
               цифры на первый взгляд выглядят дороже, хотя это не так. -#}
           <li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
         </ul>
-        <p class="calc__note" id="calc-min" hidden>Меньше {{ site.min_volume }} не возим: {{ site.min_volume_note }}. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p>
+        <p class="calc__note" id="calc-min" hidden>Это меньше минимального заказа. {{ site.min_volume_note|capitalize }}. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p>
         <p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка по {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс считается туда и обратно{% endif %}. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
         <a class="btn btn--call calc__btn" href="#zayavka">Посчитать точно</a>
       </div>
