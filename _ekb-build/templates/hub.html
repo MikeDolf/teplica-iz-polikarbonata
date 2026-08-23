@@ -17,6 +17,7 @@
         <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
+        <p class="hero__min"><b>Минимальный заказ {{ site.min_volume }}</b>{% if not site.bags %} — возим только навалом, самосвалом. Мешками и меньшим объёмом не возим{% else %} — {{ site.min_volume_note }}{% endif %}. Доставка {{ site.km_price }} ₽/км {{ site.base_city_iz }}{% if site.km_round_trip %}, туда и обратно{% endif %}.</p>
         <div class="hero__cta">
           {%- if site.max_url %}
           <a class="btn btn--call" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
