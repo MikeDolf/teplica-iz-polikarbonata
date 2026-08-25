@@ -5,6 +5,7 @@
 Генератор нужен только для пересборки, сам сайт работает без него.
 """
 import os, sys, json, re, zlib
+from datetime import date
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "data"))
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -160,15 +161,23 @@ def build_schema(page, canonical):
             "availability": "https://schema.org/InStock",
             "areaServed": CITIES[page["city"]]["name"],
             "seller": {"@type": "LocalBusiness", "name": SITE["brand"]},
+            # Срок действия цены: без него поисковики помечают предложение
+            # как неполное. Ставим конец следующего года, а не «сегодня плюс
+            # год»: иначе разметка менялась бы при каждой пересборке и
+            # сборка перестала бы быть воспроизводимой.
+            "priceValidUntil": f"{date.today().year + 1}-12-31",
         }
         prod = {
             "@type": "Product",
             "name": page["h1"],
             "description": page["description"],
             "category": "Грунт и органические удобрения",
+            "brand": {"@type": "Organization", "name": SITE["brand"]},
             "offers": offer,
+            # Картинка обязательна для товарного сниппета. Если своего фото
+            # у материала нет, отдаём общее: пустое поле хуже, чем общее.
+            "image": img or f'{SITE["domain"]}/assets/ekb/photo/hero-default-1400.jpg',
         }
-        if img: prod["image"] = img
         # Рейтинг и отзывы. Разметка появляется ТОЛЬКО если в reviews.py есть
         # настоящие отзывы: размечать выдуманные нельзя, это и нарушение
         # правил Яндекса о достоверности разметки, и статья 5 ФЗ «О рекламе».
@@ -328,6 +337,44 @@ def money_meta(product_key, city_key):
 
 
 REPEAT_SEEN = set()
+
+
+def publisher_node():
+    """Издатель для Article. Логотип обязателен для расширенных сниппетов:
+    без него Google помечает разметку как неполную."""
+    return {
+        "@type": "Organization",
+        "name": SITE["brand"],
+        "url": SITE["domain"] + "/dostavka-grunta/",
+        "logo": {"@type": "ImageObject",
+                 "url": SITE["domain"] + "/assets/ekb/photo/hero-default-1400.jpg"},
+    }
+
+
+def article_node(a, canonical, cover, kind="Article"):
+    """Узел Article с датами, картинкой и автором.
+
+    Без datePublished в сниппете нет даты, а для информационных статей
+    свежесть заметно влияет на клик. Автором ставим организацию: живого
+    подписанта у текстов нет, и выдумывать его нельзя.
+    """
+    img = (SITE["domain"] + f"/assets/ekb/photo/{cover}-1400.jpg") if cover else \
+          (SITE["domain"] + "/assets/ekb/photo/hero-default-1400.jpg")
+    node = {
+        "@type": kind,
+        "headline": a["h1"],
+        "description": a["description"],
+        "inLanguage": "ru-RU",
+        "mainEntityOfPage": canonical,
+        "image": img,
+        "author": {"@type": "Organization", "name": SITE["brand"],
+                   "url": SITE["domain"] + "/dostavka-grunta/"},
+        "publisher": publisher_node(),
+    }
+    if a.get("date"):
+        node["datePublished"] = a["date"]
+        node["dateModified"] = a.get("updated", a["date"])
+    return node
 
 
 def check_repeats(html, slug, seen=REPEAT_SEEN):
@@ -711,10 +758,9 @@ def render_articles():
         a["_related"] = related[:6]
     for a in ARTICLES:
         canonical = f'{SITE["domain"]}/{base}/{a["slug"]}/'
+        cover_key = (lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"]))
         schema = json.dumps({"@context": "https://schema.org", "@graph": [
-            {"@type": "Article", "headline": a["h1"], "description": a["description"],
-             "inLanguage": "ru-RU", "mainEntityOfPage": canonical,
-             "publisher": {"@type": "Organization", "name": SITE["brand"], "url": SITE["domain"] + "/dostavka-grunta/"}},
+            article_node(a, canonical, cover_key),
             {"@type": "BreadcrumbList", "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
                 {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
@@ -807,10 +853,8 @@ def render_blog():
         pool.sort(key=lambda r: stable_hash(p["slug"] + r["url"]))
         related += pool[: max(0, 6 - len(related))]
         schema = json.dumps({"@context": "https://schema.org", "@graph": [
-            {"@type": "Article", "headline": p["h1"], "description": p["description"],
-             "inLanguage": "ru-RU", "mainEntityOfPage": canonical,
-             "isPartOf": {"@type": "Blog", "name": "Блог о грунте и органике", "url": hub_canonical},
-             "publisher": {"@type": "Organization", "name": SITE["brand"], "url": SITE["domain"] + "/dostavka-grunta/"}},
+            dict(article_node(p, canonical, None, kind="BlogPosting"),
+                 isPartOf={"@type": "Blog", "name": "Блог о грунте и органике", "url": hub_canonical}),
             {"@type": "BreadcrumbList", "itemListElement": [
                 {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
                 {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
