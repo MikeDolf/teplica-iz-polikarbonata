@@ -326,8 +326,10 @@
     return many;
   }
   function trucks(v){
-    if(v <= 3) return 'малый самосвал';
-    if(v <= 7) return 'средний самосвал';
+    // Названия совпадают с блоком «На чём привозим»: там два варианта,
+    // самосвал 5 т и КамАЗ. Третьего в парке нет, и выдумывать его здесь
+    // нельзя, иначе подпись расходится с соседней секцией.
+    if(v <= 7) return 'самосвал 5 т';
     if(v <= 12) return '1 КамАЗ';
     var n = Math.ceil(v / 12);
     return n + ' ' + plural(n, 'рейс', 'рейса', 'рейсов') + ' КамАЗа';
@@ -380,14 +382,19 @@
     // Считаем по минимальному объёму: заказ на полкуба всё равно оплачивается
     // как три, и увидеть это человек должен здесь, а не в переписке.
     var billed = Math.max(m3, MIN_M3);
-    var material = Math.round(billed * price / 100) * 100;
+    // Без округления до сотни: прайс-таблица на этой же странице считает
+    // точно, и округление давало расхождение в полсотни рублей за одно и
+    // то же. Цены и так подписаны как «от».
+    var material = Math.round(billed * price);
     oMp.textContent = 'от ' + ru(material) + ' ₽';
     oDl.textContent = 'Доставка, ' + ru(distance) + ' км' + (LEGS > 1 ? ' в один конец' : '');
-    oD.textContent = ride ? ru(ride) + ' ₽' : '—';
-    oC.textContent = 'от ' + ru(material + ride) + ' ₽';
+    // Пустое поле километров, это не «доставка бесплатно»: пока плечо не
+    // задано, итог и цену за куб не показываем вовсе.
+    oD.textContent = distance > 0 ? ru(ride) + ' ₽' : '—';
+    oC.textContent = distance > 0 ? 'от ' + ru(material + ride) + ' ₽' : '—';
     // Делим на оплачиваемый объём, а не на введённый: при заказе меньше
     // минимума человек платит за три куба, и честная цифра именно такая.
-    oPer.textContent = ru(Math.round((material + ride) / billed)) + ' ₽';
+    oPer.textContent = distance > 0 ? ru(Math.round((material + ride) / billed)) + ' ₽' : '—';
     oMin.hidden = m3 >= MIN_M3;
   }
   [mat, area, depth, shrink].forEach(function(el){
