@@ -13,7 +13,7 @@ from site_config import SITE  # noqa
 from cities import CITIES      # noqa
 from bases import BASES, PRODUCT_BASE, DEFAULT_BASE  # noqa
 from pages import PAGES        # noqa
-from products import PRODUCTS, GEO_PAGES, USES, USES_DEFAULT  # noqa
+from products import PRODUCTS, GEO_PAGES, USES, USES_DEFAULT, CITY_ORDER  # noqa
 from articles import ARTICLES  # noqa
 from blog import BLOG  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR, DENSITY, CALC_ORDER  # noqa
@@ -702,8 +702,23 @@ def render_hub(all_pages):
     # навоз/навоз коровий, торф/кислый торф, плодородный грунт/земля в
     # мешках, поэтому в списке получались одинаковые на вид пункты,
     # ведущие на разные страницы, и так по всем 15 городам.
-    geo = [{"url": f'/{p["slug"]}/', "text": nav_label(p)}
-           for p in all_pages if p["slug"] not in NOINDEX]
+    # По городу одна ссылка, а не по одной на каждую пару «город + товар».
+    #
+    # Раньше здесь лежали все 246 индексируемых страниц раздела единым
+    # списком. Это половина всех узлов хаба и стена одинаковых на вид
+    # пунктов, в которой человек себя не находит. На вес ссылки такой
+    # список тоже работает плохо: она делится на 246.
+    #
+    # Ведём на чернозём города: это самый частый товарный запрос по каждому
+    # пункту, а со страницы города перелинковка ведёт на остальные десять
+    # товаров того же города. Глубина до любой страницы остаётся два клика,
+    # и все они лежат в карте сайта.
+    geo = []
+    for ck in CITY_ORDER:
+        slug = f"chernozem-{ck}"
+        if slug in NOINDEX:
+            continue
+        geo.append({"url": f"/{slug}/", "text": CITIES[ck]["name"]})
     # Хаб был чисто навигационным: 875 слов, из них почти всё — списки
     # ссылок. По общему запросу «доставка грунта екатеринбург» ему нечем
     # было ранжироваться, тогда как товарные страницы держат по 2-3 тысячи

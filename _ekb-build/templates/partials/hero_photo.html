@@ -1,11 +1,19 @@
 {#- Фото материала в шапке. Раньше стояло aria-hidden с пустым alt, то есть
     самая крупная и самая тематичная картинка страницы не участвовала в
     поиске по картинкам. Теперь у неё осмысленный alt. -#}
+{#- Выбор файла здесь описан ровно теми же правилами, что и предзагрузка в
+    base.html: srcset по ширине плюс sizes, а не media-запрос. Раньше
+    предзагрузка выбирала по ширине с учётом плотности экрана, а picture —
+    по ширине окна, и на телефоне с плотным экраном браузер успевал скачать
+    и версию 1400, и версию 800. Один и тот же кадр приезжал дважды.
+
+    fetchpriority на самой картинке нужен отдельно от предзагрузки: это
+    крупнейший элемент первого экрана, и он должен обгонять всё остальное. -#}
 <div class="heropic">
   <picture>
-    <source type="image/webp" media="(min-width:900px)" srcset="/assets/ekb/photo/{{ hero_photo }}-1400.webp">
-    <source type="image/webp" srcset="/assets/ekb/photo/{{ hero_photo }}-800.webp">
+    <source type="image/webp" sizes="100vw"
+            srcset="/assets/ekb/photo/{{ hero_photo }}-800.webp 800w, /assets/ekb/photo/{{ hero_photo }}-1400.webp 1400w">
     <img src="/assets/ekb/photo/{{ hero_photo }}-1400.jpg" alt="{{ hero_alt|default('Доставка грунта и органики') }}"
-         loading="eager" decoding="async" width="1400" height="788">
+         loading="eager" fetchpriority="high" decoding="async" width="1400" height="788">
   </picture>
 </div>

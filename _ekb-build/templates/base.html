@@ -31,12 +31,25 @@
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="stylesheet" href="{{ site.css }}">
 {%- if site.metrika_id %}
+  {#- Счётчик Метрики грузится не сразу, а как только браузер освободится.
+      tag.js весит 92 КБ и занимает главный поток примерно на 400 мс: на
+      среднем телефоне это заметная часть времени до появления страницы.
+      Очередь ym() создаётся сразу и вызов init в неё складывается, поэтому
+      визит регистрируется как обычно, просто отправляется чуть позже, когда
+      картинка шапки уже отрисована. Ожидание ограничено секундой: если
+      браузер занят дольше, счётчик грузится всё равно. -#}
   <script type="text/javascript">
     window.__ymid = {{ site.metrika_id }};
-    (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
-    m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}
-    k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
-    (window,document,'script','https://mc.yandex.ru/metrika/tag.js?id={{ site.metrika_id }}','ym');
+    (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+    m[i].l=1*new Date();
+    function load(){
+      for(var j=0;j<e.scripts.length;j++){if(e.scripts[j].src===r){return;}}
+      var k=e.createElement('script'),a=e.getElementsByTagName('script')[0];
+      k.async=1;k.src=r;a.parentNode.insertBefore(k,a);
+    }
+    function idle(){ m.requestIdleCallback ? m.requestIdleCallback(load,{timeout:1000}) : setTimeout(load,600); }
+    e.readyState==='loading' ? e.addEventListener('DOMContentLoaded',idle,{once:true}) : idle();
+    })(window,document,'ym','https://mc.yandex.ru/metrika/tag.js?id={{ site.metrika_id }}');
     ym({{ site.metrika_id }},'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});
   </script>
   <noscript><div><img src="https://mc.yandex.ru/watch/{{ site.metrika_id }}" style="position:absolute;left:-9999px;" alt="" /></div></noscript>
