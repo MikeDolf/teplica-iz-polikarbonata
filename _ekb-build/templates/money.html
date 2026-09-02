@@ -30,16 +30,19 @@
           <span class="hero__price__label">Ориентировочно</span>
           <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
           {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
-          <span class="hero__price__note">Цена за материал. Доставка {{ site.km_price }} ₽/км {{ site.base_city_iz }}{% if site.km_round_trip %}, туда и обратно{% endif %}</span>
+          <span class="hero__price__note">Цена за материал. Доставка от {{ site.km_price }} ₽/км {{ calc_base.iz }}{% if site.km_round_trip %}, туда и обратно{% endif %}</span>
         </div>
         {%- endif %}
         <div class="hero__cta">
           {%- if site.max_url %}
-          <a class="btn btn--call" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          {#- Порядок кнопок сознательный: сначала расчёт, потом мессенджеры.
+              Человек, который пишет не посчитав, слышит цену в ответ и уходит.
+              Пусть сначала увидит цифру и решит сам. -#}
+          <a class="btn btn--call" href="#calc-title">Рассчитать стоимость</a>
+          <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
           {%- if site.whatsapp_url %}
-          <a class="btn btn--wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
+          <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
           {%- endif %}
-          <a class="btn btn--ghost" href="#calc-title">Рассчитать доставку</a>
           {%- else %}
           <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
           <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>

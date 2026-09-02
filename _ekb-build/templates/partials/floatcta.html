@@ -3,10 +3,11 @@
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
   </button>
   <div class="fcta__in">
-    <p class="fcta__title">Посчитаем под ваш объём</p>
-    <p class="fcta__sub">Скажите площадь и слой, назовём цену с доставкой</p>
+    <p class="fcta__title">Посчитайте до того, как писать</p>
+    <p class="fcta__sub">Калькулятор считает объём и рейс до вашего адреса</p>
+    <a class="fcta__btn fcta__btn--main" href="#calc-title">Открыть калькулятор</a>
     {%- if site.max_url %}
-    <a class="fcta__btn fcta__btn--main" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">
+    <a class="fcta__btn fcta__btn--alt" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
       Написать в MAX
     </a>
@@ -14,6 +15,5 @@
     {%- if site.whatsapp_url %}
     <a class="fcta__btn fcta__btn--wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
     {%- endif %}
-    <a class="fcta__btn fcta__btn--alt" href="#zayavka">Узнать цену</a>
   </div>
 </div>

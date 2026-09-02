@@ -8,11 +8,11 @@
         {%- if site.bags and price.bag %}
         <div class="pricebox__num"><span>от {{ price.bag }} ₽</span><small>за мешок{% if bag_kg %} 40-50 л, около {{ bag_kg }} кг{% else %} 40-50 л{% endif %}</small></div>
         {%- else %}
-        <div class="pricebox__num"><span>{{ site.km_price }} ₽</span><small>за км доставки{% if site.km_round_trip %}, рейс туда и обратно{% endif %}</small></div>
+        <div class="pricebox__num"><span>от {{ site.km_price }} ₽</span><small>за км доставки{% if site.km_round_trip %}, рейс туда и обратно{% endif %}</small></div>
         {%- endif %}
       </div>
       {%- endif %}
-      <p>Материал и доставка считаются отдельно. Цена за кубометр зависит от объёма и способа выгрузки, доставка — от плеча: {{ site.km_price }} ₽ за километр {{ site.base_city_iz }}{% if site.km_round_trip %}, рейс оплачивается туда и обратно{% endif %}. Чем больше объём, тем дешевле выходит куб, потому что рейс один и тот же.</p>
+      <p>Материал и доставка считаются отдельно. Цена за кубометр зависит от объёма и способа выгрузки, доставка — от плеча: от {{ site.km_price }} ₽ за километр от базы{% if site.km_round_trip %}, рейс оплачивается туда и обратно{% endif %}. Базы у нас три, и везём мы с той, где лежит именно ваш материал, а не через весь город. Чем больше объём, тем дешевле выходит куб, потому что рейс один и тот же.</p>
       <p class="pricebox__honest">Минимальный заказ {{ site.min_volume }}, {{ bag_note }}: {{ site.min_volume_note }}. Цены ориентировочные, точную стоимость с доставкой на ваш адрес называем сразу по заявке, без скрытых доплат.</p>
     </div>
     <a class="btn btn--call pricebox__btn" href="#zayavka">Узнать точную цену</a>

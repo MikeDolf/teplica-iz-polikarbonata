@@ -537,7 +537,8 @@
   font-weight:700;font-size:16px;text-decoration:none;border-radius:11px;padding:13px 16px;
   transition:filter .15s, background .15s, transform .05s}
 .ekb .fcta__btn:active{transform:translateY(1px)}
-.ekb .fcta__btn--main{background:var(--accent);color:#fff;margin-bottom:8px}
+.ekb .fcta__btn--main{background:var(--accent);color:#fff}
+.ekb .fcta__btn+.fcta__btn{margin-top:8px}
 .ekb .fcta__btn--main:hover{filter:brightness(1.09)}
 .ekb .fcta__btn--alt{background:rgba(255,255,255,.09);color:#fff;border:1px solid rgba(255,255,255,.2)}
 .ekb .fcta__btn--alt:hover{background:rgba(255,255,255,.16)}

@@ -32,7 +32,6 @@ ROWS = [
     ("Навоз коровий",     "свежий и перепревший"),
     ("Навоз конский",     "под тёплые грядки"),
     ("Торф",              "низинный и верховой"),
-    ("Опилки",            "хвойные и лиственные"),
     ("Плодородный грунт", "смесь под газон и отсыпку"),
     ("Торфогрунт",        "готовая смесь под рассаду"),
 ]
@@ -90,8 +89,12 @@ def build():
 
     r += 1
     put(r, 1, "Доставка", bold=True, size=13); r += 1
-    put(r, 1, f"{SITE['km_price']} ₽ за километр {SITE['base_city_iz']}"
-              + (", рейс считается туда и обратно" if SITE["km_round_trip"] else ""), size=10); r += 1
+    put(r, 1, f"от {SITE['km_price']} ₽ за километр от базы"
+              + (", рейс считается туда и обратно" if SITE["km_round_trip"] else "")
+              + ", с подачей машины", size=10); r += 1
+    put(r, 1, "Базы разные: земля, торф и торфогрунт грузятся в Курганово "
+              "(Полевской тракт), перегной и навоз — в Садовом. Плечо в таблице "
+              "ниже дано для земли; по органике считаем от Садового.", size=10); r += 1
     put(r, 1, "Стоимость рейса не зависит от загрузки кузова, поэтому чем больше объём, "
               "тем дешевле выходит кубометр.", size=10); r += 2
 
@@ -102,11 +105,12 @@ def build():
         ws.cell(row=r, column=col).border = BOX
     r += 1
 
-    for key in sorted(BASE_KM, key=lambda k: BASE_KM[k]):
-        km = BASE_KM[key]
+    ZEMLYA = "kurganovo"
+    for key in sorted(BASE_KM, key=lambda k: BASE_KM[k][ZEMLYA]):
+        km = BASE_KM[key][ZEMLYA]
         put(r, 1, CITIES[key]["name"])
         put(r, 2, km, align="center")
-        put(r, 3, km * SITE["km_price"] * legs(), align="center")
+        put(r, 3, km * SITE["km_price"] * legs() + SITE.get("order_fee", 0), align="center")
         for col in range(1, 4):
             ws.cell(row=r, column=col).border = BOX
         r += 1

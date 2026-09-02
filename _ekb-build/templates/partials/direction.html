@@ -7,7 +7,7 @@
 <section class="dirs band band--tint" aria-labelledby="dirs-title">
   <div class="wrap">
     <h2 id="dirs-title" class="sec-h">Куда возим {{ direction_name }}</h2>
-    <p class="mats__lede">Плечо считается {{ site.base_city_iz }}, доставка {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс туда и обратно{% endif %}. Цена рейса не зависит от того, три куба в кузове или десять, поэтому на большом объёме доставка в пересчёте на куб выходит заметно дешевле.</p>
+    <p class="mats__lede">Плечо в таблице считается от базы земли {{ base_zemlya.iz }} ({{ base_zemlya.where }}), доставка от {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс туда и обратно{% endif %}. Перегной и навоз идут с другой базы, {{ base_organika.v }}, и плечо у них своё — его считает калькулятор выше. Цена рейса не зависит от того, три куба в кузове или десять, поэтому на большом объёме доставка в пересчёте на куб выходит заметно дешевле.</p>
     <div class="table-wrap">
       <table>
         <caption>Плечо и стоимость рейса по направлению</caption>

@@ -10,7 +10,7 @@
 <section class="calc band band--white" aria-labelledby="calc-title">
   <div class="wrap">
     <h2 id="calc-title" class="sec-h">Калькулятор объёма и доставки</h2>
-    <p class="calc__lede">Посчитайте объём по площади и толщине слоя, а заодно стоимость рейса до вашего адреса. Минимальный заказ {{ site.min_volume }}, {{ site.min_volume_note }}.</p>
+    <p class="calc__lede">Посчитайте объём по площади и толщине слоя, а заодно стоимость рейса до вашего адреса. Минимальный заказ {{ site.min_volume }}, {{ site.min_volume_note }}. Считайте здесь до того, как писать: цифра в калькуляторе и есть та сумма, которую мы назовём в ответ.</p>
 
     <div class="calc__grid">
       <div class="calc__form">
@@ -18,7 +18,7 @@
           <label class="calc__label" for="calc-mat">Материал</label>
           <select class="calc__input" id="calc-mat">
             {%- for m in calc_materials %}
-            <option value="{{ m.key }}" data-d="{{ m.density }}" data-p="{{ m.m3 }}"{% if m.key == calc_preselect %} selected{% endif %}>{{ m.name }}</option>
+            <option value="{{ m.key }}" data-d="{{ m.density }}" data-p="{{ m.m3 }}" data-base="{{ m.base }}" data-basename="{{ m.base_name }}" data-basewhere="{{ m.base_where }}"{% if m.key == calc_preselect %} selected{% endif %}>{{ m.name }}</option>
             {%- endfor %}
           </select>
         </div>
@@ -40,7 +40,7 @@
           <label class="calc__label" for="calc-city">Куда везти</label>
           <select class="calc__input" id="calc-city">
             {%- for c in calc_cities %}
-            <option value="{{ c.key }}" data-km="{{ c.km }}"{% if c.key == calc_city %} selected{% endif %}>{{ c.name }}, {{ c.km }} км</option>
+            <option value="{{ c.key }}" data-km="{{ c.km_json }}"{% if c.key == calc_city %} selected{% endif %}>{{ c.name }}</option>
             {%- endfor %}
             <option value="other" data-km="">Другой адрес</option>
           </select>
@@ -48,7 +48,10 @@
         <div class="calc__field">
           <label class="calc__label" for="calc-km">Расстояние от базы, км</label>
           <input class="calc__input" id="calc-km" type="number" inputmode="numeric" min="1" step="1" value="{{ calc_km }}">
-          <span class="calc__hint">База {{ site.base_city_v }}. Если вашего адреса нет в списке, впишите километры вручную.</span>
+          {#- Базы три, и плечо у них разное: до Полевского от Курганово 25 км,
+              а от Садового 60. Подпись меняется вместе с материалом, иначе
+              человек считал бы рейс не от той площадки. -#}
+          <span class="calc__hint">Грузим с базы <b id="calc-base">{{ calc_base.name }}</b>, <span id="calc-basewhere">{{ calc_base.where }}</span>. Если вашего адреса нет в списке, впишите километры вручную.</span>
         </div>
       </div>
 
@@ -72,7 +75,10 @@
           <li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
         </ul>
         <p class="calc__note" id="calc-min" hidden>Это меньше минимального заказа. {{ site.min_volume_note|capitalize }}. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p>
-        <p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка по {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс считается туда и обратно{% endif %}. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
+        {#- «От» в цене километра не кокетство: в строке рейса, кроме
+            километров, сидит подача машины. Обещать здесь ровно 95 × км × 2
+            значило бы разойтись с собственным итогом. -#}
+        <p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка от {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс считается туда и обратно{% endif %} и включает подачу машины. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
         <a class="btn btn--call calc__btn" href="#zayavka">Посчитать точно</a>
       </div>
     </div>
@@ -91,7 +97,19 @@
   var oC = document.getElementById('calc-cost'), oMin = document.getElementById('calc-min');
   var oPer = document.getElementById('calc-per');
   var oUnit = document.getElementById('calc-unit');
+  var oBase = document.getElementById('calc-base'), oBaseW = document.getElementById('calc-basewhere');
   var KM_PRICE = {{ site.km_price }}, LEGS = {{ 2 if site.km_round_trip else 1 }}, MIN_M3 = 3;
+  // Наша работа на заказе. Сидит внутри строки доставки, а не отдельным
+  // пунктом: строки должны складываться в итог, который человек и услышит
+  // в ответ на заявку.
+  var ORDER_FEE = {{ site.order_fee|default(0) }};
+  // Километры до города от каждой базы: {"kurganovo":25,"sadovyy":60,...}
+  function cityKm(opt){
+    var raw = opt.dataset.km;
+    if(!raw) return null;
+    try { return JSON.parse(raw); } catch(e){ return null; }
+  }
+  function baseKey(){ return mat.options[mat.selectedIndex].dataset.base; }
   function ru(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
   // Дробные значения по-русски пишутся через запятую.
   function round(v){ return String(v < 10 ? Math.round(v * 10) / 10 : Math.round(v)).replace('.', ','); }
@@ -113,16 +131,21 @@
   // Список городов и поле километров ведут одно значение: выбор города
   // подставляет плечо, ручная правка километров переводит выбор в
   // «Другой адрес», иначе подпись врала бы про расстояние.
-  city.addEventListener('change', function(){
-    var v = city.options[city.selectedIndex].dataset.km;
-    if(v) km.value = v;
-    calc();
-  });
+  function syncKm(){
+    var m = cityKm(city.options[city.selectedIndex]);
+    if(m && m[baseKey()] != null) km.value = m[baseKey()];
+  }
+  city.addEventListener('change', function(){ syncKm(); calc(); });
+  // Смена материала меняет базу, а значит и плечо: перегной едет с севера,
+  // земля с Полевского тракта, и до одного и того же адреса это разные
+  // километры. Подставляем их сразу, иначе в поле осталось бы чужое число.
+  mat.addEventListener('change', function(){ syncKm(); });
   km.addEventListener('input', function(){
-    var v = km.value;
+    var v = parseFloat(km.value);
     var found = '';
     for(var i = 0; i < city.options.length; i++){
-      if(city.options[i].dataset.km === v){ found = city.options[i].value; break; }
+      var m = cityKm(city.options[i]);
+      if(m && m[baseKey()] === v){ found = city.options[i].value; break; }
     }
     city.value = found || 'other';
     calc();
@@ -131,10 +154,11 @@
     var a = parseFloat(area.value) || 0, d = parseFloat(depth.value) || 0;
     var o = mat.options[mat.selectedIndex];
     var dens = parseFloat(o.dataset.d), price = parseFloat(o.dataset.p);
+    if(oBase){ oBase.textContent = o.dataset.basename; oBaseW.textContent = o.dataset.basewhere; }
     var m3 = a * (d / 100);
     if(shrink.checked) m3 *= 1.2;
     var distance = parseFloat(km.value) || 0;
-    var ride = Math.round(distance * KM_PRICE * LEGS);
+    var ride = Math.round(distance * KM_PRICE * LEGS) + ORDER_FEE;
     // При пустом, нулевом или отрицательном вводе обнуляем всё разом:
     // иначе вес и цена оставались бы от прошлого расчёта.
     if(!(m3 > 0)){

@@ -22,7 +22,6 @@ PRICES = {
     "Отсев":         {"m3": 900},
     "ПГС":           {"m3": 800},
     "Торф":          {"m3": 950, "bag": 140},
-    "Опилки": {"m3": 600, "bag": 80},
     "Плодородный грунт": {"m3": 750, "bag": 110},
     "Торфогрунт": {"m3": 900, "bag": 130},
 }
@@ -57,7 +56,6 @@ PRODBAR = [
     {"slug": "peregnoy-ekaterinburg",         "tex": "peregnoy",          "name": "Перегной",     "price": "от 1100 ₽/м³"},
     {"slug": "torf-ekaterinburg",             "tex": "torf",              "name": "Торф",         "price": "от 950 ₽/м³"},
     {"slug": "navoz-ekaterinburg",            "tex": "navoz",             "name": "Навоз",        "price": "от 900 ₽/м³"},
-    {"slug": "opilki-ekaterinburg",           "tex": "opilki",            "name": "Опилки",       "price": "от 600 ₽/м³"},
     {"slug": "plodorodnyy-grunt-ekaterinburg","tex": "plodorodnyy-grunt", "name": "Плодородный грунт", "price": "от 750 ₽/м³"},
     {"slug": "torfogrunt-ekaterinburg",       "tex": "torfogrunt",        "name": "Торфогрунт",   "price": "от 900 ₽/м³"},
     {"slug": "kislyy-torf-ekaterinburg",      "tex": "kislyy-torf",       "name": "Кислый торф",  "price": "от 950 ₽/м³"},
@@ -81,4 +79,4 @@ DENSITY = {
 # отказа от фасовки ещё и сбивала с толку прямо в калькуляторе.
 CALC_ORDER = ["chernozem", "plodorodnyy-grunt", "peregnoy", "torfogrunt",
               "torf", "kislyy-torf", "navoz-koroviy", "navoz-konskiy",
-              "navoz", "opilki"]
+              "navoz"]
