@@ -283,7 +283,7 @@
           <li><span id="calc-dlabel">Доставка</span><b id="calc-delivery">2 850 ₽</b></li>
           <li class="calc__price"><span>Итого ориентировочно</span><b id="calc-cost">от 13 050 ₽</b></li><li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
         </ul>
-        <p class="calc__note" id="calc-min" hidden>Это меньше минимального заказа. Меньше не возим, рейс не окупается. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p><p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка от 95 ₽ за километр, рейс считается туда и обратно и включает подачу машины. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
+        <p class="calc__note" id="calc-min" hidden>Это меньше минимального заказа. Меньше не возим, рейс не окупается. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p><p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка от 76 ₽ за километр, рейс считается туда и обратно и включает подачу машины. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
         <a class="btn btn--call calc__btn" href="#zayavka">Посчитать точно</a>
       </div>
     </div>
@@ -303,7 +303,7 @@
   var oPer = document.getElementById('calc-per');
   var oUnit = document.getElementById('calc-unit');
   var oBase = document.getElementById('calc-base'), oBaseW = document.getElementById('calc-basewhere');
-  var KM_PRICE = 95, LEGS = 2, MIN_M3 = 3;
+  var KM_PRICE = 76, LEGS = 2, MIN_M3 = 3;
   // Наша работа на заказе. Сидит внутри строки доставки, а не отдельным
   // пунктом: строки должны складываться в итог, который человек и услышит
   // в ответ на заявку.
