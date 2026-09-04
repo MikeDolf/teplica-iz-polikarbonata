@@ -68,6 +68,7 @@ KM = {
     #                        Курганово  Садовый  Ключевск
     "ekaterinburg":          {"kurganovo": 30, "sadovyy": 10,  "klyuchevsk": 40},
     "verhnyaya-pyshma":      {"kurganovo": 45, "sadovyy": 10,  "klyuchevsk": 30},
+    "baltym":                {"kurganovo": 50, "sadovyy": 12,  "klyuchevsk": 28},
     "sredneuralsk":          {"kurganovo": 50, "sadovyy": 15,  "klyuchevsk": 40},
     "berezovskiy":           {"kurganovo": 45, "sadovyy": 20,  "klyuchevsk": 25},
     "gornyy-shchit":         {"kurganovo": 15, "sadovyy": 25,  "klyuchevsk": 55},

@@ -358,7 +358,7 @@ ORGANIC = [
 ]
 
 CITY_ORDER = [
-    "ekaterinburg", "berezovskiy", "verhnyaya-pyshma", "sredneuralsk", "aramil",
+    "ekaterinburg", "berezovskiy", "verhnyaya-pyshma", "baltym", "sredneuralsk", "aramil",
     "verhnee-dubrovo", "pervouralsk", "zarechnyy", "beloyarskiy", "revda",
     "sysert", "polevskoy", "degtyarsk", "kamensk-uralskiy", "nizhniy-tagil",
     # Полевское и Челябинское направления: по данным партнёров именно туда
