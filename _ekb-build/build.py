@@ -360,15 +360,12 @@ def money_meta(product_key, city_key):
         title = wide if len(wide) <= 68 else f"{title} с доставкой"
     if SITE.get("bags") and price.get("bag"):
         bag = f' и {price["bag"]} ₽/мешок'
-        kg = PRODUCTS[product_key].get("bag_kg")
-        mini = 'Минимальный заказ 3 м³ — 60-75 мешков' + (f' по {kg} кг.' if kg else ' по 40-50 л.')
+        mini = 'Мин. заказ 3 м³.'
     else:
         bag = ""
-        mini = (f'Минимальный заказ 3 м³, возим только навалом. '
-                f'Доставка от {SITE["km_price"]} ₽/км '
-                f'{BASES[base_of(product_key)]["iz"]}.')
-    desc = (f'{label} с доставкой {city["to"]} недорого: от {price["m3"]} ₽/м³{bag} '
-            f'за материал, {pr.get("desc_hook", "")}. {mini}')
+        mini = f'Мин. заказ 3 м³, доставка от {SITE["km_price"]} ₽/км.'
+    desc = (f'{label} с доставкой {city["to"]} недорого: от {price["m3"]} ₽/м³{bag}, '
+            f'{pr.get("desc_hook", "")}. {mini}')
     return title, " ".join(desc.split())
 
 
