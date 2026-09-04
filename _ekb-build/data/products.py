@@ -367,7 +367,7 @@ CITY_ORDER = [
     # сектором; совсем мелкие сёла в сетку не берём, они в TAIL_CITIES.
     "gornyy-shchit", "kurganovo", "severskiy",
     "bolshoy-istok", "patrushi", "bobrovskiy", "kashino", "dvurechensk",
-    "verhnyaya-sysert",
+    "verhnyaya-sysert", "kosulino", "monetnyy", "oktyabrskiy",
 ]
 
 # у этих сочетаний своя рукописная страница в pages.py
