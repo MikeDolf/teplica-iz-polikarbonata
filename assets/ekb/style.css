@@ -179,6 +179,9 @@
 .art p{margin:0 0 14px;font-size:16.5px}
 .art__list{margin:0 0 16px;padding-left:22px}
 .art__list li{margin:0 0 7px;font-size:16.5px}
+.art__earlycta{margin:6px 0 22px}
+.art__earlycta a{display:inline-block;background:#12331f;color:#fff;font-weight:600;font-size:15.5px;border-radius:10px;padding:12px 18px;text-decoration:none}
+.art__earlycta a:hover{background:#0d281a}
 .ekb .art__cta{margin:30px 0 8px;background:radial-gradient(120% 140% at 100% 0%, #12331f 0%, #0d281a 70%);color:#eaf1ea;border-radius:16px;padding:24px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between}
 .art__cta b{font-size:19px;color:#fff;display:block;margin-bottom:6px}
 .art__cta p{margin:0;color:#c3d6c8;font-size:15px;max-width:44ch}

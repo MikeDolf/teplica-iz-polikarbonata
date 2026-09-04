@@ -961,7 +961,7 @@ def render_blog():
             site=SITE, canonical=canonical, robots="index, follow",
             section_url="/dostavka-grunta/blog/", section_name="Блог",
             title=p["title"], description=p["description"], h1=p["h1"], short=p["short"],
-            lede=p["lede"], body=p["body"], faq=p["faq"], cta=p["cta"],
+            lede=p["lede"], body=p["body"], faq=p["faq"], cta=p["cta"], early_cta=p.get("early_cta"),
             related=related, footer_links=FOOTER_LINKS, cta_price=None,
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
