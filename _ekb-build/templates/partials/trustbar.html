@@ -34,8 +34,13 @@
       <span class="tstrip__ic" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17V9a1 1 0 0 1 1-1h9v9M14 11h4l3 3v3M4 17h2m10 0h2"/><circle cx="7.5" cy="18" r="1.8"/><circle cx="17.5" cy="18" r="1.8"/></svg>
       </span>
+      {%- if city.local_partner %}
+      <b>Доставка местным партнёром</b>
+      <span>цена и срок — по заявке</span>
+      {%- else %}
       <b>Доставка по километрам</b>
       <span>от {{ site.km_price }} ₽/км, считается в калькуляторе</span>
+      {%- endif %}
     </div>
   </div>
 </section>

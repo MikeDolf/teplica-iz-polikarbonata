@@ -30,15 +30,23 @@
           <span class="hero__price__label">Ориентировочно</span>
           <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
           {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
+          {%- if city.local_partner %}
+          <span class="hero__price__note">Цена за материал. По Нижнему Тагилу доставку считаем не по километражу, а по заявке — работает местный партнёр</span>
+          {%- else %}
           <span class="hero__price__note">Цена за материал. Доставка от {{ site.km_price }} ₽/км {{ calc_base.iz }}{% if site.km_round_trip %}, туда и обратно{% endif %}</span>
+          {%- endif %}
         </div>
         {%- endif %}
         <div class="hero__cta">
           {%- if site.max_url %}
           {#- Порядок кнопок сознательный: сначала расчёт, потом мессенджеры.
               Человек, который пишет не посчитав, слышит цену в ответ и уходит.
-              Пусть сначала увидит цифру и решит сам. -#}
+              Пусть сначала увидит цифру и решит сам. Исключение — города,
+              где считать рейс от наших баз бессмысленно: там калькулятора
+              на странице нет, и кнопка сразу ведёт к заявке. -#}
+          {%- if not city.local_partner %}
           <a class="btn btn--call" href="#calc-title">Рассчитать стоимость</a>
+          {%- endif %}
           <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
           {%- if site.whatsapp_url %}
           <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
@@ -70,11 +78,26 @@
   {#- 1. Сколько стоит -#}
   {% include "partials/price.html" %}
 
+  {%- if not city.local_partner %}
   {% include "partials/pricetable.html" %}
 
   {#- 2. Сколько нужно и во что обойдётся рейс. Калькулятор стоит сразу за
       ценой: это главный инструмент страницы, из-за него человек и остаётся. -#}
   {% include "partials/calc.html" %}
+  {%- else %}
+  {#- Прайс-таблица и калькулятор считают рейс от наших баз в Курганово и
+      Садовом — по Нижнему Тагилу это неверная цифра, там работает
+      местный партнёр. Вместо расчёта — прямое объяснение и переход к заявке. -#}
+  <section class="band band--tint" aria-labelledby="partner-title">
+    <div class="wrap">
+      <div class="moved">
+        <b id="partner-title">Доставка в Нижний Тагил — через местного партнёра</b>
+        <p>Возить сюда машины с наших баз под Екатеринбургом невыгодно: плечо большое, и цена вышла бы заметно выше, чем у того, кто работает на месте. Поэтому по Нижнему Тагилу с вами свяжется наш партнёр, назовёт цену материала с доставкой и сроки под ваш адрес и объём.</p>
+        <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+      </div>
+    </div>
+  </section>
+  {%- endif %}
 
   {#- 3. На каких условиях -#}
   {% include "partials/terms_bar.html" %}
