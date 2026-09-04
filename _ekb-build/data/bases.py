@@ -85,6 +85,7 @@ KM = {
     "dvurechensk":           {"kurganovo": 60, "sadovyy": 55,  "klyuchevsk": 70},
     "sysert":                {"kurganovo": 35, "sadovyy": 50,  "klyuchevsk": 75},
     "kashino":               {"kurganovo": 30, "sadovyy": 55,  "klyuchevsk": 80},
+    "cherdantsevo":          {"kurganovo": 30, "sadovyy": 50,  "klyuchevsk": 75},
     "verhnyaya-sysert":      {"kurganovo": 35, "sadovyy": 65,  "klyuchevsk": 90},
     "kurganovo":             {"kurganovo": 5,  "sadovyy": 40,  "klyuchevsk": 70},
     "polevskoy":             {"kurganovo": 25, "sadovyy": 60,  "klyuchevsk": 100},
