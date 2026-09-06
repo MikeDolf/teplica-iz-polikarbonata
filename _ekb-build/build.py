@@ -6,6 +6,17 @@
 """
 import os, sys, json, re, zlib
 from datetime import date
+
+RU_MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня",
+             "июля", "августа", "сентября", "октября", "ноября", "декабря"]
+
+
+def ru_date(iso):
+    """'2026-08-10' -> '10 августа 2026'. Для видимой даты публикации/обновления."""
+    if not iso:
+        return None
+    y, m, d = iso.split("-")
+    return f"{int(d)} {RU_MONTHS[int(m) - 1]} {y}"
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "data"))
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -861,6 +872,9 @@ def render_articles():
             site=SITE, canonical=canonical, robots="index, follow",
             title=a["title"], description=a["description"], h1=a["h1"], short=a["short"],
             lede=a["lede"], body=a["body"], faq=a["faq"], cta=a["cta"],
+            date_pub=ru_date(a.get("date")), date_upd=ru_date(a.get("updated")),
+            date_pub_iso=a.get("date"), date_upd_iso=a.get("updated"),
+            sources=a.get("sources"),
             related=a["_related"], footer_links=FOOTER_LINKS,
             cta_price=PRICE_BY_URL.get(a["cta"]["url"]),
             # Блок «переход к соседней статье» был только у блога, хотя
@@ -958,6 +972,8 @@ def render_blog():
             site=SITE, canonical=canonical, robots="index, follow",
             section_url="/dostavka-grunta/blog/", section_name="Блог",
             title=p["title"], description=p["description"], h1=p["h1"], short=p["short"],
+            date_pub=ru_date(p.get("date")), date_upd=ru_date(p.get("updated")),
+            date_pub_iso=p.get("date"), date_upd_iso=p.get("updated"),
             lede=p["lede"], body=p["body"], faq=p["faq"], cta=p["cta"], early_cta=p.get("early_cta"),
             related=related, footer_links=FOOTER_LINKS, cta_price=None,
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",

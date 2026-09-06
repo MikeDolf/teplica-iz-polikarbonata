@@ -40,6 +40,11 @@
         </picture>
       </figure>
       {%- endif %}
+    {%- if date_pub %}
+    <p class="art__dates">
+      <time datetime="{{ date_pub_iso }}">Опубликовано {{ date_pub }}</time>{% if date_upd and date_upd_iso != date_pub_iso %}<span> · <time datetime="{{ date_upd_iso }}">обновлено {{ date_upd }}</time></span>{% endif %}
+    </p>
+    {%- endif %}
     <p class="art__lede">{{ lede }}</p>
 
     {%- for sec in body %}
@@ -106,6 +111,9 @@
         <a class="btn btn--ghost" href="{{ crosslink.url }}"{% if crosslink.url.startswith("http") %} target="_blank" rel="noopener"{% endif %}>{{ crosslink.anchor }}</a>
       </div>
     </aside>
+  {%- endif %}
+  {%- if sources %}
+  <p class="art__sources">Источники: {% for s in sources %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.text }}</a>{% if not loop.last %}, {% endif %}{% endfor %}.</p>
   {%- endif %}
   </article>
 

@@ -15,6 +15,8 @@
 :where(.ekb h1,.ekb h2,.ekb h3){color:var(--ink)}
 .ekb a{color:var(--accent)}
 .ekb :focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.skip-link{position:absolute;left:-9999px;top:0;z-index:1000;background:#fff;color:var(--ink,#16241b);padding:12px 18px;border-radius:0 0 8px 0;font-weight:600}
+.skip-link:focus{left:0}
 @media (prefers-reduced-motion:reduce){.ekb *{transition:none!important;animation:none!important}}
 
 /* header */
@@ -174,11 +176,13 @@
 /* статьи */
 .art{max-width:760px;padding:clamp(24px,4vw,44px) 20px}
 .art h1{font-size:clamp(26px,4vw,36px);margin:0 0 16px}
+.art__dates{font-size:14px;color:#6b7d70;margin:0 0 10px}
 .art__lede{font-size:18px;color:#33463b;margin:0 0 26px;line-height:1.55}
 .art h2{font-size:clamp(20px,2.6vw,25px);margin:32px 0 12px}
 .art p{margin:0 0 14px;font-size:16.5px}
 .art__list{margin:0 0 16px;padding-left:22px}
 .art__list li{margin:0 0 7px;font-size:16.5px}
+.art__sources{margin:24px 0 0;font-size:13.5px;color:var(--ink-soft)}
 .art__earlycta{margin:6px 0 22px}
 .art__earlycta a{display:inline-block;background:#12331f;color:#fff;font-weight:600;font-size:15.5px;border-radius:10px;padding:12px 18px;text-decoration:none}
 .art__earlycta a:hover{background:#0d281a}
