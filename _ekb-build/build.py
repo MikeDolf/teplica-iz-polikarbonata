@@ -360,23 +360,27 @@ def money_meta(product_key, city_key):
     # seo_name нужен там, где в регионе в ходу другое слово: «опил» и
     # «опилки» для поиска — разные леммы, и в title нужны обе.
     label = pr.get("seo_name", pr["name"])
-    title = f'{label} {city["prep"]} — от {price["m3"]} ₽/м³'
+    # «купить» — самый частотный коммерческий интент по всем материалам
+    # (Wordstat: «купить чернозем» 1979 в месяц против «чернозем с
+    # доставкой» 538), а его не было ни в title, ни в H1 геостраниц.
+    # Ставим сразу после названия товара, до города.
+    title = f'{label} купить {city["prep"]} — от {price["m3"]} ₽/м³'
     if SITE.get("bags") and price.get("bag"):
         wide = f'{title} и {price["bag"]} ₽/мешок'
-        title = wide if len(wide) <= 68 else f"{title} с доставкой"
+        title = wide if len(wide) <= 68 else title
     else:
         # Минимум уводим в title: запрос «от 3 м³» никто не набирает, но
         # сниппет читают до клика, и человек с задачей на пару вёдер
         # отсеивается ещё в выдаче, а не в переписке.
         wide = f"{title}, от 3 м³"
-        title = wide if len(wide) <= 68 else f"{title} с доставкой"
+        title = wide if len(wide) <= 68 else title
     if SITE.get("bags") and price.get("bag"):
         bag = f' и {price["bag"]} ₽/мешок'
         mini = 'Мин. заказ 3 м³.'
     else:
         bag = ""
         mini = f'Мин. заказ 3 м³, доставка от {SITE["km_price"]} ₽/км.'
-    desc = (f'{label} с доставкой {city["to"]} недорого: от {price["m3"]} ₽/м³{bag}, '
+    desc = (f'{label} купить с доставкой {city["to"]} недорого: от {price["m3"]} ₽/м³{bag}, '
             f'{pr.get("desc_hook", "")}. {mini}')
     return title, " ".join(desc.split())
 
@@ -504,7 +508,7 @@ def compose_geo(product_key, city_key):
     if pr.get("h1_tpl"):
         h1 = pr["h1_tpl"].format(prep=city["prep"], to=city["to"], name=city["name"])
     else:
-        h1 = f'{pr.get("seo_name", pr["name"])} {city["prep"]} с доставкой'
+        h1 = f'{pr.get("seo_name", pr["name"])} купить {city["prep"]} с доставкой'
     # город-специфичный вопрос впереди общих: уникальность FAQ
     hint = city.get("order_hint", "Возим навалом самосвалом, от трёх кубов, срок согласуем при заявке.")
     if city.get("local_partner"):
