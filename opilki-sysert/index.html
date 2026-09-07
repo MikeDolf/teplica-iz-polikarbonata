@@ -868,6 +868,14 @@
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
         <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому перезвонить</span>
       </div>
+      <div class="field">
+        <span class="field__label">Где вам удобнее ответить</span>
+        <div class="chips" role="group" aria-label="Где вам удобнее ответить">
+          <label class="chip"><input type="radio" name="contact" value="MAX" checked><span>MAX</span></label>
+          <label class="chip"><input type="radio" name="contact" value="WhatsApp"><span>WhatsApp</span></label>
+          <label class="chip"><input type="radio" name="contact" value="Всё равно, звоните"><span>Всё равно, звоните</span></label>
+        </div>
+      </div>
       <div class="field field--full">
         <label class="field__label" for="lead-note">Комментарий <span class="field__opt">не обязательно</span></label>
         <textarea class="field__input field__input--area" id="lead-note" name="note" rows="2" placeholder="Сколько нужно, куда подъезд, любые детали"></textarea>
@@ -942,10 +950,11 @@
     var data = {
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
       subject: (form.buyer.value.indexOf("Организация") === 0 ? "ЮРЛИЦО. " : "")
-        + "Новая заявка: " + (form.product.value||"грунт"),
+        + "Новая заявка: " + (form.product.value||"грунт")
+        + " — " + (form.contact.value === "Всё равно, звоните" ? "звонить" : "написать в " + (form.contact.value||"MAX")),
       from_name: "Сайт доставки грунта",
       product:(form.product.value||''), volume:(form.volume.value||''), district:form.district.value.trim(),
-      buyer:(form.buyer.value||''),
+      buyer:(form.buyer.value||''), contact:(form.contact.value||''),
       when:(form.when.value||''), name:form.name.value.trim(), phone:phone.value.trim(), note:form.note.value.trim(),
       page:location.pathname, ref:document.referrer||'', ts:new Date().toISOString()
     };
