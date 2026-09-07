@@ -380,7 +380,7 @@ def money_meta(product_key, city_key):
     else:
         bag = ""
         mini = f'Мин. заказ 3 м³, доставка от {SITE["km_price"]} ₽/км.'
-    desc = (f'{label} купить с доставкой {city["to"]} недорого: от {price["m3"]} ₽/м³{bag}, '
+    desc = (f'{label} купить с доставкой {city["to"]} недорого, цена от {price["m3"]} ₽/м³{bag}, '
             f'{pr.get("desc_hook", "")}. {mini}')
     return title, " ".join(desc.split())
 
@@ -508,7 +508,7 @@ def compose_geo(product_key, city_key):
     if pr.get("h1_tpl"):
         h1 = pr["h1_tpl"].format(prep=city["prep"], to=city["to"], name=city["name"])
     else:
-        h1 = f'{pr.get("seo_name", pr["name"])} купить {city["prep"]} с доставкой'
+        h1 = f'{pr.get("seo_name", pr["name"])} купить {city["prep"]} с доставкой, цена'
     # город-специфичный вопрос впереди общих: уникальность FAQ
     hint = city.get("order_hint", "Возим навалом самосвалом, от трёх кубов, срок согласуем при заявке.")
     if city.get("local_partner"):
