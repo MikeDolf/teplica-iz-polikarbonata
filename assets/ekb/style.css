@@ -357,7 +357,10 @@
 .callblock__msg--max[title]{cursor:default}
 /* отзывы: блок ни разу не рендерился, пока REVIEWS был пуст, поэтому
    стили здесь появились только вместе с первыми настоящими отзывами */
-.reviews__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:0 0 18px}
+/* align-items:start — иначе grid растягивает все карточки под самую
+   длинную переписку, и под короткими скриншотами остаётся пустой белый
+   низ карточки */
+.reviews__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:0 0 18px;align-items:start}
 @media (max-width:900px){.reviews__grid{grid-template-columns:1fr 1fr}}
 @media (max-width:620px){.reviews__grid{grid-template-columns:1fr}}
 .review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
