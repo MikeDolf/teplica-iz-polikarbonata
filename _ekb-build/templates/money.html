@@ -80,6 +80,13 @@
 
   {% include "partials/trustbar.html" %}
 
+  {#- Отзывы подняты сюда, сразу после хедлайна доверия и перед ценой:
+      человек ещё не считал стоимость и ничего не решил, самое время
+      показать, что заказ у нас — не риск. Раньше блок стоял в самом низу
+      страницы, после калькулятора, преимуществ, шагов, доставки, товара,
+      флота и условий — до него никто не долистывал. -#}
+  {% include "partials/reviews.html" %}
+
   {#- 1. Сколько стоит -#}
   {% include "partials/price.html" %}
 
@@ -170,8 +177,6 @@
   {% include "partials/terms.html" %}
 
   {% include "partials/guarantees.html" %}
-
-  {% include "partials/reviews.html" %}
 
   {% include "partials/callblock.html" %}
 

@@ -4,7 +4,18 @@
     <h2 id="rev-title" class="sec-h">Отзывы клиентов</h2>
     <div class="reviews__grid">
       {%- for r in reviews %}
-      <div class="review">
+      <div class="review{% if r.image %} review--shot{% endif %}">
+        {#- Скриншот настоящей переписки — это и есть доказательство, ради
+            которого блок вообще существует: текст можно было бы сочинить,
+            а переписку в мессенджере — нет. Текст отзыва при этом не
+            дублируем визуально (он и так виден на картинке), но оставляем
+            в DOM для скринридеров и для того, чтобы Яндекс и Google видели
+            текст, а не только картинку. -#}
+        {%- if r.image %}
+        <img class="review__shot" src="/assets/ekb/photo/reviews/{{ r.image }}"
+             alt="Скриншот переписки: {{ r.name }} пишет «{{ r.text }}»"
+             width="{{ r.image_w|default(480) }}" height="{{ r.image_h|default(360) }}" loading="lazy">
+        {%- endif %}
         <div class="review__head">
           <span class="review__name">{{ r.name }}</span>
           {#- Город может быть неизвестен: отзыв пришёл в переписке, и
@@ -14,7 +25,11 @@
         {#- Звёзды — картинка из символов, скринридеру она читается как пять
             слов «звезда». Поэтому глифы прячем, а оценку даём словами. -#}
         {%- if r.stars %}<div class="review__stars"><span aria-hidden="true">{{ "★" * r.stars }}{{ "☆" * (5 - r.stars) }}</span><span class="sr-only">Оценка {{ r.stars }} из 5</span></div>{%- endif %}
+        {%- if r.image %}
+        <p class="review__text sr-only">{{ r.text }}</p>
+        {%- else %}
         <p class="review__text">{{ r.text }}</p>
+        {%- endif %}
       </div>
       {%- endfor %}
     </div>
