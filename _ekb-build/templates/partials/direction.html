@@ -15,9 +15,9 @@
         <tbody>
           {%- for d in direction_cities %}
           <tr>
-            <td><a href="{{ d.url }}">{{ d.name }}</a></td>
-            <td>{{ d.km }}</td>
-            <td>{{ d.ride|ru }}</td>
+            <td data-label="Куда везём"><a href="{{ d.url }}">{{ d.name }}</a></td>
+            <td data-label="Плечо, км">{{ d.km }}</td>
+            <td data-label="Рейс, ₽">{{ d.ride|ru }}</td>
           </tr>
           {%- endfor %}
         </tbody>

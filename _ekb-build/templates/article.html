@@ -20,8 +20,12 @@
         {%- if t.caption %}<caption>{{ t.caption }}</caption>{% endif %}
         <thead><tr>{% for h in t.head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
         <tbody>
+          {#- data-label — для мобильной раскладки таблицы карточками
+              (см. .table-wrap в style.css): на узком экране 3-4 колонки
+              не помещаются, и без подписи цифра в карточке потеряла бы
+              смысл. -#}
           {%- for row in t.rows %}
-          <tr>{% for c in row %}<td>{{ c }}</td>{% endfor %}</tr>
+          <tr>{% for c in row %}<td data-label="{{ t.head[loop.index0] }}">{{ c }}</td>{% endfor %}</tr>
           {%- endfor %}
         </tbody>
       </table>

@@ -12,16 +12,21 @@
   <div class="wrap">
     <h2 id="ptab-title" class="sec-h">Цены на все материалы {{ city.prep }}</h2>
     <p class="mats__lede">Цена за кубометр материала. Доставка считается отдельно, от {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс туда и обратно{% endif %}. Базы у товаров разные, поэтому и плечо разное: земля и торф едут из Курганово с Полевского тракта, перегной и навоз — с Садового на севере города. В таблице рейс уже посчитан до вас от нужной базы.</p>
+    {#- На узких экранах таблица шире экрана (4 колонки, в последней —
+        длинный заголовок с названием города), и появлялся горизонтальный
+        скролл: человек не видит, что таблицу можно листать вбок, и
+        принимает её за обрезанную. data-label на td нужен CSS ниже —
+        на мобильном таблица превращается в список карточек по строке. -#}
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Материал</th><th>Цена за м³</th><th>Откуда везём</th><th>3 м³ с доставкой {{ city.prep }}</th></tr></thead>
+        <thead><tr><th>Материал</th><th>Цена за м³</th><th>Откуда везём</th><th>Итого за 3 м³</th></tr></thead>
         <tbody>
           {%- for r in price_rows %}
           <tr{% if r.current %} class="ptab__on"{% endif %}>
-            <td>{% if r.current %}<b>{{ r.name }}</b>{% else %}<a href="{{ r.url }}">{{ r.name }}</a>{% endif %}</td>
-            <td>от {{ r.m3|ru }} ₽</td>
-            <td>{{ r.base }}, {{ r.km }} км</td>
-            <td>от {{ r.min_total|ru }} ₽</td>
+            <td data-label="Материал">{% if r.current %}<b>{{ r.name }}</b>{% else %}<a href="{{ r.url }}">{{ r.name }}</a>{% endif %}</td>
+            <td data-label="Цена за м³">от {{ r.m3|ru }} ₽</td>
+            <td data-label="Откуда везём">{{ r.base }}, {{ r.km }} км</td>
+            <td data-label="Итого за 3 м³ {{ city.prep }}">от {{ r.min_total|ru }} ₽</td>
           </tr>
           {%- endfor %}
         </tbody>

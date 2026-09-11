@@ -301,6 +301,29 @@
 :where(.ekb tbody td){padding:12px 18px;border-bottom:1px solid var(--line);color:var(--ink)}
 :where(.ekb tbody tr:last-child td){border-bottom:0}
 :where(.ekb tbody tr:nth-child(even)){background:#fafcfa}
+/* На узких экранах у таблиц в 3-4 колонки (прайс-лист, таблицы в статьях)
+   min-width:420px не помещался в экран, и появлялся горизонтальный
+   скролл — человек не понимал, что таблицу можно листать вбок, и часть
+   цифр читал как обрезанные. Ниже 560px каждая строка становится
+   отдельной карточкой: подпись колонки слева (data-label), значение
+   справа. Скролла больше нет, видно сразу всё. */
+@media (max-width:560px){
+  .ekb .table-wrap{overflow-x:visible;border:none;box-shadow:none;background:transparent}
+  :where(.ekb table){display:block;min-width:0}
+  .ekb table caption{padding:0 0 10px}
+  .ekb thead{display:none}
+  .ekb tbody{display:block}
+  :where(.ekb tbody tr){display:block;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:4px 16px;margin:0 0 10px;
+    box-shadow:0 8px 20px -18px rgba(16,36,27,.3)}
+  :where(.ekb tbody tr:nth-child(even)){background:#fff}
+  :where(.ekb tbody td){display:flex;align-items:baseline;justify-content:space-between;
+    gap:14px;padding:10px 0;border-bottom:1px solid var(--line);text-align:right}
+  :where(.ekb tbody tr:last-child td){border-bottom:1px solid var(--line)}
+  :where(.ekb tbody td:last-child){border-bottom:0}
+  .ekb tbody td::before{content:attr(data-label);font-weight:600;color:var(--ink-soft);
+    text-align:left;flex:none;font-size:13.5px}
+}
 
 /* uses: карточки-плитки вместо голого списка */
 .ekb .uses__list{gap:12px}
