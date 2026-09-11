@@ -114,11 +114,17 @@
 .lead__eyebrow{margin:0 0 10px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8fcaa1;font-weight:600}
 .ekb .lead__title{margin:0 0 12px;font-size:clamp(24px,3.4vw,34px);line-height:1.12;font-weight:800;letter-spacing:-.02em;color:#fff}
 .lead__lede{margin:0 0 22px;font-size:17px;line-height:1.5;color:#c3d6c8;max-width:38ch}
+.lead__contacts{display:flex;flex-wrap:wrap;gap:10px}
 .ekb .lead__call{display:inline-flex;align-items:center;gap:10px;text-decoration:none;color:#fff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);padding:12px 16px;border-radius:var(--l-radius);font-size:15px;transition:background .15s,transform .05s}
 .ekb .lead__call:hover{background:rgba(255,255,255,.13)}
 .lead__call:active{transform:translateY(1px)}
 .lead__call b{font-size:17px;letter-spacing:.01em;white-space:nowrap}
 .lead__call svg{color:#8fcaa1;flex:none}
+/* MAX выделен фирменным зелёным: это основной канал, и кнопка должна
+   читаться первой, а не сливаться с почтой. */
+.ekb .lead__call--max{background:var(--wa);color:#08301a;border-color:transparent;font-weight:700}
+.ekb .lead__call--max:hover{background:#2ee06f}
+.lead__call--max svg{color:#08301a}
 .lead__hours{margin:12px 0 0;font-size:13px;color:#9fb6a5}
 .lead__form{background:var(--l-card);color:var(--l-ink);border-radius:calc(var(--l-radius) + 4px);padding:clamp(18px,3vw,26px);display:grid;grid-template-columns:1fr 1fr;gap:16px 14px;box-shadow:0 20px 50px -24px rgba(0,0,0,.5);position:relative}
 .field{display:flex;flex-direction:column;gap:8px;min-width:0}
@@ -674,13 +680,34 @@
 .ekb .callblock__wa{background:var(--wa);color:#08301a}
 .ekb .callblock__wa:hover{background:#2ee06f}
 .ekb .callblock__wa:active{transform:translateY(1px)}
-/* шапка */
-.ekb .hdr__wa{color:#bff5d4}
-.ekb .hdr__wa:hover{color:var(--wa)}
-/* подвал */
-.ekb .ftr__wa{display:inline-flex;align-items:center;gap:8px;color:#bff5d4;text-decoration:none;
-  font-weight:700;margin-left:14px}
-.ekb .ftr__wa:hover{color:var(--wa)}
+/* шапка. MAX и WhatsApp раньше были обычным текстом рядом с логотипом —
+   человек не считывал их как «сюда можно нажать». Теперь это пилюли:
+   MAX залит фирменным зелёным как самый приоритетный канал, WhatsApp —
+   контурная кнопка того же размера, чтобы обе читались кликабельными. */
+.ekb .hdr__max{background:var(--wa);color:#08301a;padding:8px 14px;border-radius:20px;font-weight:800}
+.ekb .hdr__max svg{color:#08301a}
+.ekb .hdr__max:hover{background:#2ee06f}
+.ekb .hdr__wa{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.26);color:#eaf6ee;
+  padding:7px 13px;border-radius:20px;font-weight:700}
+.ekb .hdr__wa svg{color:var(--wa)}
+.ekb .hdr__wa:hover{background:rgba(255,255,255,.16);border-color:var(--wa)}
+/* подвал: тот же порядок и тот же язык кнопок, что в шапке и в форме заявки */
+.ftr__contacts{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.ekb .ftr__phone{display:inline-flex;align-items:center;gap:8px;background:var(--wa);color:#08301a;
+  font-weight:800;font-size:15px;text-decoration:none;padding:9px 15px;border-radius:20px}
+.ekb .ftr__phone svg{color:#08301a;flex:none}
+.ekb .ftr__phone:hover{background:#2ee06f}
+.ekb .ftr__wa{display:inline-flex;align-items:center;gap:8px;color:#eaf6ee;text-decoration:none;
+  font-weight:700;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.22);
+  padding:8px 14px;border-radius:20px}
+.ekb .ftr__wa:hover{background:rgba(255,255,255,.14);border-color:var(--wa);color:#fff}
+/* почта ниже по приоритету, чем мессенджеры, но всё равно кнопка, а не
+   голая строка текста среди пилюль */
+.ekb .ftr__mail{display:inline-flex;align-items:center;gap:8px;color:#c3d6c8;text-decoration:none;
+  font-size:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.14);
+  padding:8px 14px;border-radius:20px;margin-top:0}
+.ekb .ftr__mail svg{flex:none}
+.ekb .ftr__mail:hover{color:#fff;border-color:rgba(255,255,255,.3)}
 /* плавающая панель */
 .ekb .fcta__btn--wa{background:var(--wa);color:#08301a;gap:9px}
 .ekb .fcta__btn--wa:hover{background:#2ee06f}

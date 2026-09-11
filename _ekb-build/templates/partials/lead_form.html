@@ -17,11 +17,24 @@
       <h2 class="lead__title" id="lead-title">Рассчитаем стоимость и привезём в день заказа</h2>
       {%- endif %}
       <p class="lead__lede">Скажите, что нужно и куда везти. Ответим в течение 15 минут в любое время суток, назовём цену за куб и стоимость рейса до вашего адреса. Минимальный заказ {{ site.min_volume }}, возим навалом.</p>
-      <a class="lead__call" href="mailto:{{ site.contact_email }}">
-        <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm8 7L5 7v1l7 5 7-5V7l-7 5z"/></svg>
-        <span>Написать: <b>{{ site.contact_email }}</b></span>
-      </a>
-      <p class="lead__hours">{{ site.hours }}. Оставьте заявку или напишите на почту, {{ site.callback_promise }}.</p>
+      {#- Форма ниже требует телефон, а часть людей не хочет им делиться до
+          разговора. Раньше единственной альтернативой была почта — на неё
+          отвечают не все и не сразу. MAX стоит первым: туда же ведут кнопки
+          в шапке и хедере, и человеку, который уже открыл MAX ради заявки,
+          не нужно переключаться на почтовый клиент. -#}
+      <div class="lead__contacts">
+        {%- if site.max_url %}
+        <a class="lead__call lead__call--max" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
+          <span>Написать в <b>MAX</b></span>
+        </a>
+        {%- endif %}
+        <a class="lead__call" href="mailto:{{ site.contact_email }}">
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm8 7L5 7v1l7 5 7-5V7l-7 5z"/></svg>
+          <span>Написать: <b>{{ site.contact_email }}</b></span>
+        </a>
+      </div>
+      <p class="lead__hours">{{ site.hours }}. Оставьте заявку, напишите в MAX или на почту, {{ site.callback_promise }}.</p>
     </div>
 
     <form class="lead__form" id="lead-form" novalidate>
