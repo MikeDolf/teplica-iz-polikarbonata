@@ -368,7 +368,8 @@
    внутреннего отступа, чтобы читался как приклеенное фото, а не как
    иллюстрация внутри обычной карточки */
 .review--shot{padding:14px 14px 18px}
-.review__shot{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);display:block;margin:0 0 12px;box-shadow:0 6px 18px -10px rgba(0,0,0,.25)}
+.review__shot{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);
+  display:block;margin:0 0 12px;box-shadow:0 6px 18px -10px rgba(0,0,0,.25)}
 .review__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .ekb .review__name{font-weight:700;font-size:16.5px;color:var(--ink)}
 .review__meta{font-size:13.5px;color:var(--ink-soft)}
