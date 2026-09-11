@@ -27,9 +27,14 @@
         <p class="hero__min"><b>Минимальный заказ {{ site.min_volume }}</b> — только навалом, самосвалом. {{ site.min_volume_note|capitalize }}.</p>
         {%- if price %}
         <div class="hero__price">
-          <span class="hero__price__label">Ориентировочно</span>
-          <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
-          {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
+          {#- Верхняя строка отдельным рядом: иначе подпись с flex-basis:100%
+              входит в расчёт максимальной ширины контейнера как слагаемое,
+              и рамка получается шире самой длинной строки. -#}
+          <div class="hero__price__row">
+            <span class="hero__price__label">Ориентировочно</span>
+            <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
+            {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
+          </div>
           {%- if city.local_partner %}
           <span class="hero__price__note">Цена за материал. По Нижнему Тагилу доставку считаем не по километражу, а по заявке — работает местный партнёр</span>
           {%- else %}

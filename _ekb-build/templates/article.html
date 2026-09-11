@@ -85,13 +85,15 @@
         <p>{{ cta.text }}</p>
         {%- if cta_price %}
         <div class="art__cta-price">
-          <span class="art__cta-price__label">Ориентировочно</span>
-          <b class="art__cta-price__num">от {{ cta_price.m3 }} ₽/м³</b>
-          {%- if site.bags and cta_price.bag %}
-          <b class="art__cta-price__num">от {{ cta_price.bag }} ₽/мешок</b>
-          {%- else %}
-          <b class="art__cta-price__num">от {{ site.km_price }} ₽/км доставка</b>
-          {%- endif %}
+          <div class="art__cta-price__row">
+            <span class="art__cta-price__label">Ориентировочно</span>
+            <b class="art__cta-price__num">от {{ cta_price.m3 }} ₽/м³</b>
+            {%- if site.bags and cta_price.bag %}
+            <b class="art__cta-price__num">от {{ cta_price.bag }} ₽/мешок</b>
+            {%- else %}
+            <b class="art__cta-price__num">от {{ site.km_price }} ₽/км доставка</b>
+            {%- endif %}
+          </div>
           <span class="art__cta-price__note">Цена за материал, минимальный заказ {{ site.min_volume }}. Точную назовём по заявке</span>
         </div>
         {%- endif %}
