@@ -11,7 +11,9 @@
               выдумывать район нельзя. Склеиваем только то, что есть. -#}
           <span class="review__meta">{{ [r.area, r.date]|select|join(", ") }}</span>
         </div>
-        {%- if r.stars %}<div class="review__stars">{{ "★" * r.stars }}{{ "☆" * (5 - r.stars) }}</div>{%- endif %}
+        {#- Звёзды — картинка из символов, скринридеру она читается как пять
+            слов «звезда». Поэтому глифы прячем, а оценку даём словами. -#}
+        {%- if r.stars %}<div class="review__stars"><span aria-hidden="true">{{ "★" * r.stars }}{{ "☆" * (5 - r.stars) }}</span><span class="sr-only">Оценка {{ r.stars }} из 5</span></div>{%- endif %}
         <p class="review__text">{{ r.text }}</p>
       </div>
       {%- endfor %}
