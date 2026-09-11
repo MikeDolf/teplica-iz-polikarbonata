@@ -7,13 +7,19 @@
       <div class="review">
         <div class="review__head">
           <span class="review__name">{{ r.name }}</span>
-          <span class="review__meta">{{ r.area }}{% if r.date %}, {{ r.date }}{% endif %}</span>
+          {#- Город может быть неизвестен: отзыв пришёл в переписке, и
+              выдумывать район нельзя. Склеиваем только то, что есть. -#}
+          <span class="review__meta">{{ [r.area, r.date]|select|join(", ") }}</span>
         </div>
         {%- if r.stars %}<div class="review__stars">{{ "★" * r.stars }}{{ "☆" * (5 - r.stars) }}</div>{%- endif %}
         <p class="review__text">{{ r.text }}</p>
       </div>
       {%- endfor %}
     </div>
+    {#- Откуда отзывы. Без этой строки короткое «всё хорошо» выглядит как
+        сочинённое; с ней видно, что это ответ живого человека на вопрос
+        после доставки, а не текст для сайта. -#}
+    <p class="reviews__source">Это ответы клиентов в мессенджере: после каждой доставки спрашиваем, всё ли в порядке с материалом и машиной. Публикуем как есть, с их разрешения.</p>
     <p class="reviews__cta-line">Заказывали у нас? <a href="mailto:{{ site.contact_email }}?subject=Отзыв о доставке">Оставьте отзыв</a>, это поможет другим дачникам выбрать.</p>
   </div>
 </section>

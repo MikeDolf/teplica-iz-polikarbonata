@@ -349,7 +349,19 @@
 .ekb .callblock__msg--max{background:transparent;color:var(--ink-soft);border-color:var(--line);font-weight:700}
 .ekb .callblock__msg--max:hover{border-color:var(--accent);color:var(--accent)}
 .callblock__msg--max[title]{cursor:default}
-.review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+/* отзывы: блок ни разу не рендерился, пока REVIEWS был пуст, поэтому
+   стили здесь появились только вместе с первыми настоящими отзывами */
+.reviews__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:0 0 18px}
+@media (max-width:900px){.reviews__grid{grid-template-columns:1fr 1fr}}
+@media (max-width:620px){.reviews__grid{grid-template-columns:1fr}}
+.review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.review__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.ekb .review__name{font-weight:700;font-size:16.5px;color:var(--ink)}
+.review__meta{font-size:13.5px;color:var(--ink-soft)}
+.review__stars{color:#f0a814;font-size:15px;letter-spacing:2px}
+.ekb .review__text{margin:0;font-size:16px;line-height:1.5;color:var(--ink)}
+.reviews__source{margin:0 0 10px;font-size:14px;color:var(--ink-soft);max-width:70ch}
+.reviews__cta-line{margin:0;font-size:15px;color:var(--ink-soft)}
 
 /* CTA сбора отзывов (когда реальных ещё нет) */
 .revcta{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
