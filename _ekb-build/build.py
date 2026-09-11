@@ -603,6 +603,10 @@ def calc_materials():
         name = {"zemlya-v-meshkah": "земля в мешках"}.get(key, TAIL_NAME.get(key, key))
         base = base_of(key)
         out.append({"key": key, "name": name[0].upper() + name[1:],
+                    # chip — значение радиокнопки товара в форме заявки:
+                    # по нему калькулятор отмечает нужный материал, когда
+                    # человек переходит от расчёта к заявке.
+                    "chip": PRODUCTS[key]["chip"],
                     "density": DENSITY[key], "m3": pr["m3"],
                     # Смена материала в калькуляторе меняет базу, а с ней и
                     # плечо: это и есть главная новость расчёта.

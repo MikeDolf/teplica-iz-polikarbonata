@@ -219,7 +219,7 @@
         <div class="pricebox__num"><span>от 1200 ₽</span><small>за куб материала</small></div>
         <div class="pricebox__num"><span>от 76 ₽</span><small>за км доставки, рейс туда и обратно</small></div>
       </div>
-      <p>Материал и доставка считаются отдельно. Цена за кубометр зависит от объёма и способа выгрузки, доставка — от плеча: от 76 ₽ за километр от базы, рейс оплачивается туда и обратно. Базы у нас три, и везём мы с той, где лежит именно ваш материал, а не через весь город. Чем больше объём, тем дешевле выходит куб, потому что рейс один и тот же.</p>
+      <p>Материал и доставка считаются отдельно. Цена за кубометр зависит от объёма и способа выгрузки, доставка — от плеча: от 76 ₽ за километр от базы, рейс оплачивается туда и обратно. Базы у нас три, и везём мы с той, где лежит именно ваш материал, а не через весь город. Чем больше объём в одной машине, тем дешевле выходит куб: рейс стоит одинаково и при трёх кубах, и при двенадцати.</p>
       <p class="pricebox__honest">Минимальный заказ 3 м³, это неполный кузов самосвала: меньше не возим, рейс не окупается. Цены ориентировочные, точную стоимость с доставкой на ваш адрес называем сразу по заявке, без скрытых доплат.</p>
     </div>
     <a class="btn btn--call pricebox__btn" href="#zayavka">Узнать точную цену</a>
@@ -278,7 +278,7 @@
         </tbody>
       </table>
     </div>
-    <p class="fleet__note">Последняя колонка, это минимальный заказ целиком: три куба материала плюс рейс. Чем больше объём, тем дешевле выходит куб, потому что рейс один и тот же. Посчитать под свою площадь можно калькулятором выше.</p>
+    <p class="fleet__note">Последняя колонка, это минимальный заказ целиком: три куба материала плюс рейс. Чем больше объём в одной машине, тем дешевле выходит куб: рейс стоит одинаково и при трёх кубах, и при двенадцати. Посчитать под свою площадь можно калькулятором выше.</p>
   </div>
 </section><section class="calc band band--white" aria-labelledby="calc-title">
   <div class="wrap">
@@ -290,15 +290,15 @@
         <div class="calc__field">
           <label class="calc__label" for="calc-mat">Материал</label>
           <select class="calc__input" id="calc-mat">
-            <option value="chernozem" data-d="1.2" data-p="850" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Чернозём</option>
-            <option value="plodorodnyy-grunt" data-d="1.3" data-p="750" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Плодородный грунт</option>
-            <option value="peregnoy" data-d="0.65" data-p="1100" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга">Перегной</option>
-            <option value="torfogrunt" data-d="0.9" data-p="900" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Торфогрунт</option>
-            <option value="torf" data-d="0.7" data-p="950" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Торф</option>
-            <option value="kislyy-torf" data-d="0.32" data-p="950" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Кислый торф</option>
-            <option value="navoz-koroviy" data-d="0.8" data-p="900" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга">Коровий навоз</option>
-            <option value="navoz-konskiy" data-d="0.6" data-p="1200" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга" selected>Конский навоз</option>
-            <option value="navoz" data-d="0.8" data-p="900" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга">Навоз</option>
+            <option value="chernozem" data-chip="Чернозём" data-d="1.2" data-p="850" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Чернозём</option>
+            <option value="plodorodnyy-grunt" data-chip="Плодородный грунт" data-d="1.3" data-p="750" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Плодородный грунт</option>
+            <option value="peregnoy" data-chip="Перегной" data-d="0.65" data-p="1100" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга">Перегной</option>
+            <option value="torfogrunt" data-chip="Торфогрунт" data-d="0.9" data-p="900" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Торфогрунт</option>
+            <option value="torf" data-chip="Торф" data-d="0.7" data-p="950" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Торф</option>
+            <option value="kislyy-torf" data-chip="Торф" data-d="0.32" data-p="950" data-base="kurganovo" data-basename="Курганово" data-basewhere="Полевской тракт">Кислый торф</option>
+            <option value="navoz-koroviy" data-chip="Навоз коровий" data-d="0.8" data-p="900" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга">Коровий навоз</option>
+            <option value="navoz-konskiy" data-chip="Навоз конский" data-d="0.6" data-p="1200" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга" selected>Конский навоз</option>
+            <option value="navoz" data-chip="Навоз коровий" data-d="0.8" data-p="900" data-base="sadovyy" data-basename="Садовый" data-basewhere="север Екатеринбурга">Навоз</option>
           </select>
         </div>
         <div class="calc__field">
@@ -371,7 +371,7 @@
           <li class="calc__price"><span>Итого ориентировочно</span><b id="calc-cost">от 13 050 ₽</b></li><li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
         </ul>
         <p class="calc__note" id="calc-min" hidden>Это меньше минимального заказа. Меньше не возим, рейс не окупается. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p><p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка от 76 ₽ за километр, рейс считается туда и обратно и включает подачу машины. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
-        <a class="btn btn--call calc__btn" href="#zayavka">Посчитать точно</a>
+        <a class="btn btn--call calc__btn" href="#zayavka"><span class="calc__btn-label">Оставить заявку на этот объём</span></a>
       </div>
     </div>
   </div>
@@ -379,6 +379,7 @@
 <script>
 (function(){
   var mat = document.getElementById('calc-mat'); if(!mat) return;
+  var last = null, ctaLabel = document.querySelector('.calc__btn-label');
   var area = document.getElementById('calc-area'), depth = document.getElementById('calc-depth');
   var shrink = document.getElementById('calc-shrink');
   var city = document.getElementById('calc-city'), km = document.getElementById('calc-km');
@@ -411,6 +412,10 @@
     if(m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
     return many;
   }
+  // Сколько рейсов нужно на объём. Вынесено из trucks(), потому что число
+  // рейсов нужно не только для подписи, но и для денег: километры едутся
+  // столько раз, сколько ходок.
+  function tripCount(v){ return v <= 12 ? 1 : Math.ceil(v / 12); }
   function trucks(v){
     // Названия совпадают с блоком «На чём привозим»: там два варианта,
     // самосвал 5 т и КамАЗ. Третьего в парке нет, и выдумывать его здесь
@@ -450,7 +455,6 @@
     var m3 = a * (d / 100);
     if(shrink.checked) m3 *= 1.2;
     var distance = parseFloat(km.value) || 0;
-    var ride = Math.round(distance * KM_PRICE * LEGS) + ORDER_FEE;
     // При пустом, нулевом или отрицательном вводе обнуляем всё разом:
     // иначе вес и цена оставались бы от прошлого расчёта.
     if(!(m3 > 0)){
@@ -474,12 +478,20 @@
     // Считаем по минимальному объёму: заказ на полкуба всё равно оплачивается
     // как три, и увидеть это человек должен здесь, а не в переписке.
     var billed = Math.max(m3, MIN_M3);
+    // Доставка считалась как один рейс независимо от объёма: строка выше
+    // писала «10 рейсов КамАЗа», а денег брала за одну ходку, то есть на
+    // больших объёмах занижала рейс в разы. Километры умножаем на число
+    // рейсов, работу по заказу (ORDER_FEE) берём один раз — она на заказ,
+    // а не на ходку.
+    var trips = tripCount(billed);
+    var ride = Math.round(distance * KM_PRICE * LEGS) * trips + ORDER_FEE;
     // Без округления до сотни: прайс-таблица на этой же странице считает
     // точно, и округление давало расхождение в полсотни рублей за одно и
     // то же. Цены и так подписаны как «от».
     var material = Math.round(billed * price);
     oMp.textContent = 'от ' + ru(material) + ' ₽';
-    oDl.textContent = 'Доставка, ' + ru(distance) + ' км' + (LEGS > 1 ? ' в один конец' : '');
+    oDl.textContent = 'Доставка, ' + ru(distance) + ' км' + (LEGS > 1 ? ' в один конец' : '')
+      + (trips > 1 ? ', ' + trips + ' ' + plural(trips, 'рейс', 'рейса', 'рейсов') : '');
     // Пустое поле километров, это не «доставка бесплатно»: пока плечо не
     // задано, итог и цену за куб не показываем вовсе.
     oD.textContent = distance > 0 ? ru(ride) + ' ₽' : '—';
@@ -488,10 +500,52 @@
     // минимума человек платит за три куба, и честная цифра именно такая.
     oPer.textContent = distance > 0 ? ru(Math.round((material + ride) / billed)) + ' ₽' : '—';
     oMin.hidden = m3 >= MIN_M3;
+    // Запоминаем расчёт, чтобы перенести его в заявку: раньше человек
+    // выбирал материал, объём и город в калькуляторе, а в форме ниже всё
+    // это стояло по умолчанию («Чернозём», «3-4 м³»), и заявка приходила
+    // с данными, противоречащими тому, что он только что посчитал.
+    last = {chip: o.dataset.chip, matName: o.text, billed: billed,
+            shown: shown, km: distance, total: distance > 0 ? material + ride : 0};
+    if(ctaLabel) ctaLabel.textContent = 'Оставить заявку на ' + ru(round(billed)) + ' м³';
   }
   [mat, area, depth, shrink].forEach(function(el){
     el.addEventListener('input', calc); el.addEventListener('change', calc);
   });
+
+  // Перенос расчёта в форму заявки. Кнопка и так ведёт на #zayavka, но до
+  // этого форма ничего не знала о расчёте: человек второй раз выбирал тот
+  // же материал и объём, а если ленился — заявка уходила со значениями по
+  // умолчанию. Заполняем только пустое: если человек уже что-то вписал
+  // руками, его ввод важнее нашего.
+  var cta = document.querySelector('.calc__btn');
+  if(cta) cta.addEventListener('click', function(){
+    var form = document.getElementById('lead-form');
+    if(!form || !last) return;
+    var hit = null;
+    if(last.chip){
+      var radios = form.querySelectorAll('input[name="product"]');
+      for(var i = 0; i < radios.length; i++){
+        if(radios[i].value === last.chip){ radios[i].checked = true; hit = radios[i]; break; }
+      }
+    }
+    // Объём переводим в те же градации, что стоят в форме.
+    var vol = last.billed < 5 ? '3-4' : (last.billed < 8 ? '5-7' : 'От 10');
+    var vr = form.querySelectorAll('input[name="volume"]');
+    for(var j = 0; j < vr.length; j++){
+      if(vr[j].value.indexOf(vol) === 0){ vr[j].checked = true; break; }
+    }
+    var district = form.querySelector('#lead-district');
+    var cityName = city.options[city.selectedIndex] ? city.options[city.selectedIndex].text : '';
+    if(district && !district.value.trim() && city.value !== 'other') district.value = cityName;
+    var note = form.querySelector('#lead-note');
+    if(note && !note.value.trim()){
+      note.value = 'Из калькулятора: ' + ru(round(last.billed)) + ' м³, ' + last.matName.toLowerCase()
+        + (last.km > 0 ? ', плечо ' + ru(last.km) + ' км' : '')
+        + (last.total > 0 ? ', ориентировочно от ' + ru(last.total) + ' ₽' : '');
+    }
+    if(hit && window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', 'calc_to_form'); }
+  });
+
   calc();
 })();
 </script><section class="tbar band band--white" aria-labelledby="tbar-title">
@@ -834,7 +888,6 @@
           <label class="chip"><input type="radio" name="product" value="Плодородный грунт"><span>Плодородный грунт</span></label>
           <label class="chip"><input type="radio" name="product" value="Торф"><span>Торф</span></label>
           <label class="chip"><input type="radio" name="product" value="Торфогрунт"><span>Торфогрунт</span></label>
-          <label class="chip"><input type="radio" name="product" value="Опилки"><span>Опилки</span></label>
           <label class="chip"><input type="radio" name="product" value="Пока не решил"><span>Пока не решил</span></label>
         </div>
       </div>
