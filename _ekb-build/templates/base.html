@@ -54,6 +54,11 @@
   </script>
   <noscript><div><img src="https://mc.yandex.ru/watch/{{ site.metrika_id }}" style="position:absolute;left:-9999px;" alt="" /></div></noscript>
 {%- endif %}
+{%- if site.yandex_ads_page_id %}
+  <!-- Yandex Autoplacement {{ site.yandex_ads_page_id }} -->
+  <script src="https://yandex.ru/ads/system/context.js" async></script>
+  <script data-page-id="{{ site.yandex_ads_page_id }}" src="https://yandex.ru/ads/system/ap-loader.js" async></script>
+{%- endif %}
 {%- block schema %}{% endblock %}
 </head>
 <body class="ekb">
