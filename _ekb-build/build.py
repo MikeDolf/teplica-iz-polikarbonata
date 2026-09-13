@@ -1020,7 +1020,7 @@ def render_blog():
             related=related, footer_links=FOOTER_LINKS, cta_price=None,
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
-            crosslink=p.get("crosslink"),
+            crosslink=p.get("crosslink"), sources=p.get("sources"),
             calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
             calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
             calc_base=BASES[base_of("chernozem")],
