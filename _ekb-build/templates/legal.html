@@ -25,5 +25,9 @@
     </ul>
     {%- endif %}
     {%- endfor %}
+    {%- if map_embed %}
+    <h2>Как нас найти</h2>
+    <div class="art__map">{{ map_embed|safe }}</div>
+    {%- endif %}
   </article>
 {% endblock %}

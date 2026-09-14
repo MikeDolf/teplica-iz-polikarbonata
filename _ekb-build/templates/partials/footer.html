@@ -24,6 +24,10 @@
           карт. Снимает вопрос «а как платить» без захода в условия. -#}
       <p class="ftr__pay"><span>Оплата после выгрузки:</span> наличными · картой · переводом · безнал для организаций</p>
       {%- if site.legal_status %}<p class="ftr__status">{{ site.legal_status }}</p>{%- endif %}
+      {#- Телефон намеренно не кликабелен и без tel:, чтобы не провоцировать
+          звонки — заявки идут через MAX/WhatsApp/форму. Строка нужна только
+          как факт «телефон на сайте есть» для поисковых роботов. -#}
+      {%- if site.phone_display %}<p class="ftr__tel-quiet">{{ site.legal_name }}, ИНН {{ site.inn }}. Тел.: {{ site.phone_display }}</p>{%- endif %}
     </div>
     <ul class="ftr__links">
       {%- for l in footer_links %}

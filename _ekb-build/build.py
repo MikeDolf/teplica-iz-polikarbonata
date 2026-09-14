@@ -6,6 +6,7 @@
 """
 import os, sys, json, re, zlib
 from datetime import date
+from urllib.parse import quote
 
 RU_MONTHS = ["января", "февраля", "марта", "апреля", "мая", "июня",
              "июля", "августа", "сентября", "октября", "ноября", "декабря"]
@@ -148,6 +149,7 @@ FOOTER_LINKS = [
     {"url": "/dostavka-grunta-chelyabinskiy-trakt/", "text": "Челябинский тракт"},
     {"url": "/dostavka-grunta-polevskoy-trakt/", "text": "Полевской тракт"},
     {"url": "/dostavka-grunta/blog/", "text": "Блог"},
+    {"url": "/dostavka-grunta/rekvizity/", "text": "Реквизиты"},
 ]
 
 def build_localbusiness():
@@ -162,6 +164,8 @@ def build_localbusiness():
     }
     if SITE.get("phone_tel"):
         lb["telephone"] = SITE["phone_tel"]
+    if SITE.get("legal_address"):
+        lb["address"] = {"@type": "PostalAddress", "streetAddress": SITE["legal_address"], "addressLocality": "Екатеринбург", "addressCountry": "RU"}
     return lb
 
 def build_schema(page, canonical):
@@ -1101,6 +1105,54 @@ def render_privacy():
     return canonical
 
 
+def render_company():
+    """Страница «Реквизиты»: кто исполнитель, статус, ИНН, адрес, телефон.
+
+    E-E-A-T-сигнал для поисковика (проверяемое юрлицо/физлицо за сайтом),
+    а не точка входа для звонков — крупной кнопки «позвонить» тут нет,
+    только текст и мелкая ссылка из подвала.
+    """
+    canonical = f'{SITE["domain"]}/dostavka-grunta/rekvizity/'
+    body = [
+      {"h": "Исполнитель",
+       "p": [f'{SITE["legal_name"]} — {SITE["legal_status_full"]}.'],
+       "list": [
+         f'ИНН: {SITE["inn"]}',
+         f'Адрес: {SITE["legal_address"]}',
+         f'Телефон: {SITE["phone_display"]}',
+         f'Почта: {SITE["contact_email"]}',
+         f'Режим работы: {SITE["work_hours_display"]}',
+       ]},
+      {"h": "Как оформляются заказы",
+       "p": [f'Физическим лицам — напрямую, оплата после выгрузки любым удобным способом: {SITE["payment"]}',
+             f'Организациям — через партнёрскую организацию: {SITE["yurlica_note"]}.']},
+      {"h": "Связь",
+       "p": ['Для заявок и вопросов быстрее всего писать в MAX или WhatsApp — ссылки в шапке и подвале сайта. '
+             'Телефон выше указан для справки и для организаций, которым нужны реквизиты; '
+             'основная связь по заказам идёт через мессенджеры и почту.']},
+    ]
+    map_embed = (
+        '<iframe src="https://yandex.ru/map-widget/v1/?text=' +
+        quote(SITE["legal_address"]) +
+        '&z=16" width="100%" height="360" frameborder="0" loading="lazy" '
+        'title="Адрес на карте"></iframe>'
+    )
+    html = env.get_template("legal.html").render(
+        site=SITE, canonical=canonical, robots="index, follow",
+        title="Реквизиты — доставка грунта",
+        description=f'Реквизиты исполнителя: {SITE["legal_name"]}, ИНН {SITE["inn"]}, адрес {SITE["legal_address"]}. Контакты и режим работы.',
+        h1="Реквизиты", short="Реквизиты",
+        lede="Кто отвечает за доставку грунта и органики на этом сайте: статус, ИНН, адрес и контакты.",
+        body=body, map_embed=map_embed, footer_links=FOOTER_LINKS, metrika_placeholder=True,
+        prodbar=PRODBAR, current_slug="", photos=PHOTOS, related=[])
+    outdir = os.path.join(ROOT, "dostavka-grunta", "rekvizity")
+    os.makedirs(outdir, exist_ok=True)
+    with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
+        fh.write(html)
+        check_repeats(html, canonical)
+    return canonical
+
+
 if __name__ == "__main__":
     only = sys.argv[1:] or None
     done = []
@@ -1117,11 +1169,14 @@ if __name__ == "__main__":
     hub_url = render_hub(all_pages) if not only else None
     article_urls = render_articles() if not only else []
     article_urls += render_blog() if not only else []
+    company_url = None
     if not only:
         render_privacy()   # noindex, в карту сайта не идёт
+        company_url = render_company()
     index_urls = [u for (sl, u, idx) in done if idx]
     if hub_url: index_urls.insert(0, hub_url)
     index_urls += article_urls
+    if company_url: index_urls.append(company_url)
     for slug, url, idx in done:
         print(("index " if idx else "NOIDX "), slug, "->", url)
     print(f"Готово: {len(done)} страниц, в индекс: {len(index_urls)}")
