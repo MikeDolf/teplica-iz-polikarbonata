@@ -23,13 +23,14 @@ sys.path.insert(0, os.path.join(HERE, "data"))
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from site_config import SITE  # noqa
 from cities import CITIES      # noqa
-from bases import BASES, PRODUCT_BASE, DEFAULT_BASE  # noqa
+from bases import BASES, PRODUCT_BASE, PRODUCT_BASES, PYSHMA_CITIES, DEFAULT_BASE  # noqa
 from pages import PAGES        # noqa
 from products import PRODUCTS, GEO_PAGES, USES, USES_DEFAULT, CITY_ORDER  # noqa
 from articles import ARTICLES  # noqa
 from blog import BLOG  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR, DENSITY, CALC_ORDER  # noqa
 from tail_cities import TAIL_CITIES
+from works import WORKS  # noqa
 from city_product import CP, CPF  # noqa
 try:
     from reviews import REVIEWS  # noqa
@@ -119,8 +120,8 @@ CROSSLINK = {
     # их не соединяет, у них совпадают и товар, и город. Страницы фасовки
     # оставлены под запрос «в мешках», но ведут они теперь на объяснение,
     # почему возим навалом, а не на предложение мешков.
-    "peregnoy-ekaterinburg": {"title":"Искали перегной в мешках?","text":"Фасовку мы не возим: поставщика по мешкам у нас нет. Минимальный заказ три куба навалом, и на отдельной странице разобрано, сколько это в мешках для тех, кто привык считать ими, во что обходится куб против фасовки в магазине и как разгрузиться, если самосвалу негде встать.","url":"/peregnoy-v-meshkah-ekaterinburg/","anchor":"Перегной в мешках: почему возим навалом"},
-    "peregnoy-v-meshkah-ekaterinburg": {"title":"Готовы взять навалом?","text":"Тогда смотрите общую страницу перегноя: цены за куб, нормы внесения по культурам, расчёт объёма под теплицу и грядки и условия доставки. Минимальный заказ три куба, машину подаём к месту выгрузки.","url":"/peregnoy-ekaterinburg/","anchor":"Перегной навалом, цена за куб"},
+    "peregnoy-ekaterinburg": {"title":"Искали перегной в мешках?","text":"Фасовку мы не возим: поставщика по мешкам у нас нет. Минимальный заказ по Екатеринбургу — один куб навалом, и на отдельной странице разобрано, сколько это в мешках для тех, кто привык считать ими, во что обходится куб против фасовки в магазине и как разгрузиться, если самосвалу негде встать.","url":"/peregnoy-v-meshkah-ekaterinburg/","anchor":"Перегной в мешках: почему возим навалом"},
+    "peregnoy-v-meshkah-ekaterinburg": {"title":"Готовы взять навалом?","text":"Тогда смотрите общую страницу перегноя: цены за куб, нормы внесения по культурам, расчёт объёма под теплицу и грядки и условия доставки. Минимальный заказ по Екатеринбургу — один куб, машину подаём к месту выгрузки.","url":"/peregnoy-ekaterinburg/","anchor":"Перегной навалом, цена за куб"},
     # Страницы под задачу: автоматическая перелинковка даёт им ссылки, но
     # не связывает с родительским товаром, у них тот же товар и тот же город.
     "plodorodnyy-grunt-ekaterinburg": {"title":"Меняете грунт в теплице?","text":"Под теплицу считают не площадь участка, а площадь теплицы и толщину слоя: три на шесть при замене 20 см это 3,6 куба. На отдельной странице разобрано, какой слой менять, что нельзя класть в закрытый грунт и сколько выходит по кубам.","url":"/grunt-dlya-teplicy-ekaterinburg/","anchor":"Грунт для теплицы, расчёт и цены"},
@@ -129,7 +130,7 @@ CROSSLINK = {
     "zemlya-pod-gazon-ekaterinburg": {"title":"Поднимаете участок целиком?","text":"Под газон нужен слой 10-15 см, под подъём участка от воды объёмы совсем другие и пирог делается слоями. Как считать и чем засыпать нижний слой, разобрано в отдельной статье.","url":"/dostavka-grunta/blog/chem-podnyat-uchastok/","anchor":"Чем поднять участок: расчёт и материалы"},
     "torf-ekaterinburg": {"title":"Сажаете голубику?","text":"Голубике нужен верховой торф с кислотностью pH 2,6-3,5, низинный ей не подходит. Под эту задачу у нас отдельная страница: там состав смеси, размер ямы и расчёт объёма на куст.","url":"/torf-dlya-golubiki/","anchor":"Кислый торф для голубики"},
     "torf-dlya-golubiki": {"title":"Нужен торф под другие задачи?","text":"Под грядки, теплицы и почвосмеси берут низинный торф, он почти нейтральный. Виды, кислотность и цены за куб собраны на общей странице торфа.","url":"/torf-ekaterinburg/","anchor":"Весь торф в Екатеринбурге"},
-    "torf-v-meshkah-ekaterinburg": {"title":"Готовы взять навалом?","text":"Тогда смотрите общую страницу торфа: цены за куб, разница низинного и верхового кислого и условия доставки. Минимальный заказ три куба, машину подаём к месту выгрузки.","url":"/torf-ekaterinburg/","anchor":"Торф навалом, цена за куб"},
+    "torf-v-meshkah-ekaterinburg": {"title":"Готовы взять навалом?","text":"Тогда смотрите общую страницу торфа: цены за куб, разница низинного и верхового кислого и условия доставки. Минимальный заказ по Екатеринбургу — один куб, машину подаём к месту выгрузки.","url":"/torf-ekaterinburg/","anchor":"Торф навалом, цена за куб"},
     "chernozem-ekaterinburg": {"title":"Участок подтапливает?","text":"Если весной на участке стоит вода, плодородный слой в ней просто закиснет. Сначала делают водоотвод, потом завозят чернозём. Как устроить дренаж, разобрано в отдельном справочнике.","url":"https://ursdom.ru/drenazh/","anchor":"Дренаж участка: трубы, колодцы, укладка"},
 }
 
@@ -337,15 +338,64 @@ def bag_note(product_key):
     return f"это 60-75 мешков по 40-50 л{tail}"
 
 
-def base_of(product_key):
-    """С какой базы отгружают этот товар."""
-    return PRODUCT_BASE.get(product_key, DEFAULT_BASE)
+def base_of(product_key, city_key=None):
+    """С какой базы отгружают этот товар в этот город.
+
+    Товар может лежать на нескольких базах (PRODUCT_BASES). Берём ту, от
+    которой плечо до города короче: так цена рейса считается от реального
+    места погрузки, а не от исторически первой базы. При равном плече
+    выигрывает первая в списке, то есть основная база товара.
+
+    Без города выбрать не из чего — отдаём основную базу (статьи, хаб).
+    """
+    bases = PRODUCT_BASES.get(product_key)
+    if not bases:
+        return DEFAULT_BASE
+    if city_key is None:
+        return bases[0]
+    avail = [b for b in bases
+             if b != "verhnyaya-pyshma" or city_key in PYSHMA_CITIES]
+    return min(avail, key=lambda b: CITIES[city_key]["base_km"][b])
 
 
 def km_to(city_key, product_key=None, base_key=None):
     """Плечо в один конец до города от базы нужного товара."""
-    base = base_key or base_of(product_key)
+    base = base_key or base_of(product_key, city_key)
     return CITIES[city_key]["base_km"][base]
+
+
+def min_m3(city_key=None):
+    """Минимальный объём заказа в кубах для этого города.
+
+    Не общая константа: в северный куст от площадки в Верхней Пышме рейс
+    короткий и окупается на одном кубе, на дальнем плече — нет.
+    """
+    if city_key and city_key in CITIES:
+        return CITIES[city_key].get("min_m3", 3)
+    return 3
+
+
+def min_volume_text(city_key=None):
+    """«1 м³» или «3 м³» — строкой, как это стоит в текстах страниц."""
+    return f"{min_m3(city_key)} м³"
+
+
+# Ответ про объём для городов, куда возим от куба. Подменяет одноимённый
+# вопрос из faq_base, см. compose_geo.
+VOLUME_FAQ_1M3 = (
+    "Минимальный заказ 1 м³. У нас своя площадка в районе Верхней Пышмы, "
+    "плечо отсюда короткое, поэтому сюда мы возим и один куб под клумбы или "
+    "пару коробов, и полный самосвал под отсыпку участка целиком. "
+    "Подскажем, какой объём выгоднее под вашу задачу."
+)
+
+
+def min_volume_note(city_key=None):
+    """Пояснение под минимальным объёмом. Для куста от куба причина другая:
+    не «рейс не окупается», а «у нас рядом своя площадка»."""
+    if min_m3(city_key) == 1:
+        return "у нас своя площадка в районе Верхней Пышмы, плечо короткое"
+    return SITE["min_volume_note"]
 
 
 def delivery_min_rub(city_key, product_key=None, base_key=None):
@@ -506,11 +556,11 @@ def price_rows(page):
         # Рейс у каждой строки свой: земля едет из Курганово, перегной из
         # Садового, и до Полевского это 25 км против 60. Одна общая цифра
         # доставки на всю таблицу врала бы половине строк.
-        base = base_of(key)
+        base = base_of(key, city_key)
         rows.append({"name": p["name"], "url": p["url"], "m3": pr["m3"],
                      "km": km_to(city_key, base_key=base),
                      "base": BASES[base]["name"],
-                     "min_total": pr["m3"] * 3 + delivery_min_rub(city_key, base_key=base),
+                     "min_total": pr["m3"] * min_m3(city_key) + delivery_min_rub(city_key, base_key=base),
                      "current": key == cur})
     return rows
 
@@ -557,7 +607,7 @@ def compose_geo(product_key, city_key):
                   f'наших баз под Екатеринбургом: плечо оттуда слишком большое, и это было бы дороже и дольше. '
                   f'Материал и ассортимент те же, а цену и срок называем в ответ на заявку под ваш адрес и объём.')
     else:
-        base = BASES[base_of(product_key)]
+        base = BASES[base_of(product_key, city_key)]
         km = km_to(city_key, product_key)
         ride = delivery_min_rub(city_key, product_key)
         city_q = (f'Сколько стоит доставка {city["to"]}?',
@@ -577,6 +627,12 @@ def compose_geo(product_key, city_key):
         faq = [city_q] + pr["faq_base"]
     else:
         faq = CPF.get((city_key, product_key), []) + [city_q] + pr["faq_base"]
+    # Ответ про минимальный объём в faq_base написан под общие три куба.
+    # В северный куст возим от одного, и оставлять там «три» нельзя:
+    # это первый же вопрос, который читают, и он спорил бы с ценой рядом.
+    if min_m3(city_key) == 1:
+        faq = [(q, VOLUME_FAQ_1M3 if q == "В каком объёме возите?" else a)
+               for q, a in faq]
     mt, md = money_meta(product_key, city_key)
     return {
         "slug": slug, "city": city_key, "product": pr["chip"], "kind": "geo",
@@ -607,6 +663,9 @@ def calc_materials():
         name = {"zemlya-v-meshkah": "земля в мешках"}.get(key, TAIL_NAME.get(key, key))
         base = base_of(key)
         out.append({"key": key, "name": name[0].upper() + name[1:],
+                    # Все базы, где лежит товар: калькулятор выбирает из них
+                    # ближайшую к выбранному городу прямо на странице.
+                    "bases": ",".join(PRODUCT_BASES.get(key, [base])),
                     # chip — значение радиокнопки товара в форме заявки:
                     # по нему калькулятор отмечает нужный материал, когда
                     # человек переходит от расчёта к заявке.
@@ -631,8 +690,20 @@ CALC_MATERIALS = calc_materials()
 # По алфавиту человек хотя бы находит себя за секунду.
 CALC_CITIES = [{"key": k, "name": CITIES[k]["name"],
                 "km": CITIES[k]["base_km"][DEFAULT_BASE],
+                # Минимум зависит от города: в северный куст возим от куба.
+                "min_m3": CITIES[k]["min_m3"],
+                # Базы, доступные для этого города: площадка в Пышме работает
+                # только на северный куст, см. PYSHMA_CITIES в bases.py.
+                "bases": ",".join(b for b in BASES
+                                  if b != "verhnyaya-pyshma" or k in PYSHMA_CITIES),
                 "km_json": json.dumps(CITIES[k]["base_km"], ensure_ascii=False)}
                for k in sorted(CITIES, key=lambda k: (k != "ekaterinburg", CITIES[k]["name"]))]
+
+# Названия баз для калькулятора: подпись «грузим с базы …» меняется не
+# только от материала, но и от города, поэтому JS должен уметь смотреть
+# любую базу, а не только ту, что пришла с сервера.
+CALC_BASES_JSON = json.dumps({k: {"name": v["name"], "where": v["where"]}
+                              for k, v in BASES.items()}, ensure_ascii=False)
 
 
 def nav_label(page):
@@ -724,12 +795,16 @@ def render(page):
         price_rows=price_rows(page),
         calc_cities=CALC_CITIES, calc_city=page.get("city", "ekaterinburg"),
         calc_km=km_to(page.get("city", "ekaterinburg"), product_key_of(page)),
-        calc_base=BASES[base_of(product_key_of(page))],
+        calc_base=BASES[base_of(product_key_of(page), page.get("city", "ekaterinburg"))],
+        calc_bases_json=CALC_BASES_JSON,
+        min_volume=min_volume_text(page.get("city")),
+        min_volume_note=min_volume_note(page.get("city")),
         delivery_min=delivery_min_rub(page.get("city", "ekaterinburg"),
                                       product_key_of(page)),
         bag_note=bag_note(product_key_of(page)),
         bag_kg=PRODUCTS.get(product_key_of(page), {}).get("bag_kg"),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
+        works=(WORKS if page.get("city") in PYSHMA_CITIES else None),
         hero_photo=hero_photo_for(page),
         hero_alt=hero_alt_for(page),
         product_genitive=product_genitive(page),
@@ -842,7 +917,10 @@ def render_hub(all_pages):
         catalog=catalog, geo=geo, faq=faq, articles=hub_articles, about=about,
         calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
         calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
-        calc_base=BASES[base_of("chernozem")],
+        calc_base=BASES[base_of("chernozem", "ekaterinburg")],
+        calc_bases_json=CALC_BASES_JSON,
+        min_volume=min_volume_text("ekaterinburg"),
+        min_volume_note=min_volume_note("ekaterinburg"),
         delivery_min=delivery_min_rub("ekaterinburg", "chernozem"),
         bag_note=bag_note("chernozem"),
         preselect_product="Пока не решил",
@@ -932,7 +1010,10 @@ def render_articles():
             prodbar=PRODBAR, current_slug="", photos=PHOTOS,
             calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
             calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
-            calc_base=BASES[base_of("chernozem")],
+            calc_base=BASES[base_of("chernozem", "ekaterinburg")],
+        calc_bases_json=CALC_BASES_JSON,
+        min_volume=min_volume_text("ekaterinburg"),
+        min_volume_note=min_volume_note("ekaterinburg"),
             delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
             cover=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])),
             hero_photo=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])))
@@ -983,7 +1064,10 @@ def render_blog():
         posts=posts_nav, articles=art_nav, footer_links=FOOTER_LINKS,
         calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
         calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
-        calc_base=BASES[base_of("chernozem")],
+        calc_base=BASES[base_of("chernozem", "ekaterinburg")],
+        calc_bases_json=CALC_BASES_JSON,
+        min_volume=min_volume_text("ekaterinburg"),
+        min_volume_note=min_volume_note("ekaterinburg"),
         delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
         preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
         schema_json=hub_schema, metrika_placeholder=True, related=[],
@@ -1027,7 +1111,10 @@ def render_blog():
             crosslink=p.get("crosslink"), sources=p.get("sources"),
             calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
             calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
-            calc_base=BASES[base_of("chernozem")],
+            calc_base=BASES[base_of("chernozem", "ekaterinburg")],
+        calc_bases_json=CALC_BASES_JSON,
+        min_volume=min_volume_text("ekaterinburg"),
+        min_volume_note=min_volume_note("ekaterinburg"),
             delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
             prodbar=PRODBAR, current_slug="", photos=PHOTOS, cover=None, hero_photo=None)
         outdir = os.path.join(ROOT, "dostavka-grunta", "blog", p["slug"])

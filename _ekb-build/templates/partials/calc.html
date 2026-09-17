@@ -10,7 +10,7 @@
 <section class="calc band band--white" aria-labelledby="calc-title">
   <div class="wrap">
     <h2 id="calc-title" class="sec-h">Калькулятор объёма и доставки</h2>
-    <p class="calc__lede">Посчитайте объём по площади и толщине слоя, а заодно стоимость рейса до вашего адреса. Минимальный заказ {{ site.min_volume }}, {{ site.min_volume_note }}. Эта цифра и есть та сумма, которую мы назовём в ответ на заявку — можно сориентироваться заранее, а потом просто уточнить детали.</p>
+    <p class="calc__lede">Посчитайте объём по площади и толщине слоя, а заодно стоимость рейса до вашего адреса. Минимальный заказ {{ min_volume }}, {{ min_volume_note }}. Эта цифра и есть та сумма, которую мы назовём в ответ на заявку — можно сориентироваться заранее, а потом просто уточнить детали. Минимум и плечо пересчитываются при смене города: в Верхнюю Пышму, Балтым, Среднеуральск, Берёзовский, Монетный и по Екатеринбургу возим от одного куба со своей площадки в районе Верхней Пышмы.</p>
 
     <div class="calc__grid">
       <div class="calc__form">
@@ -18,7 +18,7 @@
           <label class="calc__label" for="calc-mat">Материал</label>
           <select class="calc__input" id="calc-mat">
             {%- for m in calc_materials %}
-            <option value="{{ m.key }}" data-chip="{{ m.chip }}" data-d="{{ m.density }}" data-p="{{ m.m3 }}" data-base="{{ m.base }}" data-basename="{{ m.base_name }}" data-basewhere="{{ m.base_where }}"{% if m.key == calc_preselect %} selected{% endif %}>{{ m.name }}</option>
+            <option value="{{ m.key }}" data-chip="{{ m.chip }}" data-d="{{ m.density }}" data-p="{{ m.m3 }}" data-base="{{ m.base }}" data-bases="{{ m.bases }}" data-basename="{{ m.base_name }}" data-basewhere="{{ m.base_where }}"{% if m.key == calc_preselect %} selected{% endif %}>{{ m.name }}</option>
             {%- endfor %}
           </select>
         </div>
@@ -40,9 +40,9 @@
           <label class="calc__label" for="calc-city">Куда везти</label>
           <select class="calc__input" id="calc-city">
             {%- for c in calc_cities %}
-            <option value="{{ c.key }}" data-km="{{ c.km_json }}"{% if c.key == calc_city %} selected{% endif %}>{{ c.name }}</option>
+            <option value="{{ c.key }}" data-km="{{ c.km_json }}" data-min="{{ c.min_m3 }}" data-bases="{{ c.bases }}"{% if c.key == calc_city %} selected{% endif %}>{{ c.name }}</option>
             {%- endfor %}
-            <option value="other" data-km="">Другой адрес</option>
+            <option value="other" data-km="" data-min="3" data-bases="">Другой адрес</option>
           </select>
         </div>
         <div class="calc__field">
@@ -74,7 +74,9 @@
               цифры на первый взгляд выглядят дороже, хотя это не так. -#}
           <li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
         </ul>
-        <p class="calc__note" id="calc-min" hidden>Это меньше минимального заказа. {{ site.min_volume_note|capitalize }}. Цена посчитана по минимальным трём кубам, поэтому брать меньше просто невыгодно.</p>
+        {#- Текст собирает JS: минимум зависит от выбранного города, и
+            «по минимальным трём кубам» для северного куста было бы враньём. -#}
+        <p class="calc__note" id="calc-min" hidden></p>
         {#- «От» в цене километра не кокетство: в строке рейса, кроме
             километров, сидит подача машины. Обещать здесь ровно 95 × км × 2
             значило бы разойтись с собственным итогом. -#}
@@ -99,7 +101,15 @@
   var oPer = document.getElementById('calc-per');
   var oUnit = document.getElementById('calc-unit');
   var oBase = document.getElementById('calc-base'), oBaseW = document.getElementById('calc-basewhere');
-  var KM_PRICE = {{ site.km_price }}, LEGS = {{ 2 if site.km_round_trip else 1 }}, MIN_M3 = 3;
+  var KM_PRICE = {{ site.km_price }}, LEGS = {{ 2 if site.km_round_trip else 1 }};
+  // Справочник баз: нужен, чтобы подписать площадку, выбранную на лету.
+  var BASES = {{ calc_bases_json|safe }};
+  // Минимум зависит от города: в северный куст (своя площадка в районе
+  // Верхней Пышмы) возим от куба, на дальнее плечо по-прежнему от трёх.
+  function minM3(){
+    var v = parseInt(city.options[city.selectedIndex].dataset.min, 10);
+    return v > 0 ? v : 3;
+  }
   // Наша работа на заказе. Сидит внутри строки доставки, а не отдельным
   // пунктом: строки должны складываться в итог, который человек и услышит
   // в ответ на заявку.
@@ -110,7 +120,27 @@
     if(!raw) return null;
     try { return JSON.parse(raw); } catch(e){ return null; }
   }
-  function baseKey(){ return mat.options[mat.selectedIndex].dataset.base; }
+  // Товар может лежать на нескольких базах. Берём ту, от которой до
+  // выбранного города ближе: чернозём в Балтым едет из Верхней Пышмы, а в
+  // Полевской — из Курганово, и это разные деньги за один и тот же рейс.
+  // Для «Другого адреса» километров нет, поэтому остаётся основная база.
+  function baseKey(){
+    var o = mat.options[mat.selectedIndex];
+    var c = city.options[city.selectedIndex];
+    var list = (o.dataset.bases || o.dataset.base || '').split(',').filter(Boolean);
+    // Площадка в Пышме работает не на всю область: город приносит свой
+    // список доступных баз, и материал может предлагать только их.
+    var allowed = (c.dataset.bases || '').split(',').filter(Boolean);
+    if(allowed.length) list = list.filter(function(b){ return allowed.indexOf(b) >= 0; });
+    var m = cityKm(c);
+    if(!m || list.length < 2) return list[0] || o.dataset.base;
+    var best = null;
+    list.forEach(function(b){
+      if(m[b] == null) return;
+      if(best === null || m[b] < m[best]) best = b;
+    });
+    return best || o.dataset.base;
+  }
   function ru(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
   // Дробные значения по-русски пишутся через запятую.
   function round(v){ return String(v < 10 ? Math.round(v * 10) / 10 : Math.round(v)).replace('.', ','); }
@@ -159,7 +189,13 @@
     var a = parseFloat(area.value) || 0, d = parseFloat(depth.value) || 0;
     var o = mat.options[mat.selectedIndex];
     var dens = parseFloat(o.dataset.d), price = parseFloat(o.dataset.p);
-    if(oBase){ oBase.textContent = o.dataset.basename; oBaseW.textContent = o.dataset.basewhere; }
+    // Подпись площадки берём по выбранной базе, а не по материалу: база
+    // теперь зависит ещё и от города.
+    if(oBase){
+      var bk = baseKey(), bi = BASES[bk];
+      oBase.textContent = bi ? bi.name : o.dataset.basename;
+      oBaseW.textContent = bi ? bi.where : o.dataset.basewhere;
+    }
     var m3 = a * (d / 100);
     if(shrink.checked) m3 *= 1.2;
     var distance = parseFloat(km.value) || 0;
@@ -182,9 +218,11 @@
     if(oBags) oBags.textContent = ru(Math.round(m3 * 20)) + '-' + ru(Math.round(m3 * 25));
     var t = m3 * dens;
     oW.textContent = (t < 1 ? ru(Math.round(t * 1000)) + ' кг' : ru(round(t)) + ' т');
+    var MIN_M3 = minM3();
     oT.textContent = trucks(Math.max(m3, MIN_M3));
-    // Считаем по минимальному объёму: заказ на полкуба всё равно оплачивается
-    // как три, и увидеть это человек должен здесь, а не в переписке.
+    // Считаем по минимальному объёму: заказ меньше минимума всё равно
+    // оплачивается как минимум, и увидеть это человек должен здесь, а не
+    // в переписке. Минимум зависит от города, см. minM3().
     var billed = Math.max(m3, MIN_M3);
     // Доставка считалась как один рейс независимо от объёма: строка выше
     // писала «10 рейсов КамАЗа», а денег брала за одну ходку, то есть на
@@ -205,9 +243,14 @@
     oD.textContent = distance > 0 ? ru(ride) + ' ₽' : '—';
     oC.textContent = distance > 0 ? 'от ' + ru(material + ride) + ' ₽' : '—';
     // Делим на оплачиваемый объём, а не на введённый: при заказе меньше
-    // минимума человек платит за три куба, и честная цифра именно такая.
+    // минимума человек платит за минимум, и честная цифра именно такая.
     oPer.textContent = distance > 0 ? ru(Math.round((material + ride) / billed)) + ' ₽' : '—';
     oMin.hidden = m3 >= MIN_M3;
+    if(!oMin.hidden){
+      oMin.textContent = 'Это меньше минимального заказа. Цена посчитана по минимальному объёму, '
+        + MIN_M3 + ' ' + plural(MIN_M3, 'кубу', 'кубам', 'кубам')
+        + ', поэтому брать меньше просто невыгодно.';
+    }
     // Запоминаем расчёт, чтобы перенести его в заявку: раньше человек
     // выбирал материал, объём и город в калькуляторе, а в форме ниже всё
     // это стояло по умолчанию («Чернозём», «3-4 м³»), и заявка приходила

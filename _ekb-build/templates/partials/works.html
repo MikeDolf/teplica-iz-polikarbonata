@@ -1,0 +1,18 @@
+{%- if works %}
+<section class="works band band--white" aria-labelledby="works-title">
+  <div class="wrap">
+    <h2 id="works-title" class="sec-h">Наши доставки</h2>
+    <p class="works__lede">Снимки с рейсов по этому направлению: своя техника, свои выгрузки. Машину подаём к месту разгрузки, если подъезд позволяет, а если нет — высыпаем там, куда встала, и это заранее обсуждаем.</p>
+    <div class="works__grid">
+      {%- for w in works %}
+      <figure class="works__item">
+        <img class="works__img" src="/assets/ekb/photo/raboty/{{ w.file }}-800.jpg"
+             srcset="/assets/ekb/photo/raboty/{{ w.file }}-400.webp 400w, /assets/ekb/photo/raboty/{{ w.file }}-800.webp 800w"
+             sizes="(max-width: 700px) 100vw, 33vw"
+             alt="{{ w.alt }}" width="{{ w.w }}" height="{{ w.h }}" loading="lazy" decoding="async">
+      </figure>
+      {%- endfor %}
+    </div>
+  </div>
+</section>
+{%- endif %}

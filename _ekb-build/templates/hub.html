@@ -17,7 +17,7 @@
         <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
-        <p class="hero__min"><b>Минимальный заказ {{ site.min_volume }}</b> — только навалом, самосвалом. {{ site.min_volume_note|capitalize }}. Доставка от {{ site.km_price }} ₽/км от базы{% if site.km_round_trip %}, туда и обратно{% endif %}.</p>
+        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом, самосвалом. {{ min_volume_note|capitalize }}. Доставка от {{ site.km_price }} ₽/км от базы{% if site.km_round_trip %}, туда и обратно{% endif %}.</p>
         <div class="hero__cta">
           {%- if site.max_url %}
           <a class="btn btn--call" href="#calc-title">Рассчитать стоимость</a>
