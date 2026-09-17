@@ -59,7 +59,13 @@
             сама предлагала то, чего мы не возим, и заявка приходила заведомо
             невыполнимой. Теперь минимальный вариант и есть минимальный заказ. -#}
         <div class="chips" role="group" aria-label="Объём">
+          {%- if min_volume == "1 м³" %}
+          {#- В кусте вокруг площадки в Пышме минимум ниже общего, и первый
+              чип должен предлагать реальный минимум, а не общий «3-4 м³». -#}
+          <label class="chip"><input type="radio" name="volume" value="1-2 м³, минимальный заказ" checked><span>1-2 м³</span></label>
+          {%- else %}
           <label class="chip"><input type="radio" name="volume" value="3-4 м³, минимальный заказ" checked><span>3-4 м³</span></label>
+          {%- endif %}
           <label class="chip"><input type="radio" name="volume" value="5-7 м³, средний самосвал"><span>5-7 м³</span></label>
           <label class="chip"><input type="radio" name="volume" value="От 10 м³, КамАЗ"><span>От 10 м³</span></label>
           <label class="chip"><input type="radio" name="volume" value="Не знаю, подскажите"><span>Не знаю</span></label>
