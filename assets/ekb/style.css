@@ -21,12 +21,46 @@
 
 /* header */
 .hdr{background:var(--bg);color:#eaf1ea;position:sticky;top:0;z-index:20}
-.hdr__in{display:flex;align-items:center;gap:14px;min-height:58px;flex-wrap:wrap}
+.hdr__in{display:flex;align-items:center;gap:14px;min-height:58px;flex-wrap:nowrap}
+
+/* Контакты одной группой справа. Три канала — одинаковые по весу
+   контурные пилюли, залит только MAX как основной мессенджер, и одна
+   кнопка заявки. Раньше рядом стояли две сплошные зелёные плашки
+   разного оттенка, и шапка выглядела как набор случайных кнопок. */
+.hdr__side{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+.ekb .hdr__ln{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  height:38px;padding:0 13px;border-radius:19px;text-decoration:none;white-space:nowrap;
+  font-weight:700;font-size:14px;border:1px solid rgba(255,255,255,.22);color:#dbe8de;
+  background:rgba(255,255,255,.06);transition:background .15s,border-color .15s,color .15s}
+.ekb .hdr__ln:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);color:#fff}
+.ekb .hdr__ln svg{flex:none}
+/* WhatsApp и почта — только иконка: подпись дублирует то, что и так
+   понятно по значку, а место в строке стоит дороже. */
+.ekb .hdr__wa,.ekb .hdr__mail{width:38px;padding:0}
+.ekb .hdr__wa .hdr__ln-txt,.ekb .hdr__mail .hdr__ln-txt{position:absolute;width:1px;height:1px;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+.ekb .hdr__wa svg{color:var(--wa)}
+.ekb .hdr__max{background:var(--wa);border-color:var(--wa);color:#08301a;font-weight:800}
+.ekb .hdr__max svg{color:#08301a}
+.ekb .hdr__max:hover{background:#2ee06f;border-color:#2ee06f;color:#08301a}
+.ekb .hdr__cta{display:inline-flex;align-items:center;height:38px;padding:0 16px;border-radius:19px;
+  border:1px solid rgba(255,255,255,.5);color:#fff;text-decoration:none;font-weight:700;
+  font-size:14px;white-space:nowrap}
+.ekb .hdr__cta:hover{background:#fff;color:var(--bg);border-color:#fff}
+
+/* Узкая шапка: внизу экрана уже висит панель с MAX, заявкой и почтой,
+   поэтому здесь хватает логотипа и одной кнопки MAX. */
+@media (max-width:860px){.ekb .hdr__cta{display:none}}
+@media (max-width:720px){
+  .ekb .hdr__wa,.ekb .hdr__mail{display:none}
+  .ekb .hdr__logo{font-size:16.5px}
+}
+@media (max-width:380px){
+  .ekb .hdr__logo span{font-size:15px}
+  .ekb .hdr__max{font-size:13px;padding:0 11px}
+}
 .ekb .hdr__logo{display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:800;font-size:18px}
 .hdr__logo svg{color:#8fcaa1}
-.ekb .hdr__phone{margin-left:auto;display:inline-flex;align-items:center;gap:8px;color:#fff;text-decoration:none;font-weight:700;font-size:17px;white-space:nowrap}
-.hdr__phone svg{color:#8fcaa1}
-@media (max-width:560px){.ekb .hdr__phone{font-size:16px}}
 
 /* hero */
 .hero{background:radial-gradient(120% 140% at 100% 0%, var(--bg) 0%, var(--bg2) 70%);color:#eaf1ea;padding:clamp(30px,5vw,60px) 0}
@@ -352,10 +386,6 @@
 .ekb .art h3{font-size:clamp(17px,2.2vw,20px);font-weight:700;margin:22px 0 8px;color:var(--ink)}
 
 /* ---- контакты: телефон в шапке/подвале/callbar, блок «позвонить», отзывы (v12) ---- */
-.ekb .hdr__mail{display:inline-flex;align-items:center;gap:6px;color:#c3d6c8;text-decoration:none;font-size:14px}
-.ekb .hdr__mail:hover{color:#fff}
-.ekb .hdr__cta{background:var(--accent);color:#fff;padding:9px 16px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;white-space:nowrap}
-@media (max-width:720px){.hdr__mail-txt{display:none}}
 .ekb .callbar__phone{background:var(--accent);color:#fff}
 .ekb .callbar__form{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}
 .ekb .ftr__mail{display:block;color:#c3d6c8;text-decoration:none;font-size:14px;margin-top:6px}
@@ -556,8 +586,6 @@
 }
 
 /* ===== цели касания не меньше 44px по мобильным рекомендациям ===== */
-.ekb .hdr__logo,.ekb .hdr__phone,.ekb .hdr__max{padding:9px 4px}
-.ekb .hdr__mail{padding:12px 8px;min-width:44px;min-height:44px;justify-content:center}
 .crumbs a{display:inline-block;padding:7px 2px}
 .crumbs li{display:flex;align-items:center}
 .ekb .callblock__phone{padding:13px 18px}
@@ -584,16 +612,9 @@
 /* ===== мобильная шапка: не дублируем липкую панель снизу ===== */
 @media (max-width:720px){
   /* внизу уже есть MAX, заявка и почта — в шапке хватит логотипа и MAX */
-  .ekb .hdr__cta{display:none}
-  .ekb .hdr__mail{display:none}
-  .hdr__in{flex-wrap:nowrap;gap:10px}
-  .ekb .hdr__phone,.ekb .hdr__max{margin-left:auto;font-size:15.5px;white-space:nowrap}
-  .ekb .hdr__logo{font-size:16.5px}
   .hdr__logo svg{width:20px;height:20px}
 }
 @media (max-width:380px){
-  .ekb .hdr__logo span{font-size:15px}
-  .ekb .hdr__phone,.ekb .hdr__max{font-size:14.5px}
 }
 
 /* ===== всплывающий блок связи (десктоп) ===== */
@@ -732,13 +753,6 @@
    человек не считывал их как «сюда можно нажать». Теперь это пилюли:
    MAX залит фирменным зелёным как самый приоритетный канал, WhatsApp —
    контурная кнопка того же размера, чтобы обе читались кликабельными. */
-.ekb .hdr__max{background:var(--wa);color:#08301a;padding:8px 14px;border-radius:20px;font-weight:800}
-.ekb .hdr__max svg{color:#08301a}
-.ekb .hdr__max:hover{background:#2ee06f}
-.ekb .hdr__wa{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.26);color:#eaf6ee;
-  padding:7px 13px;border-radius:20px;font-weight:700}
-.ekb .hdr__wa svg{color:var(--wa)}
-.ekb .hdr__wa:hover{background:rgba(255,255,255,.16);border-color:var(--wa)}
 /* подвал: тот же порядок и тот же язык кнопок, что в шапке и в форме заявки */
 .ftr__contacts{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
 .ekb .ftr__phone{display:inline-flex;align-items:center;gap:8px;background:var(--wa);color:#08301a;
@@ -765,8 +779,6 @@
 /* середина страницы, текстовая ссылка */
 .ctamid__alt a{color:#fff;font-weight:700}
 @media (max-width:720px){
-  /* в шапке мессенджеры дублируются нижней панелью, оставляем только логотип */
-  .ekb .hdr__wa{display:none}
 }
 
 /* Ссылка «к содержанию»: не видна мышью, всплывает при табуляции. */
