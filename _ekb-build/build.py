@@ -31,6 +31,7 @@ from blog import BLOG  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR, DENSITY, CALC_ORDER  # noqa
 from tail_cities import TAIL_CITIES
 from works import WORKS  # noqa
+from bagged import BAGGED, BAG_BASE, MIN_BAGS  # noqa
 from city_product import CP, CPF  # noqa
 try:
     from reviews import REVIEWS  # noqa
@@ -105,11 +106,15 @@ LOW_DEMAND = set()
 # по запросу «опилки купить» и отвечает «мы их не возим», собирает отказы и
 # тянет вниз весь раздел.
 DISCONTINUED = {"opilki"}
+# Опил в мешках вернулся (см. bagged.py) — навалом по-прежнему не возим,
+# но эта страница отвечает на реальный спрос и не должна уходить из индекса
+# вместе с остальными "opilki-*".
+DISCONTINUED_EXCEPT = {"opilki-v-meshkah-ekaterinburg"}
 DISCONTINUED_SLUGS = (
     {p["slug"] for p in PAGES
      if any(p["slug"] == d or p["slug"].startswith(d + "-") for d in DISCONTINUED)}
     | {f"{pk}-{ck}" for pk, ck in GEO_PAGES if pk in DISCONTINUED}
-)
+) - DISCONTINUED_EXCEPT
 
 NOINDEX = OTHER_SITE | LOW_DEMAND | DISCONTINUED_SLUGS
 
@@ -433,6 +438,18 @@ def min_volume_note(city_key=None):
     if min_m3(city_key) == 1:
         return "у нас своя площадка в районе Верхней Пышмы, плечо короткое"
     return SITE["min_volume_note"]
+
+
+def bag_order_rub(city_key, price_per_bag, n_bags=MIN_BAGS):
+    """Стоимость заказа мешков: материал + рейс от площадки у Семи Ключей.
+
+    Площадка грузится от той же точки, что база verhnyaya-pyshma (см.
+    bases.py и bagged.py), поэтому расстояние и формула доставки те же,
+    что и для навалом — деление на мешки/кубы для рейса не важно, платится
+    он за машину, а не за то, что в кузове.
+    """
+    ride = delivery_min_rub(city_key, base_key=BAG_BASE)
+    return n_bags * price_per_bag + ride, ride
 
 
 def delivery_min_rub(city_key, product_key=None, base_key=None):
