@@ -81,7 +81,15 @@
             километров, сидит подача машины. Обещать здесь ровно 95 × км × 2
             значило бы разойтись с собственным итогом. -#}
         <p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка от {{ site.km_price }} ₽ за километр{% if site.km_round_trip %}, рейс считается туда и обратно{% endif %} и включает подачу машины. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p>
-        <a class="btn btn--call calc__btn" href="#zayavka"><span class="calc__btn-label">Оставить заявку на этот объём</span></a>
+        {#- Пик готовности заказать — момент, когда калькулятор выдал сумму.
+            Здесь развилка из двух кнопок, а не одна ссылка вниз по якорю:
+            часть людей не станет заполнять форму, но напишет в мессенджер. -#}
+        <div class="calc__cta">
+          <a class="btn btn--call calc__btn" href="#zayavka"><span class="calc__btn-label">Оставить заявку на этот объём</span></a>
+          {%- if site.max_url %}
+          <a class="btn btn--wa calc__btn calc__btn--alt" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          {%- endif %}
+        </div>
       </div>
     </div>
   </div>

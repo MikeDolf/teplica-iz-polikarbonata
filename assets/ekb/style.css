@@ -803,6 +803,8 @@
 .ekb .calc__note{margin:12px 0 0;font-size:13px;color:#ffd9a8}
 .ekb .calc__disclaimer{margin:10px 0 0;font-size:12px;line-height:1.45;color:#9dbcab}
 .ekb .calc__btn{margin-top:14px;width:100%;justify-content:center}
+.calc__cta{display:flex;flex-wrap:wrap;gap:10px}
+.ekb .calc__cta .calc__btn{flex:1 1 220px;width:auto}
 @media (max-width:760px){
   .ekb .calc__grid{grid-template-columns:1fr}
   .ekb .calc__num{font-size:38px}
