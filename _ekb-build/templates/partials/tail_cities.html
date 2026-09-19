@@ -2,6 +2,11 @@
   <div class="wrap">
     <h2 id="tail-title" class="sec-h">Куда ещё возим {{ tail_name }}</h2>
     <p class="mats__lede">Кроме Екатеринбурга доставляем {{ tail_name }} в {{ tail_cities|join(", ") }}. Отдельной страницы под эти направления нет, но заявки принимаем: скажите адрес и объём, посчитаем доставку.</p>
-    <a class="btn btn--call" href="#zayavka">Посчитать доставку в свой город</a>
+    <div class="cta-row">
+      <a class="btn btn--call" href="#zayavka">Посчитать доставку в свой город</a>
+      {%- if site.max_url %}
+      <a class="btn btn--ghost" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+      {%- endif %}
+    </div>
   </div>
 </section>

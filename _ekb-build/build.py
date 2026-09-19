@@ -29,6 +29,17 @@ from products import PRODUCTS, GEO_PAGES, USES, USES_DEFAULT, CITY_ORDER  # noqa
 from articles import ARTICLES  # noqa
 from blog import BLOG  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR, DENSITY, CALC_ORDER  # noqa
+
+# Реальная минимальная стоимость рейса от площадки у Пышмы, названная
+# партнёром (сентябрь 2026): чернозём 8500-9500 ₽, торфогрунт 9500-10000 ₽
+# за рейс любого объёма — расчёт по километражу (76 ₽/км) давал 1500-3300 ₽,
+# кратно ниже. Берём нижнюю границу диапазона как «от». Ключ — product_key
+# в том виде, в котором его знают base_of/km_to/delivery_min_rub (тот же,
+# что в PRODUCT_BASES), не отображаемое название.
+RIDE_FLOOR_PYSHMA = {
+    "chernozem": 8500 - 850,     # 7650 ₽: цена рейса, материал уже отдельно
+    "torfogrunt": 9500 - 900,    # 8600 ₽
+}
 from tail_cities import TAIL_CITIES
 from works import WORKS  # noqa
 from bagged import BAGGED, BAG_BASE, MIN_BAGS  # noqa
@@ -464,7 +475,20 @@ def delivery_min_rub(city_key, product_key=None, base_key=None):
     """
     km = km_to(city_key, product_key, base_key)
     legs = 2 if SITE["km_round_trip"] else 1
-    return km * SITE["km_price"] * legs + SITE.get("order_fee", 0)
+    ride = km * SITE["km_price"] * legs + SITE.get("order_fee", 0)
+    # Площадка у Пышмы на практике не даёт такой дешёвый рейс, как считает
+    # формула по километражу — партнёр называет по чернозёму и торфогрунту
+    # реальный минимум 8500-9500 ₽ за рейс независимо от объёма, и разница
+    # с расчётной ценой (1500-3300 ₽) означала бы для клиента сюрприз в
+    # переписке после честной цифры на сайте. RIDE_FLOOR_PYSHMA — это и
+    # есть та реальная минимальная стоимость рейса, а не километраж.
+    # Данных по остальным материалам (перегной, навоз, торф, кислый торф,
+    # плодородный грунт) с этой площадки пока нет — для них остаётся
+    # расчёт по километражу, его нужно будет поправить, когда появятся
+    # реальные цифры.
+    if city_key in PYSHMA_CITIES and product_key in RIDE_FLOOR_PYSHMA:
+        ride = max(ride, RIDE_FLOOR_PYSHMA[product_key])
+    return ride
 
 
 def money_meta(product_key, city_key):
@@ -774,6 +798,12 @@ CALC_CITIES = [{"key": k, "name": CITIES[k]["name"],
 CALC_BASES_JSON = json.dumps({k: {"name": v["name"], "where": v["where"]}
                               for k, v in BASES.items()}, ensure_ascii=False)
 
+# Тот же RIDE_FLOOR_PYSHMA, но для JS-калькулятора: он считает цену в
+# браузере на лету и не видит функцию delivery_min_rub(), поэтому пороги
+# передаются данными и применяются в calc.html тем же способом — только
+# для города из кластера Пышмы (проверяется по data-bases опции города).
+RIDE_FLOOR_JSON = json.dumps(RIDE_FLOOR_PYSHMA, ensure_ascii=False)
+
 
 def nav_label(page):
     """Подпись ссылки на страницу: «Коровий навоз, Берёзовский».
@@ -866,6 +896,7 @@ def render(page):
         calc_km=km_to(page.get("city", "ekaterinburg"), product_key_of(page)),
         calc_base=BASES[base_of(product_key_of(page), page.get("city", "ekaterinburg"))],
         calc_bases_json=CALC_BASES_JSON,
+        ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text(page.get("city")),
         min_volume_note=min_volume_note(page.get("city")),
         delivery_min=delivery_min_rub(page.get("city", "ekaterinburg"),
@@ -988,6 +1019,7 @@ def render_hub(all_pages):
         calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
         calc_base=BASES[base_of("chernozem", "ekaterinburg")],
         calc_bases_json=CALC_BASES_JSON,
+        ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
         delivery_min=delivery_min_rub("ekaterinburg", "chernozem"),
@@ -1081,6 +1113,7 @@ def render_articles():
             calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
             calc_base=BASES[base_of("chernozem", "ekaterinburg")],
         calc_bases_json=CALC_BASES_JSON,
+        ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
             delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
@@ -1135,6 +1168,7 @@ def render_blog():
         calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
         calc_base=BASES[base_of("chernozem", "ekaterinburg")],
         calc_bases_json=CALC_BASES_JSON,
+        ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
         delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
@@ -1182,6 +1216,7 @@ def render_blog():
             calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
             calc_base=BASES[base_of("chernozem", "ekaterinburg")],
         calc_bases_json=CALC_BASES_JSON,
+        ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
             delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),

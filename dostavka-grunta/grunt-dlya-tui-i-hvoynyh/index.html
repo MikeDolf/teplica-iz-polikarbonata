@@ -21,7 +21,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=55"><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=56"><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -331,6 +331,17 @@
   // пунктом: строки должны складываться в итог, который человек и услышит
   // в ответ на заявку.
   var ORDER_FEE = 1000;
+  // Реальная минимальная стоимость рейса от площадки у Пышмы для части
+  // материалов — партнёр называет её выше, чем даёт расчёт по километражу
+  // (см. RIDE_FLOOR_PYSHMA в build.py). Применяется только для городов
+  // кластера — там, где среди доступных баз материала есть Пышма.
+  var RIDE_FLOOR = {"chernozem": 7650, "torfogrunt": 8600};
+  function rideFloor(materialKey, cityOpt){
+    var floor = RIDE_FLOOR[materialKey];
+    if(!floor) return 0;
+    var allowed = (cityOpt.dataset.bases || '').split(',');
+    return allowed.indexOf('verhnyaya-pyshma') >= 0 ? floor : 0;
+  }
   // Километры до города от каждой базы: {"kurganovo":25,"sadovyy":60,...}
   function cityKm(opt){
     var raw = opt.dataset.km;
@@ -448,6 +459,11 @@
     // а не на ходку.
     var trips = tripCount(billed);
     var ride = Math.round(distance * KM_PRICE * LEGS) * trips + ORDER_FEE;
+    // Порог считается по итоговому рейсу (км + подача машины вместе), той же
+    // цифрой, что и на статических страницах — иначе JS-калькулятор и
+    // серверный расчёт минимального заказа расходились бы на ORDER_FEE.
+    var floor = rideFloor(o.value, city.options[city.selectedIndex]);
+    if(floor) ride = Math.max(ride, floor);
     // Без округления до сотни: прайс-таблица на этой же странице считает
     // точно, и округление давало расхождение в полсотни рублей за одно и
     // то же. Цены и так подписаны как «от».

@@ -217,10 +217,12 @@
 @media (max-width:720px){.fleet__grid{grid-template-columns:1fr}}
 .fleet__note{margin:12px 0 0;font-size:13.5px;color:var(--ink-soft)}
 .pricebox{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-.pricebox__in{display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between;padding:clamp(26px,4vw,40px) 20px}
+.pricebox__in{padding:clamp(26px,4vw,40px) 20px}
 .pricebox__in h2{margin:0 0 10px}
 .pricebox__in p{margin:0 0 8px;font-size:17.5px;max-width:60ch}
 .pricebox__honest{color:var(--ink-soft);font-size:14.5px}
+.pricebox__cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
 .pricebox .btn--call{white-space:nowrap}
 
 /* другие материалы + условия */
@@ -284,13 +286,13 @@
 .ekb .steps__list{gap:16px}
 
 /* цена: крупные плашки */
-.ekb .pricebox__in{display:flex;flex-wrap:wrap;gap:28px;align-items:center;justify-content:space-between}
-.ekb .pricebox__text{flex:1 1 440px}
+.ekb .pricebox__in{display:block}
+.ekb .pricebox__text{max-width:760px}
 .ekb .pricebox__nums{display:flex;gap:14px;flex-wrap:wrap;margin:0 0 16px}
 .ekb .pricebox__num{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 20px;min-width:150px}
 .ekb .pricebox__num span{display:block;font-size:27px;font-weight:800;color:var(--accent);line-height:1.05}
 .ekb .pricebox__num small{color:var(--ink-soft);font-size:13px}
-.ekb .pricebox__btn{flex:0 0 auto;align-self:center;font-size:16px}
+.ekb .pricebox__cta .btn{font-size:16px}
 .ekb .pricebox__honest{color:var(--ink-soft);font-size:14px}
 
 /* таблица (в ekb-стиле не было, отсюда «скомканный» вид) */

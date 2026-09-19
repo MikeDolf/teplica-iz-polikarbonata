@@ -35,6 +35,11 @@
     </div>
 
     <p class="fleetviz__foot">Не уверены в объёме? Скажите площадь и нужный слой, посчитаем сами и подскажем, какая машина выгоднее.</p>
-    <a class="btn btn--call" href="#zayavka">Посчитать объём под участок</a>
+    <div class="cta-row">
+      <a class="btn btn--call" href="#zayavka">Посчитать объём под участок</a>
+      {%- if site.max_url %}
+      <a class="btn btn--ghost" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+      {%- endif %}
+    </div>
   </div>
 </section>
