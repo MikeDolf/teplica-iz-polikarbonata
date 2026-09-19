@@ -12,9 +12,11 @@
             в DOM для скринридеров и для того, чтобы Яндекс и Google видели
             текст, а не только картинку. -#}
         {%- if r.image %}
-        <img class="review__shot" src="/assets/ekb/photo/reviews/{{ r.image }}"
-             alt="Скриншот переписки: {{ r.name }} пишет «{{ r.text }}»"
-             width="{{ r.image_w|default(480) }}" height="{{ r.image_h|default(360) }}" loading="lazy">
+        <div class="review__shot-wrap">
+          <img class="review__shot" src="/assets/ekb/photo/reviews/{{ r.image }}"
+               alt="Скриншот переписки: {{ r.name }} пишет «{{ r.text }}»"
+               width="{{ r.image_w|default(480) }}" height="{{ r.image_h|default(360) }}" loading="lazy">
+        </div>
         {%- endif %}
         <div class="review__head">
           <span class="review__name">{{ r.name }}</span>
@@ -33,7 +35,6 @@
       </div>
       {%- endfor %}
     </div>
-    <p class="reviews__cta-line">Заказывали у нас? <a href="mailto:{{ site.contact_email }}?subject=Отзыв о доставке">Оставьте отзыв</a>, это поможет другим дачникам выбрать.</p>
   </div>
 </section>
 {%- else %}
