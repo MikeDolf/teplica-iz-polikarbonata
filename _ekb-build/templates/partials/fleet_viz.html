@@ -1,4 +1,4 @@
-<section class="fleetviz band band--white" aria-labelledby="fleetviz-title">
+<section class="fleetviz band band--{{ band_tone|default('white') }}" aria-labelledby="fleetviz-title">
   <div class="wrap">
     <h2 id="fleetviz-title" class="sec-h">Сколько {{ product_genitive }} влезает в машину</h2>
     <p class="fleetviz__lede">Чтобы прикинуть, что заказывать. Кузов заполняем полностью, объём считаем по факту загрузки, а не «на глаз».</p>

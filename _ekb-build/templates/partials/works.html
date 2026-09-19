@@ -1,5 +1,5 @@
 {%- if works %}
-<section class="works band band--white" aria-labelledby="works-title">
+<section class="works band band--{{ band_tone|default('white') }}" aria-labelledby="works-title">
   <div class="wrap">
     <h2 id="works-title" class="sec-h">Наши доставки</h2>
     <p class="works__lede">Снимки с рейсов по этому направлению: своя техника, свои выгрузки. Машину подаём к месту разгрузки, если подъезд позволяет, а если нет — высыпаем там, куда встала, и это заранее обсуждаем.</p>
