@@ -387,20 +387,28 @@
    обрубает смысл, весь текст виден на скриншоте по кадру. */
 .reviews__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:0 0 18px;align-items:stretch}
 @media (max-width:900px){.reviews__grid{grid-template-columns:1fr 1fr}}
-@media (max-width:620px){.reviews__grid{grid-template-columns:1fr}}
+/* На телефоне карточки идут в один столбец, три подряд — при высоте 190px
+   каждая это очень длинная прокрутка. Кадр ниже, отступы плотнее. */
+@media (max-width:620px){
+  .reviews__grid{grid-template-columns:1fr;gap:10px;margin-bottom:12px}
+  .review{padding:14px 16px}
+  .review--shot{padding:10px 10px 14px}
+  .review__shot-wrap{height:130px;margin-bottom:8px}
+}
 .review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;height:100%}
 /* карточка со скриншотом переписки: сам скриншот прижат к верху без
    внутреннего отступа, чтобы читался как приклеенное фото, а не как
    иллюстрация внутри обычной карточки */
 .review--shot{padding:14px 14px 18px}
-/* Обрезка по высоте раньше резала переписку прямо посреди фразы — выглядело
-   как баг. Затемняющий градиент внизу превращает срез в осознанное
-   "смотреть дальше на скриншоте", а не в обрыв текста. */
-.review__shot-wrap{position:relative;height:220px;border-radius:10px;overflow:hidden;
+/* Кадрируем СНИЗУ (object-position:bottom), а не сверху: важна не
+   первая реплика с вопросом, а ответ клиента внизу переписки — раньше
+   обрезался именно он. Верхний градиент вместо нижнего: скрытое начало
+   переписки наверху читается как «выше есть ещё», не как обрыв ответа. */
+.review__shot-wrap{position:relative;height:190px;border-radius:10px;overflow:hidden;
   border:1px solid var(--line);margin:0 0 12px;box-shadow:0 6px 18px -10px rgba(0,0,0,.25)}
-.review__shot-wrap::after{content:"";position:absolute;left:0;right:0;bottom:0;height:56px;
-  background:linear-gradient(to bottom, rgba(255,255,255,0), var(--paper))}
-.review__shot{width:100%;height:100%;object-fit:cover;object-position:top;display:block}
+.review__shot-wrap::before{content:"";position:absolute;left:0;right:0;top:0;height:34px;
+  background:linear-gradient(to top, rgba(255,255,255,0), var(--paper));z-index:1}
+.review__shot{width:100%;height:100%;object-fit:cover;object-position:bottom;display:block}
 .review__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .ekb .review__name{font-weight:700;font-size:16.5px;color:var(--ink)}
 .review__meta{font-size:13.5px;color:var(--ink-soft)}
