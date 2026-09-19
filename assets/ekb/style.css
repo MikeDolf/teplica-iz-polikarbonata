@@ -380,25 +380,26 @@
 .callblock__msg--max[title]{cursor:default}
 /* отзывы: блок ни разу не рендерился, пока REVIEWS был пуст, поэтому
    стили здесь появились только вместе с первыми настоящими отзывами */
-/* align-items:start — иначе grid растягивает все карточки под самую
-   длинную переписку, и под короткими скриншотами остаётся пустой белый
-   низ карточки */
-.reviews__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:0 0 18px;align-items:start}
+/* Карточки одной высоты: раньше короткие переписки (Люба) давали низкую
+   карточку, а длинные (Алексей) — высокую, и ряд выглядел рваным.
+   Стретчим карточки по высоте строки грида, а скриншот обрезаем по
+   высоте (object-fit: cover) — реальная переписка длиннее рамки не
+   обрубает смысл, весь текст виден на скриншоте по кадру. */
+.reviews__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:0 0 18px;align-items:stretch}
 @media (max-width:900px){.reviews__grid{grid-template-columns:1fr 1fr}}
 @media (max-width:620px){.reviews__grid{grid-template-columns:1fr}}
-.review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px}
+.review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;height:100%}
 /* карточка со скриншотом переписки: сам скриншот прижат к верху без
    внутреннего отступа, чтобы читался как приклеенное фото, а не как
    иллюстрация внутри обычной карточки */
 .review--shot{padding:14px 14px 18px}
-.review__shot{width:100%;height:auto;border-radius:10px;border:1px solid var(--line);
+.review__shot{width:100%;height:220px;object-fit:cover;object-position:top;border-radius:10px;border:1px solid var(--line);
   display:block;margin:0 0 12px;box-shadow:0 6px 18px -10px rgba(0,0,0,.25)}
 .review__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .ekb .review__name{font-weight:700;font-size:16.5px;color:var(--ink)}
 .review__meta{font-size:13.5px;color:var(--ink-soft)}
 .review__stars{color:#f0a814;font-size:15px;letter-spacing:2px}
 .ekb .review__text{margin:0;font-size:16px;line-height:1.5;color:var(--ink)}
-.reviews__source{margin:0 0 10px;font-size:14px;color:var(--ink-soft);max-width:70ch}
 .reviews__cta-line{margin:0;font-size:15px;color:var(--ink-soft)}
 
 /* CTA сбора отзывов (когда реальных ещё нет) */
