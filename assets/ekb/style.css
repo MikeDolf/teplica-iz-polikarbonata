@@ -339,6 +339,27 @@ html{overflow-x:hidden}
 .ekb .pricebox__num{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 20px;min-width:150px}
 .ekb .pricebox__num span{display:block;font-size:27px;font-weight:800;color:var(--accent);line-height:1.05}
 .ekb .pricebox__num small{color:var(--ink-soft);font-size:13px}
+/* Мобильные карточки цен рядом, а не в столбик: раньше min-width:150px
+   при двух картах не помещался в узкий экран и они переносились друг
+   под друга. Второй карте отдано чуть больше доли — в ней более длинная
+   подпись «за км доставки, рейс туда и обратно».
+
+   Порог 361px — не круглое число ради красоты, а реальная граница: на
+   320px (старые iPhone SE и часть Android) той же паре карт вплотную
+   уже не хватает места даже с сокращённым шрифтом, и «обратно» снова
+   повисает одиноким словом. Ниже порога проще и надёжнее оставить
+   карточки в столбик, как было до сжатия, чем гнаться за компактностью
+   ценой обрезанных слов. */
+@media (min-width:361px) and (max-width:480px){
+  .ekb .pricebox__nums{gap:8px;flex-wrap:nowrap;margin:0 0 10px}
+  .ekb .pricebox__num{flex:0.8 1 0;min-width:0;padding:10px 8px}
+  .ekb .pricebox__num:last-child{flex:1.5 1 0}
+  .ekb .pricebox__num span{font-size:19px;white-space:nowrap}
+  .ekb .pricebox__num small{font-size:10.5px;line-height:1.3}
+}
+@media (max-width:360px){
+  .ekb .pricebox__nums{margin:0 0 12px}
+}
 .ekb .pricebox__cta .btn{font-size:16px}
 .ekb .pricebox__honest{color:var(--ink-soft);font-size:14px}
 /* Скидка за заявку с сайта: единственная строка в блоке цены, где
