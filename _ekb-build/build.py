@@ -904,7 +904,13 @@ def render(page):
         bag_note=bag_note(product_key_of(page)),
         bag_kg=PRODUCTS.get(product_key_of(page), {}).get("bag_kg"),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
-        works=(WORKS if page.get("city") in PYSHMA_CITIES else None),
+        # Показываем на всех страницах органики — это доказательство, что
+        # компания реальная, а не абстрактная кто-то в интернете, и не
+        # привязано к тому, где именно снят конкретный кадр. Исключение —
+        # страницы MOVED_TO (щебень, песок, отсев, ПГС): там возит другой
+        # проект на другой технике, и наши фото были бы чужой техникой на
+        # чужом товаре.
+        works=(WORKS if page["slug"] not in MOVED_TO else None),
         hero_photo=hero_photo_for(page),
         hero_alt=hero_alt_for(page),
         product_genitive=product_genitive(page),

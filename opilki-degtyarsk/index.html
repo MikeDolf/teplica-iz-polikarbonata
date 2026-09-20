@@ -177,7 +177,101 @@
     </div>
   </section>
   
-  <section class="calc band band--white" aria-labelledby="calc-title">
+<section class="works band band--white" aria-labelledby="works-title">
+  <div class="wrap">
+    <h2 id="works-title" class="sec-h">Наши доставки</h2>
+    <p class="works__lede">Снимки с наших рейсов: своя техника, свои выгрузки. Машину подаём к месту разгрузки, если подъезд позволяет, а если нет — высыпаем там, куда встала, и это заранее обсуждаем.</p><div class="works__carousel">
+      <button type="button" class="works__arrow works__arrow--prev" aria-label="Предыдущее фото" disabled>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="works__track" id="works-track" role="group" aria-roledescription="галерея" aria-label="Фото доставок">
+        <figure class="works__item">
+          <img class="works__img" src="/assets/ekb/photo/raboty/samosval-zagruzhen-800.jpg"
+               srcset="/assets/ekb/photo/raboty/samosval-zagruzhen-400.webp 400w, /assets/ekb/photo/raboty/samosval-zagruzhen-800.webp 800w"
+               sizes="100vw"
+               alt="Загруженный самосвал с чернозёмом на площадке перед выездом на участок" width="800" height="1067" loading="lazy" decoding="async">
+        </figure>
+        <figure class="works__item">
+          <img class="works__img" src="/assets/ekb/photo/raboty/vygruzka-uchastok-800.jpg"
+               srcset="/assets/ekb/photo/raboty/vygruzka-uchastok-400.webp 400w, /assets/ekb/photo/raboty/vygruzka-uchastok-800.webp 800w"
+               sizes="100vw"
+               alt="Самосвал выгружает чернозём у ворот участка в частном секторе" width="800" height="600" loading="lazy" decoding="async">
+        </figure>
+        <figure class="works__item">
+          <img class="works__img" src="/assets/ekb/photo/raboty/dve-kuchi-uchastok-800.jpg"
+               srcset="/assets/ekb/photo/raboty/dve-kuchi-uchastok-400.webp 400w, /assets/ekb/photo/raboty/dve-kuchi-uchastok-800.webp 800w"
+               sizes="100vw"
+               alt="Две кучи на участке: перегной и плодородный грунт, привезённые одним рейсом" width="800" height="600" loading="lazy" decoding="async">
+        </figure>
+        <figure class="works__item">
+          <img class="works__img" src="/assets/ekb/photo/raboty/vygruzka-vo-dvore-800.jpg"
+               srcset="/assets/ekb/photo/raboty/vygruzka-vo-dvore-400.webp 400w, /assets/ekb/photo/raboty/vygruzka-vo-dvore-800.webp 800w"
+               sizes="100vw"
+               alt="Выгрузка грунта во дворе многоквартирного дома под благоустройство" width="800" height="600" loading="lazy" decoding="async">
+        </figure>
+        <figure class="works__item">
+          <img class="works__img" src="/assets/ekb/photo/raboty/vygruzka-na-plenku-800.jpg"
+               srcset="/assets/ekb/photo/raboty/vygruzka-na-plenku-400.webp 400w, /assets/ekb/photo/raboty/vygruzka-na-plenku-800.webp 800w"
+               sizes="100vw"
+               alt="Выгрузка на плёнку у дома, чтобы не пачкать брусчатку" width="800" height="600" loading="lazy" decoding="async">
+        </figure>
+        <figure class="works__item">
+          <img class="works__img" src="/assets/ekb/photo/raboty/kamaz-otsypka-800.jpg"
+               srcset="/assets/ekb/photo/raboty/kamaz-otsypka-400.webp 400w, /assets/ekb/photo/raboty/kamaz-otsypka-800.webp 800w"
+               sizes="100vw"
+               alt="КамАЗ высыпает землю вдоль участка под отсыпку и планировку" width="800" height="600" loading="lazy" decoding="async">
+        </figure>
+      </div>
+      <button type="button" class="works__arrow works__arrow--next" aria-label="Следующее фото">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="works__dots" id="works-dots" aria-hidden="true">
+      <span class="works__dot works__dot--on"></span>
+      <span class="works__dot"></span>
+      <span class="works__dot"></span>
+      <span class="works__dot"></span>
+      <span class="works__dot"></span>
+      <span class="works__dot"></span>
+    </div>
+  </div>
+</section>
+<script>
+(function(){
+  var track = document.getElementById('works-track'); if(!track) return;
+  var prev = track.parentElement.querySelector('.works__arrow--prev');
+  var next = track.parentElement.querySelector('.works__arrow--next');
+  var dots = document.getElementById('works-dots');
+  var dotEls = dots ? dots.querySelectorAll('.works__dot') : [];
+  var n = track.children.length;
+
+  function current(){
+    return Math.round(track.scrollLeft / track.clientWidth);
+  }
+  function update(){
+    var i = Math.max(0, Math.min(n - 1, current()));
+    prev.disabled = i <= 0;
+    next.disabled = i >= n - 1;
+    dotEls.forEach(function(d, j){ d.classList.toggle('works__dot--on', j === i); });
+  }
+  function go(dir){
+    var i = Math.max(0, Math.min(n - 1, current() + dir));
+    track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+  }
+  prev.addEventListener('click', function(){ go(-1); });
+  next.addEventListener('click', function(){ go(1); });
+  // Скролл идёт и от смахивания, и от кнопок, и от resize — везде нужно
+  // обновить стрелки и точки, поэтому вешаем на сам scroll, а не на клики.
+  var raf;
+  track.addEventListener('scroll', function(){
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(update);
+  }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
+  <section class="calc band band--tint" aria-labelledby="calc-title">
   <div class="wrap">
     <h2 id="calc-title" class="sec-h">Калькулятор объёма и доставки</h2>
     <p class="calc__lede">Посчитайте объём и стоимость доставки до вашего адреса.</p>
@@ -525,7 +619,7 @@
   calc();
 })();
 </script>
-  <section class="pricebox band band--tint" aria-labelledby="price-title">
+  <section class="pricebox band band--white" aria-labelledby="price-title">
   <div class="wrap pricebox__in">
     <div class="pricebox__text">
       <h2 id="price-title" class="sec-h">Сколько это стоит</h2>
@@ -538,7 +632,7 @@
     </div>
   </div>
 </section>
-  <section class="ptab band band--white" aria-labelledby="ptab-title">
+  <section class="ptab band band--tint" aria-labelledby="ptab-title">
   <div class="wrap">
     <h2 id="ptab-title" class="sec-h">Цены на все материалы в Дегтярске</h2>
     <p class="mats__lede">Цена за кубометр материала. Доставка считается отдельно, от 76 ₽ за километр, рейс туда и обратно. Базы у товаров разные, поэтому и плечо разное: земля и торф едут из Курганово с Полевского тракта, перегной и навоз — с Садового на севере города. В таблице рейс уже посчитан до вас от нужной базы.</p><div class="table-wrap">
@@ -593,7 +687,7 @@
     <p class="fleet__note">Последняя колонка — минимальный заказ целиком: 3 м³ материала плюс рейс. Посчитать под свою площадь можно калькулятором выше.</p>
   </div>
 </section>
-  <section class="delivery band band--tint" aria-labelledby="delivery-title">
+  <section class="delivery band band--white" aria-labelledby="delivery-title">
     <div class="wrap">
     <h2 id="delivery-title" class="sec-h">Доставка в Дегтярске</h2>
     <div class="delivery__grid">
@@ -613,7 +707,7 @@
     <p class="delivery__unique">Дегтярск небольшой город примерно в 55 км от Екатеринбурга, стоит рядом с Ревдой, поэтому доставку сюда мы почти всегда объединяем с ревдинскими рейсами и за счёт этого держим цену ниже. Заказывают в основном перегной и чернозём небольшими объёмами под грядки в частном секторе.</p>
     </div>
   </section>
-  <section class="fleetviz band band--white" aria-labelledby="fleetviz-title">
+  <section class="fleetviz band band--tint" aria-labelledby="fleetviz-title">
   <div class="wrap">
     <h2 id="fleetviz-title" class="sec-h">Сколько опилок влезает в машину</h2>
     <p class="fleetviz__lede">Чтобы прикинуть, что заказывать. Кузов заполняем полностью, объём считаем по факту загрузки, а не «на глаз».</p>
@@ -654,7 +748,7 @@
     </div>
   </div>
 </section>
-  <section class="fleet band band--tint" aria-labelledby="fleet-title">
+  <section class="fleet band band--white" aria-labelledby="fleet-title">
   <div class="wrap">
     <h2 id="fleet-title" class="sec-h">На чём привозим и сколько это в объёме</h2>
     <div class="fleet__grid">
@@ -708,7 +802,7 @@
     </div>
   </div>
 </section>
-  <section class="adv band band--white" aria-labelledby="adv-title">
+  <section class="adv band band--tint" aria-labelledby="adv-title">
   <div class="wrap">
     <h2 id="adv-title" class="sec-h">Почему заказывают у нас</h2>
     <div class="adv__grid">
@@ -723,7 +817,7 @@
     </div>
   </div>
 </section>
-  <section class="tbar band band--tint" aria-labelledby="tbar-title">
+  <section class="tbar band band--white" aria-labelledby="tbar-title">
   <div class="wrap">
     <h2 id="tbar-title" class="sr-only">Условия заказа</h2>
     <div class="tbar__grid">
@@ -760,7 +854,7 @@
   </div>
 </section>
   
-<section class="band band--white" aria-labelledby="rev-title">
+<section class="band band--tint" aria-labelledby="rev-title">
   <div class="wrap">
     <h2 id="rev-title" class="sec-h">Отзывы клиентов</h2>
     <div class="reviews__grid">
@@ -800,7 +894,7 @@
     </div>
   </div>
 </section>
-  <section class="uses band band--tint" aria-labelledby="uses-title">
+  <section class="uses band band--white" aria-labelledby="uses-title">
   <div class="wrap">
     <h2 id="uses-title" class="sec-h">Для чего берут грунт</h2>
     <ul class="uses__list">
@@ -811,7 +905,7 @@
     </ul>
   </div>
 </section>
-  <section class="about band band--white">
+  <section class="about band band--tint">
     <div class="wrap">
     <p>Дегтярск, небольшой город примерно в 55 км от Екатеринбурга, стоит между Ревдой и Полевским, на Полевском направлении. Доставку сюда мы почти всегда объединяем с ревдинскими рейсами, а по самому тракту машины идут регулярно, за счёт чего держим цену ниже, чем дало бы отдельное плечо.</p>
     <p>Заказы здесь в основном частные и небольшие: перегной и чернозём под грядки, теплицы и клумбы в частном секторе. Для таких объёмов особенно важно попасть в общий рейс, поэтому лучше планировать доставку за несколько дней, а не день в день.</p>
@@ -824,7 +918,7 @@
     <p>Всё остальное, что мы возим, никуда не делось: чернозём, перегной, навоз, торф, торфогрунт и плодородный грунт, навалом, от трёх кубов, с доставкой по Екатеринбургу и области. Посчитать объём и рейс до вашего адреса можно калькулятором ниже.</p>
     </div>
   </section>
-  <section class="steps band band--tint" aria-labelledby="steps-title">
+  <section class="steps band band--white" aria-labelledby="steps-title">
     <div class="wrap">
     <h2 id="steps-title" class="sec-h">Как заказать</h2>
     <ol class="steps__list">
@@ -926,7 +1020,7 @@
   });
 })();
 </script>
-  <section class="terms band band--white" aria-labelledby="terms-title">
+  <section class="terms band band--tint" aria-labelledby="terms-title">
   <div class="wrap">
     <h2 id="terms-title" class="sec-h">Условия доставки и оплаты</h2>
     <ul class="terms__list">
