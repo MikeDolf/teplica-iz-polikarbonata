@@ -328,6 +328,11 @@
 .ekb .pricebox__num small{color:var(--ink-soft);font-size:13px}
 .ekb .pricebox__cta .btn{font-size:16px}
 .ekb .pricebox__honest{color:var(--ink-soft);font-size:14px}
+/* Скидка за заявку с сайта: единственная строка в блоке цены, где
+   человеку что-то предлагают, а не объясняют — поэтому с заливкой. */
+.ekb .pricebox__bonus{margin:14px 0 0;padding:12px 14px;border-radius:10px;font-size:14.5px;
+  background:rgba(43,138,62,.09);border:1px solid rgba(43,138,62,.25);color:var(--ink)}
+.ekb .pricebox__bonus b{color:var(--accent)}
 
 /* таблица (в ekb-стиле не было, отсюда «скомканный» вид) */
 .ekb .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 10px 26px -20px rgba(16,36,27,.3);margin:0 0 12px}
@@ -857,6 +862,12 @@
    но без верхней линии, они читаются парой. */
 .ekb .calc__per{color:#c7ddd0}
 .ekb .calc__per b{font-size:17px}
+/* Скидка за заявку с сайта — единственная строка в расчёте, которую
+   человек может получить, что-то сделав, поэтому она подсвечена. */
+.ekb .calc__save{margin-top:8px;padding-top:9px;border-top:1px solid rgba(255,255,255,.16);
+  color:var(--wa);align-items:baseline}
+.ekb .calc__save b{font-size:19px;color:var(--wa);white-space:nowrap}
+.ekb .calc__when{margin:10px 0 0;font-size:13.5px;color:#c7ddd0}
 
 .ftr__pay{margin:8px 0 0;font-size:13px;color:#9fb6a5}
 .ftr__pay span{color:#c3d6c8;font-weight:600}

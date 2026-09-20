@@ -21,7 +21,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=58"><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=59"><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -304,8 +304,9 @@
           <li><span>Это машин</span><b id="calc-truck">1 КамАЗ</b></li>
           <li><span>Материал</span><b id="calc-mprice">от 10 200 ₽</b></li>
           <li><span id="calc-dlabel">Доставка</span><b id="calc-delivery">2 850 ₽</b></li>
-          <li class="calc__price"><span>Итого ориентировочно</span><b id="calc-cost">от 13 050 ₽</b></li><li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
-        </ul><p class="calc__note" id="calc-min" hidden></p><p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка от 76 ₽ за километр, рейс считается туда и обратно и включает подачу машины. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p><div class="calc__cta">
+          <li class="calc__price"><span>Итого ориентировочно</span><b id="calc-cost">от 13 050 ₽</b></li><li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li><li class="calc__save"><span>Через сайт, −5% на доставку</span><b id="calc-save">от 12 908 ₽</b></li>
+        </ul>
+        <p class="calc__when" id="calc-when"></p><p class="calc__note" id="calc-min" hidden></p><p class="calc__disclaimer">Материал по опубликованным ценам «от», доставка от 76 ₽ за километр, рейс считается туда и обратно и включает подачу машины. Точную стоимость называем по заявке, когда знаем адрес и подъезд.</p><div class="calc__cta">
           <a class="btn btn--call calc__btn" href="#zayavka"><span class="calc__btn-label">Оставить заявку на этот объём</span></a>
           <a class="btn btn--wa calc__btn calc__btn--alt" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">Написать в MAX</a>
         </div>
@@ -326,6 +327,24 @@
   var oDl = document.getElementById('calc-dlabel');
   var oC = document.getElementById('calc-cost'), oMin = document.getElementById('calc-min');
   var oPer = document.getElementById('calc-per');
+  var oSave = document.getElementById('calc-save'), oWhen = document.getElementById('calc-when');
+  var SITE_DISCOUNT = 0.05;
+
+  // Ближайшая дата доставки. Цифра денег без срока отвечает только на
+  // половину вопроса: «сколько» человек уже знает, а «когда» — ещё нет.
+  // Считаем в браузере, а не на сборке: страница статическая и провисела
+  // бы с датой того дня, когда её собрали.
+  (function(){
+    if(!oWhen) return;
+    var MON = ['января','февраля','марта','апреля','мая','июня',
+               'июля','августа','сентября','октября','ноября','декабря'];
+    var d = new Date();
+    // Заявка после шести вечера уже не успевает в завтрашний рейс:
+    // машину ставят в график накануне.
+    d.setDate(d.getDate() + (d.getHours() >= 18 ? 2 : 1));
+    oWhen.textContent = 'Ближайшая доставка — ' + d.getDate() + ' ' + MON[d.getMonth()]
+      + ', если оставить заявку сегодня.';
+  })();
   var oUnit = document.getElementById('calc-unit');
   var oBase = document.getElementById('calc-base'), oBaseW = document.getElementById('calc-basewhere');
   var KM_PRICE = 76, LEGS = 2;
@@ -491,6 +510,10 @@
     // Делим на оплачиваемый объём, а не на введённый: при заказе меньше
     // минимума человек платит за минимум, и честная цифра именно такая.
     oPer.textContent = distance > 0 ? ru(Math.round((material + ride) / billed)) + ' ₽' : '—';
+    // Скидка считается от рейса, а не от всей суммы: материал мы не наш, и
+    // скидывать с него нечего.
+    oSave.textContent = distance > 0
+      ? 'от ' + ru(material + Math.round(ride * (1 - SITE_DISCOUNT))) + ' ₽' : '—';
     oMin.hidden = m3 >= MIN_M3;
     if(!oMin.hidden){
       oMin.textContent = 'Это меньше минимального заказа. Цена посчитана по минимальному объёму, '
