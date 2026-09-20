@@ -869,11 +869,32 @@
 .ftr__tel-quiet{margin:6px 0 0;font-size:11px;color:#5f7568}
 .art__map iframe{max-width:100%;border-radius:8px}
 
-/* Фото выполненных доставок. Сетка ужимается до одной колонки на телефоне,
-   карточки одной высоты — кадры разной пропорции (есть вертикальный). */
+/* Фото выполненных доставок: лента на одно фото, а не сетка. Блок стоит
+   вторым на странице, и сетка в три колонки на телефоне превращалась в
+   мелкие превью, которые не разглядеть. Прокрутка нативная (scroll-snap,
+   работает свайпом без единой строчки JS), стрелки и точки — только
+   поверх неё, для тех, кто листает кликом, а не пальцем. */
 .works__lede{margin:0 0 16px;max-width:70ch;color:#3f5546}
-.works__grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.works__item{margin:0}
-.works__img{display:block;width:100%;height:240px;object-fit:cover;border-radius:10px;background:#e8efe9}
-@media (max-width:900px){.works__grid{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:560px){.works__grid{grid-template-columns:1fr}.works__img{height:220px}}
+.works__carousel{position:relative}
+.works__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;gap:0;border-radius:10px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.works__track::-webkit-scrollbar{display:none}
+.works__item{flex:0 0 100%;margin:0;scroll-snap-align:start;scroll-snap-stop:always}
+.works__img{display:block;width:100%;height:clamp(220px,42vw,420px);object-fit:cover;background:#e8efe9}
+.ekb .works__arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+  width:42px;height:42px;border-radius:50%;border:1px solid rgba(0,0,0,.12);
+  background:rgba(255,255,255,.92);color:var(--ink);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.ekb .works__arrow:hover{background:#fff}
+.ekb .works__arrow:disabled{opacity:0;pointer-events:none}
+.works__arrow--prev{left:10px}
+.works__arrow--next{right:10px}
+.works__dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+.works__dot{width:7px;height:7px;border-radius:50%;background:#c8d6cb}
+.works__dot--on{background:var(--accent)}
+@media (max-width:560px){
+  .ekb .works__arrow{width:36px;height:36px}
+  .works__arrow--prev{left:6px}
+  .works__arrow--next{right:6px}
+}

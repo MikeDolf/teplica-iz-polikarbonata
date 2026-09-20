@@ -66,11 +66,11 @@
     </div>
   </section>
 
-  {#- Порядок блоков повторяет логику Моснеруда: цена и таблица сразу под
-      заголовком, следом доставка и техника, потом доказательства, описание
-      товара, формы, перелинковка и только в конце калькулятор — к нему
-      ведёт кнопка из первого экрана, поэтому его позиция внизу не мешает
-      им воспользоваться. Ни один блок не убран, изменён только порядок.
+  {#- Фото доставок и калькулятор стоят сразу после первого экрана —
+      технику и расчёт видно раньше статичных цифр цены. Дальше порядок
+      по Моснеруду: цена и таблица, доставка и техника, доказательства,
+      описание товара, формы, перелинковка. Ни один блок не убран,
+      изменён только порядок.
 
       Фон полос при этом чередуется, а часть блоков есть не на каждой
       странице (карточка переезда, прайс-таблица, калькулятор, отзывы,
@@ -92,7 +92,22 @@
   </section>
   {%- endif %}
 
-  {#- 1. Цена: первое, что человек ищет после заголовка и фото. -#}
+  {#- 1. Фото доставок — лента сразу после первого экрана: технику и
+      выгрузки человек видит раньше, чем начнёт считать деньги. Только на
+      страницах северного куста, где сняты снимки; на страницах щебня и
+      песка блока нет — их возит другой проект. -#}
+  {%- if not moved_to %}
+  {%- if works %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
+  {% with band_tone = ns.t %}{% include "partials/works.html" %}{% endwith %}
+  {%- endif %}
+
+  {#- 2. Калькулятор — сразу за фото, до статичных цифр цены ниже. -#}
+  {%- if not city.local_partner %}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/calc.html" %}{% endwith %}
+  {%- endif %}
+
+  {#- 3. Цена. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/price.html" %}{% endwith %}
 
@@ -116,7 +131,7 @@
   </section>
   {%- endif %}
 
-  {#- 2. Доставка и техника — как у Моснеруда сразу за ценой. -#}
+  {#- 4. Доставка и техника — как у Моснеруда сразу за ценой. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   <section class="delivery band band--{{ ns.t }}" aria-labelledby="delivery-title">
     <div class="wrap">
@@ -145,7 +160,7 @@
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/fleet.html" %}{% endwith %}
 
-  {#- 3. Преимущества и условия — пачка иконок, как у Моснеруда после
+  {#- 5. Преимущества и условия — пачка иконок, как у Моснеруда после
       блока доставки. -#}
   {% include "partials/trustbar.html" %}
 
@@ -155,20 +170,11 @@
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/terms_bar.html" %}{% endwith %}
 
-  {#- 4. Доказательства. -#}
+  {#- 6. Доказательства. -#}
   {%- if reviews %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
   {% with band_tone = ns.t %}{% include "partials/reviews.html" %}{% endwith %}
 
-  {#- Фото реальных выгрузок. Только на страницах северного куста: снимки
-      сделаны на этом направлении, и обещать тот же парк везде нечестно.
-      На страницах щебня и песка не показываем: их возит другой проект,
-      и наши фото с землёй там не к месту. -#}
-  {%- if not moved_to %}
-  {%- if works %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
-  {% with band_tone = ns.t %}{% include "partials/works.html" %}{% endwith %}
-  {%- endif %}
-
-  {#- 5. Описание товара: для чего берут, нормы внесения, о нас. -#}
+  {#- 7. Описание товара: для чего берут, нормы внесения, о нас. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/uses.html" %}{% endwith %}
 
@@ -187,7 +193,7 @@
     </div>
   </section>
 
-  {#- 6. Как заказать и первая форма. -#}
+  {#- 8. Как заказать и первая форма. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   <section class="steps band band--{{ ns.t }}" aria-labelledby="steps-title">
     <div class="wrap">
@@ -202,7 +208,7 @@
 
   {% include "partials/cta_mid.html" %}
 
-  {#- 7. Условия, гарантии и большая форма. -#}
+  {#- 9. Условия, гарантии и большая форма. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/terms.html" %}{% endwith %}
 
@@ -216,8 +222,7 @@
 
   {% include "partials/lead_form.html" %}
 
-  {#- 8. Другие товары и направления — «другие товары» у Моснеруда стоят
-      ровно здесь, перед калькулятором. -#}
+  {#- 10. Другие товары и направления. -#}
   {%- if direction_cities %}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/direction.html" %}{% endwith %}
@@ -229,14 +234,6 @@
 
   {%- if related %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
   {% with band_tone = ns.t %}{% include "partials/related.html" %}{% endwith %}
-
-  {#- 9. Калькулятор. У Моснеруда он тоже внизу: наверху достаточно
-      кнопки, которая к нему ведёт. -#}
-  {%- if not city.local_partner %}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/calc.html" %}{% endwith %}
-
-  {%- endif %}
 
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/faq.html" %}{% endwith %}

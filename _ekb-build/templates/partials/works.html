@@ -3,16 +3,70 @@
   <div class="wrap">
     <h2 id="works-title" class="sec-h">Наши доставки</h2>
     <p class="works__lede">Снимки с рейсов по этому направлению: своя техника, свои выгрузки. Машину подаём к месту разгрузки, если подъезд позволяет, а если нет — высыпаем там, куда встала, и это заранее обсуждаем.</p>
-    <div class="works__grid">
+    {#- Лента вместо сетки: блок стоит вторым на странице, сразу после
+        первого экрана, и на телефоне сетка в три колонки превращалась в
+        три мелких превью подряд — фото не разглядеть. Один кадр во весь
+        экран и стрелки по краям работают как галерея: смахнул или нажал
+        стрелку — следующее фото. Прокрутка нативная (scroll-snap), стрелки
+        только дублируют её для тех, кто не догадается смахнуть. -#}
+    <div class="works__carousel">
+      <button type="button" class="works__arrow works__arrow--prev" aria-label="Предыдущее фото" disabled>
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="works__track" id="works-track" role="group" aria-roledescription="галерея" aria-label="Фото доставок">
+        {%- for w in works %}
+        <figure class="works__item">
+          <img class="works__img" src="/assets/ekb/photo/raboty/{{ w.file }}-800.jpg"
+               srcset="/assets/ekb/photo/raboty/{{ w.file }}-400.webp 400w, /assets/ekb/photo/raboty/{{ w.file }}-800.webp 800w"
+               sizes="100vw"
+               alt="{{ w.alt }}" width="{{ w.w }}" height="{{ w.h }}" loading="lazy" decoding="async">
+        </figure>
+        {%- endfor %}
+      </div>
+      <button type="button" class="works__arrow works__arrow--next" aria-label="Следующее фото">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+    <div class="works__dots" id="works-dots" aria-hidden="true">
       {%- for w in works %}
-      <figure class="works__item">
-        <img class="works__img" src="/assets/ekb/photo/raboty/{{ w.file }}-800.jpg"
-             srcset="/assets/ekb/photo/raboty/{{ w.file }}-400.webp 400w, /assets/ekb/photo/raboty/{{ w.file }}-800.webp 800w"
-             sizes="(max-width: 700px) 100vw, 33vw"
-             alt="{{ w.alt }}" width="{{ w.w }}" height="{{ w.h }}" loading="lazy" decoding="async">
-      </figure>
+      <span class="works__dot{% if loop.first %} works__dot--on{% endif %}"></span>
       {%- endfor %}
     </div>
   </div>
 </section>
+<script>
+(function(){
+  var track = document.getElementById('works-track'); if(!track) return;
+  var prev = track.parentElement.querySelector('.works__arrow--prev');
+  var next = track.parentElement.querySelector('.works__arrow--next');
+  var dots = document.getElementById('works-dots');
+  var dotEls = dots ? dots.querySelectorAll('.works__dot') : [];
+  var n = track.children.length;
+
+  function current(){
+    return Math.round(track.scrollLeft / track.clientWidth);
+  }
+  function update(){
+    var i = Math.max(0, Math.min(n - 1, current()));
+    prev.disabled = i <= 0;
+    next.disabled = i >= n - 1;
+    dotEls.forEach(function(d, j){ d.classList.toggle('works__dot--on', j === i); });
+  }
+  function go(dir){
+    var i = Math.max(0, Math.min(n - 1, current() + dir));
+    track.scrollTo({ left: i * track.clientWidth, behavior: 'smooth' });
+  }
+  prev.addEventListener('click', function(){ go(-1); });
+  next.addEventListener('click', function(){ go(1); });
+  // Скролл идёт и от смахивания, и от кнопок, и от resize — везде нужно
+  // обновить стрелки и точки, поэтому вешаем на сам scroll, а не на клики.
+  var raf;
+  track.addEventListener('scroll', function(){
+    cancelAnimationFrame(raf);
+    raf = requestAnimationFrame(update);
+  }, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+})();
+</script>
 {%- endif %}
