@@ -175,7 +175,7 @@ html{overflow-x:hidden}
 .field__label{font-size:13px;font-weight:600;color:var(--l-ink)}
 .field__req{color:var(--l-accent);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.04em;margin-left:2px}
 .field__opt{color:var(--l-ink-soft);font-weight:500;font-size:11px;margin-left:2px}
-.field__hint{display:block;margin-top:7px;font-size:12.5px;color:var(--l-ink-soft)}
+.field__hint{display:block;margin:7px 0 0;font-size:12.5px;color:var(--l-ink-soft)}
 .field__input{width:100%;font:inherit;font-size:16.5px;color:var(--l-ink);background:#fff;border:1.5px solid var(--l-line);border-radius:10px;padding:11px 13px;transition:border-color .15s,box-shadow .15s}
 .field__input::placeholder{color:#9aa79e}
 .field__input:focus{outline:none;border-color:var(--l-accent);box-shadow:0 0 0 3px rgba(47,125,70,.16)}

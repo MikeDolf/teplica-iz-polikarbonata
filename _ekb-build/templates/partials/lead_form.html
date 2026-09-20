@@ -61,13 +61,22 @@
             посчитаем при ответе. -#}
         <label class="field__label" for="lead-volume">Объём, м³</label>
         <input class="field__input field__input--vol" id="lead-volume" name="volume" type="number" inputmode="decimal" min="1" step="1" value="{{ min_volume.split(' ')[0] }}">
-        <span class="field__hint">Минимальный заказ {{ min_volume }}, меньше не возим. Не знаете точно — впишите на глаз.</span>
       </div>
       <div class="field">
         <label class="field__label" for="lead-district">Район или город доставки</label>
         <input class="field__input" id="lead-district" name="district" type="text" inputmode="text" placeholder="{{ district_ph }}" autocomplete="off">
       </div>
-      <div class="field field--req">
+      {#- Подсказка вынесена под обе колонки, а не под одну «Объём»: там
+          она растягивала строку на три строки текста, и под соседним
+          полем «Район» оставалась пустая нижняя половина. Заодно текст
+          сокращён — «не знаете точно, впишите на глаз» и так понятно из
+          самого факта, что поле можно просто оставить как есть. -#}
+      <p class="field__hint field--full">Минимальный заказ {{ min_volume }}, меньше не возим.</p>
+      {#- Телефон растянут на всю ширину карточки: у него нет пары в
+          строке (второй половины сетки), и раньше это оставляло пустую
+          половину формы справа от поля — самый заметный провал в
+          симметрии. -#}
+      <div class="field field--full field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
         <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому перезвонить</span>
