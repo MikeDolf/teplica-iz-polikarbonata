@@ -66,10 +66,17 @@
     </div>
   </section>
 
-  {#- Фон полос чередуется, но часть блоков есть не на каждой странице
-      (карточка переезда, прайс-таблица, калькулятор, отзывы, фото работ,
-      направления). Поэтому тон не прибит классом, а считается: ns.t
-      помнит фон предыдущей полосы, следующая берёт противоположный. -#}
+  {#- Порядок блоков повторяет логику Моснеруда: цена и таблица сразу под
+      заголовком, следом доставка и техника, потом доказательства, описание
+      товара, формы, перелинковка и только в конце калькулятор — к нему
+      ведёт кнопка из первого экрана, поэтому его позиция внизу не мешает
+      им воспользоваться. Ни один блок не убран, изменён только порядок.
+
+      Фон полос при этом чередуется, а часть блоков есть не на каждой
+      странице (карточка переезда, прайс-таблица, калькулятор, отзывы,
+      фото работ, направления). Поэтому тон не прибит классом, а
+      считается: ns.t помнит фон предыдущей полосы, следующая берёт
+      противоположный. -#}
   {%- set ns = namespace(t="tint") %}
 
   {%- if moved_to %}
@@ -85,9 +92,7 @@
   </section>
   {%- endif %}
 
-  {% include "partials/trustbar.html" %}
-
-  {#- 1. Сколько стоит -#}
+  {#- 1. Цена: первое, что человек ищет после заголовка и фото. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/price.html" %}{% endwith %}
 
@@ -95,10 +100,6 @@
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/pricetable.html" %}{% endwith %}
 
-  {#- 2. Сколько нужно и во что обойдётся рейс. Калькулятор стоит сразу за
-      ценой: это главный инструмент страницы, из-за него человек и остаётся. -#}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/calc.html" %}{% endwith %}
   {%- else %}
   {#- Прайс-таблица и калькулятор считают рейс от наших баз в Курганово и
       Садовом — по Нижнему Тагилу это неверная цифра, там работает
@@ -115,50 +116,7 @@
   </section>
   {%- endif %}
 
-  {#- 3. Снятие возражений — сразу после того, как человек увидел свою сумму.
-      Сначала отзывы: цифра уже названа, и теперь важно, что за эти деньги
-      реально привозят. Следом техника и фото выгрузок — они отвечают на
-      «а заедет ли ко мне», а этот вопрос возникает в момент выбора объёма
-      в калькуляторе, а не десятью блоками ниже, где стояли раньше. -#}
-  {%- if reviews %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
-  {% with band_tone = ns.t %}{% include "partials/reviews.html" %}{% endwith %}
-
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/fleet_viz.html" %}{% endwith %}
-
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/fleet.html" %}{% endwith %}
-
-  {#- Фото реальных выгрузок. Только на страницах северного куста: снимки
-      сделаны на этом направлении, и обещать тот же парк везде нечестно.
-      На страницах щебня и песка не показываем: их возит другой проект,
-      и наши фото с землёй там не к месту. -#}
-  {%- if not moved_to %}
-  {%- if works %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
-  {% with band_tone = ns.t %}{% include "partials/works.html" %}{% endwith %}
-  {%- endif %}
-
-  {#- 4. На каких условиях -#}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/terms_bar.html" %}{% endwith %}
-
-  {%- if direction_cities %}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/direction.html" %}{% endwith %}
-  {%- endif %}
-
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  <section class="steps band band--{{ ns.t }}" aria-labelledby="steps-title">
-    <div class="wrap">
-    <h2 id="steps-title" class="sec-h">Как заказать</h2>
-    <ol class="steps__list">
-      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите в мессенджер. Укажите продукт, объём и район.</p></div></li>
-      <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем цену материала и рейса отдельными цифрами. Скрытых доплат нет.</p></div></li>
-      <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к месту выгрузки.</p></div></li>
-    </ol>
-    </div>
-  </section>
-
+  {#- 2. Доставка и техника — как у Моснеруда сразу за ценой. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   <section class="delivery band band--{{ ns.t }}" aria-labelledby="delivery-title">
     <div class="wrap">
@@ -181,28 +139,43 @@
     </div>
   </section>
 
-  {#- Преимущества и короткая форма стоят после «Как заказать»: сначала
-      человек читает, что будет после заявки, и только потом его просят
-      оставить телефон. Раньше порядок был обратный. -#}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/fleet_viz.html" %}{% endwith %}
+
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/fleet.html" %}{% endwith %}
+
+  {#- 3. Преимущества и условия — пачка иконок, как у Моснеруда после
+      блока доставки. -#}
+  {% include "partials/trustbar.html" %}
+
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/advantages.html" %}{% endwith %}
 
-  {% include "partials/cta_mid.html" %}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/terms_bar.html" %}{% endwith %}
 
-  {#- 5. Детали по товару -#}
+  {#- 4. Доказательства. -#}
+  {%- if reviews %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
+  {% with band_tone = ns.t %}{% include "partials/reviews.html" %}{% endwith %}
+
+  {#- Фото реальных выгрузок. Только на страницах северного куста: снимки
+      сделаны на этом направлении, и обещать тот же парк везде нечестно.
+      На страницах щебня и песка не показываем: их возит другой проект,
+      и наши фото с землёй там не к месту. -#}
+  {%- if not moved_to %}
+  {%- if works %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
+  {% with band_tone = ns.t %}{% include "partials/works.html" %}{% endwith %}
+  {%- endif %}
+
+  {#- 5. Описание товара: для чего берут, нормы внесения, о нас. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/uses.html" %}{% endwith %}
-
-  {#- Дальше идут блоки, которых на части страниц просто нет: нормы
-      внесения, кросслинк, соседние города. Если задавать им фон
-      классом намертво, на одних страницах он чередуется, а на других
-      два одинаковых блока сливаются в один. Поэтому тон считается на
-      лету: ns.t хранит фон предыдущей полосы, каждая следующая берёт
-      противоположный. -#}
 
   {%- if rates %}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/rates.html" %}{% endwith %}
+
   {%- endif %}
 
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
@@ -214,7 +187,22 @@
     </div>
   </section>
 
-  {#- 6. Доверие -#}
+  {#- 6. Как заказать и первая форма. -#}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  <section class="steps band band--{{ ns.t }}" aria-labelledby="steps-title">
+    <div class="wrap">
+    <h2 id="steps-title" class="sec-h">Как заказать</h2>
+    <ol class="steps__list">
+      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите в мессенджер. Укажите продукт, объём и район.</p></div></li>
+      <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем цену материала и рейса отдельными цифрами. Скрытых доплат нет.</p></div></li>
+      <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к месту выгрузки.</p></div></li>
+    </ol>
+    </div>
+  </section>
+
+  {% include "partials/cta_mid.html" %}
+
+  {#- 7. Условия, гарантии и большая форма. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/terms.html" %}{% endwith %}
 
@@ -226,8 +214,29 @@
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/callblock.html" %}{% endwith %}
 
-  {#- 7. Заказать -#}
   {% include "partials/lead_form.html" %}
+
+  {#- 8. Другие товары и направления — «другие товары» у Моснеруда стоят
+      ровно здесь, перед калькулятором. -#}
+  {%- if direction_cities %}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/direction.html" %}{% endwith %}
+
+  {%- endif %}
+
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/materials.html" %}{% endwith %}
+
+  {%- if related %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
+  {% with band_tone = ns.t %}{% include "partials/related.html" %}{% endwith %}
+
+  {#- 9. Калькулятор. У Моснеруда он тоже внизу: наверху достаточно
+      кнопки, которая к нему ведёт. -#}
+  {%- if not city.local_partner %}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/calc.html" %}{% endwith %}
+
+  {%- endif %}
 
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/faq.html" %}{% endwith %}
@@ -245,18 +254,9 @@
   </section>
   {%- endif %}
 
-  {#- 8. Навигация. Списки перелинковки в самом низу: они для того, кто
-      дочитал и не нашёл своего, а не для того, кто пришёл считать. -#}
-  {#- related.html сам себя прячет, если перелинковывать не на что,
-      поэтому тон крутим только когда блок действительно выведется. -#}
-  {%- if related %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
-  {% with band_tone = ns.t %}{% include "partials/related.html" %}{% endwith %}
-
   {%- if tail_cities %}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/tail_cities.html" %}{% endwith %}
-  {%- endif %}
 
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/materials.html" %}{% endwith %}
+  {%- endif %}
 {% endblock %}
