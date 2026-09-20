@@ -6,7 +6,13 @@
     <div class="ctamid__l">
       <p class="ctamid__eyebrow">Цена под ваш объём</p>
       <h2 class="ctamid__title" id="ctamid-title">Посчитаем объём {{ product_genitive }} с доставкой {{ city.prep }}</h2>
+      {#- На страницах Нижнего Тагила калькулятора на странице нет — ссылка
+          «калькулятор выше» вела бы в пустоту. -#}
+      {%- if city.local_partner %}
+      <p class="ctamid__sub">Оставьте номер — назовём цену и срок под ваш адрес и объём. Работаем {{ site.hours|lower }}, {{ site.callback_promise }}.</p>
+      {%- else %}
       <p class="ctamid__sub">Сначала посчитайте сами: <a href="#calc-title">калькулятор выше</a> покажет объём и стоимость рейса до вашего адреса. Если цифра устраивает, оставьте номер, и мы подтвердим её под ваш подъезд и сроки. Работаем {{ site.hours|lower }}, {{ site.callback_promise }}.</p>
+      {%- endif %}
     </div>
 
     <form class="ctamid__form" id="ctamid-form" novalidate>
@@ -24,7 +30,7 @@
         <span>Согласен на обработку контактных данных. <a href="{{ site.privacy_url }}" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
       </label>
       {%- if site.max_url %}
-      <p class="ctamid__alt">Проще в мессенджере? <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">MAX</a>{%- if site.whatsapp_url %} или <a href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">WhatsApp</a>{%- endif %}</p>
+      <p class="ctamid__alt">Проще в мессенджере? <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">MAX</a></p>
       {%- endif %}
       <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p>
     </form>

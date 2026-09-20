@@ -9,11 +9,21 @@
         каждая ссылка тянула margin-left:auto сама за себя, промежутки
         выходили разной ширины, а кнопка заявки при нехватке места
         сваливалась на вторую строку — шапка ехала в два этажа. -#}
+    {#- Кнопка WhatsApp стояла тут же, где MAX и почта — «написать», хотя
+        нажатие вело не в переписку, а на тот же расчёт, что и остальные
+        каналы вокруг. Заменена на калькулятор: он и есть тот инструмент,
+        который отвечает на вопрос «сколько это будет стоить», без
+        необходимости кому-то писать. -#}
+    {%- set _c = city|default({}) %}
     <div class="hdr__side">
-      {%- if site.whatsapp_url %}
-      <a class="hdr__ln hdr__wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener" aria-label="Написать в WhatsApp">
-        {% with size=18 %}{% include "partials/icon_wa.html" %}{% endwith %}
-        <span class="hdr__ln-txt">WhatsApp</span>
+      {%- if _c.local_partner %}
+      <a class="hdr__ln hdr__wa" href="#zayavka" aria-label="Оставить заявку">
+        <span class="hdr__ln-txt">Оставить заявку</span>
+      </a>
+      {%- else %}
+      <a class="hdr__ln hdr__wa" href="#calc-title" aria-label="Калькулятор">
+        {% with size=18 %}{% include "partials/icon_calc.html" %}{% endwith %}
+        <span class="hdr__ln-txt">Калькулятор</span>
       </a>
       {%- endif %}
       <a class="hdr__ln hdr__mail" href="mailto:{{ site.contact_email }}" aria-label="Написать на почту">

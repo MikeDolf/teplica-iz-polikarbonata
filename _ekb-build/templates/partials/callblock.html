@@ -2,14 +2,22 @@
 <section class="band band--{{ band_tone|default('white') }}" aria-labelledby="call-title">
   <div class="wrap">
     <div class="callblock">
+      {#- Кнопка WhatsApp тут дублировала MAX — тот же смысл «написать в
+          мессенджер», просто другим приложением. Второе место в блоке
+          отдано калькулятору: тот, кто дошёл сюда, не написав, скорее
+          хочет сам увидеть цифру, чем выбирать, в каком мессенджере
+          писать. -#}
+      {%- set _c = city|default({}) %}
       <div class="callblock__l">
-        <b id="call-title">Проще написать? Мы в MAX и WhatsApp</b>
+        <b id="call-title">Проще написать? Мы в MAX</b>
         <p>Опишите задачу в мессенджере: подскажем цену под ваш объём и район, поможем выбрать материал. Работаем {{ site.hours|lower }}, {{ site.callback_promise }}.</p>
       </div>
       <div class="callblock__act">
         <a class="callblock__phone" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
-        {%- if site.whatsapp_url %}
-        <a class="callblock__wa" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}Написать в WhatsApp</a>
+        {%- if _c.local_partner %}
+        <a class="callblock__msg callblock__msg--max" href="#zayavka">Оставить заявку</a>
+        {%- else %}
+        <a class="callblock__wa" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
         {%- endif %}
         <a class="callblock__msg callblock__msg--max" href="mailto:{{ site.contact_email }}">Или на почту</a>
       </div>

@@ -34,12 +34,13 @@
   background:rgba(255,255,255,.06);transition:background .15s,border-color .15s,color .15s}
 .ekb .hdr__ln:hover{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);color:#fff}
 .ekb .hdr__ln svg{flex:none}
-/* WhatsApp и почта — только иконка: подпись дублирует то, что и так
-   понятно по значку, а место в строке стоит дороже. */
-.ekb .hdr__wa,.ekb .hdr__mail{width:38px;padding:0}
-.ekb .hdr__wa .hdr__ln-txt,.ekb .hdr__mail .hdr__ln-txt{position:absolute;width:1px;height:1px;
+/* Почта — только иконка: подпись дублирует то, что и так понятно по
+   значку, а место в строке стоит дороже. У калькулятора подпись видна —
+   это не мессенджер, и слово должно читаться, а не угадываться по svg. */
+.ekb .hdr__mail{width:38px;padding:0}
+.ekb .hdr__mail .hdr__ln-txt{position:absolute;width:1px;height:1px;
   overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
-.ekb .hdr__wa svg{color:var(--wa)}
+.ekb .hdr__wa svg{color:#8fcaa1}
 .ekb .hdr__max{background:var(--wa);border-color:var(--wa);color:#08301a;font-weight:800}
 .ekb .hdr__max svg{color:#08301a}
 .ekb .hdr__max:hover{background:#2ee06f;border-color:#2ee06f;color:#08301a}

@@ -2,10 +2,20 @@
   <button class="fcta__close" type="button" aria-label="Скрыть панель связи">
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
   </button>
+  {#- На страницах Нижнего Тагила калькулятора на странице нет — там рейс
+      считает не километраж от наших баз, а местный партнёр, — поэтому
+      кнопка вела на #calc-title, которого просто не существует. -#}
+  {%- set _c = city|default({}) %}
   <div class="fcta__in">
+    {%- if _c.local_partner %}
+    <p class="fcta__title">Нужна помощь с расчётом?</p>
+    <p class="fcta__sub">Оставьте заявку — назовём цену и срок под ваш адрес и объём</p>
+    <a class="fcta__btn fcta__btn--main" href="#zayavka">Оставить заявку</a>
+    {%- else %}
     <p class="fcta__title">Нужна помощь с расчётом?</p>
     <p class="fcta__sub">Калькулятор посчитает объём и рейс до вашего адреса — можно прикинуть заранее</p>
-    <a class="fcta__btn fcta__btn--main" href="#calc-title">Открыть калькулятор</a>
+    <a class="fcta__btn fcta__btn--main" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
+    {%- endif %}
     {%- if site.max_url %}
     <a class="fcta__btn fcta__btn--alt" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">
       <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>

@@ -20,11 +20,8 @@
         <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом, самосвалом. {{ min_volume_note|capitalize }}. Доставку считаем отдельно, точную сумму до вашего адреса покажет калькулятор.</p>
         <div class="hero__cta">
           {%- if site.max_url %}
-          <a class="btn btn--call" href="#calc-title">Рассчитать стоимость</a>
+          <a class="btn btn--call" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
           <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
-          {%- if site.whatsapp_url %}
-          <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
-          {%- endif %}
           {%- else %}
           <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
           <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>

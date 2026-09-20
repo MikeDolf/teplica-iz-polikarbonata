@@ -43,22 +43,35 @@
         </div>
         {%- endif %}
         <div class="hero__cta">
-          {%- if site.max_url %}
-          {#- Порядок кнопок сознательный: сначала расчёт, потом мессенджеры.
+          {#- Порядок кнопок сознательный: сначала расчёт, потом мессенджер.
               Человек, который пишет не посчитав, слышит цену в ответ и уходит.
-              Пусть сначала увидит цифру и решит сам. Исключение — города,
-              где считать рейс от наших баз бессмысленно: там калькулятора
-              на странице нет, и кнопка сразу ведёт к заявке. -#}
-          {%- if not city.local_partner %}
-          <a class="btn btn--call" href="#calc-title">Рассчитать стоимость</a>
-          {%- endif %}
+              Пусть сначала увидит цифру и решит сам.
+
+              Кнопки WhatsApp тут больше нет: рядом уже стоит калькулятор,
+              и вторая ссылка на «написать» вместо него была бы лишней, а
+              не альтернативой — она вела бы туда же, куда и MAX рядом.
+
+              Условие раньше проверяло site.max_url и внутри него отдельно
+              city.local_partner — «заявка» веткой не доходила никогда,
+              потому что max_url включён всегда, а local_partner проверялся
+              только внутри этой ветки для отдельной кнопки калькулятора.
+              На Нижнем Тагиле, где калькулятора на странице нет, это тихо
+              съедало вторую кнопку: оставался один «Написать в MAX» вместо
+              обещанной в комментарии «заявки». Условия развязаны. -#}
+          {%- if city.local_partner %}
+          <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+          {%- if site.max_url %}
           <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
-          {%- if site.whatsapp_url %}
-          <a class="btn btn--ghost" href="{{ site.whatsapp_url }}" target="_blank" rel="nofollow noopener">{% with size=20 %}{% include "partials/icon_wa.html" %}{% endwith %}WhatsApp</a>
+          {%- else %}
+          <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
           {%- endif %}
           {%- else %}
-          <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+          <a class="btn btn--call" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
+          {%- if site.max_url %}
+          <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          {%- else %}
           <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
+          {%- endif %}
           {%- endif %}
         </div>
         <p class="hero__note">На заявку {{ site.callback_promise }}. {{ site.hours }}. {{ site.payment }}</p>
