@@ -1,11 +1,19 @@
 /* ЕКБ лид-ген раздел. Дизайн-токены + вёрстка. Изолирован классом .ekb, чтобы не влиять на основной сайт. */
 /* hidden всегда сильнее классовых display: см. .lead__done */
 [hidden]{display:none!important}
+/* Страховка от горизонтального выезда страницы на мобильных. Если хоть
+   один элемент на странице шире экрана (например, картинка с width/height
+   в HTML-атрибутах внутри ленты-карусели — см. works__carousel), мобильный
+   браузер расширяет весь видимый вьюпорт под него, и страница выглядит
+   отдалённой, обрезанной, с возможностью развести пальцы и увидеть лишнее
+   поле сбоку. overflow-x:hidden на html и на теле не даёт вьюпорту
+   раздуться, даже если внутри найдётся элемент шире экрана. */
+html{overflow-x:hidden}
 .ekb{
   --bg:#12331f; --bg2:#0d281a; --ink:#16241b; --ink-soft:#5b6b60;
   --line:#e2e8e2; --accent:#2f7d46; --accent-ink:#fff; --focus:#f0a814;
   --paper:#f7faf7; --radius:14px; --wrap:1040px;
-  margin:0; color:var(--ink); background:#fff;
+  margin:0; color:var(--ink); background:#fff; overflow-x:hidden;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   line-height:1.55; -webkit-text-size-adjust:100%;
 }
@@ -428,17 +436,21 @@
    именно кроп однажды срезал ответ клиента снизу. В ленте у каждой
    карточки своя полная ширина, скриншот вписан целиком (object-fit:
    contain) — обрезать нечего ни сверху, ни снизу. */
-.rev__carousel{position:relative;margin-top:8px}
+/* min-width:0 по всей цепочке — та же причина, что и в works__carousel:
+   у img есть атрибуты width/height (700-800 px), и без min-width:0
+   flex-элемент не сжимается уже них, весь трек и страница расширяются
+   под ширину скриншота. */
+.rev__carousel{position:relative;margin-top:8px;min-width:0}
 .rev__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
-  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  scroll-behavior:smooth;min-width:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .rev__track::-webkit-scrollbar{display:none}
-.rev__item{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;
+.rev__item{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;
   background:var(--paper);border:1px solid var(--line);border-radius:14px;
   padding:18px 20px;display:flex;flex-direction:column;gap:8px;box-sizing:border-box}
 .rev__item--shot{padding:14px 14px 18px}
 .review__shot-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--line);
   margin:0 0 12px;box-shadow:0 6px 18px -10px rgba(0,0,0,.25);
-  background:var(--tint);display:flex;justify-content:center}
+  background:var(--tint);display:flex;justify-content:center;min-width:0}
 .review__shot{display:block;width:auto;max-width:100%;height:clamp(240px,52vw,460px);object-fit:contain}
 .review__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .ekb .review__name{font-weight:700;font-size:16.5px;color:var(--ink)}
@@ -887,12 +899,18 @@
    мелкие превью, которые не разглядеть. Прокрутка нативная (scroll-snap,
    работает свайпом без единой строчки JS), стрелки и точки — только
    поверх неё, для тех, кто листает кликом, а не пальцем. */
-.works__carousel{position:relative;margin-top:16px}
+/* min-width:0 на треке и на карточках — без него flex-элемент не может
+   сжаться уже своего содержимого. У img внутри есть атрибуты width/height
+   (нужны против прыжков вёрстки при загрузке), и браузер считает их
+   минимальным размером карточки: track растягивался до ширины фото
+   (у нас были кадры 800 px), а вместе с ним и вся страница — отсюда
+   мобильный масштаб съезжал и появлялась возможность отдалить экран. */
+.works__carousel{position:relative;margin-top:16px;min-width:0}
 .works__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
-  scroll-behavior:smooth;gap:0;border-radius:10px;
+  scroll-behavior:smooth;gap:0;border-radius:10px;min-width:0;
   -webkit-overflow-scrolling:touch;scrollbar-width:none}
 .works__track::-webkit-scrollbar{display:none}
-.works__item{flex:0 0 100%;margin:0;scroll-snap-align:start;scroll-snap-stop:always}
+.works__item{flex:0 0 100%;min-width:0;margin:0;scroll-snap-align:start;scroll-snap-stop:always}
 .works__img{display:block;width:100%;height:clamp(220px,42vw,420px);object-fit:cover;background:#e8efe9}
 .ekb .works__arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;
   width:42px;height:42px;border-radius:50%;border:1px solid rgba(0,0,0,.12);
