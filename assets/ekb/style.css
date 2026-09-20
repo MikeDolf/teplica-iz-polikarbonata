@@ -171,6 +171,10 @@
 .field__input::placeholder{color:#9aa79e}
 .field__input:focus{outline:none;border-color:var(--l-accent);box-shadow:0 0 0 3px rgba(47,125,70,.16)}
 .field__input--area{resize:vertical;min-height:44px}
+/* Поле объёма — узкое число, а не диапазон чипами: раньше «Объём» был
+   самой высокой частью формы на телефоне (4 чипа в 2 ряда). */
+.field--vol{max-width:140px}
+.field__input--vol{width:100%;text-align:center;font-weight:700}
 .field__error{font-size:12px;color:#c0392b;font-weight:600}
 .field--req.invalid .field__input{border-color:#c0392b;box-shadow:0 0 0 3px rgba(192,57,43,.12)}
 .field--req.invalid .field__error{display:block}

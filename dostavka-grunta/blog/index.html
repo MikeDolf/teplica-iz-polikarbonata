@@ -21,7 +21,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=61"><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=62"><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -604,12 +604,10 @@
         if(radios[i].value === last.chip){ radios[i].checked = true; hit = radios[i]; break; }
       }
     }
-    // Объём переводим в те же градации, что стоят в форме.
-    var vol = last.billed < 5 ? '3-4' : (last.billed < 8 ? '5-7' : 'От 10');
-    var vr = form.querySelectorAll('input[name="volume"]');
-    for(var j = 0; j < vr.length; j++){
-      if(vr[j].value.indexOf(vol) === 0){ vr[j].checked = true; break; }
-    }
+    // Поле объёма теперь число, а не диапазон — просто подставляем
+    // посчитанный объём, округлённый в большую сторону.
+    var vf = form.querySelector('#lead-volume');
+    if(vf) vf.value = Math.ceil(last.billed);
     var district = form.querySelector('#lead-district');
     var cityName = city.options[city.selectedIndex] ? city.options[city.selectedIndex].text : '';
     if(district && !district.value.trim() && city.value !== 'other') district.value = cityName;
@@ -659,13 +657,9 @@
           <label class="chip"><input type="radio" name="product" value="Пока не решил" checked><span>Пока не решил</span></label>
         </div>
       </div>
-      <div class="field">
-        <span class="field__label">Объём</span><div class="chips" role="group" aria-label="Объём"><label class="chip"><input type="radio" name="volume" value="1-2 м³, минимальный заказ" checked><span>1-2 м³</span></label>
-          <label class="chip"><input type="radio" name="volume" value="5-7 м³, средний самосвал"><span>5-7 м³</span></label>
-          <label class="chip"><input type="radio" name="volume" value="От 10 м³, КамАЗ"><span>От 10 м³</span></label>
-          <label class="chip"><input type="radio" name="volume" value="Не знаю, подскажите"><span>Не знаю</span></label>
-        </div>
-        <span class="field__hint">Минимальный заказ 1 м³, меньше не возим.</span>
+      <div class="field field--vol"><label class="field__label" for="lead-volume">Объём, м³</label>
+        <input class="field__input field__input--vol" id="lead-volume" name="volume" type="number" inputmode="decimal" min="1" step="1" value="1">
+        <span class="field__hint">Минимальный заказ 1 м³, меньше не возим. Не знаете точно — впишите на глаз.</span>
       </div>
       <div class="field">
         <label class="field__label" for="lead-district">Район или город доставки</label>
@@ -743,12 +737,12 @@
     // визуально не менялось ничего, и кнопка выглядела нерабочей.
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
     consentErr.hidden = true;
+    var volumeText = form.volume.value ? form.volume.value + ' м³' : 'объём не указан';
     var data = {
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
-      subject: "Новая заявка: " + (form.product.value||"грунт")
-        + " — " + (form.volume.value||"объём не указан"),
+      subject: "Новая заявка: " + (form.product.value||"грунт") + " — " + volumeText,
       from_name: "Сайт доставки грунта",
-      product:(form.product.value||''), volume:(form.volume.value||''), district:form.district.value.trim(),
+      product:(form.product.value||''), volume:volumeText, district:form.district.value.trim(),
       phone:phone.value.trim(), note:form.note.value.trim(),
       page:location.pathname, ref:document.referrer||'', ts:new Date().toISOString()
     };
