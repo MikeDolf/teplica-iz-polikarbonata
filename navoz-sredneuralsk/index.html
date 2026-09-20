@@ -945,7 +945,7 @@
 
     <form class="lead__form" id="lead-form" novalidate>
       <input type="text" name="company" tabindex="-1" autocomplete="off" class="lead__trap" aria-hidden="true">
-      <div class="field field--full">
+      <div class="field">
         <label class="field__label" for="lead-product">Что нужно</label>
         <select class="field__input" id="lead-product" name="product">
           <option value="Чернозём">Чернозём</option>
@@ -958,13 +958,13 @@
           <option value="Пока не решил">Пока не решил</option>
         </select>
       </div>
-      <div class="field field--vol"><label class="field__label" for="lead-volume">Объём, м³</label>
+      <div class="field"><label class="field__label" for="lead-volume">Объём, м³</label>
         <input class="field__input field__input--vol" id="lead-volume" name="volume" type="number" inputmode="decimal" min="1" step="1" value="1">
       </div>
       <div class="field">
         <label class="field__label" for="lead-district">Район или город доставки</label>
         <input class="field__input" id="lead-district" name="district" type="text" inputmode="text" placeholder="Напр. Среднеуральск, район или адрес" autocomplete="off">
-      </div><p class="field__hint field--full">Минимальный заказ 1 м³, меньше не возим.</p><div class="field field--full field--req">
+      </div><div class="field field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
         <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому перезвонить</span>

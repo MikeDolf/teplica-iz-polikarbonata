@@ -39,7 +39,7 @@
 
     <form class="lead__form" id="lead-form" novalidate>
       <input type="text" name="company" tabindex="-1" autocomplete="off" class="lead__trap" aria-hidden="true">
-      <div class="field field--full">
+      <div class="field">
         <label class="field__label" for="lead-product">Что нужно</label>
         {#- Опил убран из списка: он снят с продажи (DISCONTINUED в build.py),
             страница товара прямо пишет «мы его больше не возим». Раньше это
@@ -54,12 +54,13 @@
           {%- endfor %}
         </select>
       </div>
-      <div class="field field--vol">
+      <div class="field">
         {#- Раньше здесь стояли четыре чипа диапазонов — на телефоне это
-            была самая высокая часть формы. Одно узкое числовое поле
-            занимает одну строку и не заставляет выбирать: если человек не
-            знает точный объём, оставит минимум или впишет на глаз, а точно
-            посчитаем при ответе. -#}
+            была самая высокая часть формы. Числовое поле не заставляет
+            выбирать: если человек не знает точный объём, оставит минимум
+            или впишет на глаз, а точно посчитаем при ответе. Ширину не
+            ограничиваем — поле занимает свою половину сетки наравне с
+            остальными тремя. -#}
         <label class="field__label" for="lead-volume">Объём, м³</label>
         <input class="field__input field__input--vol" id="lead-volume" name="volume" type="number" inputmode="decimal" min="1" step="1" value="{{ min_volume.split(' ')[0] }}">
       </div>
@@ -67,17 +68,14 @@
         <label class="field__label" for="lead-district">Район или город доставки</label>
         <input class="field__input" id="lead-district" name="district" type="text" inputmode="text" placeholder="{{ district_ph }}" autocomplete="off">
       </div>
-      {#- Подсказка вынесена под обе колонки, а не под одну «Объём»: там
-          она растягивала строку на три строки текста, и под соседним
-          полем «Район» оставалась пустая нижняя половина. Заодно текст
-          сокращён — «не знаете точно, впишите на глаз» и так понятно из
-          самого факта, что поле можно просто оставить как есть. -#}
-      <p class="field__hint field--full">Минимальный заказ {{ min_volume }}, меньше не возим.</p>
-      {#- Телефон растянут на всю ширину карточки: у него нет пары в
-          строке (второй половины сетки), и раньше это оставляло пустую
-          половину формы справа от поля — самый заметный провал в
-          симметрии. -#}
-      <div class="field field--full field--req">
+      {#- Подсказки про минимальный объём здесь больше нет: в сетке 2×2
+          она снова ломала бы выравнивание пар. Сам факт никуда не делся —
+          он стоит на первом экране заметной плашкой, в блоке цены, в
+          полосе условий и в «Условиях доставки и оплаты». -#}
+      {#- Телефон стоит в паре с районом: сетка 2×2 (материал + объём,
+          район + телефон) короче столбика из четырёх полей и не оставляет
+          пустой половины строки. -#}
+      <div class="field field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
         <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому перезвонить</span>
