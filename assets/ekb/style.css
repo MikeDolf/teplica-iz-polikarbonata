@@ -862,11 +862,6 @@
    но без верхней линии, они читаются парой. */
 .ekb .calc__per{color:#c7ddd0}
 .ekb .calc__per b{font-size:17px}
-/* Скидка за заявку с сайта — единственная строка в расчёте, которую
-   человек может получить, что-то сделав, поэтому она подсвечена. */
-.ekb .calc__save{margin-top:8px;padding-top:9px;border-top:1px solid rgba(255,255,255,.16);
-  color:var(--wa);align-items:baseline}
-.ekb .calc__save b{font-size:19px;color:var(--wa);white-space:nowrap}
 .ekb .calc__when{margin:10px 0 0;font-size:13.5px;color:#c7ddd0}
 
 .ftr__pay{margin:8px 0 0;font-size:13px;color:#9fb6a5}

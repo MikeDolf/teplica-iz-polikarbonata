@@ -73,9 +73,6 @@
               конкурентов доставка вшита в цену куба, и наши раздельные
               цифры на первый взгляд выглядят дороже, хотя это не так. -#}
           <li class="calc__per"><span>Это за куб с доставкой</span><b id="calc-per">1 088 ₽</b></li>
-          {#- Скидка за заявку текстом: она приходит сразу с объёмом, адресом
-              и материалом, и разбирать то же самое голосом не нужно. -#}
-          <li class="calc__save"><span>Со скидкой 5% на доставку</span><b id="calc-save">от 12 908 ₽</b></li>
         </ul>
         <p class="calc__when" id="calc-when"></p>
         {#- Текст собирает JS: минимум зависит от выбранного города, и
@@ -111,8 +108,7 @@
   var oDl = document.getElementById('calc-dlabel');
   var oC = document.getElementById('calc-cost'), oMin = document.getElementById('calc-min');
   var oPer = document.getElementById('calc-per');
-  var oSave = document.getElementById('calc-save'), oWhen = document.getElementById('calc-when');
-  var SITE_DISCOUNT = 0.05;
+  var oWhen = document.getElementById('calc-when');
 
   // Ближайшая дата доставки. Цифра денег без срока отвечает только на
   // половину вопроса: «сколько» человек уже знает, а «когда» — ещё нет.
@@ -294,10 +290,6 @@
     // Делим на оплачиваемый объём, а не на введённый: при заказе меньше
     // минимума человек платит за минимум, и честная цифра именно такая.
     oPer.textContent = distance > 0 ? ru(Math.round((material + ride) / billed)) + ' ₽' : '—';
-    // Скидка считается от рейса, а не от всей суммы: материал мы не наш, и
-    // скидывать с него нечего.
-    oSave.textContent = distance > 0
-      ? 'от ' + ru(material + Math.round(ride * (1 - SITE_DISCOUNT))) + ' ₽' : '—';
     oMin.hidden = m3 >= MIN_M3;
     if(!oMin.hidden){
       oMin.textContent = 'Это меньше минимального заказа. Цена посчитана по минимальному объёму, '
