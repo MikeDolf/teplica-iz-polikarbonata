@@ -893,6 +893,16 @@ html{overflow-x:hidden}
 .ekb .calc__hint{font-size:12px;color:var(--ink-soft);line-height:1.35}
 .ekb .calc__check{display:flex;gap:9px;align-items:center;font-size:14px;color:var(--ink);cursor:pointer}
 .ekb .calc__check input{width:18px;height:18px;flex:none}
+/* Поля попарно в сетке 2×2: материал/город в одной строке, площадь/толщина
+   слоя во второй — так пары визуально выровнены друг относительно друга,
+   а не растянуты одна под другой на всю ширину. */
+.ekb .calc__form{grid-template-columns:1fr 1fr}
+.ekb .calc__field:nth-child(1){order:1}
+.ekb .calc__field:nth-child(2){order:3}
+.ekb .calc__field:nth-child(3){order:4}
+.ekb .calc__check{order:5;grid-column:1/-1}
+.ekb .calc__field:nth-child(5){order:2}
+.ekb .calc__field:nth-child(6){order:6;grid-column:1/-1}
 .ekb .calc__out{background:var(--bg,#12331f);color:#eaf3ec;border-radius:14px;padding:20px}
 .ekb .calc__main{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
   padding-bottom:14px;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,.16)}
