@@ -422,40 +422,48 @@
 .callblock__msg--max[title]{cursor:default}
 /* отзывы: блок ни разу не рендерился, пока REVIEWS был пуст, поэтому
    стили здесь появились только вместе с первыми настоящими отзывами */
-/* Карточки одной высоты: раньше короткие переписки (Люба) давали низкую
-   карточку, а длинные (Алексей) — высокую, и ряд выглядел рваным.
-   Стретчим карточки по высоте строки грида, а скриншот обрезаем по
-   высоте (object-fit: cover) — реальная переписка длиннее рамки не
-   обрубает смысл, весь текст виден на скриншоте по кадру. */
-.reviews__grid{display:grid;gap:14px;grid-template-columns:repeat(3,1fr);margin:0 0 18px;align-items:stretch}
-@media (max-width:900px){.reviews__grid{grid-template-columns:1fr 1fr}}
-/* На телефоне карточки идут в один столбец, три подряд — при высоте 190px
-   каждая это очень длинная прокрутка. Кадр ниже, отступы плотнее. */
-@media (max-width:620px){
-  .reviews__grid{grid-template-columns:1fr;gap:10px;margin-bottom:12px}
-  .review{padding:14px 16px}
-  .review--shot{padding:10px 10px 14px}
-  .review__shot-wrap{height:130px;margin-bottom:8px}
-}
-.review{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:18px 20px;display:flex;flex-direction:column;gap:8px;height:100%}
-/* карточка со скриншотом переписки: сам скриншот прижат к верху без
-   внутреннего отступа, чтобы читался как приклеенное фото, а не как
-   иллюстрация внутри обычной карточки */
-.review--shot{padding:14px 14px 18px}
-/* Кадрируем СНИЗУ (object-position:bottom), а не сверху: важна не
-   первая реплика с вопросом, а ответ клиента внизу переписки — раньше
-   обрезался именно он. Верхний градиент вместо нижнего: скрытое начало
-   переписки наверху читается как «выше есть ещё», не как обрыв ответа. */
-.review__shot-wrap{position:relative;height:190px;border-radius:10px;overflow:hidden;
-  border:1px solid var(--line);margin:0 0 12px;box-shadow:0 6px 18px -10px rgba(0,0,0,.25)}
-.review__shot-wrap::before{content:"";position:absolute;left:0;right:0;top:0;height:34px;
-  background:linear-gradient(to top, rgba(255,255,255,0), var(--paper));z-index:1}
-.review__shot{width:100%;height:100%;object-fit:cover;object-position:bottom;display:block}
+/* Отзывы — та же лента-карусель, что и «Наши доставки»: один отзыв на
+   экран, свайп или стрелка переключают следующий. Раньше это была сетка
+   в 3 колонки с обрезкой скриншота по высоте (object-fit: cover), и
+   именно кроп однажды срезал ответ клиента снизу. В ленте у каждой
+   карточки своя полная ширина, скриншот вписан целиком (object-fit:
+   contain) — обрезать нечего ни сверху, ни снизу. */
+.rev__carousel{position:relative;margin-top:8px}
+.rev__track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.rev__track::-webkit-scrollbar{display:none}
+.rev__item{flex:0 0 100%;scroll-snap-align:start;scroll-snap-stop:always;
+  background:var(--paper);border:1px solid var(--line);border-radius:14px;
+  padding:18px 20px;display:flex;flex-direction:column;gap:8px;box-sizing:border-box}
+.rev__item--shot{padding:14px 14px 18px}
+.review__shot-wrap{border-radius:10px;overflow:hidden;border:1px solid var(--line);
+  margin:0 0 12px;box-shadow:0 6px 18px -10px rgba(0,0,0,.25);
+  background:var(--tint);display:flex;justify-content:center}
+.review__shot{display:block;width:auto;max-width:100%;height:clamp(240px,52vw,460px);object-fit:contain}
 .review__head{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
 .ekb .review__name{font-weight:700;font-size:16.5px;color:var(--ink)}
 .review__meta{font-size:13.5px;color:var(--ink-soft)}
 .review__stars{color:#f0a814;font-size:15px;letter-spacing:2px}
 .ekb .review__text{margin:0;font-size:16px;line-height:1.5;color:var(--ink)}
+.ekb .rev__arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:2;
+  width:42px;height:42px;border-radius:50%;border:1px solid var(--line);
+  background:rgba(255,255,255,.94);color:var(--ink);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.14)}
+.ekb .rev__arrow:hover{background:#fff}
+.ekb .rev__arrow:disabled{opacity:0;pointer-events:none}
+.rev__arrow--prev{left:8px}
+.rev__arrow--next{right:8px}
+.rev__dots{display:flex;justify-content:center;gap:7px;margin-top:12px}
+.rev__dot{width:7px;height:7px;border-radius:50%;background:#c8d6cb}
+.rev__dot--on{background:var(--accent)}
+@media (max-width:620px){
+  .rev__item{padding:14px 16px}
+  .rev__item--shot{padding:10px 10px 14px}
+  .review__shot{height:clamp(200px,60vw,340px)}
+  .ekb .rev__arrow{width:36px;height:36px}
+  .rev__arrow--prev{left:-8px}
+  .rev__arrow--next{right:-8px}
+}
 
 /* CTA сбора отзывов (когда реальных ещё нет) */
 .revcta{display:flex;flex-wrap:wrap;gap:18px 30px;align-items:center;justify-content:space-between}
