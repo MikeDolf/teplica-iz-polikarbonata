@@ -596,17 +596,17 @@
     <form class="lead__form" id="lead-form" novalidate>
       <input type="text" name="company" tabindex="-1" autocomplete="off" class="lead__trap" aria-hidden="true">
       <div class="field field--full">
-        <span class="field__label">Что нужно</span>
-        <div class="chips" role="group" aria-label="Что нужно">
-          <label class="chip"><input type="radio" name="product" value="Чернозём"><span>Чернозём</span></label>
-          <label class="chip"><input type="radio" name="product" value="Перегной"><span>Перегной</span></label>
-          <label class="chip"><input type="radio" name="product" value="Навоз коровий"><span>Навоз коровий</span></label>
-          <label class="chip"><input type="radio" name="product" value="Навоз конский"><span>Навоз конский</span></label>
-          <label class="chip"><input type="radio" name="product" value="Плодородный грунт" checked><span>Плодородный грунт</span></label>
-          <label class="chip"><input type="radio" name="product" value="Торф"><span>Торф</span></label>
-          <label class="chip"><input type="radio" name="product" value="Торфогрунт"><span>Торфогрунт</span></label>
-          <label class="chip"><input type="radio" name="product" value="Пока не решил"><span>Пока не решил</span></label>
-        </div>
+        <label class="field__label" for="lead-product">Что нужно</label>
+        <select class="field__input" id="lead-product" name="product">
+          <option value="Чернозём">Чернозём</option>
+          <option value="Перегной">Перегной</option>
+          <option value="Навоз коровий">Навоз коровий</option>
+          <option value="Навоз конский">Навоз конский</option>
+          <option value="Плодородный грунт" selected>Плодородный грунт</option>
+          <option value="Торф">Торф</option>
+          <option value="Торфогрунт">Торфогрунт</option>
+          <option value="Пока не решил">Пока не решил</option>
+        </select>
       </div>
       <div class="field field--vol"><label class="field__label" for="lead-volume">Объём, м³</label>
         <input class="field__input field__input--vol" id="lead-volume" name="volume" type="number" inputmode="decimal" min="1" step="1" value="3">

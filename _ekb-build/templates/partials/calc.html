@@ -315,9 +315,12 @@
     if(!form || !last) return;
     var hit = null;
     if(last.chip){
-      var radios = form.querySelectorAll('input[name="product"]');
-      for(var i = 0; i < radios.length; i++){
-        if(radios[i].value === last.chip){ radios[i].checked = true; hit = radios[i]; break; }
+      // Поле «Что нужно» теперь выпадающий список, а не набор радио-кнопок.
+      var sel = form.querySelector('select[name="product"]');
+      if(sel){
+        for(var i = 0; i < sel.options.length; i++){
+          if(sel.options[i].value === last.chip){ sel.value = last.chip; hit = sel; break; }
+        }
       }
     }
     // Поле объёма теперь число, а не диапазон — просто подставляем

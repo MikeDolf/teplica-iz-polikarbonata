@@ -40,18 +40,19 @@
     <form class="lead__form" id="lead-form" novalidate>
       <input type="text" name="company" tabindex="-1" autocomplete="off" class="lead__trap" aria-hidden="true">
       <div class="field field--full">
-        <span class="field__label">Что нужно</span>
-        <div class="chips" role="group" aria-label="Что нужно">
-          {#- Опил убран из списка: он снят с продажи (DISCONTINUED в build.py),
-            страница товара прямо пишет «мы его больше не возим». Пока чип
-            здесь стоял, форма предлагала выбрать то, чего нет, и заявка
-            приходила заведомо невыполнимой — та же ошибка, что раньше
-            была с чипом «Мешки». -#}
+        <label class="field__label" for="lead-product">Что нужно</label>
+        {#- Опил убран из списка: он снят с продажи (DISCONTINUED в build.py),
+            страница товара прямо пишет «мы его больше не возим». Раньше это
+            было 8 кнопок в 4 ряда — самая высокая часть формы. Один
+            выпадающий список занимает одну строку, весь ассортимент
+            по-прежнему выбирается, просто не висит перед глазами сразу
+            весь целиком. -#}
         {%- set products = ["Чернозём","Перегной","Навоз коровий","Навоз конский","Плодородный грунт","Торф","Торфогрунт","Пока не решил"] %}
+        <select class="field__input" id="lead-product" name="product">
           {%- for p in products %}
-          <label class="chip"><input type="radio" name="product" value="{{ p }}"{% if p == preselect_product %} checked{% endif %}><span>{{ p }}</span></label>
+          <option value="{{ p }}"{% if p == preselect_product %} selected{% endif %}>{{ p }}</option>
           {%- endfor %}
-        </div>
+        </select>
       </div>
       <div class="field field--vol">
         {#- Раньше здесь стояли четыре чипа диапазонов — на телефоне это
