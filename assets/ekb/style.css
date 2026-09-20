@@ -412,7 +412,10 @@ html{overflow-x:hidden}
 @media (max-width:560px){
   .ekb .table-wrap{overflow-x:visible;border:none;box-shadow:none;background:transparent}
   :where(.ekb table){display:block;min-width:0}
-  .ekb table caption{padding:0 0 10px}
+  /* Таблица стала display:block, а <caption> без явного display остаётся
+     table-caption и сжимается по контенту вместо всей ширины — отсюда
+     подпись в три узких строки вместо одной-двух на всю ширину карточки. */
+  .ekb table caption{padding:0 0 10px;display:block;width:100%}
   .ekb thead{display:none}
   .ekb tbody{display:block}
   :where(.ekb tbody tr){display:block;background:#fff;border:1px solid var(--line);
