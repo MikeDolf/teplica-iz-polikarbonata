@@ -79,17 +79,24 @@
     </div>
   </section>
 
-  {#- Фото доставок и калькулятор стоят сразу после первого экрана —
-      технику и расчёт видно раньше статичных цифр цены. Дальше порядок
-      по Моснеруду: цена и таблица, доставка и техника, доказательства,
-      описание товара, формы, перелинковка. Ни один блок не убран,
-      изменён только порядок.
+  {#- Гибридный порядок (согласован с владельцем): цена и калькулятор сразу
+      после первого экрана — это то, зачем открыли страницу. Следом
+      доказательства (отзывы + фото) одним блоком, а сразу за ними —
+      единственная в верхней половине страницы точка «оставить контакт»:
+      короткая форма, чей собственный текст («калькулятор выше») как раз
+      и рассчитан стоять здесь. Дальше — сжатый кластер повторного
+      доверия (гарантии, полоса фактов, преимущества, условия заказа) для
+      тех, кто прокрутил форму, не заполнив. «Как заказать» и большая
+      форма с блоком связи — вторая, более полная точка контакта. Всё
+      остальное — таблица цен, техника, применение, условия списком,
+      перелинковка, FAQ — то, что нужно для поисковика и для дочитавших
+      до конца, но не мешает тем, кто пришёл написать.
 
-      Фон полос при этом чередуется, а часть блоков есть не на каждой
-      странице (карточка переезда, прайс-таблица, калькулятор, отзывы,
-      фото работ, направления). Поэтому тон не прибит классом, а
-      считается: ns.t помнит фон предыдущей полосы, следующая берёт
-      противоположный. -#}
+      Ни один блок и ни один текст не убраны и не переписаны, изменён
+      только порядок {% include %}. Фон полос по-прежнему считается через
+      ns.t, а не прибит классом: часть блоков есть не на каждой странице
+      (карточка переезда, прайс-таблица, калькулятор, отзывы, фото
+      работ, направления). -#}
   {%- set ns = namespace(t="tint") %}
 
   {%- if moved_to %}
@@ -105,48 +112,63 @@
   </section>
   {%- endif %}
 
-  {#- 1. Фото доставок — лента сразу после первого экрана: технику и
-      выгрузки человек видит раньше, чем начнёт считать деньги. Стоит на
-      всех страницах органики, не только там, где снят конкретный кадр —
-      это доказательство, что компания реальная, а не привязка к городу.
-      Кроме страниц щебня, песка, отсева и ПГС (moved_to): их возит другой
-      проект на другой технике. -#}
-  {%- if not moved_to %}
-  {%- if works %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
-  {% with band_tone = ns.t %}{% include "partials/works.html" %}{% endwith %}
-  {%- endif %}
+  {#- 1. Цена. -#}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/price.html" %}{% endwith %}
 
-  {#- 2. Калькулятор — сразу за фото, до статичных цифр цены ниже. -#}
+  {#- 2. Калькулятор. -#}
   {%- if not city.local_partner %}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/calc.html" %}{% endwith %}
   {%- endif %}
 
-  {#- 3. Цена. -#}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/price.html" %}{% endwith %}
+  {#- 3. Доказательства: отзывы и фото доставок рядом. -#}
+  {%- if reviews %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
+  {% with band_tone = ns.t %}{% include "partials/reviews.html" %}{% endwith %}
 
-  {%- if not city.local_partner %}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/pricetable.html" %}{% endwith %}
-
-  {%- else %}
-  {#- Прайс-таблица и калькулятор считают рейс от наших баз в Курганово и
-      Садовом — по Нижнему Тагилу это неверная цифра, там работает
-      местный партнёр. Вместо расчёта — прямое объяснение и переход к заявке. -#}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  <section class="band band--{{ ns.t }}" aria-labelledby="partner-title">
-    <div class="wrap">
-      <div class="moved">
-        <b id="partner-title">Доставка в Нижний Тагил — через местного партнёра</b>
-        <p>Возить сюда машины с наших баз под Екатеринбургом невыгодно: плечо большое, и цена вышла бы заметно выше, чем у того, кто работает на месте. Поэтому по Нижнему Тагилу с вами свяжется наш партнёр, назовёт цену материала с доставкой и сроки под ваш адрес и объём.</p>
-        <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
-      </div>
-    </div>
-  </section>
+  {%- if not moved_to %}
+  {%- if works %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
+  {% with band_tone = ns.t %}{% include "partials/works.html" %}{% endwith %}
   {%- endif %}
 
-  {#- 4. Доставка и техника — как у Моснеруда сразу за ценой. -#}
+  {#- 4. Первая и единственная в верхней половине страницы точка контакта —
+      короткая форма сразу после доказательств, на пике доверия. -#}
+  {% include "partials/cta_mid.html" %}
+
+  {#- 5. Повторное доверие сжатым кластером — для тех, кто прокрутил
+      форму, не заполнив. Гарантии всегда тёмные и выпадают из
+      чередования; после них следующая полоса должна быть светлой. -#}
+  {% include "partials/guarantees.html" %}
+  {%- set ns.t = "tint" %}
+
+  {% include "partials/trustbar.html" %}
+
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/advantages.html" %}{% endwith %}
+
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/terms_bar.html" %}{% endwith %}
+
+  {#- 6. Как заказать и вторая, более полная точка контакта. -#}
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  <section class="steps band band--{{ ns.t }}" aria-labelledby="steps-title">
+    <div class="wrap">
+    <h2 id="steps-title" class="sec-h">Как заказать</h2>
+    <ol class="steps__list">
+      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите в мессенджер. Укажите продукт, объём и район.</p></div></li>
+      <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем цену материала и рейса отдельными цифрами. Скрытых доплат нет.</p></div></li>
+      <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к месту выгрузки.</p></div></li>
+    </ol>
+    </div>
+  </section>
+
+  {% include "partials/lead_form.html" %}
+
+  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
+  {% with band_tone = ns.t %}{% include "partials/callblock.html" %}{% endwith %}
+
+  {#- 7. Дальше — то, что нужно для поисковика и для дочитавших до конца:
+      таблица цен, доставка и техника, применение, условия списком, о нас. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   <section class="delivery band band--{{ ns.t }}" aria-labelledby="delivery-title">
     <div class="wrap">
@@ -175,21 +197,26 @@
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/fleet.html" %}{% endwith %}
 
-  {#- 5. Преимущества и условия — пачка иконок, как у Моснеруда после
-      блока доставки. -#}
-  {% include "partials/trustbar.html" %}
-
+  {%- if not city.local_partner %}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/advantages.html" %}{% endwith %}
+  {% with band_tone = ns.t %}{% include "partials/pricetable.html" %}{% endwith %}
 
+  {%- else %}
+  {#- Прайс-таблица и калькулятор считают рейс от наших баз в Курганово и
+      Садовом — по Нижнему Тагилу это неверная цифра, там работает
+      местный партнёр. Вместо расчёта — прямое объяснение и переход к заявке. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/terms_bar.html" %}{% endwith %}
+  <section class="band band--{{ ns.t }}" aria-labelledby="partner-title">
+    <div class="wrap">
+      <div class="moved">
+        <b id="partner-title">Доставка в Нижний Тагил — через местного партнёра</b>
+        <p>Возить сюда машины с наших баз под Екатеринбургом невыгодно: плечо большое, и цена вышла бы заметно выше, чем у того, кто работает на месте. Поэтому по Нижнему Тагилу с вами свяжется наш партнёр, назовёт цену материала с доставкой и сроки под ваш адрес и объём.</p>
+        <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+      </div>
+    </div>
+  </section>
+  {%- endif %}
 
-  {#- 6. Доказательства. -#}
-  {%- if reviews %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
-  {% with band_tone = ns.t %}{% include "partials/reviews.html" %}{% endwith %}
-
-  {#- 7. Описание товара: для чего берут, нормы внесения, о нас. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/uses.html" %}{% endwith %}
 
@@ -208,36 +235,9 @@
     </div>
   </section>
 
-  {#- 8. Как заказать и первая форма. -#}
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  <section class="steps band band--{{ ns.t }}" aria-labelledby="steps-title">
-    <div class="wrap">
-    <h2 id="steps-title" class="sec-h">Как заказать</h2>
-    <ol class="steps__list">
-      <li class="steps__item"><span class="steps__n">1</span><div><b>Заявка</b><p>Оставьте заявку на сайте или напишите в мессенджер. Укажите продукт, объём и район.</p></div></li>
-      <li class="steps__item"><span class="steps__n">2</span><div><b>Расчёт и подтверждение</b><p>Называем цену материала и рейса отдельными цифрами. Скрытых доплат нет.</p></div></li>
-      <li class="steps__item"><span class="steps__n">3</span><div><b>Доставка</b><p>Привозим в оговорённый срок, самосвал подаём к месту выгрузки.</p></div></li>
-    </ol>
-    </div>
-  </section>
-
-  {% include "partials/cta_mid.html" %}
-
-  {#- 9. Условия, гарантии и большая форма. -#}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/terms.html" %}{% endwith %}
 
-  {#- Гарантии всегда тёмные и выпадают из чередования; после них
-      следующая полоса должна быть светлой. -#}
-  {% include "partials/guarantees.html" %}
-  {%- set ns.t = "tint" %}
-
-  {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
-  {% with band_tone = ns.t %}{% include "partials/callblock.html" %}{% endwith %}
-
-  {% include "partials/lead_form.html" %}
-
-  {#- 10. Другие товары и направления. -#}
   {%- if direction_cities %}
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/direction.html" %}{% endwith %}
