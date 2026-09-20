@@ -358,21 +358,22 @@ html{overflow-x:hidden}
    под друга. Второй карте отдано чуть больше доли — в ней более длинная
    подпись «за км доставки, рейс туда и обратно».
 
-   Порог 361px — не круглое число ради красоты, а реальная граница: на
-   320px (старые iPhone SE и часть Android) той же паре карт вплотную
-   уже не хватает места даже с сокращённым шрифтом, и «обратно» снова
-   повисает одиноким словом. Ниже порога проще и надёжнее оставить
-   карточки в столбик, как было до сжатия, чем гнаться за компактностью
-   ценой обрезанных слов. */
-@media (min-width:361px) and (max-width:480px){
+   На узких Android (часто ровно 344-360px по CSS-пикселям) сжатого шрифта
+   не хватало, и «обратно» повисало одиноким словом на третьей строке —
+   поэтому раньше ниже 361px карточки просто откатывались в столбик. Но
+   именно на таких экранах владелец и хотел видеть их рядом, а не в
+   столбик. text-wrap:balance решает саму причину: браузер сам подбирает,
+   где перенести строку, чтобы она не заканчивалась одним словом — вместо
+   отдельного узкого порога карточки теперь сжаты на всех шириных до
+   300px. Приём поддержан в современном Chrome/Android WebView; там, где
+   не поддержан, просто получаем обычный перенос без балансировки, макет
+   не ломается. */
+@media (max-width:480px){
   .ekb .pricebox__nums{gap:8px;flex-wrap:nowrap;margin:0 0 10px}
   .ekb .pricebox__num{flex:0.8 1 0;min-width:0;padding:10px 8px}
   .ekb .pricebox__num:last-child{flex:1.5 1 0}
-  .ekb .pricebox__num span{font-size:19px;white-space:nowrap}
-  .ekb .pricebox__num small{font-size:10.5px;line-height:1.3}
-}
-@media (max-width:360px){
-  .ekb .pricebox__nums{margin:0 0 12px}
+  .ekb .pricebox__num span{font-size:18px;white-space:nowrap}
+  .ekb .pricebox__num small{font-size:10.5px;line-height:1.3;text-wrap:balance}
 }
 .ekb .pricebox__cta .btn{font-size:16px}
 .ekb .pricebox__honest{color:var(--ink-soft);font-size:14px}
