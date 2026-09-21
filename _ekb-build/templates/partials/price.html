@@ -4,6 +4,13 @@
       <h2 id="price-title" class="sec-h">Сколько это стоит</h2>
       {%- if price %}
       <div class="pricebox__nums">
+        {#- На странице фасовки первым стоит мешок: это то, что она продаёт.
+            Цена за куб остаётся рядом — она честно показывает, с какого
+            объёма выгоднее брать навалом. -#}
+        {%- if bag_offer %}
+        <div class="pricebox__num"><span>{{ bag_offer.price }} ₽</span><small>за мешок {{ bag_offer.volume_l }} л</small></div>
+        <div class="pricebox__num"><span>от {{ price.m3 }} ₽</span><small>за куб навалом</small></div>
+        {%- else %}
         <div class="pricebox__num"><span>от {{ price.m3 }} ₽</span><small>за куб материала</small></div>
         {%- if site.bags and price.bag %}
         <div class="pricebox__num"><span>от {{ price.bag }} ₽</span><small>за мешок{% if bag_kg %} 40-50 л, около {{ bag_kg }} кг{% else %} 40-50 л{% endif %}</small></div>
@@ -12,12 +19,13 @@
         {%- else %}
         <div class="pricebox__num"><span>от {{ site.km_price }} ₽</span><small>за км доставки</small></div>
         {%- endif %}
+        {%- endif %}
       </div>
       {%- endif %}
       {%- if city.local_partner %}
-      <p>Материал и доставка считаются отдельно. По Нижнему Тагилу доставку организует местный партнёр — цену рейса назовут под ваш адрес и объём. Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}.</p>
+      <p>Материал и доставка считаются отдельно. По Нижнему Тагилу доставку организует местный партнёр — цену рейса назовут под ваш адрес и объём. {% if bag_offer %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}{% endif %}.</p>
       {%- else %}
-      <p>Материал и доставка считаются отдельно: доставка — от {{ site.km_price }} ₽ за километр от базы{% if site.km_round_trip %}, рейс туда и обратно{% endif %}. Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}.</p>
+      <p>Материал и доставка считаются отдельно: доставка — от {{ site.km_price }} ₽ за километр от базы{% if site.km_round_trip %}, рейс туда и обратно{% endif %}. {% if bag_offer %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}{% endif %}.</p>
       {%- endif %}
       {#- Скидка названа до кнопки, а не после: она и есть довод нажать. -#}
       <p class="pricebox__bonus"><b>Скидка 5% на доставку</b> при заявке с сайта или в MAX.</p>

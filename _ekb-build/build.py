@@ -167,6 +167,28 @@ CROSSLINK = {
 # «навалом не возим». Без ссылки на фасовку это тупик: товар у нас есть,
 # а со страницы, куда он пришёл по запросу «опилки купить», его не видно.
 # Ищется только если точной записи по слугу нет.
+# Страницы под запрос «<товар> в мешках». У них в шапке нельзя показывать
+# минимум и цену навалом: страница продаёт фасовку, а шапка писала
+# «минимальный заказ 1 м³ — только навалом» и цену за куб. Ключ — начало
+# слуга, значение — позиция из bagged.py, которую эта страница предлагает.
+BAG_PAGES = {
+    "opilki-v-meshkah": "opil-melkiy",
+    "torf-v-meshkah": "torf-frezerovanny",
+    "peregnoy-v-meshkah": "universalnaya-smes",
+    "zemlya-v-meshkah": "pochvogrunt-frezerovanny",
+}
+
+
+def bag_offer(slug):
+    """Фасованная позиция, которую продаёт эта страница, или None."""
+    for prefix, key in BAG_PAGES.items():
+        if slug == prefix or slug.startswith(prefix + "-"):
+            item = dict(BAGGED[key])
+            item["min_bags"] = MIN_BAGS
+            return item
+    return None
+
+
 CROSSLINK_BY_PRODUCT = {
     "opilki": {"title":"Нужно совсем немного опила?","text":"Тогда смотрите фасовку: мешок 50 литров, 450 рублей, минимальный заказ 5 мешков. Мелкий берут под мульчу, крупный на подстилку животным. На объём от куба выгоднее навалом — 1000 рублей за куб против 9000 за те же 20 мешков, — но если нужно донести руками до пары грядок, мешки удобнее.","url":"/opilki-v-meshkah-ekaterinburg/","anchor":"Опил в мешках, 450 ₽ за мешок"},
 }
@@ -933,6 +955,7 @@ def render(page):
         ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text(page.get("city")),
         min_volume_note=min_volume_note(page.get("city")),
+        bag_offer=bag_offer(page["slug"]),
         delivery_min=delivery_min_rub(page.get("city", "ekaterinburg"),
                                       product_key_of(page)),
         bag_note=bag_note(product_key_of(page)),
