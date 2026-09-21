@@ -72,6 +72,9 @@ PRODUCT_BASES = {
     "navoz": ["sadovyy", "verhnyaya-pyshma"],
     "navoz-koroviy": ["sadovyy", "verhnyaya-pyshma"],
     "navoz-konskiy": ["sadovyy", "verhnyaya-pyshma"],
+    # Опил только с площадки в Пышме: на других базах его нет, поэтому
+    # список из одной базы, а не из двух, как у земли и органики.
+    "opilki": ["verhnyaya-pyshma"],
 }
 
 # Основная база товара: та же, что и раньше. Нужна там, где город неизвестен
