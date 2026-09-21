@@ -18,10 +18,13 @@
     <span>Почта</span>
   </a>
   {%- else %}
-  <a class="callbar__wa" href="#calc-title" aria-label="Калькулятор">
+  <a class="callbar__wa" href="{{ cta_base|default('') }}#calc-title" aria-label="Калькулятор">
     {% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}
     <span class="callbar__long">Калькулятор</span><span class="callbar__short">Расчёт</span>
   </a>
   {%- endif %}
-  <a class="callbar__form" href="#zayavka"><span class="callbar__long">Оставить заявку</span><span class="callbar__short">Заявка</span></a>
+  {#- cta_base пуст на страницах, где форма и калькулятор есть рядом. На
+      правовых страницах (политика, реквизиты) их нет, и голый якорь никуда
+      не вёл: обе кнопки нижней панели там просто не работали. -#}
+  <a class="callbar__form" href="{{ cta_base|default('') }}#zayavka"><span class="callbar__long">Оставить заявку</span><span class="callbar__short">Заявка</span></a>
 </div>

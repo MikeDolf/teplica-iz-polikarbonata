@@ -10,11 +10,11 @@
     {%- if _c.local_partner %}
     <p class="fcta__title">Нужна помощь с расчётом?</p>
     <p class="fcta__sub">Оставьте заявку — назовём цену и срок под ваш адрес и объём</p>
-    <a class="fcta__btn fcta__btn--main" href="#zayavka">Оставить заявку</a>
+    <a class="fcta__btn fcta__btn--main" href="{{ cta_base|default('') }}#zayavka">Оставить заявку</a>
     {%- else %}
     <p class="fcta__title">Нужна помощь с расчётом?</p>
     <p class="fcta__sub">Калькулятор посчитает объём и рейс до вашего адреса — можно прикинуть заранее</p>
-    <a class="fcta__btn fcta__btn--main" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
+    <a class="fcta__btn fcta__btn--main" href="{{ cta_base|default('') }}#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
     {%- endif %}
     {%- if site.max_url %}
     <a class="fcta__btn fcta__btn--alt" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">

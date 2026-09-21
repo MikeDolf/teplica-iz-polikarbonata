@@ -17,11 +17,11 @@
     {%- set _c = city|default({}) %}
     <div class="hdr__side">
       {%- if _c.local_partner %}
-      <a class="hdr__ln hdr__wa" href="#zayavka" aria-label="Оставить заявку">
+      <a class="hdr__ln hdr__wa" href="{{ cta_base|default('') }}#zayavka" aria-label="Оставить заявку">
         <span class="hdr__ln-txt">Оставить заявку</span>
       </a>
       {%- else %}
-      <a class="hdr__ln hdr__wa" href="#calc-title" aria-label="Калькулятор">
+      <a class="hdr__ln hdr__wa" href="{{ cta_base|default('') }}#calc-title" aria-label="Калькулятор">
         {% with size=18 %}{% include "partials/icon_calc.html" %}{% endwith %}
         <span class="hdr__ln-txt">Калькулятор</span>
       </a>
@@ -36,7 +36,7 @@
         <span class="hdr__ln-txt">Написать в MAX</span>
       </a>
       {%- endif %}
-      <a class="hdr__cta" href="#zayavka">Оставить заявку</a>
+      <a class="hdr__cta" href="{{ cta_base|default('') }}#zayavka">Оставить заявку</a>
     </div>
   </div>
 </header>
