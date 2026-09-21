@@ -21,7 +21,7 @@ BAGGED = {
         "name": "Опил крупный", "volume_l": 50, "price": 450,
     },
     "torf-frezerovanny": {
-        "name": "Торф фрезерованный", "volume_l": 40, "price": 530,
+        "name": "Торф фрезерованный", "volume_l": 40, "price": 490,
     },
     "universalnaya-smes": {
         "name": "Смесь универсальная фрезерованная",
