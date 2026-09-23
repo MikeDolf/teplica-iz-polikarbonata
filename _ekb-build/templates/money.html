@@ -31,7 +31,7 @@
         {%- if bag_offer %}
         <p class="hero__min"><b>Минимальный заказ {{ bag_offer.min_bags }} мешков</b> — это фасовка, мешок {{ bag_offer.volume_l }} л. Навалом возим отдельно, от {{ min_volume }}.</p>
         {%- else %}
-        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом, самосвалом. {{ min_volume_note|capitalize }}.</p>
+        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом. {{ min_volume_note|capitalize }}.</p>
         {%- endif %}
         {%- if bag_offer %}
         <div class="hero__price">

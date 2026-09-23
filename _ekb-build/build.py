@@ -380,7 +380,7 @@ def product_rates(page):
     return None
 
 
-def bag_note(product_key):
+def bag_note(product_key, city_key=None):
     """Расшифровка минимального заказа.
 
     Пока возили фасовку, минимум объясняли мешками: «3 м³, это 60-75 мешков».
@@ -390,8 +390,12 @@ def bag_note(product_key):
     Вес мешка пишем только там, где он известен: у торфа и опилок плотность
     в разы ниже, и 40 кг было бы враньём.
     """
+    # Машиной объясняем через малую машину до 3 м³: она есть в парке, и
+    # «неполный кузов самосвала» рядом с «подаём небольшую машину» читался
+    # как противоречие на одной строке.
     if not SITE.get("bags"):
-        return "это неполный кузов самосвала"
+        return ("это треть кузова небольшой машины" if min_m3(city_key) == 1
+                else "это полный кузов небольшой машины")
     kg = PRODUCTS.get(product_key, {}).get("bag_kg")
     tail = f", около {kg} кг каждый" if kg else ""
     return f"это 60-75 мешков по 40-50 л{tail}"
@@ -967,7 +971,7 @@ def render(page):
         bag_offer=bag_offer(page["slug"]),
         delivery_min=delivery_min_rub(page.get("city", "ekaterinburg"),
                                       product_key_of(page)),
-        bag_note=bag_note(product_key_of(page)),
+        bag_note=bag_note(product_key_of(page), page.get("city")),
         bag_kg=PRODUCTS.get(product_key_of(page), {}).get("bag_kg"),
         fleet_viz=FLEET_VIZ, prodbar=PRODBAR, current_slug=page["slug"], photos=PHOTOS,
         # Показываем на всех страницах органики — это доказательство, что
@@ -1095,7 +1099,7 @@ def render_hub(all_pages):
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
         delivery_min=delivery_min_rub("ekaterinburg", "chernozem"),
-        bag_note=bag_note("chernozem"),
+        bag_note=bag_note("chernozem", "ekaterinburg"),
         preselect_product="Пока не решил",
         district_ph="Напр. Академический, Верхняя Пышма, Сысерть",
         footer_links=FOOTER_LINKS, schema_json=schema, metrika_placeholder=True, related=[],
@@ -1188,7 +1192,7 @@ def render_articles():
         ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
-            delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
+            delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem", "ekaterinburg"),
             cover=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])),
             hero_photo=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])))
         outdir = os.path.join(ROOT, base, a["slug"])
@@ -1243,7 +1247,7 @@ def render_blog():
         ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
-        delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
+        delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem", "ekaterinburg"),
         preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
         schema_json=hub_schema, metrika_placeholder=True, related=[],
         prodbar=PRODBAR, current_slug="", photos=PHOTOS, hero_photo=None)
@@ -1291,7 +1295,7 @@ def render_blog():
         ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
-            delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem"),
+            delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem", "ekaterinburg"),
             prodbar=PRODBAR, current_slug="", photos=PHOTOS, cover=None, hero_photo=None)
         outdir = os.path.join(ROOT, "dostavka-grunta", "blog", p["slug"])
         os.makedirs(outdir, exist_ok=True)

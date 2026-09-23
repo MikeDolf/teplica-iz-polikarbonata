@@ -176,7 +176,7 @@
         <p class="hero__eyebrow">Доставка по Екатеринбургу и Свердловской области</p>
         <h1>Навоз конский купить в Верхнем Дуброво с доставкой, цена</h1>
         <p class="hero__sub">Конский навоз, лучшая органика для теплицы и тёплых грядок. Возим навалом, самосвалом, от 3 м³. Скажите объём и адрес, назовём цену с доставкой.</p>
-        <p class="hero__min"><b>Минимальный заказ 3 м³</b> — только навалом, самосвалом. Меньше не возим, рейс не окупается.</p>
+        <p class="hero__min"><b>Минимальный заказ 3 м³</b> — только навалом. Меньше не возим, рейс не окупается.</p>
         <div class="hero__price"><div class="hero__price__row">
             <span class="hero__price__label">Ориентировочно</span>
             <b class="hero__price__num">от 1200 руб/м³</b>
@@ -200,7 +200,7 @@
         <div class="pricebox__num"><span>от 1200 ₽</span><small>за куб материала</small></div>
         <div class="pricebox__num"><span>от 76 ₽</span><small>за км доставки</small></div>
       </div>
-      <p>Материал и доставка считаются отдельно: доставка — от 76 ₽ за километр от базы, рейс туда и обратно. Минимальный заказ 3 м³, это неполный кузов самосвала: меньше не возим, рейс не окупается.</p><p class="pricebox__bonus"><b>Скидка 5% на доставку</b> при заявке с сайта или в MAX.</p>
+      <p>Материал и доставка считаются отдельно: доставка — от 76 ₽ за километр от базы, рейс туда и обратно. Минимальный заказ 3 м³, это полный кузов небольшой машины: меньше не возим, рейс не окупается.</p><p class="pricebox__bonus"><b>Скидка 5% на доставку</b> при заявке с сайта или в MAX.</p>
       <div class="pricebox__cta">
         <a class="btn btn--wa" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">Написать в MAX</a>
       </div>
@@ -403,10 +403,10 @@
   // (самосвал с наращенными бортами), это и есть верхняя граница парка.
   function tripCount(v){ return v <= 26 ? 1 : Math.ceil(v / 26); }
   function trucks(v){
-    // Названия совпадают с блоком «На чём привозим»: там три варианта —
-    // самосвал 5 т, КамАЗ и самосвал с наращенными бортами. Четвёртого в
-    // парке нет, и выдумывать его здесь нельзя, иначе подпись разойдётся
-    // с соседней секцией.
+    // Названия совпадают с блоком «На чём привозим»: небольшая машина до
+    // 3 м³, самосвал 5 т, КамАЗ и самосвал с наращенными бортами. Новую
+    // машину добавлять и сюда, и туда, иначе подписи разойдутся.
+    if(v <= 3) return 'небольшая машина до 3 м³';
     if(v <= 7) return 'самосвал 5 т';
     if(v <= 10) return '1 КамАЗ';
     if(v <= 26) return 'самосвал с наращенными бортами';
@@ -894,7 +894,7 @@
       <div class="tbar__item">
         <span class="tbar__label">Минимальный заказ</span>
         <b class="tbar__val">3 м³</b>
-        <span class="tbar__note">это неполный кузов самосвала, меньше не возим</span>
+        <span class="tbar__note">это полный кузов небольшой машины, меньше не возим</span>
       </div>
       <div class="tbar__item">
         <span class="tbar__label">Наличие</span>
@@ -1110,6 +1110,23 @@
 
     <div class="fleetviz__grid">
       <figure class="fv">
+        <svg class="fv__svg" viewBox="0 0 190 96" role="img" aria-label="Небольшая машина, объём до 3 м³">
+          <line x1="2" y1="88" x2="188" y2="88" stroke="var(--line)" stroke-width="2.5" stroke-linecap="round"/>
+          <rect x="30" y="52" width="62" height="26" rx="2" fill="var(--accent)" opacity=".9"/>
+          <rect x="30" y="52" width="62" height="26" rx="2" fill="none" stroke="currentColor" stroke-width="2.4"/>
+          <path d="M92 78 V58 H110 L122 70 V78 Z" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="48" cy="80" r="8.5" fill="#fff" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="108" cy="80" r="8.5" fill="#fff" stroke="currentColor" stroke-width="2.4"/>
+          <circle cx="48" cy="80" r="2.6" fill="currentColor"/>
+          <circle cx="108" cy="80" r="2.6" fill="currentColor"/>
+        </svg>
+        <figcaption class="fv__cap">
+          <b class="fv__name">Небольшая машина</b>
+          <span class="fv__vol">до 3 м³</span>
+          <span class="fv__note">заказ от одного куба, заезжает в тесный двор</span>
+        </figcaption>
+      </figure>
+      <figure class="fv">
         <picture>
           <source type="image/webp" srcset="/assets/ekb/photo/truck-samosval-840.webp 840w, /assets/ekb/photo/truck-samosval-420.webp 420w"
                   sizes="(max-width:760px) 92vw, 30vw">
@@ -1119,7 +1136,7 @@
         <figcaption class="fv__cap">
           <b class="fv__name">Самосвал 5 т</b>
           <span class="fv__vol">3-7 м³</span>
-          <span class="fv__note">от минимального заказа до отсыпки грядок и теплицы, проходит в узкий проезд</span>
+          <span class="fv__note">отсыпка грядок и теплицы целиком, проходит в узкий проезд</span>
         </figcaption>
       </figure>
       <figure class="fv">
@@ -1148,7 +1165,8 @@
   <div class="wrap">
     <h2 id="fleet-title" class="sec-h">На чём привозим и сколько это в объёме</h2>
     <div class="fleet__grid">
-      <div class="fleet__card"><b>Самосвал 5 т, 3-7 кубов</b><p>От минимального заказа до отсыпки грядок и теплицы. Проходит в узкий проезд, разворачивается там, где КамАЗ не встанет.</p></div>
+      <div class="fleet__card"><b>Небольшая машина, до 3 кубов</b><p>Под заказ от одного куба: несколько грядок, теплица, клумбы. Заезжает в тесный двор и узкий проезд, куда самосвал не пройдёт.</p></div>
+      <div class="fleet__card"><b>Самосвал 5 т, 3-7 кубов</b><p>Под отсыпку грядок и теплицы целиком. Проходит в узкий проезд, разворачивается там, где КамАЗ не встанет.</p></div>
       <div class="fleet__card"><b>КамАЗ, до 10 кубов</b><p>Стандартный кузов вмещает до 10 кубов. Под отсыпку участка целиком, газон и строительные задачи.</p></div>
       <div class="fleet__card"><b>Самосвал с наращенными бортами, до 26 кубов</b><p>Для больших объёмов за один рейс — крупная отсыпка, планировка целого участка.</p></div>
     </div><div class="table-wrap table-wrap--compact">
