@@ -7,7 +7,7 @@
         {#- На странице фасовки первым стоит мешок: это то, что она продаёт.
             Цена за куб остаётся рядом — она честно показывает, с какого
             объёма выгоднее брать навалом. -#}
-        {%- if bag_offer %}
+        {%- if bag_offer and bag_zone %}
         <div class="pricebox__num"><span>{{ bag_offer.price }} ₽</span><small>за мешок {{ bag_offer.volume_l }} л</small></div>
         <div class="pricebox__num"><span>от {{ price.m3 }} ₽</span><small>за куб навалом</small></div>
         {%- else %}
@@ -23,9 +23,9 @@
       </div>
       {%- endif %}
       {%- if city.local_partner %}
-      <p>Материал и доставка считаются отдельно. По Нижнему Тагилу доставку организует местный партнёр — цену рейса назовут под ваш адрес и объём. {% if bag_offer %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}{% endif %}.</p>
+      <p>Материал и доставка считаются отдельно. По Нижнему Тагилу доставку организует местный партнёр — цену рейса назовут под ваш адрес и объём. {% if bag_offer and bag_zone %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}{% if bag_zone and not moved_to %}. В мешках — от {{ min_bags }} штук по {{ bag_any.volume_l }} л, {{ bag_any.price }} ₽{% elif bag_offer %}. Мешки возим только по району Верхней Пышмы, до {{ bag_zone_km }} км от площадки{% endif %}{% endif %}.</p>
       {%- else %}
-      <p>Материал и доставка считаются отдельно: доставка — от {{ site.km_price }} ₽ за километр от базы{% if site.km_round_trip %}, рейс туда и обратно{% endif %}. {% if bag_offer %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}{% endif %}.</p>
+      <p>Материал и доставка считаются отдельно: доставка — от {{ site.km_price }} ₽ за километр от базы{% if site.km_round_trip %}, рейс туда и обратно{% endif %}. {% if bag_offer and bag_zone %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}{% if bag_zone and not moved_to %}. В мешках — от {{ min_bags }} штук по {{ bag_any.volume_l }} л, {{ bag_any.price }} ₽{% elif bag_offer %}. Мешки возим только по району Верхней Пышмы, до {{ bag_zone_km }} км от площадки{% endif %}{% endif %}.</p>
       {%- endif %}
       {#- Скидка названа до кнопки, а не после: она и есть довод нажать. -#}
       <p class="pricebox__bonus"><b>Скидка 5% на доставку</b> при заявке с сайта или в MAX.</p>

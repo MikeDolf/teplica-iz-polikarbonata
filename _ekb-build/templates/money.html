@@ -28,12 +28,18 @@
             не кубы. Раньше шапка обеих страниц была одна, и человек читал
             «минимальный заказ 1 м³ — только навалом» прямо под заголовком
             «опил в мешках, 450 ₽ за мешок». -#}
-        {%- if bag_offer %}
+        {#- Фасовку возим только по району Пышмы (bag_zone): за его пределами
+            страница «в мешках» честно говорит, что мешки сюда не едут. -#}
+        {%- if bag_offer and bag_zone %}
         <p class="hero__min"><b>Минимальный заказ {{ bag_offer.min_bags }} мешков</b> — это фасовка, мешок {{ bag_offer.volume_l }} л. Навалом возим отдельно, от {{ min_volume }}.</p>
+        {%- elif bag_offer %}
+        <p class="hero__min"><b>Мешки сюда не возим</b> — фасовка только по району Верхней Пышмы, до {{ bag_zone_km }} км от площадки. К вам — навалом, от {{ min_volume }}.</p>
+        {%- elif bag_zone and not moved_to %}
+        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> навалом или {{ min_bags }} мешков по {{ bag_any.volume_l }} л. {{ min_volume_note|capitalize }}.</p>
         {%- else %}
         <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом. {{ min_volume_note|capitalize }}.</p>
         {%- endif %}
-        {%- if bag_offer %}
+        {%- if bag_offer and bag_zone %}
         <div class="hero__price">
           <div class="hero__price__row">
             <span class="hero__price__label">Ориентировочно</span>
@@ -50,6 +56,7 @@
           <div class="hero__price__row">
             <span class="hero__price__label">Ориентировочно</span>
             <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
+            {%- if bag_zone and not moved_to %}<b class="hero__price__num">{{ bag_any.price }} руб/мешок</b>{% endif %}
             {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
           </div>
           {%- if city.local_partner %}

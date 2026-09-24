@@ -17,7 +17,7 @@
         <p class="hero__eyebrow">Доставка по {{ site.region_po }}</p>
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
-        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом. {{ min_volume_note|capitalize }}. Доставку считаем отдельно, точную сумму до вашего адреса покажет калькулятор.</p>
+        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> навалом, а по району Верхней Пышмы — и от {{ min_bags }} мешков. {{ min_volume_note|capitalize }}. Доставку считаем отдельно, точную сумму до вашего адреса покажет калькулятор.</p>
         <div class="hero__cta">
           {%- if site.max_url %}
           <a class="btn btn--call" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
