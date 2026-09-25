@@ -143,9 +143,8 @@ NOINDEX = OTHER_SITE | LOW_DEMAND | DISCONTINUED_SLUGS
 # чтобы не создавать сквозной шаблонный линк со всего раздела.
 CROSSLINK = {
     # Связка «товар вообще» ↔ «товар в мешках»: автоматическая перелинковка
-    # их не соединяет, у них совпадают и товар, и город. Страницы фасовки
-    # оставлены под запрос «в мешках», но ведут они теперь на объяснение,
-    # почему возим навалом, а не на предложение мешков.
+    # их не соединяет, у них совпадают и товар, и город. Страница товара
+    # ведёт на фасовку, страница фасовки — обратно на навал под объём.
     "peregnoy-ekaterinburg": {"title":"Искали перегной в мешках?","text":"По Екатеринбургу перегной есть и в мешках: чистый — 20-25 литров, 450 рублей, и универсальная смесь с перегноем — 50 литров, 550 рублей, от 5 мешков. На отдельной странице разобрано, когда мешки выгоднее, а когда навалом.","url":"/peregnoy-v-meshkah-ekaterinburg/","anchor":"Перегной в мешках, 450 ₽ за мешок"},
     "peregnoy-v-meshkah-ekaterinburg": {"title":"Готовы взять навалом?","text":"Тогда смотрите общую страницу перегноя: цены за куб, нормы внесения по культурам, расчёт объёма под теплицу и грядки и условия доставки. Минимальный заказ по Екатеринбургу — один куб, машину подаём к месту выгрузки.","url":"/peregnoy-ekaterinburg/","anchor":"Перегной навалом, цена за куб"},
     # Страницы под задачу: автоматическая перелинковка даёт им ссылки, но
@@ -187,6 +186,36 @@ def in_bag_zone(city_key):
     return km is not None and km <= BAG_ZONE_KM
 
 
+def page_bag_zone(page):
+    """В зоне ли фасовки страница: True, False или None, если зона её делит.
+
+    Страница тракта стоит на псевдогороде, у которого плечо — середина
+    направления, а посёлки по тракту лежат по обе стороны от BAG_ZONE_KM.
+    По середине выходило, что Челябинский тракт в зоне целиком, вплоть до
+    Каменска, а Полевской целиком вне её, хотя Горный Щит и Курганово в
+    зоне. Поэтому у тракта зону решают его посёлки, а не псевдогород.
+    """
+    keys = page.get("direction")
+    if keys:
+        flags = {in_bag_zone(k) for k in keys}
+        return flags.pop() if len(flags) == 1 else None
+    return in_bag_zone(page.get("city"))
+
+
+def zone_bag(page, zone):
+    """Мешок, который обычная страница товара предлагает рядом с навалом.
+
+    Только в зоне фасовки и не на страницах MOVED_TO: щебень и прочее
+    нерудное возит другой проект. У опила свой мешок, 50 л, а не общий
+    20-25 л (BAG_ANY), и шапка опила не должна обещать чужой литраж.
+    """
+    if not zone or page["slug"] in MOVED_TO:
+        return None
+    if product_key_of(page) == "opilki":
+        return BAGGED["opil-melkiy"]
+    return BAG_ANY
+
+
 def bag_offer(slug):
     """Фасованная позиция, которую продаёт эта страница, или None."""
     for prefix, key in BAG_PAGES.items():
@@ -197,8 +226,11 @@ def bag_offer(slug):
     return None
 
 
+# "bags": True — ссылка ведёт на фасовку, и вне зоны фасовки (BAG_ZONE_KM)
+# её не показываем: мешки туда не едут, и страница «в мешках» ответила бы
+# человеку «сюда не возим».
 CROSSLINK_BY_PRODUCT = {
-    "opilki": {"title":"Нужно совсем немного опила?","text":"Тогда смотрите фасовку: мешок 50 литров, 450 рублей, минимальный заказ 5 мешков. Мелкий берут под мульчу, крупный на подстилку животным. На объём от куба выгоднее навалом — 1000 рублей за куб против 9000 за те же 20 мешков, — но если нужно донести руками до пары грядок, мешки удобнее.","url":"/opilki-v-meshkah-ekaterinburg/","anchor":"Опил в мешках, 450 ₽ за мешок"},
+    "opilki": {"bags": True, "title":"Нужно совсем немного опила?","text":"Тогда смотрите фасовку: мешок 50 литров, 450 рублей, минимальный заказ 5 мешков. Мелкий берут под мульчу, крупный на подстилку животным. На объём от куба выгоднее навалом — 1000 рублей за куб против 9000 за те же 20 мешков, — но если нужно донести руками до пары грядок, мешки удобнее.","url":"/opilki-v-meshkah-ekaterinburg/","anchor":"Опил в мешках, 450 ₽ за мешок"},
 }
 
 MOVED_TO = {
@@ -568,8 +600,9 @@ def money_meta(product_key, city_key):
     if not price:
         return None, None
     # Товар может забрать сниппет себе: у страниц под запрос «в мешках»
-    # шаблонная строка с ценой за куб не объясняет главного, что фасовки
-    # нет, а это и нужно сказать до клика. Тогда берутся title_tpl/desc_tpl.
+    # шаблонная строка с ценой за куб не говорит главного — цену мешка и
+    # едут ли мешки в этот город, а это и нужно сказать до клика. Тогда
+    # берутся title_tpl/desc_tpl.
     if pr.get("meta_override"):
         return None, None
     # seo_name нужен там, где в регионе в ходу другое слово: «опил» и
@@ -743,9 +776,8 @@ def compose_geo(product_key, city_key):
     else:
         slug = f'{product_key}-{city_key}'
     # h1_tpl нужен там, где заголовок «<товар> <город> с доставкой» обещал бы
-    # не то, что мы возим: страницы под запрос «в мешках» ловят спрос, но
-    # в фасовке идут только готовые позиции (bagged.py), а не мешок любого
-    # материала, и заголовок должен говорить это сразу.
+    # не то, что мы возим: страница под запрос «в мешках» должна сразу
+    # сказать, едут ли мешки в этот город (зона BAG_ZONE_KM, см. "outzone").
     if pr.get("h1_tpl"):
         h1 = pr["h1_tpl"].format(prep=city["prep"], to=city["to"], name=city["name"]).replace("от 3 м³", f"от {min_volume_text(city_key)}")
     else:
@@ -942,6 +974,12 @@ def attach_related(pages):
 def render(page):
     city = CITIES[page["city"]]
     canonical = f'{SITE["domain"]}/{page["slug"]}/'
+    bag_zone = page_bag_zone(page)
+    crosslink = CROSSLINK.get(page["slug"])
+    if not crosslink:
+        crosslink = CROSSLINK_BY_PRODUCT.get(product_key_of(page))
+        if crosslink and crosslink.get("bags") and not bag_zone:
+            crosslink = None
     tpl = env.get_template("money.html" if page["kind"] in ("money", "geo") else "money.html")
     html = tpl.render(
         site=SITE, city=city, canonical=canonical,
@@ -961,8 +999,7 @@ def render(page):
         # сразу сказать, что мы это не возим. Тематическая же ссылка
         # уходит вниз, чтобы не уводить покупателя до знакомства с товаром.
         moved_to=MOVED_TO.get(page["slug"]),
-        crosslink=(CROSSLINK.get(page["slug"])
-                   or CROSSLINK_BY_PRODUCT.get(product_key_of(page))),
+        crosslink=crosslink,
         tail_cities=(TAIL_CITIES.get(page["slug"][:-len("-ekaterinburg")]) if page["slug"].endswith("-ekaterinburg") else None),
         rates=product_rates(page),
         # у страниц-исключений слаг не отражает товар: torf-dlya-golubiki
@@ -981,7 +1018,11 @@ def render(page):
         min_volume=min_volume_text(page.get("city")),
         min_volume_note=min_volume_note(page.get("city")),
         bag_offer=bag_offer(page["slug"]),
-        bag_zone=in_bag_zone(page.get("city")),
+        bag_zone=bag_zone,
+        zone_bag=zone_bag(page, bag_zone),
+        # Тракт, который зона фасовки делит: называем посёлки, куда мешки едут.
+        bag_zone_cities=([CITIES[k]["name"] for k in page.get("direction", [])
+                          if in_bag_zone(k)] if bag_zone is None else []),
         delivery_min=delivery_min_rub(page.get("city", "ekaterinburg"),
                                       product_key_of(page)),
         bag_note=bag_note(product_key_of(page), page.get("city")),

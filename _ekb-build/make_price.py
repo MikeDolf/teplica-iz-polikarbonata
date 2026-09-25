@@ -19,6 +19,7 @@ ROOT = os.path.dirname(HERE)
 from site_config import SITE          # noqa: E402
 from prices import PRICES             # noqa: E402
 from cities import CITIES, BASE_KM    # noqa: E402
+from bagged import BAGGED, BAG_ANY, BAG_ZONE_KM, MIN_BAGS  # noqa: E402
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Border, Font, PatternFill, Side
@@ -77,9 +78,15 @@ def build():
               f"Там, где рядом своя площадка, минимум ниже — от 1 м³: "
               f"{', '.join(min1)}.",
         bold=True, size=11); r += 1
-    put(r, 1, "Фасовка — по району Верхней Пышмы, примерно до 50 км от площадки: "
-              "любой материал в мешках 20-25 л по 450 ₽; опил 50 л — 450 ₽, фрезерованный "
-              "торф 40 л — 490 ₽, универсальная смесь 50 л — 550 ₽. От 5 мешков. Дальше — только навалом.", bold=True, size=11); r += 2
+    # Цифры фасовки — из bagged.py, а не текстом: иначе прайс снова
+    # разойдётся со страницами при первой же смене цены или зоны.
+    opil, torf, smes = (BAGGED[k] for k in ("opil-melkiy", "torf-frezerovanny", "universalnaya-smes"))
+    put(r, 1, f"Фасовка — по району Верхней Пышмы, примерно до {BAG_ZONE_KM} км от площадки: "
+              f"любой материал в мешках {BAG_ANY['volume_l']} л по {BAG_ANY['price']} ₽; "
+              f"опил {opil['volume_l']} л — {opil['price']} ₽, фрезерованный "
+              f"торф {torf['volume_l']} л — {torf['price']} ₽, универсальная смесь "
+              f"{smes['volume_l']} л — {smes['price']} ₽. От {MIN_BAGS} мешков. "
+              f"Дальше — только навалом.", bold=True, size=11); r += 2
 
     put(r, 1, "Материал", bold=True, fill=ACCENT)
     put(r, 2, "Цена за м³, ₽", bold=True, fill=ACCENT, align="center")
