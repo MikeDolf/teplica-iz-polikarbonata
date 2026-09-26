@@ -1059,3 +1059,24 @@ html{overflow-x:hidden}
   .works__layout{grid-template-columns:minmax(0,1fr) auto;align-items:start}
   .works__video{width:calc(clamp(220px,42vw,420px) * .75)}
 }
+
+/* ===== отзывы: стрелки под лентой на телефоне и планшете =====
+   Поверх карточки стрелки закрывали текст на широких скриншотах
+   переписки (короткий диалог в одну-две реплики растягивается на всю
+   ширину карточки). До 900px они стоят строкой под лентой, по бокам от
+   точек, и ничего не перекрывают. На компьютере скриншот уже карточки,
+   и стрелки по краям её не задевают. */
+@media (max-width:900px){
+  .ekb .rev__arrow{top:calc(100% + 8px);transform:none;width:44px;height:44px;box-shadow:none}
+  .rev__arrow--prev{left:0}
+  .rev__arrow--next{right:0}
+  .rev__dots{margin-top:8px;min-height:44px;align-items:center}
+}
+
+/* ===== мелкие тап-зоны, найденные повторным аудитом =====
+   Ссылки на посёлки в таблице тракта были 22px в высоту, ссылка на
+   политику в короткой форме — 14px: пальцем попасть трудно. */
+@media (max-width:720px){
+  .ekb .dirs td a{display:inline-block;padding:9px 0}
+}
+.ekb .ctamid__consent a{display:inline-block;padding:6px 0}
