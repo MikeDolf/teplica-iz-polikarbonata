@@ -27,7 +27,7 @@
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=79"><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=80"><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -687,19 +687,53 @@
   update();
 (function(){
     if(n <= 1) return;
-    var DELAY = 3000, QUIET = 5000;
-    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var seen = !('IntersectionObserver' in window), held = false, focus = false, due = 0;
+    var DELAY = 3000, QUIET = 5000, FADE = 900;
+    var seen = !('IntersectionObserver' in window), held = false, focus = false, due = 0, fading = null;
     function wait(ms){ due = Date.now() + ms; }
     wait(DELAY);
+
+    // Картинка следующего слайда может быть ещё не загружена (loading=lazy):
+    // перелив в пустую карточку хуже, чем подождать её до 2 секунд.
+    function ready(el){
+      var img = el.querySelector('img');
+      if(!img || (img.complete && img.naturalWidth)) return Promise.resolve();
+      img.loading = 'eager';
+      var load = img.decode ? img.decode().catch(function(){}) : new Promise(function(r){ img.onload = img.onerror = r; });
+      return Promise.race([load, new Promise(function(r){ setTimeout(r, 2000); })]);
+    }
+    function finish(){
+      if(!fading) return;
+      var f = fading; fading = null; clearTimeout(f.timer);
+      // Снятие наложения и перескок в одном кадре — глазу не видно.
+      // Порядок важен: пока слайд сдвинут transform'ом, браузер считает
+      // его точку прилипания (scroll-snap) по сдвинутому месту, и перескок
+      // на него тут же отщёлкивался обратно на старый слайд.
+      f.el.classList.remove('is-fadein');
+      f.el.style.removeProperty('--shift');
+      track.scrollTo({ left: f.j * track.clientWidth, behavior: 'instant' });
+    }
+    function fadeTo(j){
+      var i = current(), el = track.children[j];
+      if(!el || i === j) return;
+      fading = { j: j, el: el, timer: 0 };
+      ready(el).then(function(){
+        if(!fading || fading.el !== el) return;
+        // Слайды стоят в ряд по ширине ленты: сдвиг на (i - j) ширин
+        // кладёт j ровно поверх видимого i.
+        el.style.setProperty('--shift', ((i - j) * 100) + '%');
+        el.classList.add('is-fadein');
+        fading.timer = setTimeout(finish, FADE + 50);
+      });
+    }
+
     setInterval(function(){
       // Пока ленту не видно или её держат, отсчёт начинается заново:
       // первый слайд после появления на экране стоит полные 3 секунды.
       if(!seen || held || focus || document.hidden){ wait(DELAY); return; }
-      if(Date.now() < due) return;
+      if(fading || Date.now() < due) return;
       var i = current();
-      track.scrollTo({ left: (i >= n - 1 ? 0 : i + 1) * track.clientWidth, behavior: still ? 'instant' : 'smooth' });
-      wait(DELAY);
+      fadeTo(i >= n - 1 ? 0 : i + 1);
+      wait(DELAY + FADE);
     }, 250);
     // Видна ли лента хотя бы на треть. Порог 0 нужен, чтобы колбэк пришёл
     // и когда лента уходит с экрана целиком, а не только на границе трети.
@@ -707,7 +741,9 @@
       seen = es[es.length - 1].intersectionRatio >= 0.3;
     }, { threshold: [0, 0.3, 0.6] }).observe(track);
     var box = track.parentElement;
-    function grab(){ held = true; }
+    // Схватили ленту посреди перелива — сразу доводим его, чтобы свайп
+    // шёл уже от нового слайда, а не от наполовину проявленного.
+    function grab(){ held = true; finish(); }
     function drop(){ if(held){ held = false; wait(QUIET); } }
     box.addEventListener('pointerdown', grab);
     window.addEventListener('pointerup', drop);
@@ -715,7 +751,7 @@
     track.addEventListener('touchstart', grab, { passive: true });
     window.addEventListener('touchend', drop, { passive: true });
     window.addEventListener('touchcancel', drop, { passive: true });
-    track.addEventListener('wheel', function(){ wait(QUIET); }, { passive: true });
+    track.addEventListener('wheel', function(){ finish(); wait(QUIET); }, { passive: true });
     // Клик мышью по стрелке тоже даёт фокус, но держать ленту должен только
     // фокус с клавиатуры, иначе она стоит, пока не кликнешь мимо.
     box.addEventListener('focusin', function(e){

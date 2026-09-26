@@ -1040,3 +1040,12 @@ html{overflow-x:hidden}
 @media (max-width:374px){
   .ekb .hdr__max .hdr__pre{display:none}
 }
+
+/* ===== автопрокрутка лент отзывов и доставок: перелив =====
+   Следующий слайд сдвигается ровно на место видимого и проявляется
+   поверх него (см. partials/carousel_autoplay.html). Это прозрачность,
+   а не движение, поэтому !important перебивает общий запрет анимаций
+   при prefers-reduced-motion — иначе слайд менялся бы рывком. */
+@keyframes ekb-fadein{from{opacity:0}to{opacity:1}}
+.ekb .is-fadein{position:relative;z-index:1;transform:translateX(var(--shift,0));
+  animation:ekb-fadein .9s ease-in-out both!important}
