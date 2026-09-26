@@ -565,6 +565,17 @@
       <div class="rev__track" id="rev-track" role="group" aria-roledescription="галерея" aria-label="Отзывы клиентов">
         <div class="rev__item rev__item--shot">
           <div class="review__shot-wrap">
+            <img class="review__shot" src="/assets/ekb/photo/reviews/review-irina-2026-09.jpg"
+                 alt="Скриншот переписки: Ирина пишет «Всё хорошо. Девочка молодец, выгрузила всё точно, аккуратно. Грунт хороший, всё устраивает!!!»"
+                 width="700" height="645" loading="lazy">
+          </div>
+          <div class="review__head">
+            <span class="review__name">Ирина</span><span class="review__meta">сентябрь 2026</span>
+          </div>
+          <p class="review__text sr-only">Всё хорошо. Девочка молодец, выгрузила всё точно, аккуратно. Грунт хороший, всё устраивает!!!</p>
+        </div>
+        <div class="rev__item rev__item--shot">
+          <div class="review__shot-wrap">
             <img class="review__shot" src="/assets/ekb/photo/reviews/review-vyacheslav-2026-09.jpg"
                  alt="Скриншот переписки: Вячеслав пишет «Спасибо большое, всё прошло хорошо, качество устраивает. Всех благ вам и вашей команде.»"
                  width="700" height="658" loading="lazy">
@@ -576,6 +587,17 @@
         </div>
         <div class="rev__item rev__item--shot">
           <div class="review__shot-wrap">
+            <img class="review__shot" src="/assets/ekb/photo/reviews/review-mihail-2026-09.jpg"
+                 alt="Скриншот переписки: Михаил пишет «Да спасибо всё хорошо. И водителю респект.»"
+                 width="700" height="554" loading="lazy">
+          </div>
+          <div class="review__head">
+            <span class="review__name">Михаил</span><span class="review__meta">сентябрь 2026</span>
+          </div>
+          <p class="review__text sr-only">Да спасибо всё хорошо. И водителю респект.</p>
+        </div>
+        <div class="rev__item rev__item--shot">
+          <div class="review__shot-wrap">
             <img class="review__shot" src="/assets/ekb/photo/reviews/review-aleksey-2026-08.jpg"
                  alt="Скриншот переписки: Алексей пишет «Всё хорошо. Замечаний нет. Спасибо за сотрудничество, готов рекомендовать вашу организацию.»"
                  width="700" height="828" loading="lazy">
@@ -584,6 +606,17 @@
             <span class="review__name">Алексей</span><span class="review__meta">село Новоалексеевское, август 2026</span>
           </div><div class="review__stars"><span aria-hidden="true">★★★★★</span><span class="sr-only">Оценка 5 из 5</span></div>
           <p class="review__text sr-only">Всё хорошо. Замечаний нет. Спасибо за сотрудничество, готов рекомендовать вашу организацию.</p>
+        </div>
+        <div class="rev__item rev__item--shot">
+          <div class="review__shot-wrap">
+            <img class="review__shot" src="/assets/ekb/photo/reviews/review-oleg-2026-09.jpg"
+                 alt="Скриншот переписки: Олег пишет «Всё отлично, спасибо.»"
+                 width="700" height="406" loading="lazy">
+          </div>
+          <div class="review__head">
+            <span class="review__name">Олег</span><span class="review__meta">сентябрь 2026</span>
+          </div>
+          <p class="review__text sr-only">Всё отлично, спасибо.</p>
         </div>
         <div class="rev__item rev__item--shot">
           <div class="review__shot-wrap">
@@ -603,6 +636,9 @@
     </div>
     <div class="rev__dots" id="rev-dots" aria-hidden="true">
       <span class="rev__dot rev__dot--on"></span>
+      <span class="rev__dot"></span>
+      <span class="rev__dot"></span>
+      <span class="rev__dot"></span>
       <span class="rev__dot"></span>
       <span class="rev__dot"></span>
     </div>
@@ -640,6 +676,38 @@
   }, { passive: true });
   window.addEventListener('resize', update);
   update();
+(function(){
+    if(n <= 1 || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var DELAY = 5000, QUIET = 10000;
+    var seen = !('IntersectionObserver' in window), hover = false, focus = false, due = 0;
+    function wait(ms){ due = Date.now() + ms; }
+    wait(DELAY);
+    setInterval(function(){
+      // Пока ленту не видно или её держат, отсчёт начинается заново:
+      // первый слайд после появления на экране стоит полные 5 секунд.
+      if(!seen || hover || focus || document.hidden){ wait(DELAY); return; }
+      if(Date.now() < due) return;
+      var i = current();
+      track.scrollTo({ left: (i >= n - 1 ? 0 : i + 1) * track.clientWidth, behavior: 'smooth' });
+      wait(DELAY);
+    }, 500);
+    if(!seen) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; }, { threshold: 0.5 }).observe(track);
+    var box = track.parentElement;
+    function hush(){ wait(QUIET); }
+    // Только мышь: на телефоне pointerenter прилетает после тапа, а
+    // pointerleave — нет, и лента встала бы навсегда.
+    box.addEventListener('pointerenter', function(e){ if(e.pointerType === 'mouse') hover = true; });
+    box.addEventListener('pointerleave', function(e){ if(e.pointerType === 'mouse') hover = false; });
+    box.addEventListener('pointerdown', hush);
+    track.addEventListener('touchstart', hush, { passive: true });
+    track.addEventListener('wheel', hush, { passive: true });
+    // Клик мышью по стрелке тоже даёт фокус, но держать ленту должен только
+    // фокус с клавиатуры, иначе она стоит, пока не кликнешь мимо.
+    box.addEventListener('focusin', function(e){
+      try { focus = e.target.matches(':focus-visible'); } catch(_) { focus = true; }
+    });
+    box.addEventListener('focusout', function(){ focus = false; });
+  })();
 })();
 </script>
   
@@ -734,6 +802,38 @@
   }, { passive: true });
   window.addEventListener('resize', update);
   update();
+(function(){
+    if(n <= 1 || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var DELAY = 5000, QUIET = 10000;
+    var seen = !('IntersectionObserver' in window), hover = false, focus = false, due = 0;
+    function wait(ms){ due = Date.now() + ms; }
+    wait(DELAY);
+    setInterval(function(){
+      // Пока ленту не видно или её держат, отсчёт начинается заново:
+      // первый слайд после появления на экране стоит полные 5 секунд.
+      if(!seen || hover || focus || document.hidden){ wait(DELAY); return; }
+      if(Date.now() < due) return;
+      var i = current();
+      track.scrollTo({ left: (i >= n - 1 ? 0 : i + 1) * track.clientWidth, behavior: 'smooth' });
+      wait(DELAY);
+    }, 500);
+    if(!seen) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; }, { threshold: 0.5 }).observe(track);
+    var box = track.parentElement;
+    function hush(){ wait(QUIET); }
+    // Только мышь: на телефоне pointerenter прилетает после тапа, а
+    // pointerleave — нет, и лента встала бы навсегда.
+    box.addEventListener('pointerenter', function(e){ if(e.pointerType === 'mouse') hover = true; });
+    box.addEventListener('pointerleave', function(e){ if(e.pointerType === 'mouse') hover = false; });
+    box.addEventListener('pointerdown', hush);
+    track.addEventListener('touchstart', hush, { passive: true });
+    track.addEventListener('wheel', hush, { passive: true });
+    // Клик мышью по стрелке тоже даёт фокус, но держать ленту должен только
+    // фокус с клавиатуры, иначе она стоит, пока не кликнешь мимо.
+    box.addEventListener('focusin', function(e){
+      try { focus = e.target.matches(':focus-visible'); } catch(_) { focus = true; }
+    });
+    box.addEventListener('focusout', function(){ focus = false; });
+  })();
 })();
 </script><section class="ctamid" aria-labelledby="ctamid-title">
   <div class="wrap ctamid__in">

@@ -1,0 +1,41 @@
+{#- Автопрокрутка ленты. Подключается внутрь скрипта карусели (reviews.html,
+    works.html) и берёт оттуда track, n и current().
+
+    Раз в 5 секунд лента сама переходит к следующему слайду, после
+    последнего — снова к первому. Лента стоит, пока человек смотрит сам:
+    навёл мышь, ушёл внутрь клавиатурой. После свайпа, колеса или нажатия
+    стрелки ждёт 10 секунд тишины, чтобы не выдёргивать слайд из-под пальца.
+    Вне экрана и в фоновой вкладке не крутится, а при «уменьшить движение»
+    в настройках системы не крутится вовсе. -#}
+  (function(){
+    if(n <= 1 || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
+    var DELAY = 5000, QUIET = 10000;
+    var seen = !('IntersectionObserver' in window), hover = false, focus = false, due = 0;
+    function wait(ms){ due = Date.now() + ms; }
+    wait(DELAY);
+    setInterval(function(){
+      // Пока ленту не видно или её держат, отсчёт начинается заново:
+      // первый слайд после появления на экране стоит полные 5 секунд.
+      if(!seen || hover || focus || document.hidden){ wait(DELAY); return; }
+      if(Date.now() < due) return;
+      var i = current();
+      track.scrollTo({ left: (i >= n - 1 ? 0 : i + 1) * track.clientWidth, behavior: 'smooth' });
+      wait(DELAY);
+    }, 500);
+    if(!seen) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; }, { threshold: 0.5 }).observe(track);
+    var box = track.parentElement;
+    function hush(){ wait(QUIET); }
+    // Только мышь: на телефоне pointerenter прилетает после тапа, а
+    // pointerleave — нет, и лента встала бы навсегда.
+    box.addEventListener('pointerenter', function(e){ if(e.pointerType === 'mouse') hover = true; });
+    box.addEventListener('pointerleave', function(e){ if(e.pointerType === 'mouse') hover = false; });
+    box.addEventListener('pointerdown', hush);
+    track.addEventListener('touchstart', hush, { passive: true });
+    track.addEventListener('wheel', hush, { passive: true });
+    // Клик мышью по стрелке тоже даёт фокус, но держать ленту должен только
+    // фокус с клавиатуры, иначе она стоит, пока не кликнешь мимо.
+    box.addEventListener('focusin', function(e){
+      try { focus = e.target.matches(':focus-visible'); } catch(_) { focus = true; }
+    });
+    box.addEventListener('focusout', function(){ focus = false; });
+  })();
