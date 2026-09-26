@@ -1,29 +1,29 @@
 {#- Автопрокрутка ленты. Подключается внутрь скрипта карусели (reviews.html,
-    works.html) и берёт оттуда track, n и current().
+    works.html) и берёт оттуда track, n и current(). Пауза между сменами —
+    переменная delay из include (отзывы 5 с, фото доставок 3 с).
 
-    Раз в 3 секунды лента сама переходит к следующему слайду, после
-    последнего — снова к первому. Стоит, только пока ленту держат пальцем
-    или мышью, и ещё 5 секунд после свайпа или стрелки, чтобы не выдёргивать
-    слайд, который человек сам только что открыл. Вне экрана и в фоновой
-    вкладке не крутится.
+    Лента сама переходит к следующему слайду, после последнего — к первому.
+    Стоит, только пока ленту держат пальцем или мышью, и ещё 5 секунд после
+    свайпа или стрелки, чтобы не выдёргивать слайд, который человек сам
+    только что открыл. Вне экрана и в фоновой вкладке не крутится.
 
-    Смена — переливом: следующий слайд ставится поверх текущего и
-    проявляется за 0,9 с, потом лента без анимации перескакивает на него.
-    Сдвигом (scrollTo smooth) было хуже: браузер крутит его рывком за
-    долю секунды, с последнего на первый лента проматывалась через все
-    слайды назад, а на телефонах с «уменьшить движение» (оно часто
-    включено вместе с энергосбережением) сдвиг и вовсе шёл без анимации.
-    Перелив — это прозрачность, а не движение, поэтому он остаётся и там
-    (см. .is-fadein в style.css). Стрелки и свайп листают как раньше. -#}
+    Смена — плавным сдвигом: текущий слайд уезжает влево, следующий
+    въезжает справа за 0,7 с, потом лента без анимации встаёт на него.
+    Анимация своя (Web Animations), а не scrollTo smooth: тот браузер
+    крутит рывком за долю секунды, на телефонах с «уменьшить движение»
+    (оно часто включено вместе с энергосбережением) сдвигает вовсе без
+    анимации, а с последнего на первый проматывал ленту назад через все
+    слайды. Здесь первый слайд въезжает справа, как любой следующий. -#}
   (function(){
     if(n <= 1) return;
-    var DELAY = 3000, QUIET = 5000, FADE = 900;
-    var seen = !('IntersectionObserver' in window), held = false, focus = false, due = 0, fading = null;
+    var DELAY = {{ delay|default(3000) }}, QUIET = 5000, SLIDE = 700;
+    var EASE = 'cubic-bezier(.45,0,.2,1)';
+    var seen = !('IntersectionObserver' in window), held = false, focus = false, due = 0, moving = null;
     function wait(ms){ due = Date.now() + ms; }
     wait(DELAY);
 
     // Картинка следующего слайда может быть ещё не загружена (loading=lazy):
-    // перелив в пустую карточку хуже, чем подождать её до 2 секунд.
+    // въезд пустой карточки хуже, чем подождать её до 2 секунд.
     function ready(el){
       var img = el.querySelector('img');
       if(!img || (img.complete && img.naturalWidth)) return Promise.resolve();
@@ -32,38 +32,44 @@
       return Promise.race([load, new Promise(function(r){ setTimeout(r, 2000); })]);
     }
     function finish(){
-      if(!fading) return;
-      var f = fading; fading = null; clearTimeout(f.timer);
-      // Снятие наложения и перескок в одном кадре — глазу не видно.
-      // Порядок важен: пока слайд сдвинут transform'ом, браузер считает
-      // его точку прилипания (scroll-snap) по сдвинутому месту, и перескок
-      // на него тут же отщёлкивался обратно на старый слайд.
-      f.el.classList.remove('is-fadein');
-      f.el.style.removeProperty('--shift');
-      track.scrollTo({ left: f.j * track.clientWidth, behavior: 'instant' });
+      if(!moving) return;
+      var m = moving; moving = null;
+      // Снять сдвиг, встать на новый слайд и вернуть прилипание — в одном
+      // кадре, глазу не видно. Порядок важен: пока слайды сдвинуты, браузер
+      // считает точки прилипания по сдвинутым местам и отщёлкивает ленту.
+      m.anims.forEach(function(a){ a.cancel(); });
+      track.scrollTo({ left: m.j * track.clientWidth, behavior: 'instant' });
+      track.style.scrollSnapType = '';
     }
-    function fadeTo(j){
-      var i = current(), el = track.children[j];
-      if(!el || i === j) return;
-      fading = { j: j, el: el, timer: 0 };
-      ready(el).then(function(){
-        if(!fading || fading.el !== el) return;
-        // Слайды стоят в ряд по ширине ленты: сдвиг на (i - j) ширин
-        // кладёт j ровно поверх видимого i.
-        el.style.setProperty('--shift', ((i - j) * 100) + '%');
-        el.classList.add('is-fadein');
-        fading.timer = setTimeout(finish, FADE + 50);
+    function slideTo(j){
+      var i = current(), from = track.children[i], to = track.children[j];
+      if(!to || i === j) return;
+      if(!to.animate){ track.scrollTo({ left: j * track.clientWidth, behavior: 'smooth' }); return; }
+      moving = { j: j, anims: [] };
+      var m = moving;
+      ready(to).then(function(){
+        if(moving !== m) return;
+        // Следующий слайд ставим сразу справа от видимого: для соседнего
+        // сдвиг 0, для первого после последнего — на всю длину ленты.
+        var shift = (i + 1 - j) * 100;
+        track.style.scrollSnapType = 'none';
+        var opt = { duration: SLIDE, easing: EASE, fill: 'forwards' };
+        m.anims = [
+          from.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-100%)' }], opt),
+          to.animate([{ transform: 'translateX(' + shift + '%)' }, { transform: 'translateX(' + (shift - 100) + '%)' }], opt)
+        ];
+        m.anims[1].onfinish = finish;
       });
     }
 
     setInterval(function(){
       // Пока ленту не видно или её держат, отсчёт начинается заново:
-      // первый слайд после появления на экране стоит полные 3 секунды.
+      // первый слайд после появления на экране стоит полную паузу.
       if(!seen || held || focus || document.hidden){ wait(DELAY); return; }
-      if(fading || Date.now() < due) return;
+      if(moving || Date.now() < due) return;
       var i = current();
-      fadeTo(i >= n - 1 ? 0 : i + 1);
-      wait(DELAY + FADE);
+      slideTo(i >= n - 1 ? 0 : i + 1);
+      wait(DELAY + SLIDE);
     }, 250);
     // Видна ли лента хотя бы на треть. Порог 0 нужен, чтобы колбэк пришёл
     // и когда лента уходит с экрана целиком, а не только на границе трети.
@@ -71,8 +77,8 @@
       seen = es[es.length - 1].intersectionRatio >= 0.3;
     }, { threshold: [0, 0.3, 0.6] }).observe(track);
     var box = track.parentElement;
-    // Схватили ленту посреди перелива — сразу доводим его, чтобы свайп
-    // шёл уже от нового слайда, а не от наполовину проявленного.
+    // Схватили ленту посреди сдвига — сразу доводим его, чтобы свайп
+    // шёл уже от нового слайда, а не от сдвинутого наполовину.
     function grab(){ held = true; finish(); }
     function drop(){ if(held){ held = false; wait(QUIET); } }
     box.addEventListener('pointerdown', grab);

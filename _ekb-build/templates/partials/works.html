@@ -124,7 +124,7 @@
   }, { passive: true });
   window.addEventListener('resize', update);
   update();
-{% include "partials/carousel_autoplay.html" %}
+{% with delay = 3000 %}{% include "partials/carousel_autoplay.html" %}{% endwith %}
 })();
 </script>
 {%- endif %}
