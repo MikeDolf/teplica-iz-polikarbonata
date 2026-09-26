@@ -1006,3 +1006,37 @@ html{overflow-x:hidden}
   .works__arrow--prev{left:6px}
   .works__arrow--next{right:6px}
 }
+
+/* ===== мобильная полировка (аудит 320/360/390) =====
+   .ekb .wrap{padding:0 20px} сильнее по специфичности, чем .tstrip__in и
+   .prodbar__in, и молча обнулял их вертикальные отступы — полоса гарантий
+   и витрина прилипали к соседним блокам. */
+.ekb .tstrip__in{padding-top:16px;padding-bottom:16px}
+.ekb .prodbar__in{padding-top:8px;padding-bottom:8px}
+/* Якоря (#calc-title, #zayavka) не уезжают под липкую шапку */
+[id]{scroll-margin-top:84px}
+@media (max-width:720px){
+  /* Снизу всегда висит панель с MAX и заявкой. Липкая шапка сверху
+     дублировала её и вдвоём они съедали до 140px экрана телефона. */
+  .hdr{position:static}
+  [id]{scroll-margin-top:12px}
+  .ekb .hdr__logo{white-space:nowrap}
+  .ekb .hdr__ln{height:44px;border-radius:22px}
+  /* Последняя крошка повторяет H1 строкой ниже — на телефоне это две
+     лишние строки перед заголовком. В разметке BreadcrumbList она есть. */
+  .crumbs li:last-child{display:none}
+  .crumbs li:nth-last-child(2)::after{content:none}
+  .ekb .rev__arrow,.ekb .works__arrow{width:44px;height:44px}
+  .ekb .ptab td a{display:inline-block;padding:9px 0}
+  .ekb .calc__hint{font-size:13px}
+}
+@media (max-width:480px){
+  /* «Доставка по Свердловской области» капсом в две строки над H1 —
+     в H1 и так есть город, а экран первого экрана дорог */
+  .hero__eyebrow{display:none}
+  .ekb .pricebox__num small{font-size:12px}
+}
+/* до 374px «Написать в» не влезает рядом с логотипом — остаётся «MAX» с иконкой */
+@media (max-width:374px){
+  .ekb .hdr__max .hdr__pre{display:none}
+}

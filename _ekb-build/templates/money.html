@@ -38,11 +38,11 @@
         {%- elif bag_offer %}
         <p class="hero__min"><b>Мешки сюда не возим</b> — фасовка только по району Верхней Пышмы, до {{ bag_zone_km }} км от площадки. К вам — навалом, от {{ min_volume }}.</p>
         {%- elif zone_bag %}
-        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> навалом или {{ min_bags }} мешков по {{ zone_bag.volume_l }} л. {{ min_volume_note|capitalize }}.</p>
+        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> навалом или {{ min_bags }} мешков по {{ zone_bag.volume_l }} л. {{ min_volume_note|ucfirst }}.</p>
         {%- elif bag_zone_cities %}
-        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> навалом, а в зоне фасовки, до {{ bag_zone_km }} км от площадки ({{ bag_zone_cities|join(", ") }}), — и от {{ min_bags }} мешков. {{ min_volume_note|capitalize }}.</p>
+        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> навалом, а в зоне фасовки, до {{ bag_zone_km }} км от площадки ({{ bag_zone_cities|join(", ") }}), — и от {{ min_bags }} мешков. {{ min_volume_note|ucfirst }}.</p>
         {%- else %}
-        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом. {{ min_volume_note|capitalize }}.</p>
+        <p class="hero__min"><b>Минимальный заказ {{ min_volume }}</b> — только навалом. {{ min_volume_note|ucfirst }}.</p>
         {%- endif %}
         {%- if bag_offer and bag_zone %}
         <div class="hero__price">
