@@ -8,6 +8,11 @@
         экран и стрелки по краям работают как галерея: смахнул или нажал
         стрелку — следующее фото. Прокрутка нативная (scroll-snap), стрелки
         только дублируют её для тех, кто не догадается смахнуть. -#}
+    {#- Видео с выгрузки стоит рядом с лентой: на компьютере справа, той
+        же высоты, на телефоне — под лентой. Оно вертикальное (3:4), и
+        слайдом в ленте его пришлось бы сильно обрезать по высоте. -#}
+    <div class="works__layout">
+    <div class="works__main">
     <div class="works__carousel">
       <button type="button" class="works__arrow works__arrow--prev" aria-label="Предыдущее фото" disabled>
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
@@ -31,9 +36,62 @@
       <span class="works__dot{% if loop.first %} works__dot--on{% endif %}"></span>
       {%- endfor %}
     </div>
+    </div>
+    {%- if works_video %}
+    {%- set v = works_video %}
+    <figure class="works__video">
+      <div class="works__vbox">
+        {#- src и poster ставит скрипт ниже, когда до блока остаётся ~400px:
+            poster у <video> браузер качает сразу, даже внизу страницы, а
+            блок стоит на трёх сотнях страниц. preload="none" — по той же
+            причине. -#}
+        <video class="works__vid" id="works-video" muted loop playsinline preload="none"
+               width="{{ v.w }}" height="{{ v.h }}" aria-label="{{ v.alt }}"
+               data-src="/assets/ekb/photo/raboty/{{ v.file }}-video.mp4"
+               data-poster="/assets/ekb/photo/raboty/{{ v.file }}-poster.webp"></video>
+        <span class="works__vbadge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="12" height="12"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>Видео
+        </span>
+      </div>
+      <figcaption class="works__vcap">{{ v.caption }}</figcaption>
+    </figure>
+    {%- endif %}
+    </div>
   </div>
 </section>
 <script>
+(function(){
+  // Видео с выгрузки: подгружаем на подходе к блоку, играем без звука по
+  // кругу, пока ролик виден хотя бы на 40%, и ставим на паузу, когда ушёл
+  // с экрана. Нажатие останавливает и снова запускает. Если браузер не
+  // дал запустить без касания (iPhone в режиме энергосбережения), видео
+  // получает обычные кнопки управления, и его можно включить самому.
+  var v = document.getElementById('works-video'); if(!v) return;
+  var stopped = false;
+  v.muted = true;
+  function load(){
+    if(!v.dataset.src) return;
+    v.poster = v.dataset.poster; v.src = v.dataset.src;
+    delete v.dataset.src;
+  }
+  function play(){
+    load();
+    var p = v.play();
+    if(p && p.catch) p.catch(function(){ v.controls = true; });
+  }
+  v.addEventListener('click', function(){
+    if(v.controls) return;
+    if(v.paused){ stopped = false; play(); } else { stopped = true; v.pause(); }
+  });
+  if(!('IntersectionObserver' in window)){ play(); return; }
+  new IntersectionObserver(function(es){
+    if(es[es.length - 1].isIntersecting) load();
+  }, { rootMargin: '400px 0px' }).observe(v);
+  new IntersectionObserver(function(es){
+    if(es[es.length - 1].intersectionRatio >= 0.4){ if(!stopped) play(); }
+    else if(!v.paused) v.pause();
+  }, { threshold: [0, 0.4] }).observe(v);
+})();
 (function(){
   var track = document.getElementById('works-track'); if(!track) return;
   var prev = track.parentElement.querySelector('.works__arrow--prev');

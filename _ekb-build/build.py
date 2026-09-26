@@ -41,7 +41,7 @@ RIDE_FLOOR_PYSHMA = {
     "torfogrunt": 9500 - 900,    # 8600 ₽
 }
 from tail_cities import TAIL_CITIES
-from works import WORKS  # noqa
+from works import WORKS, WORKS_VIDEO  # noqa
 from bagged import BAGGED, BAG_BASE, MIN_BAGS, BAG_ZONE_KM, BAG_ANY  # noqa
 from city_product import CP, CPF  # noqa
 try:
@@ -1077,6 +1077,7 @@ def render(page):
         # проект на другой технике, и наши фото были бы чужой техникой на
         # чужом товаре.
         works=(WORKS if page["slug"] not in MOVED_TO else None),
+        works_video=(WORKS_VIDEO if page["slug"] not in MOVED_TO else None),
         hero_photo=hero_photo_for(page),
         hero_alt=hero_alt_for(page),
         product_genitive=product_genitive(page),
