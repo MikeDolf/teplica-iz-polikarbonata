@@ -2,40 +2,53 @@
     works.html) и берёт оттуда track, n и current().
 
     Раз в 3 секунды лента сама переходит к следующему слайду, после
-    последнего — снова к первому. Лента стоит, пока человек смотрит сам:
-    навёл мышь, ушёл внутрь клавиатурой. После свайпа, колеса или нажатия
-    стрелки ждёт 10 секунд тишины, чтобы не выдёргивать слайд из-под пальца.
-    Вне экрана и в фоновой вкладке не крутится, а при «уменьшить движение»
-    в настройках системы не крутится вовсе. -#}
+    последнего — снова к первому. Стоит, только пока ленту держат пальцем
+    или мышью, и ещё 5 секунд после свайпа или стрелки, чтобы не выдёргивать
+    слайд, который человек сам только что открыл. Вне экрана и в фоновой
+    вкладке не крутится.
+
+    Первая версия останавливалась ещё при наведении мыши и выключалась
+    совсем при «уменьшить движение» в системе (на многих телефонах оно
+    включается вместе с энергосбережением), а любое касание — даже когда
+    страницу листали вниз, начав с ленты, — глушило её на 10 секунд.
+    В итоге владелец открывал страницу и не видел, что лента листается.
+    Теперь при «уменьшить движение» слайд меняется без анимации сдвига,
+    а не пропадает смена целиком. -#}
   (function(){
-    if(n <= 1 || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-    var DELAY = 3000, QUIET = 10000;
-    var seen = !('IntersectionObserver' in window), hover = false, focus = false, due = 0;
+    if(n <= 1) return;
+    var DELAY = 3000, QUIET = 5000;
+    var still = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var seen = !('IntersectionObserver' in window), held = false, focus = false, due = 0;
     function wait(ms){ due = Date.now() + ms; }
     wait(DELAY);
     setInterval(function(){
       // Пока ленту не видно или её держат, отсчёт начинается заново:
       // первый слайд после появления на экране стоит полные 3 секунды.
-      if(!seen || hover || focus || document.hidden){ wait(DELAY); return; }
+      if(!seen || held || focus || document.hidden){ wait(DELAY); return; }
       if(Date.now() < due) return;
       var i = current();
-      track.scrollTo({ left: (i >= n - 1 ? 0 : i + 1) * track.clientWidth, behavior: 'smooth' });
+      track.scrollTo({ left: (i >= n - 1 ? 0 : i + 1) * track.clientWidth, behavior: still ? 'instant' : 'smooth' });
       wait(DELAY);
-    }, 500);
-    if(!seen) new IntersectionObserver(function(es){ seen = es[0].isIntersecting; }, { threshold: 0.5 }).observe(track);
+    }, 250);
+    // Видна ли лента хотя бы на треть. Порог 0 нужен, чтобы колбэк пришёл
+    // и когда лента уходит с экрана целиком, а не только на границе трети.
+    if(!seen) new IntersectionObserver(function(es){
+      seen = es[es.length - 1].intersectionRatio >= 0.3;
+    }, { threshold: [0, 0.3, 0.6] }).observe(track);
     var box = track.parentElement;
-    function hush(){ wait(QUIET); }
-    // Только мышь: на телефоне pointerenter прилетает после тапа, а
-    // pointerleave — нет, и лента встала бы навсегда.
-    box.addEventListener('pointerenter', function(e){ if(e.pointerType === 'mouse') hover = true; });
-    box.addEventListener('pointerleave', function(e){ if(e.pointerType === 'mouse') hover = false; });
-    box.addEventListener('pointerdown', hush);
-    track.addEventListener('touchstart', hush, { passive: true });
-    track.addEventListener('wheel', hush, { passive: true });
+    function grab(){ held = true; }
+    function drop(){ if(held){ held = false; wait(QUIET); } }
+    box.addEventListener('pointerdown', grab);
+    window.addEventListener('pointerup', drop);
+    window.addEventListener('pointercancel', drop);
+    track.addEventListener('touchstart', grab, { passive: true });
+    window.addEventListener('touchend', drop, { passive: true });
+    window.addEventListener('touchcancel', drop, { passive: true });
+    track.addEventListener('wheel', function(){ wait(QUIET); }, { passive: true });
     // Клик мышью по стрелке тоже даёт фокус, но держать ленту должен только
     // фокус с клавиатуры, иначе она стоит, пока не кликнешь мимо.
     box.addEventListener('focusin', function(e){
-      try { focus = e.target.matches(':focus-visible'); } catch(_) { focus = true; }
+      try { focus = e.target.matches(':focus-visible'); } catch(_) { focus = false; }
     });
     box.addEventListener('focusout', function(){ focus = false; });
   })();
