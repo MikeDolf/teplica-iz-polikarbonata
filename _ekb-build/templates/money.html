@@ -48,8 +48,8 @@
         <div class="hero__price">
           <div class="hero__price__row">
             <span class="hero__price__label">Ориентировочно</span>
-            <b class="hero__price__num">{{ bag_offer.price }} руб/мешок</b>
-            {%- if price %}<b class="hero__price__num">от {{ price.m3 }} руб/м³ навалом</b>{% endif %}
+            <b class="hero__price__num">{{ bag_offer.price|ru }} ₽/мешок</b>
+            {%- if price %}<b class="hero__price__num">от {{ price.m3|ru }} ₽/м³ навалом</b>{% endif %}
           </div>
           <span class="hero__price__note">Цена за материал. Доставку считаем отдельно — точную сумму до вашего адреса покажет калькулятор ниже</span>
         </div>
@@ -60,9 +60,9 @@
               и рамка получается шире самой длинной строки. -#}
           <div class="hero__price__row">
             <span class="hero__price__label">Ориентировочно</span>
-            <b class="hero__price__num">от {{ price.m3 }} руб/м³</b>
-            {%- if zone_bag %}<b class="hero__price__num">{{ zone_bag.price }} руб/мешок</b>{% endif %}
-            {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag }} руб/мешок</b>{% endif %}
+            <b class="hero__price__num">от {{ price.m3|ru }} ₽/м³</b>
+            {%- if zone_bag %}<b class="hero__price__num">{{ zone_bag.price|ru }} ₽/мешок</b>{% endif %}
+            {% if site.bags and price.bag %}<b class="hero__price__num">от {{ price.bag|ru }} ₽/мешок</b>{% endif %}
           </div>
           {%- if city.local_partner %}
           <span class="hero__price__note">Цена за материал. По Нижнему Тагилу доставку считаем не по километражу, а по заявке — работает местный партнёр</span>

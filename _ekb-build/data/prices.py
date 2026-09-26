@@ -61,14 +61,14 @@ FLEET_VIZ = [
 # одинокой страницы.
 PRODBAR = [
     {"slug": "chernozem-ekaterinburg",        "tex": "chernozem",         "name": "Чернозём",     "price": "от 850 ₽/м³"},
-    {"slug": "peregnoy-ekaterinburg",         "tex": "peregnoy",          "name": "Перегной",     "price": "от 1100 ₽/м³"},
+    {"slug": "peregnoy-ekaterinburg",         "tex": "peregnoy",          "name": "Перегной",     "price": "от 1\u2009100 ₽/м³"},
     {"slug": "torf-ekaterinburg",             "tex": "torf",              "name": "Торф",         "price": "от 950 ₽/м³"},
     {"slug": "navoz-ekaterinburg",            "tex": "navoz",             "name": "Навоз",        "price": "от 900 ₽/м³"},
     {"slug": "plodorodnyy-grunt-ekaterinburg","tex": "plodorodnyy-grunt", "name": "Плодородный грунт", "price": "от 750 ₽/м³"},
     {"slug": "torfogrunt-ekaterinburg",       "tex": "torfogrunt",        "name": "Торфогрунт",   "price": "от 900 ₽/м³"},
     {"slug": "kislyy-torf-ekaterinburg",      "tex": "kislyy-torf",       "name": "Кислый торф",  "price": "от 950 ₽/м³"},
     {"slug": "zemlya-v-meshkah-ekaterinburg", "tex": "zemlya-v-meshkah",  "name": "Земля в мешках", "price": "от 450 ₽/мешок"},
-    {"slug": "opilki-ekaterinburg",           "tex": "opilki",            "name": "Опил",         "price": "от 1000 ₽/м³"},
+    {"slug": "opilki-ekaterinburg",           "tex": "opilki",            "name": "Опил",         "price": "от 1\u2009000 ₽/м³"},
 ]
 for _p in PRODBAR:
     _p["url"] = "/" + _p["slug"] + "/"

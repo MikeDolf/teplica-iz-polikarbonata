@@ -265,10 +265,34 @@ FOOTER_LINKS = [
     {"url": "/dostavka-grunta/rekvizity/", "text": "Реквизиты"},
 ]
 
+BUSINESS_ID = SITE["domain"] + "/dostavka-grunta/#business"
+
+
+def postal_address(raw):
+    """«620017, Екатеринбург, ул. …» → PostalAddress по полям.
+
+    Раньше вся строка вместе с индексом и городом лежала в streetAddress,
+    а addressLocality дублировал город: парсеры Яндекса и Google читают
+    индекс и регион из своих полей, а не из улицы.
+    """
+    m = re.match(r"\s*(\d{6}),\s*([^,]+),\s*(.+)", raw or "")
+    if not m:
+        return {"@type": "PostalAddress", "streetAddress": raw, "addressLocality": "Екатеринбург",
+                "addressRegion": "Свердловская область", "addressCountry": "RU"}
+    return {"@type": "PostalAddress", "postalCode": m.group(1), "addressLocality": m.group(2).strip(),
+            "streetAddress": m.group(3).strip(), "addressRegion": "Свердловская область",
+            "addressCountry": "RU"}
+
+
 def build_localbusiness():
+    # image обязателен для расширенного сниппета организации в Google —
+    # берём реальный кадр с доставки, а не обложку. @id связывает с этой
+    # организацией продавца в Product.offers и страницу реквизитов.
     lb = {
         "@type": "LocalBusiness",
+        "@id": BUSINESS_ID,
         "name": SITE["brand"],
+        "image": SITE["domain"] + "/assets/ekb/photo/raboty/dve-kuchi-uchastok-800.jpg",
         "url": SITE["domain"] + "/dostavka-grunta/",
         "email": SITE["contact_email"],
         "areaServed": SITE["region"],
@@ -278,7 +302,7 @@ def build_localbusiness():
     if SITE.get("phone_tel"):
         lb["telephone"] = SITE["phone_tel"]
     if SITE.get("legal_address"):
-        lb["address"] = {"@type": "PostalAddress", "streetAddress": SITE["legal_address"], "addressLocality": "Екатеринбург", "addressCountry": "RU"}
+        lb["address"] = postal_address(SITE["legal_address"])
     return lb
 
 def build_schema(page, canonical):
@@ -306,7 +330,7 @@ def build_schema(page, canonical):
             "lowPrice": pr["m3"],
             "availability": "https://schema.org/InStock",
             "areaServed": CITIES[page["city"]]["name"],
-            "seller": {"@type": "LocalBusiness", "name": SITE["brand"]},
+            "seller": {"@type": "LocalBusiness", "@id": BUSINESS_ID, "name": SITE["brand"]},
             # Срок действия цены: без него поисковики помечают предложение
             # как неполное. Ставим конец следующего года, а не «сегодня плюс
             # год»: иначе разметка менялась бы при каждой пересборке и
@@ -561,6 +585,10 @@ def min_volume_note(city_key=None):
     самосвал, и узкий проезд не проблема."""
     if min_m3(city_key) == 1:
         return "плечо до вас короткое, а на такой объём подаём небольшую машину до 4 м³ — она проедет в любой двор"
+    # В зоне фасовки меньше трёх кубов возим мешками, и голое «меньше не
+    # возим» спорило со следующей же фразой про мешки от 5 штук.
+    if city_key and in_bag_zone(city_key):
+        return "меньше навалом не возим, рейс не окупается"
     return SITE["min_volume_note"]
 
 
@@ -1184,9 +1212,9 @@ def render_hub(all_pages):
     html = env.get_template("hub.html").render(
         site=SITE, canonical=canonical, robots="index, follow",
         title="Доставка грунта по Екатеринбургу — чернозём от 850 ₽/м³",
-        description="Доставка чернозёма, перегноя и навоза по Екатеринбургу и области. Мин. заказ 3 м³, навалом самосвалом. Рейс считает калькулятор.",
+        description="Доставка чернозёма, перегноя, навоза, торфа и опила по Екатеринбургу и области. По городу от 1 м³, мешками от 5 штук. Рейс считает калькулятор.",
         h1="Доставка грунта, перегноя и навоза по Екатеринбургу",
-        hero_sub="Чернозём, перегной и навоз с доставкой по городу и области, в день заказа. Возим навалом, минимальный заказ 3 м³. Скажите объём и адрес, назовём цену материала и рейса.",
+        hero_sub="Чернозём, перегной, навоз, торф и опил с доставкой по городу и области, в день заказа. По Екатеринбургу — от одного куба навалом, небольшой объём — мешками, от 5 штук. Скажите объём и адрес, назовём цену материала и рейса.",
         catalog=catalog, geo=geo, faq=faq, articles=hub_articles, about=about,
         calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
         calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
@@ -1503,7 +1531,19 @@ def render_company():
         '&z=16" width="100%" height="360" frameborder="0" loading="lazy" '
         'title="Адрес на карте"></iframe>'
     )
+    # Разметки на странице не было вовсе. Реквизиты — ровно то место, где
+    # поисковику стоит подтвердить, кто стоит за сайтом: та же организация
+    # (@id), что и на остальных страницах, плюс ИНН и имя исполнителя.
+    lb = build_localbusiness()
+    lb.update({"legalName": SITE["legal_name"], "taxID": SITE["inn"]})
+    schema = json.dumps({"@context": "https://schema.org", "@graph": [lb, {
+        "@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
+            {"@type": "ListItem", "position": 3, "name": "Реквизиты", "item": canonical}]}]},
+        ensure_ascii=False, separators=(",", ":"))
     html = env.get_template("legal.html").render(
+        schema_json=schema,
         cta_base="/chernozem-ekaterinburg/",
         site=SITE, canonical=canonical, robots="index, follow",
         title="Реквизиты и контакты — Грунт Доставка, Екатеринбург",

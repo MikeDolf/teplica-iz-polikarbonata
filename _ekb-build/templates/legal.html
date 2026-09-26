@@ -1,4 +1,11 @@
 {% extends "base.html" %}
+{% block schema %}
+{%- if schema_json %}
+  <script type="application/ld+json">
+  {{ schema_json|safe }}
+  </script>
+{%- endif %}
+{% endblock %}
 {% block breadcrumbs %}
 <nav class="crumbs wrap" aria-label="Хлебные крошки">
   <ol>

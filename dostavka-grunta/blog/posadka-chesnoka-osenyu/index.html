@@ -15,13 +15,18 @@
   <meta property="og:description" content="Когда сажать озимый чеснок и на какую глубину: точные сроки по признаку корешков, а не по календарю. Схема на грядке, отбор зубков и частые ошибки.">
   <meta property="og:url" content="https://fanline.su/dostavka-grunta/blog/posadka-chesnoka-osenyu/">
   <meta property="og:image" content="https://fanline.su/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Кучи грунта и опила на площадке, погрузчик">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Посадка чеснока осенью: сроки и глубина">
   <meta name="twitter:description" content="Когда сажать озимый чеснок и на какую глубину: точные сроки по признаку корешков, а не по календарю. Схема на грядке, отбор зубков и частые ошибки.">
   <meta name="twitter:image" content="https://fanline.su/img/og-cover.jpg">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=85"><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=89"><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -35,7 +40,6 @@
     })(window,document,'ym','https://mc.yandex.ru/metrika/tag.js?id=110303165');
     ym(110303165,'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});
   </script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/110303165" style="position:absolute;left:-9999px;" alt="" /></div></noscript>
   <!-- Yandex Autoplacement 20037656 -->
   <script src="https://yandex.ru/ads/system/context.js" async></script>
   <script data-page-id="20037656" src="https://yandex.ru/ads/system/ap-loader.js" async></script>
@@ -44,11 +48,10 @@
   </script>
 
 </head>
-<body class="ekb">
+<body class="ekb"><noscript><div><img src="https://mc.yandex.ru/watch/110303165" style="position:absolute;left:-9999px;" alt=""></div></noscript>
 
 <a class="skip-link" href="#top">Перейти к содержимому</a>
 
-<a class="skiplink" href="#top">Перейти к содержанию</a>
 <header class="hdr">
   <div class="wrap hdr__in">
     <a class="hdr__logo" href="/dostavka-grunta/">
@@ -72,6 +75,41 @@
     </div>
   </div>
 </header>
+<script>
+(function(){
+  // Шапка уезжает вверх, когда страницу листают вниз, и возвращается,
+  // когда листают вверх. Направление копится (±12px), чтобы шапка не
+  // дёргалась от дрожи пальца и медленной прокрутки по 1-2 пикселя.
+  // В самом верху страницы она видна всегда. Переход по якорю внутри
+  // страницы (калькулятор, заявка) прячет её, чтобы она не легла поверх
+  // заголовка, к которому перешли. Фокус с клавиатуры внутри шапки
+  // возвращает её на место.
+  var h = document.querySelector('.hdr'); if(!h) return;
+  var last = Math.max(0, window.scrollY), acc = 0, lock = 0, tick = false;
+  function set(hide){ h.classList.toggle('hdr--hidden', hide); }
+  function upd(){
+    tick = false;
+    var y = Math.max(0, window.scrollY), d = y - last;
+    last = y;
+    h.classList.toggle('hdr--stuck', y > 0);
+    if(y <= h.offsetHeight){ acc = 0; set(false); return; }
+    if(Date.now() < lock) return;
+    if((d > 0) !== (acc > 0)) acc = 0;
+    acc += d;
+    if(acc > 12) set(true);
+    else if(acc < -12) set(false);
+  }
+  window.addEventListener('scroll', function(){
+    if(!tick){ tick = true; requestAnimationFrame(upd); }
+  }, { passive: true });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href*="#"]'); if(!a) return;
+    var u = new URL(a.href, location.href);
+    if(u.pathname === location.pathname && u.hash && u.hash !== '#top'){ set(true); lock = Date.now() + 1000; }
+  });
+  h.addEventListener('focusin', function(){ lock = 0; set(false); });
+})();
+</script>
 <nav class="crumbs wrap" aria-label="Хлебные крошки">
   <ol>
     <li><a href="/">Главная</a></li>
@@ -97,7 +135,7 @@
            alt="" aria-hidden="true" loading="eager" decoding="async">
       <span class="pb__txt">
         <b class="pb__name">Перегной</b>
-        <span class="pb__price">от 1100 ₽/м³</span>
+        <span class="pb__price">от 1 100 ₽/м³</span>
       </span>
     </a>
     <a class="pb" href="/torf-ekaterinburg/">
@@ -153,7 +191,7 @@
            alt="" aria-hidden="true" loading="lazy" decoding="async">
       <span class="pb__txt">
         <b class="pb__name">Опил</b>
-        <span class="pb__price">от 1000 ₽/м³</span>
+        <span class="pb__price">от 1 000 ₽/м³</span>
       </span>
     </a>
   </div>
@@ -830,17 +868,17 @@
     <p class="ftr__legal">Доставка чернозёма, перегноя и навоза по Екатеринбургу и Свердловской области. Цены рассчитываются под объём и район, точную стоимость называем в ответ на заявку.</p>
   </div>
 </footer>
-<div class="callbar">
+<nav class="callbar" aria-label="Связаться с нами">
   <a class="callbar__phone" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener" aria-label="Написать в MAX">
     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg><span class="callbar__long">Написать в MAX</span><span class="callbar__short">MAX</span>
   </a>
-  <a class="callbar__wa" href="#calc-title" aria-label="Калькулятор">
+  <a class="callbar__wa" href="#calc-title">
     <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="12" y1="15" x2="12" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/><line x1="8" y1="19" x2="8" y2="19.01"/><line x1="12" y1="19" x2="12" y2="19.01"/><line x1="16" y1="19" x2="16" y2="19.01"/></svg>
     <span class="callbar__long">Калькулятор</span><span class="callbar__short">Расчёт</span>
   </a><a class="callbar__form" href="#zayavka"><span class="callbar__long">Оставить заявку</span><span class="callbar__short">Заявка</span></a>
-</div>
+</nav>
 
-  <div class="fcta" id="fcta" hidden>
+  <aside class="fcta" id="fcta" aria-label="Помощь с расчётом" hidden>
   <button class="fcta__close" type="button" aria-label="Скрыть панель связи">
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
   </button>
@@ -853,13 +891,16 @@
       Написать в MAX
     </a>
   </div>
-</div>
+</aside>
   <script>
   // Всплывающий блок связи: появляется, когда шапка ушла из виду,
   // и прячется у формы заявки, чтобы не перекрывать её собой.
   (function(){
     var el=document.getElementById('fcta'); if(!el) return;
-    if (localStorage.getItem('fctaHidden')==='1') return;
+    // localStorage бывает недоступен (запрет cookie, встроенные браузеры
+    // соцсетей) и тогда бросает исключение — блок просто показываем.
+    function store(k,v){ try { return v===undefined ? localStorage.getItem(k) : localStorage.setItem(k,v); } catch(e){ return null; } }
+    if (store('fctaHidden')==='1') return;
     var hero=document.querySelector('.hero'), form=document.getElementById('zayavka');
     el.hidden=false;
     var shown=false;
@@ -874,7 +915,7 @@
     addEventListener('scroll', function(){ if(!tick){ tick=true; requestAnimationFrame(function(){ upd(); tick=false; }); } }, {passive:true});
     addEventListener('resize', upd, {passive:true});
     el.querySelector('.fcta__close').addEventListener('click', function(){
-      el.classList.remove('is-on'); localStorage.setItem('fctaHidden','1');
+      el.classList.remove('is-on'); store('fctaHidden','1');
     });
     upd();
   })();

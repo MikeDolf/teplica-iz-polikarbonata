@@ -13,7 +13,7 @@
   <link rel="preload" as="image" fetchpriority="high"
         href="/assets/ekb/photo/{{ hero_photo }}-1400.webp"
         imagesrcset="/assets/ekb/photo/{{ hero_photo }}-800.webp 800w, /assets/ekb/photo/{{ hero_photo }}-1400.webp 1400w"
-        imagesizes="100vw" type="image/webp">
+        imagesizes="(max-width: 900px) 260px, 100vw" type="image/webp">
   {%- endif %}
   <link rel="canonical" href="{{ canonical }}">
   <meta property="og:type" content="{{ og_type|default('website') }}">
@@ -23,11 +23,16 @@
   <meta property="og:description" content="{{ description }}">
   <meta property="og:url" content="{{ canonical }}">
   <meta property="og:image" content="{{ site.domain }}/img/og-cover.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Кучи грунта и опила на площадке, погрузчик">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="{{ title }}">
   <meta name="twitter:description" content="{{ description }}">
   <meta name="twitter:image" content="{{ site.domain }}/img/og-cover.jpg">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="stylesheet" href="{{ site.css }}">
 {%- if site.metrika_id %}
@@ -52,7 +57,6 @@
     })(window,document,'ym','https://mc.yandex.ru/metrika/tag.js?id={{ site.metrika_id }}');
     ym({{ site.metrika_id }},'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});
   </script>
-  <noscript><div><img src="https://mc.yandex.ru/watch/{{ site.metrika_id }}" style="position:absolute;left:-9999px;" alt="" /></div></noscript>
 {%- endif %}
 {%- if site.yandex_ads_page_id %}
   <!-- Yandex Autoplacement {{ site.yandex_ads_page_id }} -->
@@ -62,6 +66,12 @@
 {%- block schema %}{% endblock %}
 </head>
 <body class="ekb">
+{%- if site.metrika_id %}
+{#- Пиксель Метрики для браузеров без JS. Стоял в <head>, а там <noscript>
+    может содержать только link/style/meta: встретив <div>, парсер досрочно
+    закрывал <head>, и разметка JSON-LD оказывалась уже в <body>. -#}
+<noscript><div><img src="https://mc.yandex.ru/watch/{{ site.metrika_id }}" style="position:absolute;left:-9999px;" alt=""></div></noscript>
+{%- endif %}
 
 <a class="skip-link" href="#top">Перейти к содержимому</a>
 
@@ -82,7 +92,10 @@
   // и прячется у формы заявки, чтобы не перекрывать её собой.
   (function(){
     var el=document.getElementById('fcta'); if(!el) return;
-    if (localStorage.getItem('fctaHidden')==='1') return;
+    // localStorage бывает недоступен (запрет cookie, встроенные браузеры
+    // соцсетей) и тогда бросает исключение — блок просто показываем.
+    function store(k,v){ try { return v===undefined ? localStorage.getItem(k) : localStorage.setItem(k,v); } catch(e){ return null; } }
+    if (store('fctaHidden')==='1') return;
     var hero=document.querySelector('.hero'), form=document.getElementById('zayavka');
     el.hidden=false;
     var shown=false;
@@ -97,7 +110,7 @@
     addEventListener('scroll', function(){ if(!tick){ tick=true; requestAnimationFrame(function(){ upd(); tick=false; }); } }, {passive:true});
     addEventListener('resize', upd, {passive:true});
     el.querySelector('.fcta__close').addEventListener('click', function(){
-      el.classList.remove('is-on'); localStorage.setItem('fctaHidden','1');
+      el.classList.remove('is-on'); store('fctaHidden','1');
     });
     upd();
   })();

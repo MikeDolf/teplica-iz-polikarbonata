@@ -7,13 +7,17 @@
    браузер расширяет весь видимый вьюпорт под него, и страница выглядит
    отдалённой, обрезанной, с возможностью развести пальцы и увидеть лишнее
    поле сбоку. overflow-x:hidden на html и на теле не даёт вьюпорту
-   раздуться, даже если внутри найдётся элемент шире экрана. */
+   раздуться, даже если внутри найдётся элемент шире экрана.
+   На теле — clip, а не hidden: hidden делал <body> отдельной областью
+   прокрутки, и position:sticky у шапки молча переставал работать (шапка
+   уезжала вместе со страницей). clip режет так же, но скролл-контейнер
+   не создаёт. Старый Safari (до 16) clip не знает — там страхует html. */
 html{overflow-x:hidden}
 .ekb{
   --bg:#12331f; --bg2:#0d281a; --ink:#16241b; --ink-soft:#5b6b60;
   --line:#e2e8e2; --accent:#2f7d46; --accent-ink:#fff; --focus:#f0a814;
   --paper:#f7faf7; --radius:14px; --wrap:1040px;
-  margin:0; color:var(--ink); background:#fff; overflow-x:hidden;
+  margin:0; color:var(--ink); background:#fff; overflow-x:clip;
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
   line-height:1.55; -webkit-text-size-adjust:100%;
 }
@@ -229,7 +233,7 @@ html{overflow-x:hidden}
 /* статьи */
 .art{max-width:760px;padding:clamp(24px,4vw,44px) 20px}
 .art h1{font-size:clamp(26px,4vw,36px);margin:0 0 16px}
-.art__dates{font-size:14px;color:#6b7d70;margin:0 0 10px}
+.art__dates{font-size:14px;color:var(--ink-soft);margin:0 0 10px}
 .art__lede{font-size:18px;color:#33463b;margin:0 0 26px;line-height:1.55}
 .art h2{font-size:clamp(20px,2.6vw,25px);margin:32px 0 12px}
 .art p{margin:0 0 14px;font-size:16.5px}
@@ -880,10 +884,6 @@ html{overflow-x:hidden}
 @media (max-width:720px){
 }
 
-/* Ссылка «к содержанию»: не видна мышью, всплывает при табуляции. */
-.skiplink{position:absolute;left:-9999px;top:0;z-index:100;background:var(--accent);color:#fff;
-  padding:12px 18px;border-radius:0 0 10px 0;font-weight:700;text-decoration:none}
-.skiplink:focus{left:0}
 /* Крестик плавающей панели был 31px, для пальца мало. */
 .fcta__close{width:44px;height:44px;top:4px;right:4px}
 
@@ -1013,13 +1013,10 @@ html{overflow-x:hidden}
    и витрина прилипали к соседним блокам. */
 .ekb .tstrip__in{padding-top:16px;padding-bottom:16px}
 .ekb .prodbar__in{padding-top:8px;padding-bottom:8px}
-/* Якоря (#calc-title, #zayavka) не уезжают под липкую шапку */
-[id]{scroll-margin-top:84px}
+/* Якоря (#calc-title, #zayavka): при переходе по ссылке-якорю шапка
+   прячется (см. header.html), поэтому отступ сверху небольшой. */
+[id]{scroll-margin-top:16px}
 @media (max-width:720px){
-  /* Снизу всегда висит панель с MAX и заявкой. Липкая шапка сверху
-     дублировала её и вдвоём они съедали до 140px экрана телефона. */
-  .hdr{position:static}
-  [id]{scroll-margin-top:12px}
   .ekb .hdr__logo{white-space:nowrap}
   .ekb .hdr__ln{height:44px;border-radius:22px}
   /* Последняя крошка повторяет H1 строкой ниже — на телефоне это две
@@ -1080,3 +1077,13 @@ html{overflow-x:hidden}
   .ekb .dirs td a{display:inline-block;padding:9px 0}
 }
 .ekb .ctamid__consent a{display:inline-block;padding:6px 0}
+
+/* ===== шапка прячется при прокрутке вниз и возвращается при прокрутке вверх =====
+   Липкая на всех ширинах. Раньше на телефоне она была статичной (уезжала
+   вместе со страницей и возвращалась только в самом верху), а на
+   компьютере висела всегда и забирала 58px. Теперь при чтении вниз её
+   нет, а стоит двинуть страницу вверх — MAX и калькулятор снова под
+   рукой. Класс ставит скрипт в header.html. */
+.hdr{transition:transform .28s cubic-bezier(.4,0,.2,1),box-shadow .28s}
+.hdr.hdr--stuck{box-shadow:0 2px 12px rgba(0,0,0,.18)}
+.hdr.hdr--hidden{transform:translateY(-100%);box-shadow:none}

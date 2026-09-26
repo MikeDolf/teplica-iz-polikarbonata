@@ -1,4 +1,3 @@
-<a class="skiplink" href="#top">Перейти к содержанию</a>
 <header class="hdr">
   <div class="wrap hdr__in">
     <a class="hdr__logo" href="/dostavka-grunta/">
@@ -40,3 +39,38 @@
     </div>
   </div>
 </header>
+<script>
+(function(){
+  // Шапка уезжает вверх, когда страницу листают вниз, и возвращается,
+  // когда листают вверх. Направление копится (±12px), чтобы шапка не
+  // дёргалась от дрожи пальца и медленной прокрутки по 1-2 пикселя.
+  // В самом верху страницы она видна всегда. Переход по якорю внутри
+  // страницы (калькулятор, заявка) прячет её, чтобы она не легла поверх
+  // заголовка, к которому перешли. Фокус с клавиатуры внутри шапки
+  // возвращает её на место.
+  var h = document.querySelector('.hdr'); if(!h) return;
+  var last = Math.max(0, window.scrollY), acc = 0, lock = 0, tick = false;
+  function set(hide){ h.classList.toggle('hdr--hidden', hide); }
+  function upd(){
+    tick = false;
+    var y = Math.max(0, window.scrollY), d = y - last;
+    last = y;
+    h.classList.toggle('hdr--stuck', y > 0);
+    if(y <= h.offsetHeight){ acc = 0; set(false); return; }
+    if(Date.now() < lock) return;
+    if((d > 0) !== (acc > 0)) acc = 0;
+    acc += d;
+    if(acc > 12) set(true);
+    else if(acc < -12) set(false);
+  }
+  window.addEventListener('scroll', function(){
+    if(!tick){ tick = true; requestAnimationFrame(upd); }
+  }, { passive: true });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a[href*="#"]'); if(!a) return;
+    var u = new URL(a.href, location.href);
+    if(u.pathname === location.pathname && u.hash && u.hash !== '#top'){ set(true); lock = Date.now() + 1000; }
+  });
+  h.addEventListener('focusin', function(){ lock = 0; set(false); });
+})();
+</script>

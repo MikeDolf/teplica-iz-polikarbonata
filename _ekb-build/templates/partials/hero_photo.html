@@ -8,10 +8,16 @@
     и версию 1400, и версию 800. Один и тот же кадр приезжал дважды.
 
     fetchpriority на самой картинке нужен отдельно от предзагрузки: это
-    крупнейший элемент первого экрана, и он должен обгонять всё остальное. -#}
+    крупнейший элемент первого экрана, и он должен обгонять всё остальное.
+
+    sizes на узких экранах занижен намеренно: до 900px кадр закрыт тёмной
+    подложкой на 80–95% (см. .heropic::after), деталей 1400px там не видно,
+    а телефон с плотностью экрана 3 при «100vw» брал именно 1400 — до 200 КБ
+    на самый важный для скорости элемент. С 260px он берёт 800 (30–85 КБ).
+    Строка должна совпадать с imagesizes предзагрузки в base.html. -#}
 <div class="heropic">
   <picture>
-    <source type="image/webp" sizes="100vw"
+    <source type="image/webp" sizes="(max-width: 900px) 260px, 100vw"
             srcset="/assets/ekb/photo/{{ hero_photo }}-800.webp 800w, /assets/ekb/photo/{{ hero_photo }}-1400.webp 1400w">
     <img src="/assets/ekb/photo/{{ hero_photo }}-1400.jpg" alt="{{ hero_alt|default('Доставка грунта и органики') }}"
          loading="eager" fetchpriority="high" decoding="async" width="1400" height="788">

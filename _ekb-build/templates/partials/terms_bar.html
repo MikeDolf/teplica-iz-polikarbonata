@@ -4,8 +4,25 @@
     <div class="tbar__grid">
       <div class="tbar__item">
         <span class="tbar__label">Минимальный заказ</span>
+        {#- «Меньше не возим» верно только там, куда не возим мешки. На
+            странице мешков минимум — мешки, а в зоне фасовки (до 50 км от
+            площадки) меньше куба берут мешками: раньше полоса и там писала
+            «1 м³, меньше не возим» — прямо поперёк заголовка страницы. -#}
+        {%- if bag_offer and bag_zone %}
+        <b class="tbar__val">{{ bag_offer.min_bags }} мешков</b>
+        <span class="tbar__note">навалом — от {{ min_volume }}</span>
+        {%- elif zone_bag %}
+        <b class="tbar__val">{{ min_volume }} навалом</b>
+        <span class="tbar__note">меньше — мешками, от {{ min_bags }} штук</span>
+        {%- elif bag_zone_cities %}
+        {#- Тракт, который зона фасовки делит пополам: в ближние посёлки
+            мешки едут, в дальние — нет. -#}
+        <b class="tbar__val">{{ min_volume }} навалом</b>
+        <span class="tbar__note">мешками от {{ min_bags }} штук — {{ bag_zone_cities|join(", ") }}</span>
+        {%- else %}
         <b class="tbar__val">{{ min_volume }}</b>
         <span class="tbar__note">{{ bag_note }}, меньше не возим</span>
+        {%- endif %}
       </div>
       <div class="tbar__item">
         <span class="tbar__label">Наличие</span>

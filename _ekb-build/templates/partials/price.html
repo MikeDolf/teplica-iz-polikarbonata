@@ -25,7 +25,7 @@
       {#- Строка о минимуме одна на обе ветки ниже: раньше она стояла копией
           в двух абзацах, и правка одного из них расходилась с другим. -#}
       {%- set min_line -%}
-      {% if bag_offer and bag_zone %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}, {{ bag_note }}: {{ min_volume_note }}{% if zone_bag %}. В мешках — от {{ min_bags }} штук по {{ zone_bag.volume_l }} л, {{ zone_bag.price }} ₽{% elif bag_offer %}. Мешки возим только по району Верхней Пышмы, до {{ bag_zone_km }} км от площадки{% elif bag_zone_cities %}. Мешки — только в зоне фасовки, до {{ bag_zone_km }} км от площадки: {{ bag_zone_cities|join(", ") }}{% endif %}{% endif %}
+      {% if bag_offer and bag_zone %}Минимальный заказ {{ bag_offer.min_bags }} мешков; навалом — от {{ min_volume }}{% else %}Минимальный заказ {{ min_volume }}{% if min_volume != "1 м³" %}, {{ bag_note }}{% endif %}: {{ min_volume_note }}{% if zone_bag %}. В мешках — от {{ min_bags }} штук по {{ zone_bag.volume_l }} л, {{ zone_bag.price }} ₽{% elif bag_offer %}. Мешки возим только по району Верхней Пышмы, до {{ bag_zone_km }} км от площадки{% elif bag_zone_cities %}. Мешки — только в зоне фасовки, до {{ bag_zone_km }} км от площадки: {{ bag_zone_cities|join(", ") }}{% endif %}{% endif %}
       {%- endset %}
       {%- if city.local_partner %}
       <p>Материал и доставка считаются отдельно. По Нижнему Тагилу доставку организует местный партнёр — цену рейса назовут под ваш адрес и объём. {{ min_line }}.</p>

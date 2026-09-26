@@ -1,4 +1,6 @@
-<div class="callbar">
+{#- nav, а не div: панель — отдельная область страницы (landmark), по ней
+    экранный диктор переходит одним нажатием, как к шапке и подвалу. -#}
+<nav class="callbar" aria-label="Связаться с нами">
   {%- if site.max_url %}
   <a class="callbar__phone" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener" aria-label="Написать в MAX">
     <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="currentColor" d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2z"/></svg>
@@ -18,7 +20,7 @@
     <span>Почта</span>
   </a>
   {%- else %}
-  <a class="callbar__wa" href="{{ cta_base|default('') }}#calc-title" aria-label="Калькулятор">
+  <a class="callbar__wa" href="{{ cta_base|default('') }}#calc-title">
     {% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}
     <span class="callbar__long">Калькулятор</span><span class="callbar__short">Расчёт</span>
   </a>
@@ -27,4 +29,4 @@
       правовых страницах (политика, реквизиты) их нет, и голый якорь никуда
       не вёл: обе кнопки нижней панели там просто не работали. -#}
   <a class="callbar__form" href="{{ cta_base|default('') }}#zayavka"><span class="callbar__long">Оставить заявку</span><span class="callbar__short">Заявка</span></a>
-</div>
+</nav>
