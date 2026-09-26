@@ -678,13 +678,13 @@
   update();
 (function(){
     if(n <= 1 || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-    var DELAY = 5000, QUIET = 10000;
+    var DELAY = 3000, QUIET = 10000;
     var seen = !('IntersectionObserver' in window), hover = false, focus = false, due = 0;
     function wait(ms){ due = Date.now() + ms; }
     wait(DELAY);
     setInterval(function(){
       // Пока ленту не видно или её держат, отсчёт начинается заново:
-      // первый слайд после появления на экране стоит полные 5 секунд.
+      // первый слайд после появления на экране стоит полные 3 секунды.
       if(!seen || hover || focus || document.hidden){ wait(DELAY); return; }
       if(Date.now() < due) return;
       var i = current();
@@ -804,13 +804,13 @@
   update();
 (function(){
     if(n <= 1 || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-    var DELAY = 5000, QUIET = 10000;
+    var DELAY = 3000, QUIET = 10000;
     var seen = !('IntersectionObserver' in window), hover = false, focus = false, due = 0;
     function wait(ms){ due = Date.now() + ms; }
     wait(DELAY);
     setInterval(function(){
       // Пока ленту не видно или её держат, отсчёт начинается заново:
-      // первый слайд после появления на экране стоит полные 5 секунд.
+      // первый слайд после появления на экране стоит полные 3 секунды.
       if(!seen || hover || focus || document.hidden){ wait(DELAY); return; }
       if(Date.now() < due) return;
       var i = current();
