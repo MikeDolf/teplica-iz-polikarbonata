@@ -35,6 +35,11 @@
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
   <link rel="stylesheet" href="{{ site.css }}">
+  {#- Метка «посетитель в екатеринбургском часовом поясе» (Свердловская,
+      Челябинская, Тюменская области и соседи). По ней блоки заказа в
+      статьях блога заметнее для тех, кому реально можно привезти, и
+      тише для читателей из Москвы. Ставится в <head>, чтобы не мигало. -#}
+  <script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script>
 {%- if site.metrika_id %}
   {#- Счётчик Метрики грузится не сразу, а как только браузер освободится.
       tag.js весит 92 КБ и занимает главный поток примерно на 400 мс: на
@@ -89,6 +94,7 @@
 
 {% include "partials/footer.html" %}
 {% include "partials/callbar.html" %}
+{% include "partials/max_fallback.html" %}
 
   {% include "partials/floatcta.html" %}
   <script>
@@ -117,6 +123,39 @@
       el.classList.remove('is-on'); store('fctaHidden','1');
     });
     upd();
+  })();
+  </script>
+  <script>
+  // Цели Метрики по кнопкам. Раньше были только автоцели: «переход в
+  // мессенджер» без понимания, какая кнопка и на какой странице сработала.
+  // max_click уходит с параметром max_place (шапка, нижняя панель, первый
+  // экран, калькулятор, форма, статья…): разбивка — в отчёте «Параметры
+  // визитов». Остальные цели — по одному событию. Список целей для
+  // настройки счётчика — в SITE["metrika_goals"] (site_config.py).
+  (function(){
+    function goal(id, params){ if(window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', id, params || {}); } }
+    var MAX = {{ (site.max_url|default(''))|tojson }};
+    var PLACES = [['.hdr','header'], ['.callbar','callbar'], ['.hero','hero'], ['.calc','calc'],
+                  ['.ctamid','ctamid'], ['.lead','form'], ['.fcta','float'], ['.artbuy','blog_block'],
+                  ['.art','article'], ['.revcta','reviews'], ['.ftr','footer'], ['.nomax','nomax']];
+    function place(el){
+      for(var i = 0; i < PLACES.length; i++){ if(el.closest(PLACES[i][0])) return PLACES[i][1]; }
+      return 'other';
+    }
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a'); if(!a) return;
+      var href = a.getAttribute('href') || '';
+      if(MAX && a.href === MAX){ goal('max_click', { max_place: place(a), max_page: location.pathname }); return; }
+      if(href.indexOf('mailto:') === 0){ goal('email_click'); return; }
+      if(/\/price\/.*\.xlsx$/.test(href)){ goal('price_download'); return; }
+      if(a.closest('.artbuy') && href.indexOf('#calc') >= 0){ goal('blog_calc'); }
+    });
+    // Калькулятор трогали — один раз за страницу.
+    var used = false;
+    document.addEventListener('input', function(e){
+      if(used || !e.target.closest || !e.target.closest('.calc')) return;
+      used = true; goal('calc_used');
+    });
   })();
   </script>
 </body>

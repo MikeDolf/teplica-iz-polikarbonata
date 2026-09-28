@@ -27,6 +27,9 @@
           <a class="btn btn--ghost" href="mailto:{{ site.contact_email }}">Написать на почту</a>
           {%- endif %}
         </div>
+        {%- if site.max_url %}
+        <p class="nomax-link"><a href="#zayavka" data-nomax>Нет MAX? Оставьте номер — напишем сами</a></p>
+        {%- endif %}
         <p class="hero__note">На заявку {{ site.callback_promise }}. {{ site.hours }}.</p>
       </div>
     </div>

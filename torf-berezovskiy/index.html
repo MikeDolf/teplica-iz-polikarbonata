@@ -32,7 +32,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=90"><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=91"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -222,6 +222,7 @@
           <a class="btn btn--call" href="#calc-title"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="11" x2="8" y2="11.01"/><line x1="12" y1="11" x2="12" y2="11.01"/><line x1="16" y1="11" x2="16" y2="11.01"/><line x1="8" y1="15" x2="8" y2="15.01"/><line x1="12" y1="15" x2="12" y2="15.01"/><line x1="16" y1="15" x2="16" y2="15.01"/><line x1="8" y1="19" x2="8" y2="19.01"/><line x1="12" y1="19" x2="12" y2="19.01"/><line x1="16" y1="19" x2="16" y2="19.01"/></svg>Калькулятор</a>
           <a class="btn btn--wa" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">Написать в MAX</a>
         </div>
+        <p class="nomax-link"><a href="#zayavka" data-nomax>Нет MAX? Оставьте номер — напишем сами</a></p>
         <p class="hero__note">На заявку ответим за 15 минут. Круглосуточно, без выходных. Оплата любая: наличными, картой или переводом, после выгрузки.</p>
       </div>
     </div>
@@ -334,6 +335,7 @@
         <p class="calc__when" id="calc-when"></p><p class="calc__note" id="calc-min" hidden></p><div class="calc__cta">
           <a class="btn btn--call calc__btn" href="#zayavka"><span class="calc__btn-label">Оставить заявку на этот объём</span></a>
           <a class="btn btn--wa calc__btn calc__btn--alt" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          <p class="nomax-link nomax-link--calc"><a href="#zayavka" data-nomax>Нет MAX? Оставьте номер — напишем сами</a></p>
         </div>
       </div>
     </div>
@@ -584,6 +586,18 @@
         + (last.total > 0 ? ', ориентировочно от ' + ru(last.total) + ' ₽' : '');
     }
     if(hit && window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', 'calc_to_form'); }
+  });
+
+  // Кнопка из статьи блога («Посчитать КамАЗ с доставкой») приносит свой
+  // материал и объём: data-calc-mat, data-calc-area/-depth, data-calc-shrink.
+  // Человек сразу видит цену своего случая, а не расчёт по умолчанию на 3 м³.
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-calc-mat]'); if(!b) return;
+    var m = b.getAttribute('data-calc-mat');
+    for(var i = 0; i < mat.options.length; i++){ if(mat.options[i].value === m){ mat.value = m; break; } }
+    if(b.getAttribute('data-calc-area')){ area.value = b.getAttribute('data-calc-area'); depth.value = b.getAttribute('data-calc-depth'); }
+    if(b.getAttribute('data-calc-shrink') === '0') shrink.checked = false;
+    syncKm(); calc();
   });
 
   calc();
@@ -1711,6 +1725,106 @@
   </a><a class="callbar__form" href="#zayavka"><span class="callbar__long">Оставить заявку</span><span class="callbar__short">Заявка</span></a>
 </nav>
 
+<div class="nomax" id="nomax" role="dialog" aria-labelledby="nomax-title" aria-modal="false" hidden>
+  <button class="nomax__close" type="button" aria-label="Закрыть">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
+  </button>
+  <form class="nomax__form" id="nomax-form" novalidate>
+    <p class="nomax__title" id="nomax-title">Не открылся MAX?</p>
+    <p class="nomax__sub">Оставьте номер — напишем вам сами, ответим за 15 минут.</p>
+    <input type="text" name="company" tabindex="-1" autocomplete="off" class="ctamid__trap" aria-hidden="true">
+    <label class="sr-only" for="nomax-phone">Ваш телефон</label>
+    <div class="nomax__row">
+      <input class="nomax__input" id="nomax-phone" name="phone" type="tel" inputmode="tel" required
+             placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
+      <button class="nomax__submit" type="submit">Жду сообщения</button>
+    </div>
+    <span class="nomax__error" id="nomax-error" hidden>Впишите номер, на который написать</span>
+    <span class="nomax__error" id="nomax-consent-error" hidden>Без согласия на обработку данных заявку отправить нельзя</span>
+    <label class="nomax__consent">
+      <input type="checkbox" id="nomax-consent" required>
+      <span>Согласен на обработку контактных данных. <a href="/dostavka-grunta/politika/" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
+    </label>
+  </form>
+  <p class="nomax__done" id="nomax-done" hidden role="status"><b>Номер получили.</b> Напишем вам, ответим за 15 минут.</p>
+</div>
+<script>
+(function(){
+  var box = document.getElementById('nomax'); if(!box) return;
+  var MAX = "https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10";
+  var form = document.getElementById('nomax-form'), phone = document.getElementById('nomax-phone');
+  var err = document.getElementById('nomax-error'), consent = document.getElementById('nomax-consent');
+  var consentErr = document.getElementById('nomax-consent-error'), done = document.getElementById('nomax-done');
+  var btn = form.querySelector('.nomax__submit');
+  function goal(id){ if(window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', id); } }
+  // sessionStorage бывает недоступен (запрет cookie, встроенные браузеры
+  // соцсетей) и тогда бросает исключение — просто показываем как обычно.
+  function seen(v){ try { return v ? sessionStorage.setItem('nomaxSeen', '1') : sessionStorage.getItem('nomaxSeen') === '1'; } catch(e){ return false; } }
+  var from = 'max';
+  function open(src, focus){
+    if(!box.hidden) return;
+    from = src;
+    box.hidden = false;
+    requestAnimationFrame(function(){ box.classList.add('is-on'); });
+    goal('max_fallback_shown');
+    // Сами поле не фокусируем после нажатия MAX: человек, скорее всего,
+    // уже в мессенджере, и клавиатура на возврате только мешала бы.
+    if(focus){ setTimeout(function(){ phone.focus(); }, 60); }
+  }
+  function close(){ box.classList.remove('is-on'); seen(true); setTimeout(function(){ box.hidden = true; }, 250); }
+  box.querySelector('.nomax__close').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !box.hidden) close(); });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a,button'); if(!a) return;
+    if(a.hasAttribute('data-nomax')){ e.preventDefault(); open('link', true); return; }
+    if(a.tagName === 'A' && a.href === MAX && !seen()){
+      // Небольшая задержка: мессенджер успевает открыться, а панель
+      // встречает человека, когда он вернётся на вкладку.
+      setTimeout(function(){ open('max', false); }, 700);
+    }
+  });
+  // Маска +7 999 111-22-33, как в остальных формах.
+  phone.addEventListener('input', function(){
+    if(!phone.value.replace(/\D/g, '')){ phone.value = ''; return; }
+    var d = (phone.value.match(/\d/g) || []).join('');
+    if(d[0] === '8') d = '7' + d.slice(1);
+    if(d[0] !== '7') d = '7' + d;
+    d = d.slice(0, 11);
+    var r = '+7';
+    if(d.length > 1) r += ' ' + d.slice(1, 4);
+    if(d.length > 4) r += ' ' + d.slice(4, 7);
+    if(d.length > 7) r += '-' + d.slice(7, 9);
+    if(d.length > 9) r += '-' + d.slice(9, 11);
+    phone.value = r;
+    if(d.length >= 11) err.hidden = true;
+  });
+  consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(form.company.value) return;
+    if((phone.value.match(/\d/g) || []).length < 11){ err.hidden = false; phone.focus(); return; }
+    if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
+    btn.disabled = true;
+    fetch("https://api.web3forms.com/submit", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+      access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
+      subject: 'Нет MAX — написать клиенту' + ("\u0422\u043e\u0440\u0444" ? ': ' + "\u0422\u043e\u0440\u0444" : ''),
+      from_name: 'Сайт доставки грунта',
+      product: "\u0422\u043e\u0440\u0444", district: "\u0411\u0435\u0440\u0451\u0437\u043e\u0432\u0441\u043a\u0438\u0439",
+      phone: phone.value.trim(),
+      note: from === 'max' ? 'Нажал «Написать в MAX», но оставил номер: написать ему самим, не звонить'
+                           : 'Нажал «Нет MAX? Оставьте номер»: написать ему самим, не звонить',
+      page: location.pathname, ref: document.referrer || '', ts: new Date().toISOString()
+    }) })
+    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    .then(function(){
+      form.hidden = true; done.hidden = false; seen(true);
+      goal('max_fallback_lead'); goal('lead');
+    })
+    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на mezdudelom73@gmail.com'); });
+  });
+})();
+</script>
+
   <aside class="fcta" id="fcta" aria-label="Помощь с расчётом" hidden>
   <button class="fcta__close" type="button" aria-label="Скрыть панель связи">
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
@@ -1751,6 +1865,39 @@
       el.classList.remove('is-on'); store('fctaHidden','1');
     });
     upd();
+  })();
+  </script>
+  <script>
+  // Цели Метрики по кнопкам. Раньше были только автоцели: «переход в
+  // мессенджер» без понимания, какая кнопка и на какой странице сработала.
+  // max_click уходит с параметром max_place (шапка, нижняя панель, первый
+  // экран, калькулятор, форма, статья…): разбивка — в отчёте «Параметры
+  // визитов». Остальные цели — по одному событию. Список целей для
+  // настройки счётчика — в SITE["metrika_goals"] (site_config.py).
+  (function(){
+    function goal(id, params){ if(window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', id, params || {}); } }
+    var MAX = "https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10";
+    var PLACES = [['.hdr','header'], ['.callbar','callbar'], ['.hero','hero'], ['.calc','calc'],
+                  ['.ctamid','ctamid'], ['.lead','form'], ['.fcta','float'], ['.artbuy','blog_block'],
+                  ['.art','article'], ['.revcta','reviews'], ['.ftr','footer'], ['.nomax','nomax']];
+    function place(el){
+      for(var i = 0; i < PLACES.length; i++){ if(el.closest(PLACES[i][0])) return PLACES[i][1]; }
+      return 'other';
+    }
+    document.addEventListener('click', function(e){
+      var a = e.target.closest && e.target.closest('a'); if(!a) return;
+      var href = a.getAttribute('href') || '';
+      if(MAX && a.href === MAX){ goal('max_click', { max_place: place(a), max_page: location.pathname }); return; }
+      if(href.indexOf('mailto:') === 0){ goal('email_click'); return; }
+      if(/\/price\/.*\.xlsx$/.test(href)){ goal('price_download'); return; }
+      if(a.closest('.artbuy') && href.indexOf('#calc') >= 0){ goal('blog_calc'); }
+    });
+    // Калькулятор трогали — один раз за страницу.
+    var used = false;
+    document.addEventListener('input', function(e){
+      if(used || !e.target.closest || !e.target.closest('.calc')) return;
+      used = true; goal('calc_used');
+    });
   })();
   </script>
 </body>

@@ -1,0 +1,116 @@
+{#- «Не открылся MAX? Оставьте номер — напишем сами».
+
+    Зачем. За сентябрь кнопку «Написать в MAX» нажали примерно 150 человек,
+    а написали около 80: половина теряется между нажатием и сообщением —
+    чаще всего у человека просто нет MAX, и вместо чата открывается магазин
+    приложений. Эта панель ловит именно их: всплывает сразу после нажатия
+    на любую кнопку MAX (человек вернётся на вкладку — она уже ждёт) и по
+    ссылке «Нет MAX?» в первом экране. Одно поле, телефон; заявка уходит на
+    почту тем же web3forms, что и остальные формы.
+
+    Слова «перезвоним» нет намеренно: владелец не хочет звонков, поэтому
+    обещаем написать. Панель появляется не чаще раза за сессию: закрыл или
+    отправил — больше не лезет. Цели: max_fallback_shown, max_fallback_lead
+    и общая lead. -#}
+{%- if site.max_url %}
+{%- set _c = city|default({}) %}
+<div class="nomax" id="nomax" role="dialog" aria-labelledby="nomax-title" aria-modal="false" hidden>
+  <button class="nomax__close" type="button" aria-label="Закрыть">
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M18.3 5.7 12 12l6.3 6.3-1.4 1.4L10.6 13.4 4.3 19.7 2.9 18.3 9.2 12 2.9 5.7 4.3 4.3l6.3 6.3 6.3-6.3z"/></svg>
+  </button>
+  <form class="nomax__form" id="nomax-form" novalidate>
+    <p class="nomax__title" id="nomax-title">Не открылся MAX?</p>
+    <p class="nomax__sub">Оставьте номер — напишем вам сами, {{ site.callback_promise }}.</p>
+    <input type="text" name="company" tabindex="-1" autocomplete="off" class="ctamid__trap" aria-hidden="true">
+    <label class="sr-only" for="nomax-phone">Ваш телефон</label>
+    <div class="nomax__row">
+      <input class="nomax__input" id="nomax-phone" name="phone" type="tel" inputmode="tel" required
+             placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
+      <button class="nomax__submit" type="submit">Жду сообщения</button>
+    </div>
+    <span class="nomax__error" id="nomax-error" hidden>Впишите номер, на который написать</span>
+    <span class="nomax__error" id="nomax-consent-error" hidden>Без согласия на обработку данных заявку отправить нельзя</span>
+    <label class="nomax__consent">
+      <input type="checkbox" id="nomax-consent" required>
+      <span>Согласен на обработку контактных данных. <a href="{{ site.privacy_url }}" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
+    </label>
+  </form>
+  <p class="nomax__done" id="nomax-done" hidden role="status"><b>Номер получили.</b> Напишем вам, {{ site.callback_promise }}.</p>
+</div>
+<script>
+(function(){
+  var box = document.getElementById('nomax'); if(!box) return;
+  var MAX = {{ site.max_url|tojson }};
+  var form = document.getElementById('nomax-form'), phone = document.getElementById('nomax-phone');
+  var err = document.getElementById('nomax-error'), consent = document.getElementById('nomax-consent');
+  var consentErr = document.getElementById('nomax-consent-error'), done = document.getElementById('nomax-done');
+  var btn = form.querySelector('.nomax__submit');
+  function goal(id){ if(window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', id); } }
+  // sessionStorage бывает недоступен (запрет cookie, встроенные браузеры
+  // соцсетей) и тогда бросает исключение — просто показываем как обычно.
+  function seen(v){ try { return v ? sessionStorage.setItem('nomaxSeen', '1') : sessionStorage.getItem('nomaxSeen') === '1'; } catch(e){ return false; } }
+  var from = 'max';
+  function open(src, focus){
+    if(!box.hidden) return;
+    from = src;
+    box.hidden = false;
+    requestAnimationFrame(function(){ box.classList.add('is-on'); });
+    goal('max_fallback_shown');
+    // Сами поле не фокусируем после нажатия MAX: человек, скорее всего,
+    // уже в мессенджере, и клавиатура на возврате только мешала бы.
+    if(focus){ setTimeout(function(){ phone.focus(); }, 60); }
+  }
+  function close(){ box.classList.remove('is-on'); seen(true); setTimeout(function(){ box.hidden = true; }, 250); }
+  box.querySelector('.nomax__close').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !box.hidden) close(); });
+  document.addEventListener('click', function(e){
+    var a = e.target.closest && e.target.closest('a,button'); if(!a) return;
+    if(a.hasAttribute('data-nomax')){ e.preventDefault(); open('link', true); return; }
+    if(a.tagName === 'A' && a.href === MAX && !seen()){
+      // Небольшая задержка: мессенджер успевает открыться, а панель
+      // встречает человека, когда он вернётся на вкладку.
+      setTimeout(function(){ open('max', false); }, 700);
+    }
+  });
+  // Маска +7 999 111-22-33, как в остальных формах.
+  phone.addEventListener('input', function(){
+    if(!phone.value.replace(/\D/g, '')){ phone.value = ''; return; }
+    var d = (phone.value.match(/\d/g) || []).join('');
+    if(d[0] === '8') d = '7' + d.slice(1);
+    if(d[0] !== '7') d = '7' + d;
+    d = d.slice(0, 11);
+    var r = '+7';
+    if(d.length > 1) r += ' ' + d.slice(1, 4);
+    if(d.length > 4) r += ' ' + d.slice(4, 7);
+    if(d.length > 7) r += '-' + d.slice(7, 9);
+    if(d.length > 9) r += '-' + d.slice(9, 11);
+    phone.value = r;
+    if(d.length >= 11) err.hidden = true;
+  });
+  consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    if(form.company.value) return;
+    if((phone.value.match(/\d/g) || []).length < 11){ err.hidden = false; phone.focus(); return; }
+    if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
+    btn.disabled = true;
+    fetch({{ site.form_endpoint|tojson }}, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+      access_key: {{ site.web3forms_key|tojson }},
+      subject: 'Нет MAX — написать клиенту' + ({{ (preselect_product|default(''))|tojson }} ? ': ' + {{ (preselect_product|default(''))|tojson }} : ''),
+      from_name: 'Сайт доставки грунта',
+      product: {{ (preselect_product|default('не указан'))|tojson }}, district: {{ (_c.name|default(''))|tojson }},
+      phone: phone.value.trim(),
+      note: from === 'max' ? 'Нажал «Написать в MAX», но оставил номер: написать ему самим, не звонить'
+                           : 'Нажал «Нет MAX? Оставьте номер»: написать ему самим, не звонить',
+      page: location.pathname, ref: document.referrer || '', ts: new Date().toISOString()
+    }) })
+    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    .then(function(){
+      form.hidden = true; done.hidden = false; seen(true);
+      goal('max_fallback_lead'); goal('lead');
+    })
+    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на {{ site.contact_email }}'); });
+  });
+})();
+</script>
+{%- endif %}

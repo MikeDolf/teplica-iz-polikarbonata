@@ -1094,3 +1094,56 @@ html{overflow-x:hidden}
    при подгрузке рекламы на первый экран не попадает. */
 .adslot{margin:28px auto;max-width:var(--wrap)}
 .art .adslot{margin:24px 0}
+
+/* ===== «Не открылся MAX? Оставьте номер» (partials/max_fallback.html) =====
+   На телефоне — лист снизу поверх нижней панели, на компьютере — карточка
+   в правом нижнем углу поверх плавающего блока связи. */
+.nomax{position:fixed;left:0;right:0;bottom:0;z-index:60;background:#12331f;color:#eaf1ea;
+  border-radius:16px 16px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.28);
+  padding:18px 16px calc(16px + env(safe-area-inset-bottom,0px));
+  transform:translateY(110%);transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.nomax.is-on{transform:none}
+@media (min-width:721px){
+  .nomax{left:auto;right:20px;bottom:20px;width:360px;border-radius:14px;padding:20px}
+}
+.nomax__close{position:absolute;top:6px;right:6px;width:44px;height:44px;border:0;background:none;
+  color:#a8c2b0;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.nomax__close:hover{color:#fff;background:rgba(255,255,255,.08)}
+.nomax__title{margin:0 44px 4px 0;font-size:18px;font-weight:800;color:#fff}
+.nomax__sub{margin:0 0 12px;font-size:15px;line-height:1.4;color:#c7dacd}
+.nomax__row{display:flex;gap:8px}
+.ekb .nomax__input{flex:1 1 auto;min-width:0;height:48px;padding:0 12px;border-radius:10px;border:1.5px solid rgba(255,255,255,.25);
+  background:#fff;color:var(--ink);font:inherit;font-size:16px}
+.ekb .nomax__submit{flex:none;height:48px;padding:0 16px;border:0;border-radius:10px;background:var(--wa);
+  color:#08301a;font:inherit;font-size:15px;font-weight:800;cursor:pointer}
+.ekb .nomax__submit:disabled{opacity:.6}
+.nomax__error{display:block;margin-top:6px;font-size:13.5px;color:#ffb4a8}
+.nomax__consent{display:flex;gap:9px;align-items:flex-start;margin-top:10px;font-size:13px;line-height:1.45;color:#a8c2b0;cursor:pointer}
+.nomax__consent input{margin-top:2px;width:17px;height:17px;flex:none;accent-color:var(--accent)}
+.nomax__consent a{color:#c3e6ce;text-decoration:underline;display:inline-block;padding:4px 0}
+.nomax__done{margin:0;font-size:15.5px;line-height:1.45;color:#eaf1ea}
+@media (max-width:380px){.ekb .nomax__submit{padding:0 12px;font-size:14px}}
+
+/* ссылка «Нет MAX?» под кнопками первого экрана и калькулятора */
+.nomax-link{margin:10px 0 0;font-size:14.5px}
+.ekb .nomax-link a{color:inherit;opacity:.88;text-decoration:underline;text-underline-offset:3px;display:inline-block;padding:6px 0}
+.ekb .nomax-link a:hover{opacity:1}
+.hero .nomax-link{color:#d6e7da}
+.nomax-link--calc{flex-basis:100%;text-align:center}
+
+/* ===== блок заказа в статье блога (partials/artbuy.html) =====
+   Для всех — спокойная карточка; для часового пояса Екатеринбурга
+   (tz-ekb на <html>) — тёмная и заметная, с подписью для местных. */
+.artbuy{margin:22px 0 26px;padding:18px 20px;border:1px solid var(--line);border-radius:14px;background:var(--paper)}
+.artbuy__local{display:none;margin:0 0 6px;font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#8fcaa1}
+.artbuy__title{display:block;font-size:19px;line-height:1.25;color:var(--ink)}
+.ekb .artbuy__text{margin:8px 0 14px;font-size:15.5px;line-height:1.5;color:var(--ink-soft)}
+.artbuy__act .btn{gap:9px}
+.ekb .artbuy__links{margin:14px 0 0;font-size:14.5px;line-height:1.6;color:var(--ink-soft)}
+.artbuy__links a{display:inline-block;padding:3px 0}
+.tz-ekb .artbuy{background:#12331f;border-color:#12331f}
+.tz-ekb .artbuy__local{display:block}
+.tz-ekb .artbuy__title{color:#fff}
+.tz-ekb .ekb .artbuy__text,.tz-ekb .artbuy__text{color:#c7dacd}
+.tz-ekb .ekb .artbuy__links,.tz-ekb .artbuy__links{color:#a8c2b0}
+.tz-ekb .artbuy__links a{color:#c3e6ce}

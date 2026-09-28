@@ -1,0 +1,21 @@
+{#- Блок заказа в статье блога — сразу после первого раздела, где статья
+    уже ответила на вопрос. Блог даёт ~40% входов и меньше 1% обращений:
+    статья отвечала и отпускала человека, хотя «сколько кубов в КамАЗе»
+    спрашивают, когда собираются заказывать машину.
+
+    Кнопка ведёт в калькулятор на этой же странице и подставляет свой
+    материал и объём (см. calc.html). Ссылки внизу — обычные, видны всем и
+    поисковику: страницы «купить … в Екатеринбурге» стоят на 7–10 месте, и
+    ссылки с самых посещаемых статей их поднимают. Для часового пояса
+    Екатеринбурга блок ярче и с подписью для местных (класс tz-ekb на
+    <html>, ставится в base.html). -#}
+<aside class="artbuy" aria-label="Заказать с доставкой">
+  <p class="artbuy__local">Вы в Екатеринбурге или области? Привезём сами.</p>
+  <b class="artbuy__title">{{ buy.title }}</b>
+  <p class="artbuy__text">{{ buy.text }}</p>
+  <div class="artbuy__act">
+    <a class="btn btn--call" href="#calc-title" data-calc-mat="{{ buy.mat }}"
+       {%- if buy.area %} data-calc-area="{{ buy.area }}" data-calc-depth="{{ buy.depth }}" data-calc-shrink="0"{% endif %}>{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}{{ buy.button }}</a>
+  </div>
+  <p class="artbuy__links">Купить с доставкой: {% for l in buy.links %}<a href="{{ l.url }}">{{ l.text }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+</aside>

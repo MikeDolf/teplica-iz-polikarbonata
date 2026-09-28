@@ -80,7 +80,9 @@
     </ul>
     {%- endif %}
     {%- endfor %}
-    {%- if early_cta and loop.first %}
+    {%- if loop.first and buy %}
+    {% include "partials/artbuy.html" %}
+    {%- elif early_cta and loop.first %}
     <p class="art__earlycta"><a href="{{ early_cta.url }}">{{ early_cta.text }}</a></p>
     {%- endif %}
     {#- Реклама (только блог): после 1-го раздела и дальше через раздел, но

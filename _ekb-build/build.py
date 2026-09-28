@@ -707,6 +707,70 @@ def publisher_node():
     }
 
 
+# Блок заказа в статьях блога (partials/artbuy.html). Ссылки — на
+# страницы «купить … в Екатеринбурге», которые стоят на 7–10 месте; анкоры
+# в трёх вариантах и чередуются по статьям, чтобы на полусотне страниц не
+# стоял один и тот же текст ссылки.
+BUY_LINKS = {
+    "chernozem": ("/chernozem-ekaterinburg/", ["купить чернозём в Екатеринбурге", "чернозём в Екатеринбурге с доставкой", "чернозём с доставкой по Екатеринбургу"]),
+    "torf": ("/torf-ekaterinburg/", ["купить торф в Екатеринбурге", "торф в Екатеринбурге с доставкой", "торф с доставкой по Екатеринбургу"]),
+    "peregnoy": ("/peregnoy-ekaterinburg/", ["купить перегной в Екатеринбурге", "перегной в Екатеринбурге с доставкой", "перегной с доставкой по Екатеринбургу"]),
+    "plodorodnyy-grunt": ("/plodorodnyy-grunt-ekaterinburg/", ["плодородный грунт в Екатеринбурге", "купить плодородный грунт в Екатеринбурге", "плодородный грунт с доставкой по Екатеринбургу"]),
+    "grunt-dlya-teplicy": ("/grunt-dlya-teplicy-ekaterinburg/", ["грунт для теплицы в Екатеринбурге", "купить грунт для теплицы в Екатеринбурге", "грунт для теплицы с доставкой"]),
+}
+# что подставить в калькулятор и как назвать материал в тексте
+BUY_MAT = {
+    "chernozem": ("chernozem", "чернозём"),
+    "peregnoy": ("peregnoy", "перегной"),
+    "plodorodnyy-grunt": ("plodorodnyy-grunt", "плодородный грунт"),
+    "grunt-dlya-teplicy": ("plodorodnyy-grunt", "грунт для теплицы"),
+}
+# Самые посещаемые статьи — со своим текстом и подставленным объёмом.
+BUY_CUSTOM = {
+    "skolko-kubov-v-kamaze": dict(
+        product="chernozem", area=100, depth=10,
+        title="Сколько стоит КамАЗ земли до вашего адреса",
+        text="В КамАЗ помещается до 10 м³. Чернозём — от {chernozem} ₽/м³, плодородный грунт — от {plodorodnyy-grunt} ₽/м³. Кнопка подставит машину на 10 кубов в калькулятор ниже — выберите свой адрес, и он покажет цену с рейсом.",
+        button="Посчитать КамАЗ с доставкой"),
+    "skolko-vesit-kub-zemli": dict(
+        product="chernozem",
+        title="Нужно привезти землю?",
+        text="Чернозём — от {chernozem} ₽/м³. По Екатеринбургу возим от 1 м³ навалом или мешками от 5 штук. Калькулятор ниже посчитает объём, вес и рейс до вашего адреса.",
+        button="Посчитать объём и доставку"),
+    "chem-podnyat-uchastok": dict(
+        product="plodorodnyy-grunt", area=100, depth=20,
+        title="Посчитать подъём участка с доставкой",
+        text="Верхний слой — плодородный грунт от {plodorodnyy-grunt} ₽/м³. Кнопка подставит в калькулятор сотку слоем 20 см — поменяйте площадь и слой на свои, и он покажет кубы и рейс до вашего адреса.",
+        button="Посчитать подъём участка"),
+}
+
+
+def blog_buy(post):
+    """Данные блока заказа для статьи блога (partials/artbuy.html)."""
+    i = BLOG.index(post)
+    prod = (post.get("cta") or {}).get("url", "").strip("/").replace("-ekaterinburg", "")
+    custom = BUY_CUSTOM.get(post["slug"], {})
+    prod = custom.get("product", prod)
+    if prod not in BUY_MAT:
+        prod = "plodorodnyy-grunt"
+    mat, name = BUY_MAT[prod]
+    price = {m["key"]: m["m3"] for m in CALC_MATERIALS}
+    fmt = {k: ru_number(v) for k, v in price.items()}
+    order = [prod] + [k for k in ("chernozem", "torf", "peregnoy") if k != prod]
+    links = [{"url": BUY_LINKS[k][0], "text": BUY_LINKS[k][1][i % 3]} for k in order[:3]]
+    text = custom.get("text") or (
+        "{Name} — от {p} ₽/м³. По Екатеринбургу возим от 1 м³ навалом или мешками от 5 штук. "
+        "Калькулятор ниже посчитает цену материала и рейса до вашего адреса.")
+    text = text.replace("{Name}", name[:1].upper() + name[1:]).replace("{p}", fmt[mat])
+    for k, v in fmt.items():
+        text = text.replace("{" + k + "}", v)
+    return {
+        "mat": mat, "area": custom.get("area"), "depth": custom.get("depth"),
+        "title": custom.get("title") or f"Привезём {name} по Екатеринбургу и области",
+        "text": text, "button": custom.get("button", "Посчитать доставку"), "links": links,
+    }
+
+
 def article_node(a, canonical, cover, kind="Article"):
     """Узел Article с датами, картинкой и автором.
 
@@ -1400,6 +1464,7 @@ def render_blog():
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]},
         ]}, ensure_ascii=False, separators=(",", ":"))
         html = env.get_template("article.html").render(
+            buy=blog_buy(p),
             ads=True,   # реклама РСЯ — только в блоге, см. base.html
             site=SITE, canonical=canonical, robots="index, follow",
             section_url="/dostavka-grunta/blog/", section_name="Блог",

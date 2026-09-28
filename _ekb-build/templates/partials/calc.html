@@ -89,6 +89,7 @@
           <a class="btn btn--call calc__btn" href="#zayavka"><span class="calc__btn-label">Оставить заявку на этот объём</span></a>
           {%- if site.max_url %}
           <a class="btn btn--wa calc__btn calc__btn--alt" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          <p class="nomax-link nomax-link--calc"><a href="#zayavka" data-nomax>Нет MAX? Оставьте номер — напишем сами</a></p>
           {%- endif %}
         </div>
       </div>
@@ -340,6 +341,18 @@
         + (last.total > 0 ? ', ориентировочно от ' + ru(last.total) + ' ₽' : '');
     }
     if(hit && window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', 'calc_to_form'); }
+  });
+
+  // Кнопка из статьи блога («Посчитать КамАЗ с доставкой») приносит свой
+  // материал и объём: data-calc-mat, data-calc-area/-depth, data-calc-shrink.
+  // Человек сразу видит цену своего случая, а не расчёт по умолчанию на 3 м³.
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-calc-mat]'); if(!b) return;
+    var m = b.getAttribute('data-calc-mat');
+    for(var i = 0; i < mat.options.length; i++){ if(mat.options[i].value === m){ mat.value = m; break; } }
+    if(b.getAttribute('data-calc-area')){ area.value = b.getAttribute('data-calc-area'); depth.value = b.getAttribute('data-calc-depth'); }
+    if(b.getAttribute('data-calc-shrink') === '0') shrink.checked = false;
+    syncKm(); calc();
   });
 
   calc();
