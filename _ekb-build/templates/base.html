@@ -58,8 +58,12 @@
     ym({{ site.metrika_id }},'init',{ssr:true,webvisor:true,clickmap:true,accurateTrackBounce:true,trackLinks:true});
   </script>
 {%- endif %}
-{%- if site.yandex_ads_page_id %}
+{%- if site.yandex_ads_page_id and ads|default(false) %}
+  {#- Реклама РСЯ только там, где страницу рендерят с ads=True (блог).
+      yaContextCb — очередь для ручных RTB-блоков (partials/ad_slot.html):
+      должна существовать до загрузки context.js. -#}
   <!-- Yandex Autoplacement {{ site.yandex_ads_page_id }} -->
+  <script>window.yaContextCb = window.yaContextCb || [];</script>
   <script src="https://yandex.ru/ads/system/context.js" async></script>
   <script data-page-id="{{ site.yandex_ads_page_id }}" src="https://yandex.ru/ads/system/ap-loader.js" async></script>
 {%- endif %}

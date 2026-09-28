@@ -1,0 +1,11 @@
+{#- Место под ручной RTB-блок РСЯ. n — номер места (1, 2, …), блок берётся
+    из SITE["yandex_rtb_blocks"][n-1]. Выводится только на страницах с
+    ads=True (блог) и только если для этого места есть номер блока, —
+    пустых рамок на странице не остаётся. wrap — для мест вне статьи. -#}
+{%- if ads and site.yandex_rtb_blocks and site.yandex_rtb_blocks|length >= n %}
+{%- set bid = site.yandex_rtb_blocks[n - 1] %}
+<aside class="adslot{% if wrap %} wrap{% endif %}" aria-label="Реклама">
+  <div id="yandex_rtb_{{ bid }}"></div>
+</aside>
+<script>window.yaContextCb.push(function(){ Ya.Context.AdvManager.render({ blockId: "{{ bid }}", renderTo: "yandex_rtb_{{ bid }}" }); });</script>
+{%- endif %}

@@ -1087,3 +1087,10 @@ html{overflow-x:hidden}
 .hdr{transition:transform .28s cubic-bezier(.4,0,.2,1),box-shadow .28s}
 .hdr.hdr--stuck{box-shadow:0 2px 12px rgba(0,0,0,.18)}
 .hdr.hdr--hidden{transform:translateY(-100%);box-shadow:none}
+
+/* ===== места под рекламу РСЯ в блоге (partials/ad_slot.html) =====
+   Высота не резервируется: если блок не выкупят, на странице не остаётся
+   пустой рамки. Места стоят ниже первого экрана, так что сдвиг вёрстки
+   при подгрузке рекламы на первый экран не попадает. */
+.adslot{margin:28px auto;max-width:var(--wrap)}
+.art .adslot{margin:24px 0}

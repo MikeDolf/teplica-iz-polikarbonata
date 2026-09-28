@@ -83,6 +83,13 @@
     {%- if early_cta and loop.first %}
     <p class="art__earlycta"><a href="{{ early_cta.url }}">{{ early_cta.text }}</a></p>
     {%- endif %}
+    {#- Реклама (только блог): после 1-го раздела и дальше через раздел, но
+        не после последнего — там своё место ниже. Не до первого раздела:
+        человек пришёл за ответом, и реклама перед ним бьёт по поведению
+        и позициям статьи. -#}
+    {%- if loop.index is odd and not loop.last %}
+    {% with n = (loop.index + 1) // 2, wrap = false %}{% include "partials/ad_slot.html" %}{% endwith %}
+    {%- endif %}
     {%- endfor %}
 
     <aside class="art__cta">
@@ -129,11 +136,15 @@
       «сколько кубов на сотку») заканчивается тем же вопросом про деньги,
       и лучше ответить на него здесь, чем отпустить человека считать в
       другое место. Заодно минимальный объём виден и в этой ветке сайта. -#}
+  {% with n = body|length // 2 + 1, wrap = true %}{% include "partials/ad_slot.html" %}{% endwith %}
+
   {% include "partials/calc.html" %}
 
   {% include "partials/lead_form.html" %}
 
   {% include "partials/faq.html" %}
+
+  {% with n = body|length // 2 + 2, wrap = true %}{% include "partials/ad_slot.html" %}{% endwith %}
 
   {% include "partials/related.html" %}
 {% endblock %}

@@ -1354,6 +1354,7 @@ def render_blog():
             {"@type": "ListItem", "position": 2, "name": "Блог", "item": hub_canonical}]},
     ]}, ensure_ascii=False, separators=(",", ":"))
     html = env.get_template("blog_index.html").render(
+        ads=True,   # реклама РСЯ — только в блоге, см. base.html
         site=SITE, canonical=hub_canonical, robots="index, follow",
         title="Блог: расчёт объёмов грунта, вес куба, доставка",
         description="Справочник по грунту и органике: сколько весит куб земли, чернозёма и торфа, сколько кубов в КамАЗе, как посчитать объём на сотку и на грядку.",
@@ -1399,6 +1400,7 @@ def render_blog():
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]},
         ]}, ensure_ascii=False, separators=(",", ":"))
         html = env.get_template("article.html").render(
+            ads=True,   # реклама РСЯ — только в блоге, см. base.html
             site=SITE, canonical=canonical, robots="index, follow",
             section_url="/dostavka-grunta/blog/", section_name="Блог",
             title=p["title"], description=p["description"], h1=p["h1"], short=p["short"],

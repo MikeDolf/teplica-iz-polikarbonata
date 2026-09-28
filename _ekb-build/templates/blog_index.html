@@ -30,6 +30,8 @@
     </div>
   </section>
 
+  {% with n = 1, wrap = true %}{% include "partials/ad_slot.html" %}{% endwith %}
+
   <section class="hubgeo band band--white">
     <div class="wrap">
     <h2 class="sec-h">Как применять материалы</h2>
@@ -40,6 +42,8 @@
     </ul>
     </div>
   </section>
+
+  {% with n = 2, wrap = true %}{% include "partials/ad_slot.html" %}{% endwith %}
 
   {% include "partials/calc.html" %}
 
