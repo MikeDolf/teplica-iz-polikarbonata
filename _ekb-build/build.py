@@ -266,6 +266,9 @@ FOOTER_LINKS = [
 ]
 
 BUSINESS_ID = SITE["domain"] + "/dostavka-grunta/#business"
+# «Главная» в хлебных крошках — главная доставки грунта, а не корень
+# fanline.su: корень — другой раздел сайта (теплицы).
+HOME_URL = SITE["domain"] + "/dostavka-grunta/"
 
 
 def postal_address(raw):
@@ -309,9 +312,8 @@ def build_schema(page, canonical):
     graph = [build_localbusiness(), {
         "@type": "BreadcrumbList",
         "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
-            {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
-            {"@type": "ListItem", "position": 3, "name": page["h1"], "item": canonical},
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": HOME_URL},
+            {"@type": "ListItem", "position": 2, "name": page["h1"], "item": canonical},
         ],
     }]
     # Product с ценой: без него цена не попадает в сниппет выдачи.
@@ -1203,9 +1205,6 @@ def render_hub(all_pages):
     }
     schema = json.dumps({"@context": "https://schema.org", "@graph": [org, catalog_list,
         build_localbusiness(),
-        {"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
-            {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": canonical}]},
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]},
     ]}, ensure_ascii=False, separators=(",", ":"))
@@ -1288,9 +1287,8 @@ def render_articles():
         schema = json.dumps({"@context": "https://schema.org", "@graph": [
             article_node(a, canonical, cover_key),
             {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
-                {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
-                {"@type": "ListItem", "position": 3, "name": a["short"], "item": canonical}]},
+                {"@type": "ListItem", "position": 1, "name": "Главная", "item": HOME_URL},
+                {"@type": "ListItem", "position": 2, "name": a["short"], "item": canonical}]},
             {"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in a["faq"]]},
         ]}, ensure_ascii=False, separators=(",", ":"))
@@ -1352,9 +1350,8 @@ def render_blog():
                               "url": SITE["domain"] + x["url"]}
                              for i, x in enumerate(posts_nav + art_nav)]},
         {"@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
-            {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
-            {"@type": "ListItem", "position": 3, "name": "Блог", "item": hub_canonical}]},
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": HOME_URL},
+            {"@type": "ListItem", "position": 2, "name": "Блог", "item": hub_canonical}]},
     ]}, ensure_ascii=False, separators=(",", ":"))
     html = env.get_template("blog_index.html").render(
         site=SITE, canonical=hub_canonical, robots="index, follow",
@@ -1395,10 +1392,9 @@ def render_blog():
             dict(article_node(p, canonical, None, kind="BlogPosting"),
                  isPartOf={"@type": "Blog", "name": "Блог о грунте и органике", "url": hub_canonical}),
             {"@type": "BreadcrumbList", "itemListElement": [
-                {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
-                {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
-                {"@type": "ListItem", "position": 3, "name": "Блог", "item": hub_canonical},
-                {"@type": "ListItem", "position": 4, "name": p["short"], "item": canonical}]},
+                {"@type": "ListItem", "position": 1, "name": "Главная", "item": HOME_URL},
+                {"@type": "ListItem", "position": 2, "name": "Блог", "item": hub_canonical},
+                {"@type": "ListItem", "position": 3, "name": p["short"], "item": canonical}]},
             {"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in p["faq"]]},
         ]}, ensure_ascii=False, separators=(",", ":"))
@@ -1538,9 +1534,8 @@ def render_company():
     lb.update({"legalName": SITE["legal_name"], "taxID": SITE["inn"]})
     schema = json.dumps({"@context": "https://schema.org", "@graph": [lb, {
         "@type": "BreadcrumbList", "itemListElement": [
-            {"@type": "ListItem", "position": 1, "name": "Главная", "item": SITE["domain"] + "/"},
-            {"@type": "ListItem", "position": 2, "name": "Доставка грунта", "item": SITE["domain"] + "/dostavka-grunta/"},
-            {"@type": "ListItem", "position": 3, "name": "Реквизиты", "item": canonical}]}]},
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": HOME_URL},
+            {"@type": "ListItem", "position": 2, "name": "Реквизиты", "item": canonical}]}]},
         ensure_ascii=False, separators=(",", ":"))
     html = env.get_template("legal.html").render(
         schema_json=schema,

@@ -7,8 +7,10 @@
 {% block breadcrumbs %}
 <nav class="crumbs wrap" aria-label="Хлебные крошки">
   <ol>
-    <li><a href="/">Главная</a></li>
-    <li><a href="{{ section_url|default('/dostavka-grunta/') }}">{{ section_name|default('Доставка грунта') }}</a></li>
+    <li><a href="/dostavka-grunta/">Главная</a></li>
+    {%- if section_url and section_url != "/dostavka-grunta/" %}
+    <li><a href="{{ section_url }}">{{ section_name }}</a></li>
+    {%- endif %}
     <li><span aria-current="page">{{ short }}</span></li>
   </ol>
 </nav>
