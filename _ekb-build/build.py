@@ -43,7 +43,7 @@ RIDE_FLOOR_PYSHMA = {
 from tail_cities import TAIL_CITIES
 from works import WORKS, WORKS_VIDEO  # noqa
 from bagged import BAGGED, BAG_BASE, MIN_BAGS, BAG_ZONE_KM, BAG_ANY  # noqa
-from city_product import CP, CPF  # noqa
+from city_product import CP, CPF, BAGS_ASSUMED  # noqa
 try:
     from reviews import REVIEWS  # noqa
 except ImportError:
@@ -302,8 +302,8 @@ def build_localbusiness():
         "openingHours": "Mo-Su 00:00-23:59",   # круглосуточно, без выходных
         "priceRange": "₽₽",
     }
-    if SITE.get("phone_tel"):
-        lb["telephone"] = SITE["phone_tel"]
+    # Телефона в разметке нет по просьбе владельца: поисковик показывал бы
+    # его в выдаче кнопкой звонка, а связь по заказам — через MAX и почту.
     if SITE.get("legal_address"):
         lb["address"] = postal_address(SITE["legal_address"])
     return lb
@@ -478,6 +478,18 @@ def bag_note(product_key, city_key=None):
     kg = PRODUCTS.get(product_key, {}).get("bag_kg")
     tail = f", около {kg} кг каждый" if kg else ""
     return f"это 60-75 мешков по 40-50 л{tail}"
+
+
+def bags_clause(city_key, product_key):
+    """Фраза про мешки для заметки города (маркер {bags} в city_product.py)."""
+    zone = in_bag_zone(city_key)
+    assumed = BAGS_ASSUMED.get((city_key, product_key))
+    assert assumed is None or assumed == zone, (
+        f"зона фасовки сменилась для {city_key}/{product_key}: перечитайте заметку "
+        f"в city_product.py — текст вокруг {{bags}} писался под «{'в зоне' if assumed else 'вне зоны'}»")
+    if zone:
+        return f"Мешки сюда возим, от {MIN_BAGS} штук по {BAG_ANY['price']} ₽"
+    return "Мешки сюда не возим — фасовка только по району Верхней Пышмы"
 
 
 def base_of(product_key, city_key=None):
@@ -943,7 +955,7 @@ def compose_geo(product_key, city_key):
         faq = ([buy_q] if buy_q else []) + [city_q] + pr["faq_base"]
     else:
         faq = CPF.get((city_key, product_key), []) + ([buy_q] if buy_q else []) + [city_q] + pr["faq_base"]
-    about = (([CP[(city_key, product_key)]]
+    about = (([CP[(city_key, product_key)].replace("{bags}", bags_clause(city_key, product_key))]
               if (city_key, product_key) in CP and product_key not in DISCONTINUED else [])
              + city.get("about_extra", []) + pr["intro"])
     # faq_base и intro в products.py пишутся под общий минимум в три куба
