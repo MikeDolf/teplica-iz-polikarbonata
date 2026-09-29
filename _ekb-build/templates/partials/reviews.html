@@ -51,6 +51,9 @@
       {%- endfor %}
     </div>
     {%- endif %}
+    {%- if site.yandex_business_url %}
+    <p class="rev__ya">Заказывали у нас? <a href="{{ site.yandex_business_url }}" target="_blank" rel="noopener">Оставьте отзыв на Яндексе</a> — это помогает другим выбрать.</p>
+    {%- endif %}
   </div>
 </section>
 <script>

@@ -42,6 +42,7 @@
       <li><a href="{{ l.url }}">{{ l.text }}</a></li>
       {%- endfor %}
       <li><a href="{{ site.privacy_url }}">Обработка данных</a></li>
+      {%- if site.yandex_business_url %}<li><a href="{{ site.yandex_business_url }}" target="_blank" rel="noopener">Мы на Яндексе</a></li>{%- endif %}
     </ul>
     <p class="ftr__legal">Доставка чернозёма, перегноя и навоза по {{ site.region_po }}. Цены рассчитываются под объём и район, точную стоимость называем в ответ на заявку.</p>
   </div>

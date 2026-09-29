@@ -296,6 +296,7 @@ def build_localbusiness():
         "@id": BUSINESS_ID,
         "name": SITE["brand"],
         "image": SITE["domain"] + "/assets/ekb/photo/raboty/dve-kuchi-uchastok-800.jpg",
+        "sameAs": [SITE["yandex_business_url"]] if SITE.get("yandex_business_url") else [],
         "url": SITE["domain"] + "/dostavka-grunta/",
         "email": SITE["contact_email"],
         "areaServed": SITE["region"],

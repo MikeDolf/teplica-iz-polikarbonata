@@ -1147,3 +1147,7 @@ html{overflow-x:hidden}
 .tz-ekb .ekb .artbuy__text,.tz-ekb .artbuy__text{color:#c7dacd}
 .tz-ekb .ekb .artbuy__links,.tz-ekb .artbuy__links{color:#a8c2b0}
 .tz-ekb .artbuy__links a{color:#c3e6ce}
+
+/* ссылка на отзывы в Яндекс Бизнесе под лентой отзывов */
+.ekb .rev__ya{margin:16px 0 0;text-align:center;font-size:15px;color:var(--ink-soft)}
+.rev__ya a{display:inline-block;padding:6px 0;font-weight:700}
