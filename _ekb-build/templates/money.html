@@ -262,7 +262,7 @@
   <section class="about band band--{{ ns.t }}">
     <div class="wrap">
     {%- for p in about %}
-    <p>{{ p }}</p>
+    <p>{{ p|xlink(canonical) }}</p>
     {%- endfor %}
     </div>
   </section>

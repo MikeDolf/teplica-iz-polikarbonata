@@ -56,7 +56,7 @@
     {%- for sec in body %}
     <h2>{{ sec.h }}</h2>
     {%- for p in sec.p %}
-    <p>{{ p }}</p>
+    <p>{{ p|xlink(canonical) }}</p>
     {%- endfor %}
     {%- if sec.table %}{{ tbl(sec.table) }}{% endif %}
     {%- if sec.list %}
@@ -69,7 +69,7 @@
     {%- for ss in sec.sub %}
     <h3>{{ ss.h3 }}</h3>
     {%- for p in ss.p %}
-    <p>{{ p }}</p>
+    <p>{{ p|xlink(canonical) }}</p>
     {%- endfor %}
     {%- if ss.table %}{{ tbl(ss.table) }}{% endif %}
     {%- if ss.list %}

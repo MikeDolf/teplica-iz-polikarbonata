@@ -66,6 +66,51 @@ def ru_number(n):
 
 
 env.filters["ru"] = ru_number
+
+
+# Контекстные ссылки на второй сайт владельца (ursdom.ru: щебень, песок,
+# ПГС, дренаж). Ставятся прямо в предложение, на слова о материале, по одной
+# на страницу — сквозных блоков нет. Ключ — путь страницы fanline, значение —
+# (точный фрагмент текста, адрес). Если фрагмент из текста пропадёт при
+# правке статьи, сборка упадёт в check_xlinks() и назовёт страницу.
+XLINKS = {
+    "/dostavka-grunta/blog/skolko-vesit-kub-zemli/": ("Нерудные материалы заметно тяжелее", "https://ursdom.ru/dostavka/stati/skolko-vesit-kub/"),
+    "/dostavka-grunta/blog/chem-podnyat-uchastok/": ("песок и ПГС", "https://ursdom.ru/dostavka/stati/chem-otsypat-uchastok/"),
+    "/dostavka-grunta/blog/drenazh-uchastka/": ("глубинный дренаж", "https://ursdom.ru/drenazh/drenazh-uchastka-svoimi-rukami/"),
+    "/dostavka-grunta/blog/posadka-pionov/": ("крупный щебень", "https://ursdom.ru/drenazh/shcheben-dlya-drenazha/"),
+    "/dostavka-grunta/grunt-dlya-gortenzii/": ("слой щебня", "https://ursdom.ru/dostavka/shcheben/frakciya-20-40/"),
+    "/dostavka-grunta/grunt-dlya-tui-i-hvoynyh/": ("кладут щебень", "https://ursdom.ru/dostavka/shcheben/"),
+    "/dostavka-grunta/grunt-dlya-golubiki/": ("одна часть песка", "https://ursdom.ru/dostavka/stati/kakoy-pesok-vybrat/"),
+    "/dostavka-grunta/opilki-na-uchastke/": ("дорожки из опила", "https://ursdom.ru/dostavka/stati/dorozhki-na-uchastke/"),
+    "/dostavka-grunta/zemlya-pod-gazon-podgotovka/": ("добавляют песок", "https://ursdom.ru/dostavka/stati/pesok-pod-gazon/"),
+    "/dostavka-grunta/vysokie-i-teplye-gryadki/": ("немного песка", "https://ursdom.ru/dostavka/pesok/v-meshkah/"),
+    "/plodorodnyy-grunt-bolshoy-istok/": ("песок или ПГС", "https://ursdom.ru/dostavka/pesok/bolshoy-istok/"),
+    "/plodorodnyy-grunt-bobrovskiy/": ("в основание насыпи нужен песок", "https://ursdom.ru/dostavka/pesok/bobrovskiy/"),
+}
+XLINKS_DONE = set()
+
+
+def xlink(text, canonical):
+    """Абзац с контекстной ссылкой на ursdom.ru, если она назначена странице
+    и ещё не поставлена: только первое вхождение на всей странице."""
+    from markupsafe import Markup, escape
+    path = canonical.replace(SITE["domain"], "")
+    safe = escape(text)
+    hit = XLINKS.get(path)
+    if not hit or path in XLINKS_DONE or hit[0] not in str(safe):
+        return safe
+    XLINKS_DONE.add(path)
+    anchor, url = hit
+    return Markup(str(safe).replace(str(escape(anchor)),
+                                    f'<a href="{url}" target="_blank" rel="noopener">{escape(anchor)}</a>', 1))
+
+
+def check_xlinks():
+    missed = sorted(set(XLINKS) - XLINKS_DONE)
+    assert not missed, f"контекстная ссылка на ursdom.ru не встала (фрагмент не найден): {missed}"
+
+
+env.filters["xlink"] = xlink
 # Встроенный |capitalize в Jinja переводит всё, кроме первой буквы, в
 # строчные: «в Екатеринбурге»|capitalize давало «В екатеринбурге».
 env.filters["ucfirst"] = lambda v: (v[:1].upper() + v[1:]) if v else v
@@ -1661,6 +1706,8 @@ if __name__ == "__main__":
     if company_url: index_urls.append(company_url)
     for slug, url, idx in done:
         print(("index " if idx else "NOIDX "), slug, "->", url)
+    if not only:
+        check_xlinks()
     print(f"Готово: {len(done)} страниц, в индекс: {len(index_urls)}")
     # список индексируемых URL для sitemap (Фаза 4)
     with open(os.path.join(HERE, "index_urls.txt"), "w", encoding="utf-8") as fh:
