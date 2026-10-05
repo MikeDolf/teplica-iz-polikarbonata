@@ -62,7 +62,7 @@
     {%- if sec.list %}
     <ul class="art__list">
       {%- for li in sec.list %}
-      <li>{{ li }}</li>
+      <li>{{ li|xlink(canonical) }}</li>
       {%- endfor %}
     </ul>
     {%- endif %}
@@ -75,7 +75,7 @@
     {%- if ss.list %}
     <ul class="art__list">
       {%- for li in ss.list %}
-      <li>{{ li }}</li>
+      <li>{{ li|xlink(canonical) }}</li>
       {%- endfor %}
     </ul>
     {%- endif %}

@@ -89,25 +89,43 @@ XLINKS = {
 }
 XLINKS_DONE = set()
 
+# Внутренние контекстные ссылки из самых посещаемых статей на осенние
+# «навоз осенью» (881 запрос в месяц по области) и «перегной осенью» (760):
+# у этих страниц мало входящих ссылок, а статья про лук под зиму собирает
+# 30 тысяч показов за две недели. Тот же механизм, что и XLINKS.
+ILINKS = {
+    "/dostavka-grunta/blog/posadka-luka-pod-zimu/": ("мульчируют перегноем", "/dostavka-grunta/peregnoy-osenyu/"),
+    "/dostavka-grunta/blog/posadka-maliny-osenyu/": ("Замульчируйте перегноем", "/dostavka-grunta/peregnoy-osenyu/"),
+    "/dostavka-grunta/blog/posadka-chesnoka-osenyu/": ("свежий навоз под чеснок не кладут", "/dostavka-grunta/kogda-vnosit-navoz/"),
+    "/dostavka-grunta/kak-ispolzovat-peregnoy/": ("осенью его чаще вносят под многолетники и деревья", "/dostavka-grunta/peregnoy-osenyu/"),
+    "/dostavka-grunta/chem-udobrit-chesnok-i-luk/": ("осенью под перекопку", "/dostavka-grunta/kogda-vnosit-navoz/"),
+}
+ILINKS_DONE = set()
+
 
 def xlink(text, canonical):
-    """Абзац с контекстной ссылкой на ursdom.ru, если она назначена странице
-    и ещё не поставлена: только первое вхождение на всей странице."""
+    """Абзац с контекстной ссылкой: на ursdom.ru (XLINKS) или внутренней
+    (ILINKS), если она назначена странице и ещё не поставлена: только
+    первое вхождение на всей странице."""
     from markupsafe import Markup, escape
     path = canonical.replace(SITE["domain"], "")
-    safe = escape(text)
-    hit = XLINKS.get(path)
-    if not hit or path in XLINKS_DONE or hit[0] not in str(safe):
-        return safe
-    XLINKS_DONE.add(path)
-    anchor, url = hit
-    return Markup(str(safe).replace(str(escape(anchor)),
-                                    f'<a href="{url}" target="_blank" rel="noopener">{escape(anchor)}</a>', 1))
+    out = str(escape(text))
+    for table, done, ext in ((XLINKS, XLINKS_DONE, True), (ILINKS, ILINKS_DONE, False)):
+        hit = table.get(path)
+        if not hit or path in done or str(escape(hit[0])) not in out:
+            continue
+        done.add(path)
+        anchor, url = hit
+        attrs = ' target="_blank" rel="noopener"' if ext else ""
+        out = out.replace(str(escape(anchor)), f'<a href="{url}"{attrs}>{escape(anchor)}</a>', 1)
+    return Markup(out)
 
 
 def check_xlinks():
     missed = sorted(set(XLINKS) - XLINKS_DONE)
     assert not missed, f"контекстная ссылка на ursdom.ru не встала (фрагмент не найден): {missed}"
+    missed = sorted(set(ILINKS) - ILINKS_DONE)
+    assert not missed, f"внутренняя контекстная ссылка не встала (фрагмент не найден): {missed}"
 
 
 env.filters["xlink"] = xlink
