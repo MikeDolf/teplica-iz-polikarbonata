@@ -19,10 +19,12 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOMAIN = "https://fanline.su"
 
 REDIRECTS = {
-    # Fanline PRO 900 снят, ближайшая живая модель линейки — PRO 905.
+    # Fanline PRO 900 снят. Вели на PRO 905, но у той canonical на
+    # категорию, и выходила цепочка 53 → 54 → категория, по которой
+    # Яндекс вес до конца не доносит. Ведём сразу в категорию.
     "item/53-ochistitel-uvlazhnitel-fanline-pro-900":
-        ("/item/54-ochistitel-uvlazhnitel-fanline-pro-905/",
-         "Очиститель-увлажнитель Fanline PRO 905"),
+        ("/catalog/uvlazhniteli-vozdukha/",
+         "Увлажнители и мойки воздуха"),
     # VE500 не выпускается, ближайшая по производительности — VE400.
     "item/23-ochistitel-uvlazhnitel-fanline-aqua-ve500":
         ("/item/28-ochistitel-uvlazhnitel-fanline-aqua-ve400/",
