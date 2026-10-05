@@ -155,6 +155,17 @@ def buy_name(product_key):
     return TAIL_NAME.get(product_key, PRODUCTS[product_key]["name"].lower())
 
 
+# Название товара для title и H1 геостраниц. Там, где в регионе ищут двумя
+# словами, нужны оба: по Вебмастеру (20.09-03.10) половина запросов про
+# опилки набрана как «опил» — «купить опил в екатеринбурге» — и уходила на
+# страницу мешков, где это слово есть в заголовке, а не на страницу навалом.
+SEO_BUY = {"opilki": "опил и опилки"}
+
+
+def seo_buy_name(product_key):
+    return SEO_BUY.get(product_key) or buy_name(product_key)
+
+
 TAIL_NAME = {
     "chernozem":"чернозём", "peregnoy":"перегной", "torf":"торф", "opilki":"опилки",
     "navoz":"навоз", "navoz-koroviy":"коровий навоз", "navoz-konskiy":"конский навоз",
@@ -705,7 +716,7 @@ def money_meta(product_key, city_key):
     # Порядок слов — как в запросе: «купить торф в екатеринбурге» (934 в
     # месяц), а не «торф купить в…». «С доставкой» — второй по частоте
     # хвост; не влезает в 68 знаков — отбрасываем его, а не цену.
-    buy = buy_name(product_key)
+    buy = seo_buy_name(product_key)
     title = f'Купить {buy} {city["prep"]} с доставкой — от {price["m3"]} ₽/м³'
     if len(title) > 68:
         title = f'Купить {buy} {city["prep"]} — от {price["m3"]} ₽/м³'
@@ -941,7 +952,7 @@ def compose_geo(product_key, city_key):
     if pr.get("h1_tpl"):
         h1 = pr["h1_tpl"].format(prep=city["prep"], to=city["to"], name=city["name"]).replace("от 3 м³", f"от {min_volume_text(city_key)}")
     else:
-        h1 = f'Купить {buy_name(product_key)} {city["prep"]} с доставкой, цена за куб'
+        h1 = f'Купить {seo_buy_name(product_key)} {city["prep"]} с доставкой, цена за куб'
     # город-специфичный вопрос впереди общих: уникальность FAQ
     hint = city.get("order_hint", "Возим навалом самосвалом, от трёх кубов, срок согласуем при заявке.")
     if city.get("local_partner"):
