@@ -100,6 +100,7 @@ ILINKS = {
     "/dostavka-grunta/kak-ispolzovat-peregnoy/": ("осенью его чаще вносят под многолетники и деревья", "/dostavka-grunta/peregnoy-osenyu/"),
     "/dostavka-grunta/chem-udobrit-chesnok-i-luk/": ("осенью под перекопку", "/dostavka-grunta/kogda-vnosit-navoz/"),
     "/dostavka-grunta/blog/obrezka-yabloni/": ("Формировать начинают в год посадки", "/dostavka-grunta/yablonya-osenyu/"),
+    "/dostavka-grunta/chem-udobrit-klubniku/": ("заправить землю как следует можно только один раз, до посадки", "/dostavka-grunta/posadka-klubniki-osenyu/"),
     "/dostavka-grunta/blog/obrezka-smorodiny/": ("поздняя осень, после листопада", "/dostavka-grunta/smorodina-osenyu/"),
 }
 ILINKS_DONE = set()
