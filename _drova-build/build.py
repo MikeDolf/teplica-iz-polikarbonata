@@ -27,6 +27,7 @@ import drova_data as D
 import drova_texts as T
 from drova_more import MORE, MORE_INTENT
 from drova_fuel import F as FUELT
+import drova_cities as DC
 import drova_articles as AR
 
 SITE = copy.deepcopy(_SITE)
@@ -133,6 +134,13 @@ FOOTER = [{"url": D.HUB, "text": "Доставка дров"}, {"url": "/drova-e
           {"url": "/ugol-kamennyy-ekaterinburg/", "text": "Каменный уголь"}, {"url": "/dostavka-grunta/", "text": "Доставка грунта"}]
 
 
+def city_secs(key, name, prep, dat):
+    c = DC.C[key]
+    return [(f"Зона доставки дров: {name} и посёлки вокруг", [f"Кроме самого города привозим дрова в посёлки и сёла до 50 км: {c['villages']}. Если вашего посёлка нет в списке — напишите адрес, проверим.", c["tip"]]),
+            (f"Какие дрова берут {prep}", c["local"])] + \
+           [(h.format(prep=prep), [x.format(prep=prep, name=name, dat=dat) for x in ps]) for h, ps in DC.GEN]
+
+
 def ctx(**kw):
     base = dict(site=SITE, robots="index, follow", hero_photo=None, ads=False, footer_links=FOOTER,
                 cta_base="", city={}, preselect_product="", district_ph="Например, Сысерть или Шарташ",
@@ -229,8 +237,8 @@ def main():
               f"Купить дрова {prep} с доставкой — от {MIN_PRICE} ₽/м³",
               f"Дрова с доставкой {prep} и до 50 км вокруг: берёзовые колотые от {D.PRODUCTS['berezovye']['price']} ₽, смешанные, ольха, осина, сухие, горбыль. Без минимального объёма.",
               f"Берёзовые, смешанные, хвойные, ольховые, осиновые и сухие дрова, горбыль — привезём по {dat} и до 50 км вокруг. От одного куба.",
-              MIN_PRICE, T.COMMON,
-              [(f"Сколько стоят дрова {prep}?", f"Колотые дрова — от {MIN_PRICE} рублей за насыпной куб, берёзовые — от {D.PRODUCTS['berezovye']['price']}, горбыль — от {GORBYL}. Доставку {prep} считаем по километрам."),
+              MIN_PRICE, city_secs(key, name, prep, dat) + T.COMMON,
+              DC.C[key]["faq"] + [(f"Сколько стоят дрова {prep}?", f"Колотые дрова — от {MIN_PRICE} рублей за насыпной куб, берёзовые — от {D.PRODUCTS['berezovye']['price']}, горбыль — от {GORBYL}. Доставку {prep} считаем по километрам."),
                (f"Возите дрова {prep} без минимального объёма?", "Да, привезём и один куб, и полную машину.")],
               city_prep=prep, city_text=text,
               links=([{"url": f"/drova-berezovye-{key}/", "text": f"Берёзовые колотые {prep}"}] if key in T.BEREZA_CITY else []) + PROD_LINKS,
