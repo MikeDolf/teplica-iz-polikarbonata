@@ -205,7 +205,6 @@ def main():
           preselect=D.PRODUCTS["berezovye"]["name"], links2=CITY_LINKS, links2_title="Возим и в другие города")
     # Города
     for key, name, prep, dat, text in D.CITIES:
-        c = EKB_CITIES[key]
         money(f"/{D.CITY_SLUG[key]}/", f"Купить дрова {prep} с доставкой",
               f"Купить дрова {prep} с доставкой — от {MIN_PRICE} ₽/м³",
               f"Дрова с доставкой {prep} и до 50 км вокруг: берёзовые колотые от {D.PRODUCTS['berezovye']['price']} ₽, смешанные, ольха, осина, сухие, горбыль. Без минимального объёма.",
