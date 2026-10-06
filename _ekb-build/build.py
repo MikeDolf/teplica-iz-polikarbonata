@@ -345,6 +345,10 @@ FOOTER_LINKS = [
     {"url": "/dostavka-grunta-polevskoy-trakt/", "text": "Полевской тракт"},
     {"url": "/dostavka-grunta/blog/", "text": "Блог"},
     {"url": "/dostavka-grunta/rekvizity/", "text": "Реквизиты"},
+    # Второй раздел владельца на том же домене: зимой спрос на грунт падает,
+    # а на дрова держится. Сквозная ссылка помогает новому разделу
+    # быстрее попасть в индекс.
+    {"url": "/dostavka-drov/", "text": "Доставка дров"},
 ]
 
 BUSINESS_ID = SITE["domain"] + "/dostavka-grunta/#business"

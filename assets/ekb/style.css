@@ -1151,3 +1151,17 @@ html{overflow-x:hidden}
 /* ссылка на отзывы в Яндекс Бизнесе под лентой отзывов */
 .ekb .rev__ya{margin:16px 0 0;text-align:center;font-size:15px;color:var(--ink-soft)}
 .rev__ya a{display:inline-block;padding:6px 0;font-weight:700}
+
+/* Раздел «Доставка дров»: простой калькулятор и списки ссылок. */
+.dcalc{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;max-width:760px;align-items:end}
+.dcalc .field{display:flex;flex-direction:column;gap:6px}
+.dcalc__res{grid-column:1/-1;margin:4px 0 0;font-size:20px}
+.dcalc__res b{font-size:26px}
+.dcalc__note{grid-column:1/-1;margin:0;color:var(--l-muted,#5b6b61);font-size:15px}
+.dcalc .btn{grid-column:1/-1;justify-self:start}
+.dlinks{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px 18px}
+.dlinks a{display:block;padding:10px 14px;border:1px solid var(--l-line,#dfe6e1);border-radius:10px;text-decoration:none;min-height:44px}
+.dlinks a:hover{border-color:currentColor}
+@media (max-width:700px){.dcalc{grid-template-columns:1fr}.dcalc .btn{justify-self:stretch;text-align:center}}
+.dcalc{align-items:start}
+.dcalc .field__label{margin:0;min-height:1.3em}

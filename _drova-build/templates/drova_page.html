@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">{{ schema_json|safe }}</script>
+{% endblock %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="/dostavka-drov/">Главная</a></li>
+    {%- if not is_hub %}<li><span aria-current="page">{{ h1 }}</span></li>{% endif %}
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Доставка дров по {{ site.region_po }}</p>
+        <h1>{{ h1 }}</h1>
+        <p class="hero__sub">{{ hero_sub }}</p>
+        <p class="hero__min"><b>Минимального объёма нет</b> — привезём и один куб. Доставка до 50 км от {{ zone_text }}.</p>
+        <div class="hero__price">
+          <div class="hero__price__row">
+            <span class="hero__price__label">Ориентировочно</span>
+            <b class="hero__price__num">от {{ price|ru }} ₽/м³</b>
+          </div>
+          <span class="hero__price__note">Цена за насыпной кубометр дров. Доставку считаем по километрам — сумму назовём в ответ на заявку.</span>
+        </div>
+        <div class="hero__cta">
+          <a class="btn btn--call" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
+          {%- if site.max_url %}
+          <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
+          {%- endif %}
+        </div>
+        {%- if site.max_url %}
+        <p class="nomax-link"><a href="#zayavka" data-nomax>Нет MAX? Оставьте номер — напишем сами</a></p>
+        {%- endif %}
+        <p class="hero__note">На заявку {{ site.callback_promise }}. {{ site.hours }}. Оплата после выгрузки.</p>
+      </div>
+    </div>
+  </section>
+
+  {%- if city_text %}
+  <section class="about band band--tint">
+    <div class="wrap">
+      <h2 class="sec-h">Дрова {{ city_prep }}</h2>
+      <p>{{ city_text }}</p>
+    </div>
+  </section>
+  {%- endif %}
+
+  <section class="band band--plain" aria-labelledby="price-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="price-title">Цены на дрова{% if city_prep %} {{ city_prep }}{% endif %}</h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Дрова</th><th>Цена за насыпной м³</th></tr></thead>
+        <tbody>
+        {%- for p in price_rows %}
+          <tr><td data-label="Дрова">{% if p.url and p.url != self_path %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</td><td data-label="Цена">от {{ p.price|ru }} ₽</td></tr>
+        {%- endfor %}
+        </tbody>
+      </table></div>
+      <p>Цены ориентировочные: точную назовём под объём, вид и влажность дров. Доставку считаем отдельно, по километрам.</p>
+    </div>
+  </section>
+
+  <section class="calc band band--tint" id="calc" aria-labelledby="calc-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="calc-title">Калькулятор стоимости дров</h2>
+      <div class="dcalc">
+        <label class="field"><span class="field__label">Какие дрова</span>
+          <select class="field__input" id="dc-kind">
+          {%- for p in price_rows %}<option value="{{ p.price }}" data-name="{{ p.name }}"{% if p.name == preselect_product %} selected{% endif %}>{{ p.name }} — от {{ p.price|ru }} ₽/м³</option>{% endfor %}
+          </select></label>
+        <label class="field"><span class="field__label">Сколько насыпных кубов</span>
+          <input class="field__input" id="dc-vol" type="number" inputmode="decimal" min="1" step="1" value="5"></label>
+        <p class="dcalc__res" aria-live="polite">Дрова: <b id="dc-sum">—</b></p>
+        <p class="dcalc__note">Это стоимость дров по нижней цене. Доставку считаем по километрам до вашего адреса — назовём сумму в ответ на заявку. Складометр — примерно 1,5 насыпного куба.</p>
+        <a class="btn btn--call" href="#zayavka" id="dc-go">Оставить заявку с этим расчётом</a>
+      </div>
+    </div>
+  </section>
+  <script>
+  (function(){
+    var k=document.getElementById('dc-kind'), v=document.getElementById('dc-vol'), s=document.getElementById('dc-sum');
+    function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+    function upd(){ var n=parseFloat(v.value)||0; s.textContent = n>0 ? 'от '+fmt(n*parseFloat(k.value))+' ₽' : '—'; }
+    k.addEventListener('change',upd); v.addEventListener('input',upd); upd();
+    document.getElementById('dc-go').addEventListener('click',function(){
+      var note=document.getElementById('lead-note'), pr=document.getElementById('lead-product'), vol=document.getElementById('lead-volume');
+      var name=k.options[k.selectedIndex].getAttribute('data-name');
+      if(note) note.value='Калькулятор: '+name+', '+v.value+' м³, '+s.textContent;
+      if(vol) vol.value=v.value;
+      if(pr){ for(var i=0;i<pr.options.length;i++){ if(pr.options[i].value===name){ pr.selectedIndex=i; } } }
+    });
+  })();
+  </script>
+
+  {%- for sec in sections %}
+  <section class="about band band--{{ loop.cycle('plain','tint') }}">
+    <div class="wrap">
+      <h2 class="sec-h">{{ sec[0] }}</h2>
+      {%- for p in sec[1] %}<p>{{ p }}</p>{% endfor %}
+    </div>
+  </section>
+  {%- endfor %}
+
+  <section class="band band--plain" aria-labelledby="links-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="links-title">{{ links_title }}</h2>
+      <ul class="dlinks">
+      {%- for l in links %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}
+      </ul>
+      {%- if links2 %}
+      <h3>{{ links2_title }}</h3>
+      <ul class="dlinks">
+      {%- for l in links2 %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}
+      </ul>
+      {%- endif %}
+    </div>
+  </section>
+
+  {% include "partials/faq.html" %}
+  {% include "partials/lead_form.html" %}
+{% endblock %}
