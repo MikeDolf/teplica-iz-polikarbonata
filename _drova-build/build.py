@@ -111,7 +111,9 @@ def price_rows():
 MIN_PRICE = min(D.PRODUCTS[k]["price"] for k in D.ORDER if k != "gorbyl")   # дрова; горбыль отдельно
 GORBYL = D.PRODUCTS["gorbyl"]["price"]
 PROD_LINKS = [{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"] + ", от " + env.filters["ru"](D.PRODUCTS[k]["price"]) + " ₽/м³"} for k in D.ORDER] + \
-             [{"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"}]
+             [{"url": "/drova-kolotye-ekaterinburg/", "text": "Колотые дрова"},
+              {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
+              {"url": "/drova-dlya-kamina-ekaterinburg/", "text": "Дрова для камина"}]
 CITY_LINKS = [{"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"}] + \
              [{"url": f"/{D.CITY_SLUG[c[0]]}/", "text": "Дрова " + c[2]} for c in D.CITIES]
 ART_LINKS = [{"url": f"{D.HUB}{s}/", "text": AR.A[s]["h1"]} for s in D.ARTICLES]
@@ -157,11 +159,39 @@ def main():
           city_prep="в Екатеринбурге", links2=CITY_LINKS[1:] + ART_LINKS, links2_title="Другие города и статьи")
     # Товары по Екатеринбургу
     for k in D.ORDER:
-        pr, t = D.PRODUCTS[k], T.P[k]
-        f = lambda s: s.format(p=env.filters["ru"](pr["price"]))
+        pr = D.PRODUCTS[k]
+        t = T.EXTRA["suhie_obsh"] if k == "suhie" else T.P[k]
+        f = lambda s: s.format(p=env.filters["ru"](pr["price"]), b=env.filters["ru"](D.PRODUCTS["berezovye"]["price"]))
         money(f'/{pr["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pr["price"],
               t["about"] + T.COMMON, [(q, f(a)) for q, a in t["faq"]], preselect=pr["name"],
               links=[l for l in PROD_LINKS if l["url"] != f'/{pr["slug"]}/'], links2=CITY_LINKS, links2_title="Возим и в другие города")
+    # Колотые дрова (общая) и дрова для камина
+    ru = env.filters["ru"]
+    t = T.EXTRA["kolotye"]; pk = D.PRODUCTS[t["price_from"]]["price"]
+    f = lambda x: x.format(p=ru(pk), b=ru(D.PRODUCTS["berezovye"]["price"]))
+    money(f'/{t["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + T.COMMON,
+          [(q, f(a)) for q, a in t["faq"]], preselect=D.PRODUCTS[t["preselect"]]["name"],
+          links=[l for l in PROD_LINKS if l["url"] != f'/{t["slug"]}/'], links2=CITY_LINKS, links2_title="Возим и в другие города")
+    t = T.P["suhie"]; pk = D.PRODUCTS["suhie"]["price"]
+    f = lambda x: x.format(p=ru(pk))
+    money("/drova-dlya-kamina-ekaterinburg/", t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + T.COMMON,
+          [(q, f(a)) for q, a in t["faq"]] + [("Какие дрова нельзя для камина?", "Хвойные — стреляют искрами и коптят, и любые сырые — дымят и пачкают стекло.")],
+          preselect=D.PRODUCTS["suhie"]["name"], links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-kamina-ekaterinburg/"],
+          links2=CITY_LINKS, links2_title="Возим и в другие города")
+    # Берёзовые колотые в крупных городах
+    bz = D.PRODUCTS["berezovye"]["price"]
+    for key, text in T.BEREZA_CITY.items():
+        name, prep, dat = [(c[1], c[2], c[3]) for c in D.CITIES if c[0] == key][0]
+        money(f"/drova-berezovye-{key}/", f"Берёзовые дрова колотые {prep} с доставкой",
+              f"Берёзовые дрова {prep} — колотые, от {ru(bz)} ₽/м³",
+              f"Берёзовые колотые дрова с доставкой {prep} и до 50 км вокруг: от {ru(bz)} ₽ за насыпной куб, естественной влажности и сухие, без минимального объёма.",
+              f"Берёза колотая, полено 30-40 см — жаркие дрова для печи, бани и котла. Привезём по {dat} и окрестностям, от одного куба.",
+              bz, T.P["berezovye"]["about"] + T.COMMON,
+              [(f"Сколько стоят берёзовые дрова {prep}?", f"От {ru(bz)} рублей за насыпной куб колотых, доставку считаем по километрам."),
+               ("Есть ли сухие берёзовые дрова?", f"Да, от {ru(D.PRODUCTS['suhie']['price'])} рублей за насыпной куб.")],
+              preselect=D.PRODUCTS["berezovye"]["name"], city_prep=prep, city_text=text,
+              links=[{"url": f"/{D.CITY_SLUG[key]}/", "text": f"Все дрова {prep}"}] + PROD_LINKS, links_title="Ещё дрова",
+              links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"], links2_title="Другие города")
     # Дрова для бани
     bp = min(D.PRODUCTS[k]["price"] for k in ("berezovye", "osina", "olha"))
     money("/drova-dlya-bani-ekaterinburg/", "Дрова для бани с доставкой в Екатеринбурге",
@@ -183,7 +213,9 @@ def main():
               MIN_PRICE, T.COMMON,
               [(f"Сколько стоят дрова {prep}?", f"Колотые дрова — от {MIN_PRICE} рублей за насыпной куб, берёзовые — от {D.PRODUCTS['berezovye']['price']}, горбыль — от {GORBYL}. Доставку {prep} считаем по километрам."),
                (f"Возите дрова {prep} без минимального объёма?", "Да, привезём и один куб, и полную машину.")],
-              city_prep=prep, city_text=text, links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"],
+              city_prep=prep, city_text=text,
+              links=([{"url": f"/drova-berezovye-{key}/", "text": f"Берёзовые колотые {prep}"}] if key in T.BEREZA_CITY else []) + PROD_LINKS,
+              links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"],
               links2_title="Другие города", **{})
     # Статьи
     for i, s in enumerate(D.ARTICLES):

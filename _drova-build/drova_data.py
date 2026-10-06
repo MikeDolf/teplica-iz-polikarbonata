@@ -20,7 +20,7 @@ PRODUCTS = {
     "hvoynye":    {"name": "Хвойные колотые дрова",   "short": "Хвойные",   "price": 1700, "slug": "drova-hvoynye-ekaterinburg"},
     "osina":      {"name": "Осиновые колотые дрова",  "short": "Осиновые",  "price": 1900, "slug": "drova-osinovye-ekaterinburg"},
     "olha":       {"name": "Ольховые колотые дрова",  "short": "Ольховые",  "price": 2700, "slug": "drova-olhovye-ekaterinburg"},
-    "suhie":      {"name": "Сухие берёзовые дрова",   "short": "Сухие для камина", "price": 3500, "slug": "drova-dlya-kamina-ekaterinburg"},
+    "suhie":      {"name": "Сухие берёзовые дрова",   "short": "Сухие для камина", "price": 3500, "slug": "drova-suhie-ekaterinburg"},
     "churki":     {"name": "Берёзовые дрова чурками", "short": "Чурками (неколотые)", "price": 1900, "slug": "drova-churkami-ekaterinburg"},
     "gorbyl":     {"name": "Горбыль на дрова",        "short": "Горбыль",   "price": 900,  "slug": "gorbyl-ekaterinburg"},
 }
@@ -51,4 +51,4 @@ CITIES = [
 ]
 CITY_SLUG = {c[0]: f"drova-{c[0]}" for c in CITIES}
 
-ARTICLES = ["skladometr-ili-nasypnoy-kub", "skolko-drov-nuzhno-na-zimu", "kakie-drova-luchshe-dlya-bani", "vlazhnost-drov"]
+ARTICLES = ["skladometr-ili-nasypnoy-kub", "skolko-drov-nuzhno-na-zimu", "kakie-drova-luchshe-dlya-bani", "vlazhnost-drov", "skolko-stoit-kub-drov", "kakie-drova-luchshe-dlya-otopleniya", "skolko-vesit-kub-drov"]
