@@ -26,6 +26,7 @@ from cities import CITIES as EKB_CITIES
 import drova_data as D
 import drova_texts as T
 from drova_more import MORE, MORE_INTENT
+from drova_fuel import F as FUELT
 import drova_articles as AR
 
 SITE = copy.deepcopy(_SITE)
@@ -52,11 +53,14 @@ def overrides():
     o["partials/header.html"] = h
     f = ekb_src("partials/footer.html")
     f = must_sub(r'<p class="ftr__legal">.*?</p>',
-                 '<p class="ftr__legal">Доставка дров по {{ site.region_po }}: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие и горбыль. '
-                 'Цены ориентировочные, за насыпной кубометр; точную стоимость с доставкой назовём по заявке.</p>', f, re.S)
+                 '<p class="ftr__legal">Доставка дров по {{ site.region_po }}: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие, горбыль, топливные брикеты, пеллеты и уголь. '
+                 'Цены ориентировочные: дрова за насыпной кубометр, брикеты, пеллеты и уголь за тонну; точную стоимость с доставкой назовём по заявке.</p>', f, re.S)
     o["partials/footer.html"] = f
+    cb = ekb_src("partials/callbar.html")
+    cb = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", cb)
+    o["partials/callbar.html"] = cb
     lf = ekb_src("partials/lead_form.html")
-    names = [D.PRODUCTS[k]["name"] for k in D.ORDER]
+    names = [D.PRODUCTS[k]["name"] for k in D.ORDER] + [D.FUEL[k]["name"] for k in D.FUEL_ORDER]
     lf = must_sub(r'\{%- set products = \[.*?\] %\}', "{%- set products = " + json.dumps(names, ensure_ascii=False) + " %}", lf, re.S)
     lf = must_sub(r'"Сайт доставки грунта"', '"Сайт доставки дров"', lf)
     lf = must_sub(r'\(form\.product\.value\|\|"грунт"\)', '(form.product.value||"дрова")', lf)
@@ -109,18 +113,24 @@ def price_rows():
     return [{"name": D.PRODUCTS[k]["name"], "price": D.PRODUCTS[k]["price"], "url": f'/{D.PRODUCTS[k]["slug"]}/'} for k in D.ORDER]
 
 
+def fuel_rows():
+    return [{"name": D.FUEL[k]["name"], "price": D.FUEL[k]["price"], "unit": D.FUEL[k]["unit"], "url": f'/{D.FUEL[k]["slug"]}/'} for k in D.FUEL_ORDER]
+
+
 MIN_PRICE = min(D.PRODUCTS[k]["price"] for k in D.ORDER if k != "gorbyl")   # дрова; горбыль отдельно
 GORBYL = D.PRODUCTS["gorbyl"]["price"]
 PROD_LINKS = [{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"] + ", от " + env.filters["ru"](D.PRODUCTS[k]["price"]) + " ₽/м³"} for k in D.ORDER] + \
              [{"url": "/drova-kolotye-ekaterinburg/", "text": "Колотые дрова"},
               {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
-              {"url": "/drova-dlya-kamina-ekaterinburg/", "text": "Дрова для камина"}]
+              {"url": "/drova-dlya-kamina-ekaterinburg/", "text": "Дрова для камина"}] + \
+             [{"url": f'/{D.FUEL[k]["slug"]}/', "text": D.FUEL[k]["name"] + ", от " + env.filters["ru"](D.FUEL[k]["price"]) + " ₽/" + D.FUEL[k]["unit"]} for k in D.FUEL_ORDER]
 CITY_LINKS = [{"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"}] + \
              [{"url": f"/{D.CITY_SLUG[c[0]]}/", "text": "Дрова " + c[2]} for c in D.CITIES]
 ART_LINKS = [{"url": f"{D.HUB}{s}/", "text": AR.A[s]["h1"]} for s in D.ARTICLES]
 FOOTER = [{"url": D.HUB, "text": "Доставка дров"}, {"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"},
           {"url": "/drova-berezovye-ekaterinburg/", "text": "Берёзовые дрова"}, {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
-          {"url": "/gorbyl-ekaterinburg/", "text": "Горбыль"}, {"url": "/dostavka-grunta/", "text": "Доставка грунта"}]
+          {"url": "/gorbyl-ekaterinburg/", "text": "Горбыль"}, {"url": "/toplivnye-brikety-ekaterinburg/", "text": "Топливные брикеты"},
+          {"url": "/ugol-kamennyy-ekaterinburg/", "text": "Каменный уголь"}, {"url": "/dostavka-grunta/", "text": "Доставка грунта"}]
 
 
 def ctx(**kw):
@@ -132,11 +142,12 @@ def ctx(**kw):
 
 
 def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", city_prep="", city_text="",
-          links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False):
+          links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None):
     faq = faq + [x for x in T.COMMON_FAQ if x[0] not in {q for q, _ in faq}]
     html = env.get_template("drova_page.html").render(**ctx(
         title=title, description=desc, canonical=DOMAIN + path, h1=h1, hero_sub=hero_sub, price=price,
-        sections=sections, faq=faq, price_rows=price_rows(), self_path=path, preselect_product=preselect,
+        sections=sections, faq=faq, price_rows=price_rows(), fuel_rows=fuel_rows(), unit=unit, calc=calc,
+        **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
         links2=links2, links2_title=links2_title, is_hub=is_hub,
         schema_json=schema(h1, path, faq, price, crumbs=not is_hub)))
@@ -179,6 +190,14 @@ def main():
           [(q, f(a)) for q, a in t["faq"]] + [("Какие дрова нельзя для камина?", "Хвойные — стреляют искрами и коптят, и любые сырые — дымят и пачкают стекло.")],
           preselect=D.PRODUCTS["suhie"]["name"], links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-kamina-ekaterinburg/"],
           links2=CITY_LINKS, links2_title="Возим и в другие города")
+    # Брикеты, пеллеты, уголь
+    for k in D.FUEL_ORDER:
+        fu = D.FUEL[k]; t = FUELT[k]; f = lambda x: x.format(p=ru(fu["price"]))
+        note = "Цена за тонну." if fu["unit"] == "т" else "Цена за килограмм."
+        money(f'/{fu["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], fu["price"], t["sections"] + T.COMMON[1:],
+              [(q, f(a)) for q, a in t["faq"]], preselect=fu["name"], unit=fu["unit"], price_note=note, calc=False, min_text="и мешок, и полную машину",
+              links=[l for l in PROD_LINKS if l["url"] != f'/{fu["slug"]}/'], links_title="Дрова и другое топливо",
+              links2=CITY_LINKS, links2_title="Возим и в другие города")
     # Берёзовые колотые в крупных городах
     bz = D.PRODUCTS["berezovye"]["price"]
     for key, text in T.BEREZA_CITY.items():

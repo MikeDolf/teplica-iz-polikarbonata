@@ -17,16 +17,20 @@
         <p class="hero__eyebrow">Доставка дров по {{ site.region_po }}</p>
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
-        <p class="hero__min"><b>Минимального объёма нет</b> — привезём и один куб. Доставка до 50 км от {{ zone_text }}.</p>
+        <p class="hero__min"><b>Минимального объёма нет</b> — привезём {{ min_text|default("и один куб") }}. Доставка до 50 км от {{ zone_text }}.</p>
         <div class="hero__price">
           <div class="hero__price__row">
             <span class="hero__price__label">Ориентировочно</span>
-            <b class="hero__price__num">от {{ price|ru }} ₽/м³</b>
+            <b class="hero__price__num">от {{ price|ru }} ₽/{{ unit|default("м³") }}</b>
           </div>
-          <span class="hero__price__note">Цена за насыпной кубометр дров. Доставку считаем по километрам — сумму назовём в ответ на заявку.</span>
+          <span class="hero__price__note">{{ price_note|default("Цена за насыпной кубометр дров.") }} Доставку считаем по километрам — сумму назовём в ответ на заявку.</span>
         </div>
         <div class="hero__cta">
+          {%- if calc %}
           <a class="btn btn--call" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
+          {%- else %}
+          <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+          {%- endif %}
           {%- if site.max_url %}
           <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>
           {%- endif %}
@@ -59,10 +63,20 @@
         {%- endfor %}
         </tbody>
       </table></div>
+      <h3>Брикеты, пеллеты и уголь</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Топливо</th><th>Цена</th></tr></thead>
+        <tbody>
+        {%- for p in fuel_rows %}
+          <tr><td data-label="Топливо">{% if p.url != self_path %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</td><td data-label="Цена">от {{ p.price|ru }} ₽/{{ p.unit }}</td></tr>
+        {%- endfor %}
+        </tbody>
+      </table></div>
       <p>Цены ориентировочные: точную назовём под объём, вид и влажность дров. Доставку считаем отдельно, по километрам.</p>
     </div>
   </section>
 
+{%- if calc %}
   <section class="calc band band--tint" id="calc" aria-labelledby="calc-title">
     <div class="wrap">
       <h2 class="sec-h" id="calc-title">Калькулятор стоимости дров</h2>
@@ -94,6 +108,7 @@
     });
   })();
   </script>
+{%- endif %}
 
   {%- for sec in sections %}
   <section class="about band band--{{ loop.cycle('plain','tint') }}">
