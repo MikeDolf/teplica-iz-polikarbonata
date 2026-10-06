@@ -25,6 +25,7 @@ from site_config import SITE as _SITE
 from cities import CITIES as EKB_CITIES
 import drova_data as D
 import drova_texts as T
+from drova_more import MORE, MORE_INTENT
 import drova_articles as AR
 
 SITE = copy.deepcopy(_SITE)
@@ -148,13 +149,13 @@ def main():
           f"Доставка дров в Екатеринбурге и области — от {MIN_PRICE} ₽/м³",
           f"Дрова с доставкой: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие и горбыль. От {MIN_PRICE} ₽ за насыпной куб, без минимального объёма, до 50 км от каждого города.",
           "Свои дрова всех видов: колотые и чурками, естественной влажности и сухие. Возим самосвалами, без минимального объёма — от одного куба до полной машины.",
-          MIN_PRICE, T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + ART_LINKS, links2_title="Города и статьи", is_hub=True)
+          MIN_PRICE, MORE_INTENT["hub"] + T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + ART_LINKS, links2_title="Города и статьи", is_hub=True)
     # Екатеринбург, главная коммерческая
     money("/drova-ekaterinburg/", "Купить дрова в Екатеринбурге с доставкой",
           f"Купить дрова в Екатеринбурге с доставкой — от {MIN_PRICE} ₽/м³",
           f"Дрова с доставкой по Екатеринбургу: берёзовые колотые от {D.PRODUCTS['berezovye']['price']} ₽, смешанные, хвойные, ольха, осина, сухие для камина. Без минимального объёма.",
           "Берёзовые, смешанные, хвойные, осиновые, ольховые и сухие дрова, горбыль. Привезём по городу и пригороду до 50 км — и один куб, и полную машину.",
-          MIN_PRICE, T.COMMON, [("Сколько стоят дрова в Екатеринбурге?", f"Колотые дрова — от {MIN_PRICE} рублей за насыпной куб, берёзовые — от {D.PRODUCTS['berezovye']['price']}, горбыль — от {GORBYL}. Доставку считаем по километрам."),
+          MIN_PRICE, MORE_INTENT["ekb"] + T.COMMON, [("Сколько стоят дрова в Екатеринбурге?", f"Колотые дрова — от {MIN_PRICE} рублей за насыпной куб, берёзовые — от {D.PRODUCTS['berezovye']['price']}, горбыль — от {GORBYL}. Доставку считаем по километрам."),
                                 ("Какие дрова лучше купить?", "Для отопления дома — берёзовые или смешанные, для бани — берёза, ольха или осина, для камина — сухие берёзовые.")],
           city_prep="в Екатеринбурге", links2=CITY_LINKS[1:] + ART_LINKS, links2_title="Другие города и статьи")
     # Товары по Екатеринбургу
@@ -163,18 +164,18 @@ def main():
         t = T.EXTRA["suhie_obsh"] if k == "suhie" else T.P[k]
         f = lambda s: s.format(p=env.filters["ru"](pr["price"]), b=env.filters["ru"](D.PRODUCTS["berezovye"]["price"]))
         money(f'/{pr["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pr["price"],
-              t["about"] + T.COMMON, [(q, f(a)) for q, a in t["faq"]], preselect=pr["name"],
+              t["about"] + MORE[k]["sections"] + T.COMMON, [(q, f(a)) for q, a in t["faq"]] + MORE[k]["faq"], preselect=pr["name"],
               links=[l for l in PROD_LINKS if l["url"] != f'/{pr["slug"]}/'], links2=CITY_LINKS, links2_title="Возим и в другие города")
     # Колотые дрова (общая) и дрова для камина
     ru = env.filters["ru"]
     t = T.EXTRA["kolotye"]; pk = D.PRODUCTS[t["price_from"]]["price"]
     f = lambda x: x.format(p=ru(pk), b=ru(D.PRODUCTS["berezovye"]["price"]))
-    money(f'/{t["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + T.COMMON,
+    money(f'/{t["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + MORE_INTENT["kolotye"] + T.COMMON,
           [(q, f(a)) for q, a in t["faq"]], preselect=D.PRODUCTS[t["preselect"]]["name"],
           links=[l for l in PROD_LINKS if l["url"] != f'/{t["slug"]}/'], links2=CITY_LINKS, links2_title="Возим и в другие города")
     t = T.P["suhie"]; pk = D.PRODUCTS["suhie"]["price"]
     f = lambda x: x.format(p=ru(pk))
-    money("/drova-dlya-kamina-ekaterinburg/", t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + T.COMMON,
+    money("/drova-dlya-kamina-ekaterinburg/", t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + MORE_INTENT["kamin"] + T.COMMON,
           [(q, f(a)) for q, a in t["faq"]] + [("Какие дрова нельзя для камина?", "Хвойные — стреляют искрами и коптят, и любые сырые — дымят и пачкают стекло.")],
           preselect=D.PRODUCTS["suhie"]["name"], links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-kamina-ekaterinburg/"],
           links2=CITY_LINKS, links2_title="Возим и в другие города")
@@ -199,7 +200,7 @@ def main():
           f"Дрова для бани: берёза, ольха, осина — колотые и сухие. От {bp} ₽ за насыпной куб, доставка по Екатеринбургу и области до 50 км, без минимального объёма.",
           "Берёза для жара и углей, ольха и осина для чистого горения без копоти. Подскажем, что взять под вашу печь.",
           bp, [("Какие дрова лучше для бани", ["Берёзовые дают жар и угли, ольховые горят без копоти и с лёгким ароматом, осиновые чистят дымоход и не темнят стены парной. Удобная схема: прогреть печь берёзой, а последнюю закладку сделать ольхой или осиной. Хвойные для бани не советуем: смола даёт копоть и искры. Подробное сравнение — в статье «Какие дрова лучше для бани»."]),
-               ("Сколько дров нужно на баню", ["На одну топку средней бани уходит 0,08-0,12 насыпного куба берёзы. При топке раз в неделю — 4-7 насыпных кубов за год. Для бани берут сухие дрова: сырые долго разгораются и коптят."])] + T.COMMON,
+               ("Сколько дров нужно на баню", ["На одну топку средней бани уходит 0,08-0,12 насыпного куба берёзы. При топке раз в неделю — 4-7 насыпных кубов за год. Для бани берут сухие дрова: сырые долго разгораются и коптят."])] + MORE_INTENT["bani"][:3] + T.COMMON,
           [("Какие дрова лучше для бани?", "Берёза для жара, ольха и осина для чистого горения. Хвойные — только на растопку."),
            ("Сколько кубов дров нужно для бани на год?", "При топке раз в неделю — 4-7 насыпных кубов.")],
           preselect=D.PRODUCTS["berezovye"]["name"], links2=CITY_LINKS, links2_title="Возим и в другие города")

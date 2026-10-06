@@ -26,6 +26,17 @@ PRODUCTS = {
 }
 ORDER = ["berezovye", "smeshannye", "hvoynye", "osina", "olha", "suhie", "churki", "gorbyl"]
 
+# Другое топливо (владелец: «продаём вообще всё»). Цена не за куб, поэтому
+# в калькулятор дров не идёт, только в таблицы цен. Цены — средние по рынку
+# Екатеринбурга, «от».
+FUEL = {
+    "brikety":     {"name": "Топливные брикеты", "price": 11000, "unit": "т", "slug": "toplivnye-brikety-ekaterinburg"},
+    "pellety":     {"name": "Пеллеты древесные", "price": 9000,  "unit": "т", "slug": "pellety-ekaterinburg"},
+    "ugol":        {"name": "Каменный уголь",    "price": 9500,  "unit": "т", "slug": "ugol-kamennyy-ekaterinburg"},
+    "drev-ugol":   {"name": "Древесный уголь",   "price": 70,    "unit": "кг", "slug": "ugol-drevesnyy-ekaterinburg"},
+}
+FUEL_ORDER = ["brikety", "pellety", "ugol", "drev-ugol"]
+
 # Города: (ключ в cities.py сборки грунта, расстояние от Екб для текста, уникальный абзац по запросам из Вордстата)
 CITIES = [
     ("berezovskiy", "Берёзовский", "в Берёзовском", "Берёзовскому",
