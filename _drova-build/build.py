@@ -29,6 +29,12 @@ from drova_more import MORE, MORE_INTENT
 from drova_fuel import F as FUELT
 import drova_cities as DC
 import drova_articles as AR
+import drova_art_more as AM
+for _s, (_b, _f) in AM.ADD.items():
+    AR.A[_s]["body"] = AR.A[_s]["body"] + _b
+    AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
+AR.A.update(AM.NEW)
+D.ARTICLES = D.ARTICLES + list(AM.NEW)
 
 SITE = copy.deepcopy(_SITE)
 SITE["brand"] = "Дрова Доставка"
