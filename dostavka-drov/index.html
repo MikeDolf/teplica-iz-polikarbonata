@@ -299,7 +299,7 @@
           <option value="Древесный уголь">Древесный уголь</option>
         </select>
       </div>
-      <div class="field"><label class="field__label" for="lead-volume">Объём, м³</label>
+      <div class="field"><label class="field__label" for="lead-volume">Объём, <span id="lead-unit">м³</span></label>
         <input class="field__input field__input--vol" id="lead-volume" name="volume" type="number" inputmode="decimal" min="1" step="1" value="5">
       </div>
       <div class="field">
@@ -331,6 +331,12 @@
 </section>
 <script>
 (function(){
+  var UNITS = {"Топливные брикеты": "т", "Пеллеты древесные": "т", "Каменный уголь": "т", "Древесный уголь": "кг"};
+  function leadUnit(){ var f=document.getElementById('lead-product'); return (f && UNITS[f.value]) || 'м³'; }
+  (function(){ var f=document.getElementById('lead-product'), u=document.getElementById('lead-unit'), v=document.getElementById('lead-volume');
+    function sync(init){ var x=leadUnit(); if(u) u.textContent=x; if(v && (init || v.dataset.auto)){ v.value = x==='т' ? 1 : (x==='кг' ? 10 : 5); v.dataset.auto='1'; } }
+    if(f){ f.addEventListener('change', function(){ sync(false); }); sync(true); }
+    if(v){ v.addEventListener('input', function(){ delete v.dataset.auto; }); } })();
   var ENDPOINT = "https://api.web3forms.com/submit";
   var form = document.getElementById('lead-form'); if(!form) return;
   var phone = document.getElementById('lead-phone');
@@ -377,7 +383,7 @@
     // визуально не менялось ничего, и кнопка выглядела нерабочей.
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
     consentErr.hidden = true;
-    var volumeText = form.volume.value ? form.volume.value + ' м³' : 'объём не указан';
+    var volumeText = form.volume.value ? form.volume.value + ' ' + leadUnit() : 'объём не указан';
     var data = {
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
       subject: "Новая заявка: " + (form.product.value||"дрова") + " — " + volumeText,

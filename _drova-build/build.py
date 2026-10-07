@@ -77,6 +77,17 @@ def overrides():
     lf = must_sub(r'"Сайт доставки грунта"', '"Сайт доставки дров"', lf)
     lf = must_sub(r'\(form\.product\.value\|\|"грунт"\)', '(form.product.value||"дрова")', lf)
     lf = must_sub(r'value="\{\{ min_volume\.split\(\' \'\)\[0\] \}\}"', 'value="5"', lf)
+    units = {D.FUEL[k]["name"]: D.FUEL[k]["unit"] for k in D.FUEL_ORDER}
+    lf = must_sub(r'<label class="field__label" for="lead-volume">Объём, м³</label>',
+                  '<label class="field__label" for="lead-volume">Объём, <span id="lead-unit">м³</span></label>', lf)
+    lf = must_sub(r"var volumeText = form\.volume\.value \? form\.volume\.value \+ ' м³' : 'объём не указан';",
+                  "var volumeText = form.volume.value ? form.volume.value + ' ' + leadUnit() : 'объём не указан';", lf)
+    lf = must_sub(r"var ENDPOINT = ",
+                  "var UNITS = " + json.dumps(units, ensure_ascii=False) + ";\n  function leadUnit(){ var f=document.getElementById('lead-product'); return (f && UNITS[f.value]) || 'м³'; }\n"
+                  "  (function(){ var f=document.getElementById('lead-product'), u=document.getElementById('lead-unit'), v=document.getElementById('lead-volume');\n"
+                  "    function sync(init){ var x=leadUnit(); if(u) u.textContent=x; if(v && (init || v.dataset.auto)){ v.value = x==='т' ? 1 : (x==='кг' ? 10 : 5); v.dataset.auto='1'; } }\n"
+                  "    if(f){ f.addEventListener('change', function(){ sync(false); }); sync(true); }\n"
+                  "    if(v){ v.addEventListener('input', function(){ delete v.dataset.auto; }); } })();\n  var ENDPOINT = ", lf)
     o["partials/lead_form.html"] = lf
     mf = ekb_src("partials/max_fallback.html")
     mf = must_sub(r"'Сайт доставки грунта'", "'Сайт доставки дров'", mf)
