@@ -202,3 +202,6 @@ MORE["kak-razzhech-mangal"] += [
 for _p in POSTS:
     _m = MORE.get(_p["slug"], [])
     _p["body"] = _p["body"][:-1] + _m + _p["body"][-1:]
+
+from drova_blog2 import POSTS2 as _P2
+POSTS += _P2
