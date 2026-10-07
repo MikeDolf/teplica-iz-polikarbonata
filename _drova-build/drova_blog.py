@@ -205,3 +205,5 @@ for _p in POSTS:
 
 from drova_blog2 import POSTS2 as _P2
 POSTS += _P2
+from drova_blog3 import POSTS3 as _P3
+POSTS += _P3
