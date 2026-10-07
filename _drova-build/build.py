@@ -203,6 +203,7 @@ def ctx(**kw):
 def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", city_prep="", city_text="",
           links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None):
     faq = faq + [x for x in T.COMMON_FAQ if x[0] not in {q for q, _ in faq}]
+    _seen = set(); faq = [x for x in faq if not (x[0] in _seen or _seen.add(x[0]))]
     html = env.get_template("drova_page.html").render(**ctx(
         title=title, description=desc, canonical=DOMAIN + path, h1=h1, hero_sub=hero_sub, price=price,
         sections=sections, faq=faq, price_rows=price_rows(), fuel_rows=fuel_rows(), unit=unit, calc=calc,
