@@ -34,6 +34,10 @@ for _s, (_b, _f) in AM.ADD.items():
     AR.A[_s]["body"] = AR.A[_s]["body"] + _b
     AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
 AR.A.update(AM.NEW)
+import drova_art_more2 as AM2
+for _s, (_b, _f) in AM2.ADD2.items():
+    AR.A[_s]["body"] = AR.A[_s]["body"] + _b
+    AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
 D.ARTICLES = D.ARTICLES + list(AM.NEW)
 
 SITE = copy.deepcopy(_SITE)
