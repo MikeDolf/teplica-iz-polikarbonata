@@ -28,6 +28,15 @@ import drova_texts as T
 from drova_more import MORE, MORE_INTENT, KOTEL as MORE_INTENT_KOTEL
 from drova_fuel import F as FUELT
 import drova_cities as DC
+import drova_cities2 as DC2
+D.CITIES = D.CITIES + DC2.NEW
+D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC2.NEW})
+DC.C.update(DC2.C)
+DC.C["pervouralsk"]["villages"] += ", Новоуткинск, Прогресс, Коуровка, Слобода, Каменка, Нижнее Село, Трёка, Волыны, Староуткинск, Сабик, Чусовое, Мартьяново"
+DC.C["pervouralsk"]["local"] = DC.C["pervouralsk"]["local"] + [
+    "Отдельно возим дрова вверх по Чусовой — в Новоуткинск, Коуровку, Слободу, Волыны, Трёку, Староуткинск, Чусовое и Мартьяново. В этих посёлках газа почти нет, дома топят печами, и дрова нужны круглый год. Дрова для этих мест есть всегда, в том числе зимой и весной, когда у других продавцов запасы заканчиваются.",
+    "Есть и пиленый горбыль — от 900 рублей за насыпной куб: для бани, летней кухни и растопки. Горбыль можно привезти одной машиной с берёзой."]
+DC.C["revda"]["villages"] += ", Дружинино, Бисерть"
 from drova_bereza_city import B as BZC
 import drova_articles as AR
 import drova_art_more as AM
