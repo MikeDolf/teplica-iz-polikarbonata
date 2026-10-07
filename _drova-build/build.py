@@ -36,7 +36,10 @@ for _s, (_b, _f) in AM.ADD.items():
     AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
 AR.A.update(AM.NEW)
 import drova_art_more2 as AM2
-for _s, (_b, _f) in AM2.ADD2.items():
+import drova_art_more3 as AM3
+import drova_art_more4 as AM4
+import drova_art_more5 as AM5
+for _s, (_b, _f) in [*AM2.ADD2.items(), *AM3.ADD3.items(), *AM4.ADD4.items(), *AM5.ADD5.items()]:
     AR.A[_s]["body"] = AR.A[_s]["body"] + _b
     AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
 D.ARTICLES = D.ARTICLES + list(AM.NEW)
