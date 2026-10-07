@@ -6,6 +6,7 @@
 <nav class="crumbs wrap" aria-label="Хлебные крошки">
   <ol>
     <li><a href="/dostavka-drov/">Главная</a></li>
+    {%- if section_url %}<li><a href="{{ section_url }}">{{ section_name }}</a></li>{% endif %}
     <li><span aria-current="page">{{ h1 }}</span></li>
   </ol>
 </nav>
@@ -25,6 +26,9 @@
       <tbody>{% for row in sec[2].rows %}<tr>{% for c in row %}<td data-label="{{ sec[2].head[loop.index0] }}">{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
     </table></div>
     {%- endif %}
+    {%- if ads and loop.index is odd and not loop.last %}
+    {% with n = (loop.index + 1) // 2, wrap = false %}{% include "partials/ad_slot.html" %}{% endwith %}
+    {%- endif %}
     {%- endfor %}
     <aside class="art__cta">
       <p class="art__cta-title"><b>Дрова с доставкой по Екатеринбургу и области</b></p>
@@ -34,8 +38,12 @@
         {%- if site.max_url %}<a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>{% endif %}
       </div>
     </aside>
+    {%- if extra_cta %}
+    <p class="art__earlycta"><a href="{{ extra_cta.url }}">{{ extra_cta.text }}</a></p>
+    {%- endif %}
     <h2>Читайте также</h2>
     <ul class="art__list">{% for l in related %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}</ul>
   </article>
+  {%- if ads %}{% with n = 4, wrap = true %}{% include "partials/ad_slot.html" %}{% endwith %}{% endif %}
   {% include "partials/faq.html" %}
 {% endblock %}

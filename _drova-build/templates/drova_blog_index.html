@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">{{ schema_json|safe }}</script>
+{% endblock %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="/dostavka-drov/">Главная</a></li>
+    <li><span aria-current="page">Блог</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  <section class="art wrap">
+    <h1>{{ h1 }}</h1>
+    <p class="art__lede">{{ lede }}</p>
+    {%- for g in groups %}
+    <h2>{{ g.title }}</h2>
+    <ul class="art__list">{% for l in g.links %}<li><a href="{{ l.url }}">{{ l.text }}</a>{% if l.desc %} — {{ l.desc }}{% endif %}</li>{% endfor %}</ul>
+    {%- endfor %}
+    <aside class="art__cta">
+      <p class="art__cta-title"><b>Дрова с доставкой по Екатеринбургу и области</b></p>
+      <p>Берёзовые, смешанные, ольховые, сухие, горбыль, брикеты и уголь. Без минимального объёма, до 50 км от каждого города.</p>
+      <div class="art__cta-actions">
+        <a class="btn btn--call art__cta-link" href="/drova-ekaterinburg/">Цены на дрова</a>
+        {%- if site.max_url %}<a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>{% endif %}
+      </div>
+    </aside>
+  </section>
+{% endblock %}

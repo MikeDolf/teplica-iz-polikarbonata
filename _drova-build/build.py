@@ -28,6 +28,7 @@ import drova_texts as T
 from drova_more import MORE, MORE_INTENT, KOTEL as MORE_INTENT_KOTEL
 from drova_fuel import F as FUELT
 import drova_cities as DC
+import drova_blog as BL
 import drova_cities2 as DC2
 D.CITIES = D.CITIES + DC2.NEW
 D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC2.NEW})
@@ -166,7 +167,7 @@ ART_LINKS = [{"url": f"{D.HUB}{s}/", "text": AR.A[s]["h1"]} for s in D.ARTICLES]
 FOOTER = [{"url": D.HUB, "text": "Доставка дров"}, {"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"},
           {"url": "/drova-berezovye-ekaterinburg/", "text": "Берёзовые дрова"}, {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
           {"url": "/gorbyl-ekaterinburg/", "text": "Горбыль"}, {"url": "/toplivnye-brikety-ekaterinburg/", "text": "Топливные брикеты"},
-          {"url": "/ugol-kamennyy-ekaterinburg/", "text": "Каменный уголь"}, {"url": "/dostavka-grunta/", "text": "Доставка грунта"}]
+          {"url": "/ugol-kamennyy-ekaterinburg/", "text": "Каменный уголь"}, {"url": "/dostavka-drov/blog/", "text": "Блог о дровах"}, {"url": "/dostavka-grunta/", "text": "Доставка грунта"}]
 
 
 def city_secs(key, name, prep, dat):
@@ -218,7 +219,7 @@ def main():
           f"Доставка дров по Свердловской области — от {ru0(MIN_PRICE)} ₽/м³",
           f"Дрова с доставкой: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие и горбыль. От {MIN_PRICE} ₽ за насыпной куб, без минимального объёма, до 50 км от каждого города.",
           "Свои дрова всех видов: колотые и чурками, естественной влажности и сухие. Возим самосвалами, без минимального объёма — от одного куба до полной машины.",
-          MIN_PRICE, MORE_INTENT["hub"] + T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + ART_LINKS, links2_title="Города и статьи", is_hub=True)
+          MIN_PRICE, MORE_INTENT["hub"] + T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + ART_LINKS + [{"url": "/dostavka-drov/blog/", "text": "Блог: топка, колка, заготовка, копчение"}], links2_title="Города и статьи", is_hub=True)
     # Екатеринбург, главная коммерческая
     money("/drova-ekaterinburg/", "Купить дрова в Екатеринбурге с доставкой",
           f"Купить дрова в Екатеринбурге недорого — от {ru0(MIN_PRICE)} ₽/м³",
@@ -326,8 +327,54 @@ def main():
                 {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]},
                 ensure_ascii=False)))
         write(path, html)
+    render_blog()
     sitemaps()
     print(f"Дрова: {len(PAGES)} страниц")
+
+
+BLOG_URL = f"{D.HUB}blog/"
+BLOG_DATE = "2026-10-07"
+
+
+def render_blog():
+    """Блог дров: /dostavka-drov/blog/ и посты. Реклама РСЯ — только здесь (ads=True)."""
+    nav = [{"url": f"{BLOG_URL}{p['slug']}/", "text": p["short"], "desc": p["desc"].split(".")[0], "group": p["group"]} for p in BL.POSTS]
+    groups = [{"title": t, "links": [x for x in nav if x["group"] == g]} for g, t in BL.GROUPS]
+    groups = [g for g in groups if g["links"]] + [{"title": "Статьи о выборе и покупке дров", "links": ART_LINKS}]
+    hub = DOMAIN + BLOG_URL
+    html = env.get_template("drova_blog_index.html").render(**ctx(
+        title="Блог о дровах: топка, колка, заготовка, копчение", ads=True,
+        description="Статьи о дровах и печах: как топить печь, колоть и пилить дрова, можно ли собирать валежник, чем разжечь мангал и какая щепа лучше для копчения.",
+        canonical=hub, h1="Блог о дровах, печах и заготовке", groups=groups,
+        lede="Практические статьи для тех, кто топит печь, баню или камин: как колоть и пилить дрова, как правильно топить, что говорит закон о валежнике, чем разжечь мангал и как коптить.",
+        schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
+            {"@type": "Blog", "name": "Блог о дровах", "url": hub, "inLanguage": "ru-RU"},
+            {"@type": "BreadcrumbList", "itemListElement": [
+                {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
+                {"@type": "ListItem", "position": 2, "name": "Блог", "item": hub}]}]}, ensure_ascii=False)))
+    write(BLOG_URL, html)
+    d = datetime.date.fromisoformat(BLOG_DATE)
+    for p in BL.POSTS:
+        path = f"{BLOG_URL}{p['slug']}/"
+        rel = [x for x in nav if x["url"] != path] + ART_LINKS[:4]
+        html = env.get_template("drova_article.html").render(**ctx(
+            title=p["title"], description=p["desc"], canonical=DOMAIN + path, h1=p["h1"], lede=p["lede"],
+            body=p["body"], faq=p["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
+            ads=True, section_url=BLOG_URL, section_name="Блог",
+            extra_cta={"url": p["money"][0], "text": p["money"][1] + " →"},
+            date_iso=BLOG_DATE, date_ru=f"{d.day} {MONTHS[d.month-1]} {d.year}", related=rel,
+            schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
+                {"@type": "BlogPosting", "headline": p["h1"], "description": p["desc"], "datePublished": BLOG_DATE,
+                 "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
+                 "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/img/og-cover.jpg",
+                 "isPartOf": {"@type": "Blog", "name": "Блог о дровах", "url": DOMAIN + BLOG_URL}},
+                {"@type": "BreadcrumbList", "itemListElement": [
+                    {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
+                    {"@type": "ListItem", "position": 2, "name": "Блог", "item": DOMAIN + BLOG_URL},
+                    {"@type": "ListItem", "position": 3, "name": p["short"], "item": DOMAIN + path}]},
+                {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in p["faq"]]}]},
+                ensure_ascii=False)))
+        write(path, html)
 
 
 def sitemaps():
