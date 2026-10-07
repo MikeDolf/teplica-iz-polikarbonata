@@ -163,6 +163,7 @@ PROD_LINKS = [{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"
              [{"url": f'/{D.FUEL[k]["slug"]}/', "text": D.FUEL[k]["name"] + ", от " + env.filters["ru"](D.FUEL[k]["price"]) + " ₽/" + D.FUEL[k]["unit"]} for k in D.FUEL_ORDER]
 CITY_LINKS = [{"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"}] + \
              [{"url": f"/{D.CITY_SLUG[c[0]]}/", "text": "Дрова " + c[2]} for c in D.CITIES]
+BEREZA_LINKS = [{"url": f"/drova-berezovye-{k}/", "text": "Берёзовые дрова " + [c[2] for c in D.CITIES if c[0] == k][0]} for k in T.BEREZA_CITY]
 ART_LINKS = [{"url": f"{D.HUB}{s}/", "text": AR.A[s]["h1"]} for s in D.ARTICLES]
 FOOTER = [{"url": D.HUB, "text": "Доставка дров"}, {"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"},
           {"url": "/drova-berezovye-ekaterinburg/", "text": "Берёзовые дрова"}, {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
@@ -186,6 +187,15 @@ ART_MONEY = {
     "kakie-drova-luchshe-dlya-otopleniya": {"url": "/drova-berezovye-ekaterinburg/", "text": "Купить берёзовые дрова"},
     "pochemu-drova-treshchat": {"url": "/drova-dlya-kamina-ekaterinburg/", "text": "Дрова для камина"},
 }
+
+
+ART_PUB = "2026-10-06"   # раздел и статьи опубликованы 6 октября
+ART_UPD = "2026-10-07"   # статьи дописаны до ~1300-1500 слов
+
+
+def ru_d(iso):
+    d = datetime.date.fromisoformat(iso)
+    return f"{d.day} {MONTHS[d.month-1]} {d.year}"
 
 
 def ru0(n):
@@ -220,7 +230,7 @@ def main():
           f"Доставка дров по Свердловской области — от {ru0(MIN_PRICE)} ₽/м³",
           f"Дрова с доставкой: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие и горбыль. От {MIN_PRICE} ₽ за насыпной куб, без минимального объёма, до 50 км от каждого города.",
           "Свои дрова всех видов: колотые и чурками, естественной влажности и сухие. Возим самосвалами, без минимального объёма — от одного куба до полной машины.",
-          MIN_PRICE, MORE_INTENT["hub"] + T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + ART_LINKS + [{"url": "/dostavka-drov/blog/", "text": "Блог: топка, колка, заготовка, копчение"}], links2_title="Города и статьи", is_hub=True)
+          MIN_PRICE, MORE_INTENT["hub"] + T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + BEREZA_LINKS + ART_LINKS + [{"url": "/dostavka-drov/blog/", "text": "Блог: топка, колка, заготовка, копчение"}], links2_title="Города и статьи", is_hub=True)
     # Екатеринбург, главная коммерческая
     money("/drova-ekaterinburg/", "Купить дрова в Екатеринбурге с доставкой",
           f"Купить дрова в Екатеринбурге недорого — от {ru0(MIN_PRICE)} ₽/м³",
@@ -236,7 +246,9 @@ def main():
         f = lambda s: s.format(p=env.filters["ru"](pr["price"]), b=env.filters["ru"](D.PRODUCTS["berezovye"]["price"]))
         money(f'/{pr["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pr["price"],
               t["about"] + MORE[k]["sections"] + T.COMMON, [(q, f(a)) for q, a in t["faq"]] + MORE[k]["faq"], preselect=pr["name"],
-              links=[l for l in PROD_LINKS if l["url"] != f'/{pr["slug"]}/'], links2=CITY_LINKS, links2_title="Возим и в другие города")
+              links=[l for l in PROD_LINKS if l["url"] != f'/{pr["slug"]}/'],
+              links2=(BEREZA_LINKS if k == "berezovye" else []) + CITY_LINKS,
+              links2_title="Берёзовые дрова в городах и другие города" if k == "berezovye" else "Возим и в другие города")
     # Колотые дрова (общая) и дрова для камина
     ru = env.filters["ru"]
     t = T.EXTRA["kolotye"]; pk = D.PRODUCTS[t["price_from"]]["price"]
@@ -316,10 +328,10 @@ def main():
         html = env.get_template("drova_article.html").render(**ctx(
             title=a["title"], description=a["desc"], canonical=DOMAIN + path, h1=a["h1"], lede=a["lede"],
             body=a["body"], faq=a["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
-            date_iso=TODAY.isoformat(), date_ru=f"{TODAY.day} {MONTHS[TODAY.month-1]} {TODAY.year}",
+            date_iso=ART_PUB, date_ru=ru_d(ART_PUB), upd_iso=ART_UPD, upd_ru=ru_d(ART_UPD),
             related=([ART_MONEY[s]] if s in ART_MONEY else []) + [l for l in ART_LINKS if l["url"] != path] + [{"url": "/drova-ekaterinburg/", "text": "Цены на дрова в Екатеринбурге"}],
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
-                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": TODAY.isoformat(),
+                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": ART_PUB, "dateModified": ART_UPD,
                  "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/img/og-cover.jpg"},
                 {"@type": "BreadcrumbList", "itemListElement": [
@@ -339,7 +351,7 @@ BLOG_DATE = "2026-10-07"
 
 def render_blog():
     """Блог дров: /dostavka-drov/blog/ и посты. Реклама РСЯ — только здесь (ads=True)."""
-    nav = [{"url": f"{BLOG_URL}{p['slug']}/", "text": p["short"], "desc": p["desc"].split(".")[0], "group": p["group"]} for p in BL.POSTS]
+    nav = [{"url": f"{BLOG_URL}{p['slug']}/", "text": p["short"], "desc": re.split(r"(?<=[.!?])\s", p["lede"])[0], "group": p["group"]} for p in BL.POSTS]
     groups = [{"title": t, "links": [x for x in nav if x["group"] == g]} for g, t in BL.GROUPS]
     groups = [g for g in groups if g["links"]] + [{"title": "Статьи о выборе и покупке дров", "links": ART_LINKS}]
     hub = DOMAIN + BLOG_URL
@@ -365,7 +377,7 @@ def render_blog():
             extra_cta={"url": p["money"][0], "text": p["money"][1] + " →"},
             date_iso=BLOG_DATE, date_ru=f"{d.day} {MONTHS[d.month-1]} {d.year}", related=rel,
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
-                {"@type": "BlogPosting", "headline": p["h1"], "description": p["desc"], "datePublished": BLOG_DATE,
+                {"@type": "BlogPosting", "headline": p["h1"], "description": p["desc"], "datePublished": BLOG_DATE, "dateModified": BLOG_DATE,
                  "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/img/og-cover.jpg",
                  "isPartOf": {"@type": "Blog", "name": "Блог о дровах", "url": DOMAIN + BLOG_URL}},

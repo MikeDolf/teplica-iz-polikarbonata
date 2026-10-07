@@ -16,7 +16,7 @@
     <p class="art__lede">{{ lede }}</p>
     {%- for g in groups %}
     <h2>{{ g.title }}</h2>
-    <ul class="art__list">{% for l in g.links %}<li><a href="{{ l.url }}">{{ l.text }}</a>{% if l.desc %} — {{ l.desc }}{% endif %}</li>{% endfor %}</ul>
+    <ul class="art__list">{% for l in g.links %}<li><a href="{{ l.url }}">{{ l.text }}</a>{% if l.desc %}<br><span class="art__teaser">{{ l.desc }}</span>{% endif %}</li>{% endfor %}</ul>
     {%- endfor %}
     <aside class="art__cta">
       <p class="art__cta-title"><b>Дрова с доставкой по Екатеринбургу и области</b></p>

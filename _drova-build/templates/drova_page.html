@@ -55,7 +55,7 @@
   <section class="band band--plain" aria-labelledby="price-title">
     <div class="wrap">
       <h2 class="sec-h" id="price-title">Цены на дрова{% if city_prep %} {{ city_prep }}{% endif %}</h2>
-      <div class="table-wrap"><table>
+      <div class="table-wrap table-wrap--compact table-wrap--two"><table>
         <thead><tr><th>Дрова</th><th>Цена за насыпной м³</th></tr></thead>
         <tbody>
         {%- for p in price_rows %}
@@ -64,7 +64,7 @@
         </tbody>
       </table></div>
       <h3>Брикеты, пеллеты и уголь</h3>
-      <div class="table-wrap"><table>
+      <div class="table-wrap table-wrap--compact table-wrap--two"><table>
         <thead><tr><th>Топливо</th><th>Цена</th></tr></thead>
         <tbody>
         {%- for p in fuel_rows %}
