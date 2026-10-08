@@ -32,7 +32,7 @@
     {%- endfor %}
     <aside class="art__cta">
       <p class="art__cta-title"><b>Дрова с доставкой по Екатеринбургу и области</b></p>
-      <p>Берёзовые, смешанные, ольховые, осиновые, сухие для камина и горбыль. Без минимального объёма, до 50 км от каждого города. Цены — от {{ min_price|ru }} ₽ за насыпной куб.</p>
+      <p>Берёзовые, смешанные, ольховые, осиновые, сухие для камина и горбыль. Без минимального объёма, до 50 км от каждого города. Цены — от {{ min_price|ru }} ₽/м³ с доставкой, 3 куба берёзы — от %%berezovye.t3%% ₽.</p>
       <div class="art__cta-actions">
         <a class="btn btn--call art__cta-link" href="/drova-ekaterinburg/">Цены на дрова</a>
         {%- if site.max_url %}<a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX</a>{% endif %}
@@ -42,7 +42,7 @@
     <p class="art__earlycta"><a href="{{ extra_cta.url }}">{{ extra_cta.text }}</a></p>
     {%- endif %}
     <h2>Читайте также</h2>
-    <ul class="art__list">{% for l in related %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}</ul>
+    <ul class="dlinks">{% for l in related %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}</ul>
   </article>
   {%- if ads %}{% with n = 4, wrap = true %}{% include "partials/ad_slot.html" %}{% endwith %}{% endif %}
   {% include "partials/faq.html" %}

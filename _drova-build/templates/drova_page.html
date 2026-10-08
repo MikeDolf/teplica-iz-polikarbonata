@@ -86,7 +86,7 @@
           {%- for p in price_rows %}<option value="{{ p.wood }}" data-name="{{ p.name }}"{% if p.name == preselect_product %} selected{% endif %}>{{ p.name }}</option>{% endfor %}
           </select></label>
         <label class="field"><span class="field__label">Сколько насыпных кубов</span>
-          <input class="field__input" id="dc-vol" type="number" inputmode="decimal" min="1" step="1" value="5"></label>
+          <input class="field__input" id="dc-vol" type="number" inputmode="decimal" min="1" step="1" value="3"></label>
         <p class="dcalc__res" aria-live="polite">Итого с доставкой: <b id="dc-sum">—</b> <span id="dc-per"></span></p>
         <p class="dcalc__note">Ориентир по нижней цене: дрова плюс рейс около {{ delivery|ru }} ₽, в машину входит до {{ trip_m3 }} кубов. По области возим с ближайшей площадки — цена примерно та же. Точную сумму назовём по адресу. Складометр — примерно 1,5 насыпного куба.</p>
         <a class="btn btn--call" href="#zayavka" id="dc-go">Оставить заявку с этим расчётом</a>

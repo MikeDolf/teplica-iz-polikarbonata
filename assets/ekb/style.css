@@ -1188,3 +1188,10 @@ html{overflow-x:hidden}
 .dcalc .field__label{margin:0;min-height:1.3em}
 
 .ekb .art__teaser{color:var(--ink-soft);font-size:15px;line-height:1.5}
+
+/* Форма заявки дров: длинные названия дров и подсказка района не помещались
+   в половину ширины карточки («Берёзовые ко…») — и на телефоне, и на компьютере. «Что нужно» и «Район» —
+   во всю ширину, объём и телефон — рядом (dense подтягивает телефон к объёму). */
+.lead__form--drova{grid-auto-flow:row dense}
+.lead__form--drova .field--wide{grid-column:1/-1}
+.lead__form--drova .field{align-self:end}

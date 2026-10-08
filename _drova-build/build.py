@@ -87,6 +87,9 @@ def overrides():
     lf = ekb_src("partials/lead_form.html")
     names = [D.PRODUCTS[k]["name"] for k in D.ORDER] + [D.FUEL[k]["name"] for k in D.FUEL_ORDER]
     lf = must_sub(r'\{%- set products = \[.*?\] %\}', "{%- set products = " + json.dumps(names, ensure_ascii=False) + " %}", lf, re.S)
+    lf = must_sub(r'<form class="lead__form"', '<form class="lead__form lead__form--drova"', lf)
+    lf = must_sub(r'<div class="field">(\s*<label class="field__label" for="lead-product">)', r'<div class="field field--wide">\1', lf)
+    lf = must_sub(r'<div class="field">(\s*<label class="field__label" for="lead-district">)', r'<div class="field field--wide">\1', lf)
     lf = must_sub(r'"Сайт доставки грунта"', '"Сайт доставки дров"', lf)
     lf = must_sub(r'\(form\.product\.value\|\|"грунт"\)', '(form.product.value||"дрова")', lf)
     lf = must_sub(r'value="\{\{ min_volume\.split\(\' \'\)\[0\] \}\}"', 'value="3"', lf)
@@ -166,7 +169,12 @@ def write(path, html):
     PAGES.append(path)
 
 
-def schema(h1, path, faq, price=None, crumbs=True):
+def stable(s):
+    import hashlib
+    return hashlib.md5(s.encode()).hexdigest()
+
+
+def schema(h1, path, faq, price=None, crumbs=True, high=None, count=None):
     g = []
     if crumbs:
         g.append({"@type": "BreadcrumbList", "itemListElement": [
@@ -175,6 +183,7 @@ def schema(h1, path, faq, price=None, crumbs=True):
     if price:
         g.append({"@type": "Product", "name": h1, "url": DOMAIN + path, "image": DOMAIN + "/img/og-cover.jpg",
                   "offers": {"@type": "AggregateOffer", "lowPrice": price, "priceCurrency": "RUB",
+                             **({"highPrice": high} if high else {}), **({"offerCount": count} if count else {}),
                              "availability": "https://schema.org/InStock"}})
     if faq:
         g.append({"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q,
@@ -231,6 +240,19 @@ ART_PUB = "2026-10-06"   # раздел и статьи опубликованы
 ART_UPD = "2026-10-07"   # статьи дописаны до ~1300-1500 слов
 
 
+def offer_range(price, unit, ex):
+    """highPrice/offerCount для AggregateOffer. Дрова: страница вида — от цены машины до цены
+    одного куба этого вида (3 варианта объёма); сводные — по всем видам. Топливо — одно предложение
+    (у угля — от мешка до тонны)."""
+    if unit == "м³":
+        p = D.PRODUCTS[ex]
+        if price == p["price"]:
+            return {"high": p["t1"], "count": 3}
+        return {"high": max(D.PRODUCTS[k]["t1"] for k in D.ORDER), "count": len(D.ORDER)}
+    f = next(v for v in D.FUEL.values() if v["price"] == price)
+    return {"high": f.get("price_t") or price, "count": 2 if f.get("price_t") else 1}
+
+
 def ru_d(iso):
     d = datetime.date.fromisoformat(iso)
     return f"{d.day} {MONTHS[d.month-1]} {d.year}"
@@ -277,7 +299,7 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
         **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
         links2=links2, links2_title=links2_title, is_hub=is_hub,
-        schema_json=schema(h1, path, faq, price, crumbs=not is_hub)))
+        schema_json=schema(h1, path, faq, price, crumbs=not is_hub, **offer_range(price, unit, ex))))
     write(path, html)
 
 
@@ -287,7 +309,7 @@ def main():
           f"Доставка дров по Свердловской области — от {ru0(MIN_PRICE)} ₽/м³",
           f"Дрова с доставкой: берёза, смешанные, хвойные, осина, ольха, сухие, горбыль. От {ru0(MIN_PRICE)} ₽/м³ с доставкой, 3 куба берёзы — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽. Без минимального объёма.",
           "Свои дрова всех видов: колотые и чурками, естественной влажности и сухие. Возим самосвалами, без минимального объёма — от одного куба до полной машины.",
-          MIN_PRICE, MORE_INTENT["hub"] + T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + BEREZA_LINKS + ART_LINKS + [{"url": "/dostavka-drov/blog/", "text": "Блог: топка, колка, заготовка, копчение"}], links2_title="Города и статьи", is_hub=True)
+          MIN_PRICE, MORE_INTENT["hub"] + [x for x in T.COMMON if x[0] != "Насыпной куб и складометр"], [], links_title="Дрова по видам", links2=CITY_LINKS + BEREZA_LINKS + ART_LINKS + [{"url": "/dostavka-drov/blog/", "text": "Блог: топка, колка, заготовка, копчение"}], links2_title="Города и статьи", is_hub=True)
     # Екатеринбург, главная коммерческая
     money("/drova-ekaterinburg/", "Купить дрова в Екатеринбурге с доставкой",
           f"Купить дрова в Екатеринбурге недорого — от {ru0(MIN_PRICE)} ₽/м³",
@@ -430,7 +452,12 @@ def render_blog():
     d = datetime.date.fromisoformat(BLOG_DATE)
     for p in BL.POSTS:
         path = f"{BLOG_URL}{p['slug']}/"
-        rel = [x for x in nav if x["url"] != path] + ART_LINKS[:4]
+        # По кругу: следующие посты той же рубрики, затем следующие из других —
+        # так каждый пост получает примерно поровну входящих ссылок.
+        i = [x["url"] for x in nav].index(path)
+        ring = nav[i + 1:] + nav[:i]
+        same = [x for x in ring if x["group"] == p["group"]][:3]
+        rel = (same + [x for x in ring if x not in same])[:6] + [{"url": p["money"][0], "text": p["money"][1]}]
         html = env.get_template("drova_article.html").render(**ctx(
             title=p["title"], description=p["desc"], canonical=DOMAIN + path, h1=p["h1"], lede=p["lede"],
             body=p["body"], faq=p["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
