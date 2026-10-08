@@ -221,7 +221,7 @@ FOOTER = [{"url": D.HUB, "text": "Доставка дров"}, {"url": "/drova-e
 def city_secs(key, name, prep, dat):
     c = DC.C[key]
     return [(f"Зона доставки дров: {name} и посёлки вокруг", [f"Кроме самого города привозим дрова в посёлки и сёла до 50 км: {c['villages']}. Если вашего посёлка нет в списке — напишите адрес, проверим.", c["tip"]]),
-            (f"Какие дрова берут {prep}", c["local"])] + \
+            (f"Какие дрова берут {prep}", c["local"])] + c.get("extra", []) + \
            [(h.format(prep=prep), [x.format(prep=prep, name=name, dat=dat) for x in ps]) for h, ps in DC.GEN]
 
 
@@ -394,7 +394,7 @@ def main():
     # Города
     for key, name, prep, dat, text in D.CITIES:
         money(f"/{D.CITY_SLUG[key]}/", f"Купить дрова {prep} с доставкой",
-              f"Купить дрова {prep} с доставкой — от {ru0(MIN_PRICE)} ₽/м³",
+              DC.C[key].get("title", "Купить дрова {prep} с доставкой — от {p} ₽/м³").format(prep=prep, p=ru0(MIN_PRICE)),
               f"Дрова с доставкой {prep} и до 50 км вокруг: 3 куба берёзовых колотых — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽, смешанные, ольха, осина, сухие, горбыль. От одного куба.",
               f"Берёзовые, смешанные, хвойные, ольховые, осиновые и сухие дрова, горбыль — привезём по {dat} и до 50 км вокруг. От одного куба.",
               MIN_PRICE, city_secs(key, name, prep, dat) + T.COMMON,
