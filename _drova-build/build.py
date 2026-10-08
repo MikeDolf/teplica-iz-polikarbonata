@@ -36,7 +36,7 @@ DC.C.update(DC2.C)
 DC.C["pervouralsk"]["villages"] += ", Новоуткинск, Прогресс, Коуровка, Слобода, Каменка, Нижнее Село, Трёка, Волыны, Староуткинск, Сабик, Чусовое, Мартьяново"
 DC.C["pervouralsk"]["local"] = DC.C["pervouralsk"]["local"] + [
     "Отдельно возим дрова вверх по Чусовой — в Новоуткинск, Коуровку, Слободу, Волыны, Трёку, Староуткинск, Чусовое и Мартьяново. В этих посёлках газа почти нет, дома топят печами, и дрова нужны круглый год. Дрова для этих мест есть всегда, в том числе зимой и весной, когда у других продавцов запасы заканчиваются.",
-    "Есть и пиленый горбыль — 3 куба с доставкой от 8600 рублей, машина 10 кубов от 17 000: для бани, летней кухни и растопки. Горбыль можно привезти одной машиной с берёзой."]
+    "Есть и пиленый горбыль — 3 куба с доставкой от %%gorbyl.t3%% рублей, машина 10 кубов от %%gorbyl.t10%%: для бани, летней кухни и растопки. Горбыль можно привезти одной машиной с берёзой."]
 DC.C["revda"]["villages"] += ", Дружинино, Бисерть"
 from drova_bereza_city import B as BZC
 import drova_articles as AR
@@ -116,13 +116,50 @@ env = Environment(loader=ChoiceLoader([DictLoader(overrides()),
                                       FileSystemLoader(os.path.join(HERE, "templates")),
                                       FileSystemLoader(os.path.join(EKB, "templates"))]),
                   autoescape=True, trim_blocks=False, lstrip_blocks=False)
-env.filters["ru"] = lambda n: f"{int(n):,}".replace(",", " ")
+env.filters["ru"] = lambda n: f"{int(n):,}".replace(",", " ")   # узкий неразрывный: «3 500» не рвётся
 env.filters["ucfirst"] = lambda v: (v[:1].upper() + v[1:]) if v else v
 
 PAGES = []   # (path, robots-индекс) для карты
 
 
+_SCRIPT = re.compile(r"(<script\b.*?</script>|<style\b.*?</style>)", re.S)
+
+
+def nobreak_prices(html):
+    """«от 3 500 ₽/м³» — одним куском: в плитках ссылок и таблицах «м³» уезжал
+    на новую строку. Только в видимом тексте <body>, скрипты и стили не трогаем."""
+    head, sep, body = html.partition("<body")
+    parts = _SCRIPT.split(body)
+    for i in range(0, len(parts), 2):
+        t = parts[i]
+        t = re.sub(r"(\d) ₽", "\\1\u00a0₽", t)
+        t = re.sub(r"₽/(м³|т|кг|мешок)", "₽/\u2060\\1", t)
+        t = re.sub(r"(\b[Оо]т|≈) (\d)", "\\1\u00a0\\2", t)
+        parts[i] = t
+    return head + sep + "".join(parts)
+
+
+def _price_token(m):
+    """%%berezovye.t3%% — поле товара; %%sum.berezovye.18%% — итог с доставкой за 18 м³;
+    %%per.berezovye.3%% — за м³ при 3 м³; %%deliv%% — рейс. Цены — только в drova_data."""
+    p = m.group(1).split(".")
+    if p[0] == "deliv":
+        v = D.DELIVERY
+    elif p[0] == "sum":
+        v = D.total(p[1], int(p[2]))
+    elif p[0] == "per":
+        v = round(D.total(p[1], int(p[2])) / int(p[2]) / 50) * 50
+    elif p[0] in D.PRODUCTS:
+        v = D.PRODUCTS[p[0]][p[1]]
+    else:
+        v = D.FUEL[p[0]][p[1]]
+    return env.filters["ru"](v)
+
+
 def write(path, html):
+    html = re.sub(r"%%([\w.-]+)%%", _price_token, html)
+    assert "%%" not in html, path
+    html = nobreak_prices(html)
     full = os.path.join(ROOT, path.strip("/"), "index.html")
     os.makedirs(os.path.dirname(full), exist_ok=True)
     open(full, "w", encoding="utf-8").write(html)
