@@ -90,6 +90,9 @@ def overrides():
                  '<p class="ftr__legal">Доставка дров по {{ site.region_po }}: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие, горбыль, топливные брикеты, пеллеты и уголь. '
                  'Цены ориентировочные: дрова — за насыпной кубометр с доставкой, брикеты и пеллеты — за тонну, уголь — за мешок и тонну, без доставки. Точную стоимость назовём по заявке.</p>', f, re.S)
     o["partials/footer.html"] = f
+    bs = ekb_src("base.html")
+    bs = must_sub(r'imagesizes="\(max-width: 900px\) 260px, 100vw"', 'imagesizes="{{ hero_sizes|default(\'(max-width: 900px) 260px, 100vw\') }}"', bs)
+    o["base.html"] = bs
     cb = ekb_src("partials/callbar.html")
     cb = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", cb)
     o["partials/callbar.html"] = cb
@@ -302,6 +305,8 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
     faq = faq + [x for x in T.COMMON_FAQ if x[0] not in {q for q, _ in faq}]
     _seen = set(); faq = [x for x in faq if not (x[0] in _seen or _seen.add(x[0]))]
     html = env.get_template("drova_page.html").render(**ctx(
+        hero_photo="hero-drova", hero_alt="Поленница колотых берёзовых дров на опушке леса",
+        hero_sizes="(max-width: 900px) 800px, 100vw",
         title=title, description=desc, canonical=DOMAIN + path, h1=h1, hero_sub=hero_sub, price=price,
         sections=sections, faq=faq, price_rows=price_rows(), fuel_rows=fuel_rows(), unit=unit, calc=calc,
         ex=D.PRODUCTS[ex], ref_vol=D.REF_VOL, delivery=D.DELIVERY, trip_m3=D.TRIP_M3, **({"deliv_po": deliv_po} if deliv_po else {}),

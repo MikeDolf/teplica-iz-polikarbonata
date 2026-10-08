@@ -11,7 +11,19 @@
 </nav>
 {% endblock %}
 {% block content %}
-  <section class="hero">
+  <section class="hero hero--drova">
+    {#- Фон первого экрана (8 октября 2026): на компьютере — тёплое затемнение
+        с зелёным краем (вариант «Д3»), на телефоне фото полосой за заголовком
+        и тёмный низ («Т6»), см. .hero--drova в style.css. На телефоне фото
+        видно, поэтому sizes 800px, а не 260px, как у грунта (там оно закрыто). -#}
+    <div class="heropic">
+      <picture>
+        <source type="image/webp" sizes="(max-width: 900px) 800px, 100vw"
+                srcset="/assets/ekb/photo/{{ hero_photo }}-800.webp 800w, /assets/ekb/photo/{{ hero_photo }}-1400.webp 1400w">
+        <img src="/assets/ekb/photo/{{ hero_photo }}-1400.jpg" alt="{{ hero_alt }}"
+             loading="eager" fetchpriority="high" decoding="async" width="1400" height="788">
+      </picture>
+    </div>
     <div class="wrap hero__in">
       <div class="hero__text">
         <p class="hero__eyebrow">Доставка дров по {{ site.region_po }}</p>

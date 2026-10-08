@@ -7,6 +7,12 @@
   <title>Пеллеты древесные в Екатеринбурге — купить от 9 000 ₽ за тонну</title>
   <meta name="description" content="Древесные пеллеты 6 и 8 мм для котлов, каминов и наполнителя: от 9 000 ₽ за тонну, в мешках по 15 кг и на поддонах, доставка по Екатеринбургу и области до 50 км.">
   <meta name="robots" content="index, follow">
+  <!-- Картинка шапки это LCP-элемент страницы: предзагрузка ускоряет
+       отрисовку и влияет на оценку Core Web Vitals. -->
+  <link rel="preload" as="image" fetchpriority="high"
+        href="/assets/ekb/photo/hero-drova-1400.webp"
+        imagesrcset="/assets/ekb/photo/hero-drova-800.webp 800w, /assets/ekb/photo/hero-drova-1400.webp 1400w"
+        imagesizes="(max-width: 900px) 800px, 100vw" type="image/webp">
   <link rel="canonical" href="https://fanline.su/pellety-ekaterinburg/">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="ru_RU">
@@ -26,7 +32,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.css?v=95"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.css?v=96"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -113,7 +119,14 @@
 
 
 <main id="top">
-  <section class="hero">
+  <section class="hero hero--drova"><div class="heropic">
+      <picture>
+        <source type="image/webp" sizes="(max-width: 900px) 800px, 100vw"
+                srcset="/assets/ekb/photo/hero-drova-800.webp 800w, /assets/ekb/photo/hero-drova-1400.webp 1400w">
+        <img src="/assets/ekb/photo/hero-drova-1400.jpg" alt="Поленница колотых берёзовых дров на опушке леса"
+             loading="eager" fetchpriority="high" decoding="async" width="1400" height="788">
+      </picture>
+    </div>
     <div class="wrap hero__in">
       <div class="hero__text">
         <p class="hero__eyebrow">Доставка дров по Екатеринбургу и Свердловской области</p>

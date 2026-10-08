@@ -1195,3 +1195,19 @@ html{overflow-x:hidden}
 .lead__form--drova{grid-auto-flow:row dense}
 .lead__form--drova .field--wide{grid-column:1/-1}
 .lead__form--drova .field{align-self:end}
+
+/* Фон первого экрана дров (8 октября 2026). Компьютер — «Д3»: у левого края
+   тёмно-зелёный, как шапка, к поленнице переходит в тёплый коричневый.
+   Телефон — «Т6»: фото полосой за заголовком, ниже тёмный тёплый фон. */
+.hero--drova .heropic::after{background:linear-gradient(100deg,
+  rgba(13,40,26,.96) 0%, rgba(20,30,16,.90) 30%, rgba(28,16,8,.60) 58%, rgba(28,16,8,.22) 100%)}
+/* плашка цены не заходит на светлые поленья справа */
+.hero--drova .hero__price{max-width:600px}
+@media (max-width:900px){
+  .hero--drova{background:#1c1008}
+  .hero--drova .heropic{inset:0 0 auto 0;height:380px}
+  .hero--drova .heropic img{object-position:66% 40%}
+  .hero--drova .heropic::after{background:linear-gradient(180deg,
+    rgba(28,16,8,.30) 0%, rgba(28,16,8,.62) 45%, #1c1008 100%)}
+  .hero--drova h1,.hero--drova .hero__sub,.hero--drova .hero__eyebrow{text-shadow:0 2px 14px rgba(0,0,0,.85)}
+}
