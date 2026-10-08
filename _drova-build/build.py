@@ -36,7 +36,7 @@ DC.C.update(DC2.C)
 DC.C["pervouralsk"]["villages"] += ", Новоуткинск, Прогресс, Коуровка, Слобода, Каменка, Нижнее Село, Трёка, Волыны, Староуткинск, Сабик, Чусовое, Мартьяново"
 DC.C["pervouralsk"]["local"] = DC.C["pervouralsk"]["local"] + [
     "Отдельно возим дрова вверх по Чусовой — в Новоуткинск, Коуровку, Слободу, Волыны, Трёку, Староуткинск, Чусовое и Мартьяново. В этих посёлках газа почти нет, дома топят печами, и дрова нужны круглый год. Дрова для этих мест есть всегда, в том числе зимой и весной, когда у других продавцов запасы заканчиваются.",
-    "Есть и пиленый горбыль — от 900 рублей за насыпной куб: для бани, летней кухни и растопки. Горбыль можно привезти одной машиной с берёзой."]
+    "Есть и пиленый горбыль — 3 куба с доставкой от 8600 рублей, машина 10 кубов от 17 000: для бани, летней кухни и растопки. Горбыль можно привезти одной машиной с берёзой."]
 DC.C["revda"]["villages"] += ", Дружинино, Бисерть"
 from drova_bereza_city import B as BZC
 import drova_articles as AR
@@ -79,7 +79,7 @@ def overrides():
     f = ekb_src("partials/footer.html")
     f = must_sub(r'<p class="ftr__legal">.*?</p>',
                  '<p class="ftr__legal">Доставка дров по {{ site.region_po }}: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие, горбыль, топливные брикеты, пеллеты и уголь. '
-                 'Цены ориентировочные: дрова за насыпной кубометр, брикеты, пеллеты и уголь за тонну; точную стоимость с доставкой назовём по заявке.</p>', f, re.S)
+                 'Цены ориентировочные: дрова — за насыпной кубометр с доставкой, брикеты и пеллеты — за тонну, уголь — за мешок и тонну, без доставки. Точную стоимость назовём по заявке.</p>', f, re.S)
     o["partials/footer.html"] = f
     cb = ekb_src("partials/callbar.html")
     cb = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", cb)
@@ -89,8 +89,8 @@ def overrides():
     lf = must_sub(r'\{%- set products = \[.*?\] %\}', "{%- set products = " + json.dumps(names, ensure_ascii=False) + " %}", lf, re.S)
     lf = must_sub(r'"Сайт доставки грунта"', '"Сайт доставки дров"', lf)
     lf = must_sub(r'\(form\.product\.value\|\|"грунт"\)', '(form.product.value||"дрова")', lf)
-    lf = must_sub(r'value="\{\{ min_volume\.split\(\' \'\)\[0\] \}\}"', 'value="5"', lf)
-    units = {D.FUEL[k]["name"]: D.FUEL[k]["unit"] for k in D.FUEL_ORDER}
+    lf = must_sub(r'value="\{\{ min_volume\.split\(\' \'\)\[0\] \}\}"', 'value="3"', lf)
+    units = {D.FUEL[k]["name"]: {"мешок": "мешков"}.get(D.FUEL[k]["unit"], D.FUEL[k]["unit"]) for k in D.FUEL_ORDER}
     lf = must_sub(r'<label class="field__label" for="lead-volume">Объём, м³</label>',
                   '<label class="field__label" for="lead-volume">Объём, <span id="lead-unit">м³</span></label>', lf)
     lf = must_sub(r"var volumeText = form\.volume\.value \? form\.volume\.value \+ ' м³' : 'объём не указан';",
@@ -98,7 +98,7 @@ def overrides():
     lf = must_sub(r"var ENDPOINT = ",
                   "var UNITS = " + json.dumps(units, ensure_ascii=False) + ";\n  function leadUnit(){ var f=document.getElementById('lead-product'); return (f && UNITS[f.value]) || 'м³'; }\n"
                   "  (function(){ var f=document.getElementById('lead-product'), u=document.getElementById('lead-unit'), v=document.getElementById('lead-volume');\n"
-                  "    function sync(init){ var x=leadUnit(); if(u) u.textContent=x; if(v && (init || v.dataset.auto)){ v.value = x==='т' ? 1 : (x==='кг' ? 10 : 5); v.dataset.auto='1'; } }\n"
+                  "    function sync(init){ var x=leadUnit(); if(u) u.textContent=x; if(v && (init || v.dataset.auto)){ v.value = x==='т' ? 1 : (x==='кг' || x==='мешков' ? 10 : 3); v.dataset.auto='1'; } }\n"
                   "    if(f){ f.addEventListener('change', function(){ sync(false); }); sync(true); }\n"
                   "    if(v){ v.addEventListener('input', function(){ delete v.dataset.auto; }); } })();\n  var ENDPOINT = ", lf)
     o["partials/lead_form.html"] = lf
@@ -107,7 +107,7 @@ def overrides():
     o["partials/max_fallback.html"] = mf
     fc = ekb_src("partials/floatcta.html")
     fc = must_sub(r"Калькулятор посчитает объём и рейс до вашего адреса — можно прикинуть заранее",
-                  "Калькулятор посчитает стоимость дров по объёму, доставку назовём в ответ на заявку", fc)
+                  "Калькулятор посчитает стоимость дров вместе с доставкой — можно прикинуть заранее", fc)
     o["partials/floatcta.html"] = fc
     return o
 
@@ -146,11 +146,12 @@ def schema(h1, path, faq, price=None, crumbs=True):
 
 
 def price_rows():
-    return [{"name": D.PRODUCTS[k]["name"], "price": D.PRODUCTS[k]["price"], "url": f'/{D.PRODUCTS[k]["slug"]}/'} for k in D.ORDER]
+    return [dict(D.PRODUCTS[k], url=f'/{D.PRODUCTS[k]["slug"]}/') for k in D.ORDER]
 
 
 def fuel_rows():
-    return [{"name": D.FUEL[k]["name"], "price": D.FUEL[k]["price"], "unit": D.FUEL[k]["unit"], "url": f'/{D.FUEL[k]["slug"]}/'} for k in D.FUEL_ORDER]
+    return [{"name": D.FUEL[k]["name"], "price": D.FUEL[k]["price"], "unit": D.FUEL[k].get("unit_long", D.FUEL[k]["unit"]),
+             "price_t": D.FUEL[k].get("price_t"), "url": f'/{D.FUEL[k]["slug"]}/'} for k in D.FUEL_ORDER]
 
 
 MIN_PRICE = min(D.PRODUCTS[k]["price"] for k in D.ORDER if k != "gorbyl")   # дрова; горбыль отдельно
@@ -198,6 +199,22 @@ def ru_d(iso):
     return f"{d.day} {MONTHS[d.month-1]} {d.year}"
 
 
+def price_answer(prep="в Екатеринбурге", near=True):
+    """Ответ «сколько стоят дрова» в модели «цена с доставкой»."""
+    b, h, g = D.PRODUCTS["berezovye"], D.PRODUCTS["hvoynye"], D.PRODUCTS["gorbyl"]
+    tail = " Цена примерно та же, что в Екатеринбурге: возим с ближайшей к вам площадки." if not near else ""
+    return (f"С доставкой {prep}: берёзовые колотые — 1 куб от {ru0(b['t1'])} ₽, 3 куба от {ru0(b['t3'])} ₽, "
+            f"машина {D.REF_VOL} кубов от {ru0(b['t10'])} ₽ (≈{ru0(b['price'])} ₽/м³). Хвойные — машина от {ru0(h['t10'])} ₽, "
+            f"горбыль — от {ru0(g['t10'])} ₽. Минимального заказа нет.{tail}")
+
+
+def fuel_answer():
+    u, br, pe = D.FUEL["ugol"], D.FUEL["brikety"], D.FUEL["pellety"]
+    return (f"Да. Каменный уголь — от {ru0(u['price'])} ₽ за мешок 25 кг или от {ru0(u['price_t'])} ₽ за тонну, "
+            f"топливные брикеты — от {ru0(br['price'])} ₽ за тонну, пеллеты — от {ru0(pe['price'])} ₽ за тонну. "
+            f"Цены топлива без доставки; вместе с дровами привезём одним рейсом.")
+
+
 def ru0(n):
     return env.filters["ru"](n)
 
@@ -211,12 +228,15 @@ def ctx(**kw):
 
 
 def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", city_prep="", city_text="",
-          links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None):
+          links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None, ex="berezovye", deliv_po=None):
+    if calc and "₽/м³" in title and "доставк" not in title.lower() and len(title) + 12 <= 70:
+        title = title.replace("₽/м³", "₽/м³ с доставкой")
     faq = faq + [x for x in T.COMMON_FAQ if x[0] not in {q for q, _ in faq}]
     _seen = set(); faq = [x for x in faq if not (x[0] in _seen or _seen.add(x[0]))]
     html = env.get_template("drova_page.html").render(**ctx(
         title=title, description=desc, canonical=DOMAIN + path, h1=h1, hero_sub=hero_sub, price=price,
         sections=sections, faq=faq, price_rows=price_rows(), fuel_rows=fuel_rows(), unit=unit, calc=calc,
+        ex=D.PRODUCTS[ex], ref_vol=D.REF_VOL, delivery=D.DELIVERY, trip_m3=D.TRIP_M3, **({"deliv_po": deliv_po} if deliv_po else {}),
         **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
         links2=links2, links2_title=links2_title, is_hub=is_hub,
@@ -228,44 +248,48 @@ def main():
     # Хаб
     money(D.HUB, "Доставка дров по Екатеринбургу и Свердловской области",
           f"Доставка дров по Свердловской области — от {ru0(MIN_PRICE)} ₽/м³",
-          f"Дрова с доставкой: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие и горбыль. От {MIN_PRICE} ₽ за насыпной куб, без минимального объёма, до 50 км от каждого города.",
+          f"Дрова с доставкой: берёза, смешанные, хвойные, осина, ольха, сухие, горбыль. От {ru0(MIN_PRICE)} ₽/м³ с доставкой, 3 куба берёзы — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽. Без минимального объёма.",
           "Свои дрова всех видов: колотые и чурками, естественной влажности и сухие. Возим самосвалами, без минимального объёма — от одного куба до полной машины.",
           MIN_PRICE, MORE_INTENT["hub"] + T.COMMON, [], links_title="Дрова по видам", links2=CITY_LINKS + BEREZA_LINKS + ART_LINKS + [{"url": "/dostavka-drov/blog/", "text": "Блог: топка, колка, заготовка, копчение"}], links2_title="Города и статьи", is_hub=True)
     # Екатеринбург, главная коммерческая
     money("/drova-ekaterinburg/", "Купить дрова в Екатеринбурге с доставкой",
           f"Купить дрова в Екатеринбурге недорого — от {ru0(MIN_PRICE)} ₽/м³",
-          f"Дрова с доставкой по Екатеринбургу: берёзовые колотые от {D.PRODUCTS['berezovye']['price']} ₽, смешанные, хвойные, ольха, осина, сухие для камина. Без минимального объёма.",
+          f"Дрова с доставкой по Екатеринбургу: 3 куба берёзовых колотых — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽, машина — от {ru0(D.PRODUCTS['berezovye']['price'])} ₽/м³. Смешанные, хвойные, ольха, сухие. Без минимального объёма.",
           "Берёзовые, смешанные, хвойные, осиновые, ольховые и сухие дрова, горбыль. Привезём по городу и пригороду до 50 км — и один куб, и полную машину.",
-          MIN_PRICE, MORE_INTENT["ekb"] + T.COMMON, [("Сколько стоят дрова в Екатеринбурге?", f"Колотые дрова — от {MIN_PRICE} рублей за насыпной куб, берёзовые — от {D.PRODUCTS['berezovye']['price']}, горбыль — от {GORBYL}. Доставку считаем по километрам."),
+          MIN_PRICE, MORE_INTENT["ekb"] + T.COMMON, [("Сколько стоят дрова в Екатеринбурге?", price_answer()),
                                 ("Какие дрова лучше купить?", "Для отопления дома — берёзовые или смешанные, для бани — берёза, ольха или осина, для камина — сухие берёзовые.")],
           city_prep="в Екатеринбурге", links2=CITY_LINKS[1:] + ART_LINKS, links2_title="Другие города и статьи")
     # Товары по Екатеринбургу
     for k in D.ORDER:
         pr = D.PRODUCTS[k]
         t = T.EXTRA["suhie_obsh"] if k == "suhie" else T.P[k]
-        f = lambda s: s.format(p=env.filters["ru"](pr["price"]), b=env.filters["ru"](D.PRODUCTS["berezovye"]["price"]))
+        f = lambda s: s.format(p=env.filters["ru"](pr["price"]), b=env.filters["ru"](D.PRODUCTS["berezovye"]["price"]),
+                               **{x: env.filters["ru"](pr[x]) for x in ("t1", "t3", "t10")})
         money(f'/{pr["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pr["price"],
-              t["about"] + MORE[k]["sections"] + T.COMMON, [(q, f(a)) for q, a in t["faq"]] + MORE[k]["faq"], preselect=pr["name"],
+              t["about"] + MORE[k]["sections"] + T.COMMON, [(q, f(a)) for q, a in t["faq"]] + MORE[k]["faq"], preselect=pr["name"], ex=k,
               links=[l for l in PROD_LINKS if l["url"] != f'/{pr["slug"]}/'],
               links2=(BEREZA_LINKS if k == "berezovye" else []) + CITY_LINKS,
               links2_title="Берёзовые дрова в городах и другие города" if k == "berezovye" else "Возим и в другие города")
     # Колотые дрова (общая) и дрова для камина
     ru = env.filters["ru"]
     t = T.EXTRA["kolotye"]; pk = D.PRODUCTS[t["price_from"]]["price"]
-    f = lambda x: x.format(p=ru(pk), b=ru(D.PRODUCTS["berezovye"]["price"]))
+    _pf = D.PRODUCTS[t["price_from"]]
+    f = lambda x: x.format(p=ru(pk), b=ru(D.PRODUCTS["berezovye"]["price"]), **{y: ru(_pf[y]) for y in ("t1", "t3", "t10")})
     money(f'/{t["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + MORE_INTENT["kolotye"] + T.COMMON,
-          [(q, f(a)) for q, a in t["faq"]], preselect=D.PRODUCTS[t["preselect"]]["name"],
+          [(q, f(a)) for q, a in t["faq"]], preselect=D.PRODUCTS[t["preselect"]]["name"], ex=t["price_from"],
           links=[l for l in PROD_LINKS if l["url"] != f'/{t["slug"]}/'], links2=CITY_LINKS, links2_title="Возим и в другие города")
     t = T.P["suhie"]; pk = D.PRODUCTS["suhie"]["price"]
-    f = lambda x: x.format(p=ru(pk))
+    f = lambda x: x.format(p=ru(pk), **{y: ru(D.PRODUCTS["suhie"][y]) for y in ("t1", "t3", "t10")})
     money("/drova-dlya-kamina-ekaterinburg/", t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + MORE_INTENT["kamin"] + T.COMMON,
           [(q, f(a)) for q, a in t["faq"]] + [("Какие дрова нельзя для камина?", "Хвойные — стреляют искрами и коптят, и любые сырые — дымят и пачкают стекло.")],
-          preselect=D.PRODUCTS["suhie"]["name"], links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-kamina-ekaterinburg/"],
+          preselect=D.PRODUCTS["suhie"]["name"], ex="suhie", links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-kamina-ekaterinburg/"],
           links2=CITY_LINKS, links2_title="Возим и в другие города")
     # Брикеты, пеллеты, уголь
     for k in D.FUEL_ORDER:
-        fu = D.FUEL[k]; t = FUELT[k]; f = lambda x: x.format(p=ru(fu["price"]))
-        note = "Цена за тонну." if fu["unit"] == "т" else "Цена за килограмм."
+        fu = D.FUEL[k]; t = FUELT[k]; f = lambda x: x.format(p=ru(fu["price"]), pt=ru(fu.get("price_t") or 0))
+        note = {"т": "Цена за тонну, без доставки.", "кг": "Цена за килограмм, без доставки.",
+                "мешок": f"Цена за мешок 25 кг, без доставки. Тонна навалом — от {ru0(fu.get('price_t') or 0)} ₽."}[fu["unit"]]
+        note += " Доставку назовём по адресу, вместе с дровами привезём одним рейсом."
         money(f'/{fu["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], fu["price"], t["sections"] + T.COMMON[1:],
               [(q, f(a)) for q, a in t["faq"]], preselect=fu["name"], unit=fu["unit"], price_note=note, calc=False, min_text="и мешок, и полную машину",
               links=[l for l in PROD_LINKS if l["url"] != f'/{fu["slug"]}/'], links_title="Дрова и другое топливо",
@@ -277,48 +301,48 @@ def main():
         name, prep, dat = [(c[1], c[2], c[3]) for c in D.CITIES if c[0] == key][0]
         money(f"/drova-berezovye-{key}/", f"Берёзовые дрова колотые {prep} с доставкой",
               f"Берёзовые дрова {prep} — колотые, от {ru(bz)} ₽/м³",
-              f"Берёзовые колотые дрова с доставкой {prep} и до 50 км вокруг: от {ru(bz)} ₽ за насыпной куб, естественной влажности и сухие, без минимального объёма.",
+              f"Берёзовые колотые дрова с доставкой {prep} и вокруг: 3 куба — от {ru(D.PRODUCTS['berezovye']['t3'])} ₽, машина — от {ru(bz)} ₽/м³. Естественной влажности и сухие, от одного куба.",
               f"Берёза колотая, полено 30-40 см — жаркие дрова для печи, бани и котла. Привезём по {dat} и окрестностям, от одного куба.",
               bz, BZC[key]["sections"] + T.COMMON,
-              BZC[key]["faq"] + [(f"Сколько стоят берёзовые дрова {prep}?", f"От {ru(bz)} рублей за насыпной куб колотых, доставку считаем по километрам."),
-               ("Есть ли сухие берёзовые дрова?", f"Да, от {ru(D.PRODUCTS['suhie']['price'])} рублей за насыпной куб.")],
-              preselect=D.PRODUCTS["berezovye"]["name"], city_prep=prep, city_text=text,
+              BZC[key]["faq"] + [(f"Сколько стоят берёзовые дрова {prep}?", f"С доставкой {prep}: 1 куб — от {ru(D.PRODUCTS['berezovye']['t1'])} ₽, 3 куба — от {ru(D.PRODUCTS['berezovye']['t3'])} ₽, машина {D.REF_VOL} кубов — от {ru(D.PRODUCTS['berezovye']['t10'])} ₽ (≈{ru(bz)} ₽/м³). Цена примерно та же, что в Екатеринбурге: возим с ближайшей площадки."),
+               ("Есть ли сухие берёзовые дрова?", f"Да, 3 куба сухих с доставкой — от {ru(D.PRODUCTS['suhie']['t3'])} ₽.")],
+              preselect=D.PRODUCTS["berezovye"]["name"], city_prep=prep, city_text=text, deliv_po=dat,
               links=[{"url": f"/{D.CITY_SLUG[key]}/", "text": f"Все дрова {prep}"}] + PROD_LINKS, links_title="Ещё дрова",
               links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"], links2_title="Другие города")
     # Дрова для бани
-    bp = min(D.PRODUCTS[k]["price"] for k in ("berezovye", "osina", "olha"))
+    bk_ = min(("berezovye", "osina", "olha"), key=lambda k: D.PRODUCTS[k]["price"]); bp = D.PRODUCTS[bk_]["price"]
     money("/drova-dlya-bani-ekaterinburg/", "Дрова для бани с доставкой в Екатеринбурге",
-          f"Купить дрова для бани в Екатеринбурге — от {bp} ₽/м³",
-          f"Дрова для бани: берёза, ольха, осина — колотые и сухие. От {bp} ₽ за насыпной куб, доставка по Екатеринбургу и области до 50 км, без минимального объёма.",
+          f"Купить дрова для бани в Екатеринбурге — от {ru0(bp)} ₽/м³",
+          f"Дрова для бани: берёза, ольха, осина — колотые и сухие. От {ru0(bp)} ₽/м³ с доставкой по Екатеринбургу и области, без минимального объёма.",
           "Берёза для жара и углей, ольха и осина для чистого горения без копоти. Подскажем, что взять под вашу печь.",
           bp, [("Какие дрова лучше для бани", ["Берёзовые дают жар и угли, ольховые горят без копоти и с лёгким ароматом, осиновые чистят дымоход и не темнят стены парной. Удобная схема: прогреть печь берёзой, а последнюю закладку сделать ольхой или осиной. Хвойные для бани не советуем: смола даёт копоть и искры. Подробное сравнение — в статье «Какие дрова лучше для бани»."]),
                ("Сколько дров нужно на баню", ["На одну топку средней бани уходит 0,08-0,12 насыпного куба берёзы. При топке раз в неделю — 4-7 насыпных кубов за год. Для бани берут сухие дрова: сырые долго разгораются и коптят."])] + MORE_INTENT["bani"][:3] + T.COMMON,
           [("Какие дрова лучше для бани?", "Берёза для жара, ольха и осина для чистого горения. Хвойные — только на растопку."),
            ("Сколько кубов дров нужно для бани на год?", "При топке раз в неделю — 4-7 насыпных кубов.")],
-          preselect=D.PRODUCTS["berezovye"]["name"], links2=CITY_LINKS, links2_title="Возим и в другие города")
+          preselect=D.PRODUCTS["berezovye"]["name"], ex=bk_, links2=CITY_LINKS, links2_title="Возим и в другие города")
     # Дрова для котла
     bk = D.PRODUCTS["smeshannye"]["price"]
     money("/drova-dlya-kotla-ekaterinburg/", "Дрова для котла с доставкой в Екатеринбурге",
           f"Дрова для котла длительного горения — купить от {ru0(bk)} ₽/м³",
-          f"Дрова для твердотопливных котлов и котлов длительного горения: берёза и смешанные, сухие и естественной влажности, полено под вашу топку. От {ru0(bk)} ₽ за насыпной куб.",
+          f"Дрова для котлов длительного горения: берёза и смешанные, сухие и естественной влажности, полено под вашу топку. От {ru0(bk)} ₽/м³ с доставкой.",
           "Берёза и смешанные дрова для пиролизных котлов и котлов верхнего горения. Подберём длину полена под вашу камеру загрузки и привезём по Екатеринбургу и области.",
           bk, MORE_INTENT_KOTEL + T.COMMON,
           [("Какие дрова лучше для котла?", "Сухая берёза или смешанные с преобладанием берёзы. Для пиролизного котла — только сухие, до 20%."),
            ("Можно подобрать длину полена под котёл?", "Да, назовите глубину загрузочной камеры или модель котла."),
            ("Сколько дров нужно котлу на зиму?", "Для дома 100 м² — 15-18 насыпных кубов берёзы за сезон."),
            ("Можно ли топить котёл хвойными дровами?", "Можно, если они сухие, но теплообменник придётся чистить чаще.")],
-          preselect=D.PRODUCTS["berezovye"]["name"], links=[l for l in PROD_LINKS], links2=CITY_LINKS + [{"url": f"{D.HUB}drova-dlya-kotla-dlitelnogo-goreniya/", "text": "Статья: дрова для котла длительного горения"}], links2_title="Города и статьи")
+          preselect=D.PRODUCTS["berezovye"]["name"], ex="smeshannye", links=[l for l in PROD_LINKS], links2=CITY_LINKS + [{"url": f"{D.HUB}drova-dlya-kotla-dlitelnogo-goreniya/", "text": "Статья: дрова для котла длительного горения"}], links2_title="Города и статьи")
     # Города
     for key, name, prep, dat, text in D.CITIES:
         money(f"/{D.CITY_SLUG[key]}/", f"Купить дрова {prep} с доставкой",
               f"Купить дрова {prep} с доставкой — от {ru0(MIN_PRICE)} ₽/м³",
-              f"Дрова с доставкой {prep} и до 50 км вокруг: берёзовые колотые от {D.PRODUCTS['berezovye']['price']} ₽, смешанные, ольха, осина, сухие, горбыль. Без минимального объёма.",
+              f"Дрова с доставкой {prep} и до 50 км вокруг: 3 куба берёзовых колотых — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽, смешанные, ольха, осина, сухие, горбыль. От одного куба.",
               f"Берёзовые, смешанные, хвойные, ольховые, осиновые и сухие дрова, горбыль — привезём по {dat} и до 50 км вокруг. От одного куба.",
               MIN_PRICE, city_secs(key, name, prep, dat) + T.COMMON,
-              DC.C[key]["faq"] + [(f"Сколько стоят дрова {prep}?", f"Колотые дрова — от {MIN_PRICE} рублей за насыпной куб, берёзовые — от {D.PRODUCTS['berezovye']['price']}, горбыль — от {GORBYL}. Доставку {prep} считаем по километрам."),
+              DC.C[key]["faq"] + [(f"Сколько стоят дрова {prep}?", price_answer(prep, near=False)),
                (f"Возите дрова {prep} без минимального объёма?", "Да, привезём и один куб, и полную машину."),
-               (f"Можно заказать {prep} уголь, брикеты или горбыль?", f"Да. Каменный уголь — от {ru0(D.FUEL['ugol']['price'])} ₽ за тонну, топливные брикеты — от {ru0(D.FUEL['brikety']['price'])} ₽ за тонну, пеллеты — от {ru0(D.FUEL['pellety']['price'])} ₽ за тонну, горбыль — от {GORBYL} ₽ за насыпной куб. Можно в одной машине с дровами.")],
-              city_prep=prep, city_text=text,
+               (f"Можно заказать {prep} уголь, брикеты или пеллеты?", fuel_answer())],
+              city_prep=prep, city_text=text, deliv_po=dat,
               links=([{"url": f"/drova-berezovye-{key}/", "text": f"Берёзовые колотые {prep}"}] if key in T.BEREZA_CITY else []) + PROD_LINKS,
               links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"],
               links2_title="Другие города", **{})

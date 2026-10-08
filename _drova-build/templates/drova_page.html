@@ -20,10 +20,10 @@
         <p class="hero__min"><b>Минимального объёма нет</b> — привезём {{ min_text|default("и один куб") }}. Доставка до 50 км от {{ zone_text }}.</p>
         <div class="hero__price">
           <div class="hero__price__row">
-            <span class="hero__price__label">Ориентировочно</span>
+            <span class="hero__price__label">{% if price_note %}Ориентировочно{% else %}С доставкой{% endif %}</span>
             <b class="hero__price__num">от {{ price|ru }} ₽/{{ unit|default("м³") }}</b>
           </div>
-          <span class="hero__price__note">{{ price_note|default("Цена за насыпной кубометр дров.") }} Доставку считаем по километрам — сумму назовём в ответ на заявку.</span>
+          <span class="hero__price__note">{% if price_note %}{{ price_note }}{% else %}За насыпной куб при заказе машины {{ ref_vol }} м³, с доставкой по {{ deliv_po|default("Екатеринбургу") }}. {{ ex.name }}: 1 куб — от {{ ex.t1|ru }} ₽, 3 куба — от {{ ex.t3|ru }} ₽.{% endif %}</span>
         </div>
         <div class="hero__cta">
           {%- if calc %}
@@ -55,11 +55,11 @@
   <section class="band band--plain" aria-labelledby="price-title">
     <div class="wrap">
       <h2 class="sec-h" id="price-title">Цены на дрова{% if city_prep %} {{ city_prep }}{% endif %}</h2>
-      <div class="table-wrap table-wrap--compact table-wrap--two"><table>
-        <thead><tr><th>Дрова</th><th>Цена за насыпной м³</th></tr></thead>
+      <div class="table-wrap table-wrap--compact table-wrap--fit"><table>
+        <thead><tr><th>Дрова</th><th>3 м³ с доставкой</th><th>Машина {{ ref_vol }} м³ с доставкой</th></tr></thead>
         <tbody>
         {%- for p in price_rows %}
-          <tr><td data-label="Дрова">{% if p.url and p.url != self_path %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</td><td data-label="Цена">от {{ p.price|ru }} ₽</td></tr>
+          <tr><td data-label="Дрова">{% if p.url and p.url != self_path %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</td><td data-label="3 м³">от {{ p.t3|ru }} ₽</td><td data-label="{{ ref_vol }} м³">от {{ p.t10|ru }} ₽</td></tr>
         {%- endfor %}
         </tbody>
       </table></div>
@@ -68,11 +68,11 @@
         <thead><tr><th>Топливо</th><th>Цена</th></tr></thead>
         <tbody>
         {%- for p in fuel_rows %}
-          <tr><td data-label="Топливо">{% if p.url != self_path %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</td><td data-label="Цена">от {{ p.price|ru }} ₽/{{ p.unit }}</td></tr>
+          <tr><td data-label="Топливо">{% if p.url != self_path %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</td><td data-label="Цена">от {{ p.price|ru }} ₽/{{ p.unit }}{% if p.price_t %}, от {{ p.price_t|ru }} ₽/т{% endif %}</td></tr>
         {%- endfor %}
         </tbody>
       </table></div>
-      <p>Цены ориентировочные: точную назовём под объём, вид и влажность дров. Доставку считаем отдельно, по километрам.</p>
+      <p>Цены дров — с доставкой по Екатеринбургу и ближним городам; в других городах возим с ближайшей площадки, цена примерно та же. Минимального заказа нет: можно привезти и один куб. Брикеты, пеллеты и уголь — без доставки: её назовём по адресу, вместе с дровами привезём одним рейсом. Точную цену назовём под объём, вид и влажность.</p>
     </div>
   </section>
 
@@ -83,12 +83,12 @@
       <div class="dcalc">
         <label class="field"><span class="field__label">Какие дрова</span>
           <select class="field__input" id="dc-kind">
-          {%- for p in price_rows %}<option value="{{ p.price }}" data-name="{{ p.name }}"{% if p.name == preselect_product %} selected{% endif %}>{{ p.name }} — от {{ p.price|ru }} ₽/м³</option>{% endfor %}
+          {%- for p in price_rows %}<option value="{{ p.wood }}" data-name="{{ p.name }}"{% if p.name == preselect_product %} selected{% endif %}>{{ p.name }}</option>{% endfor %}
           </select></label>
         <label class="field"><span class="field__label">Сколько насыпных кубов</span>
           <input class="field__input" id="dc-vol" type="number" inputmode="decimal" min="1" step="1" value="5"></label>
-        <p class="dcalc__res" aria-live="polite">Дрова: <b id="dc-sum">—</b></p>
-        <p class="dcalc__note">Это стоимость дров по нижней цене. Доставку считаем по километрам до вашего адреса — назовём сумму в ответ на заявку. Складометр — примерно 1,5 насыпного куба.</p>
+        <p class="dcalc__res" aria-live="polite">Итого с доставкой: <b id="dc-sum">—</b> <span id="dc-per"></span></p>
+        <p class="dcalc__note">Ориентир по нижней цене: дрова плюс рейс около {{ delivery|ru }} ₽, в машину входит до {{ trip_m3 }} кубов. По области возим с ближайшей площадки — цена примерно та же. Точную сумму назовём по адресу. Складометр — примерно 1,5 насыпного куба.</p>
         <a class="btn btn--call" href="#zayavka" id="dc-go">Оставить заявку с этим расчётом</a>
       </div>
     </div>
@@ -97,12 +97,15 @@
   (function(){
     var k=document.getElementById('dc-kind'), v=document.getElementById('dc-vol'), s=document.getElementById('dc-sum');
     function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
-    function upd(){ var n=parseFloat(v.value)||0; s.textContent = n>0 ? 'от '+fmt(n*parseFloat(k.value))+' ₽' : '—'; }
+    var per=document.getElementById('dc-per'), D={{ delivery }}, T={{ trip_m3 }};
+    function upd(){ var n=parseFloat(v.value)||0;
+      if(n>0){ var t=n*parseFloat(k.value)+Math.ceil(n/T)*D; s.textContent='от '+fmt(t)+' ₽'; per.textContent='(≈ '+fmt(t/n)+' ₽/м³)'; }
+      else { s.textContent='—'; per.textContent=''; } }
     k.addEventListener('change',upd); v.addEventListener('input',upd); upd();
     document.getElementById('dc-go').addEventListener('click',function(){
       var note=document.getElementById('lead-note'), pr=document.getElementById('lead-product'), vol=document.getElementById('lead-volume');
       var name=k.options[k.selectedIndex].getAttribute('data-name');
-      if(note) note.value='Калькулятор: '+name+', '+v.value+' м³, '+s.textContent;
+      if(note) note.value='Калькулятор: '+name+', '+v.value+' м³, с доставкой '+s.textContent;
       if(vol) vol.value=v.value;
       if(pr){ for(var i=0;i<pr.options.length;i++){ if(pr.options[i].value===name){ pr.selectedIndex=i; } } }
     });

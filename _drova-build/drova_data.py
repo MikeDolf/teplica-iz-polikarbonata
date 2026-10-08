@@ -13,26 +13,53 @@
 
 HUB = "/dostavka-drov/"
 
-# key: (название, им. падеж для списка, цена от ₽ за насыпной м³, слаг страницы по Екатеринбургу)
+# Цены (октябрь 2026, от владельца): куб берёзы 3 000-3 500 ₽, 3 куба берёзы с
+# доставкой по Екатеринбургу — около 14 000 ₽. Отсюда модель: дрова за куб + рейс
+# около 5 000 ₽. Минимального заказа нет: 1 куб тоже везём, итог просто меньше.
+# В дальних городах возят с ближайшей площадки, цена примерно та же.
+# Остальные виды — пропорционально берёзе (×1,3 к прежним средним по рынку).
+# "wood" — дрова без доставки за насыпной м³; "price" — цена за м³ С ДОСТАВКОЙ
+# при заказе машины (REF_VOL м³): именно её сайт показывает как «от … ₽/м³».
+DELIVERY = 5000   # ₽ за рейс по Екатеринбургу и ближним городам, ориентир
+TRIP_M3 = 12      # насыпных м³ в одной машине
+REF_VOL = 10      # объём, при котором считаем «от … ₽/м³ с доставкой»
+
+_WOOD = {"berezovye": 3000, "smeshannye": 2350, "hvoynye": 2200, "osina": 2500,
+         "olha": 3500, "suhie": 4600, "churki": 2500, "gorbyl": 1200}
+
+
+def total(key, vol):
+    """Итог с доставкой за vol насыпных м³: дрова + рейсы."""
+    import math
+    return _WOOD[key] * vol + math.ceil(vol / TRIP_M3) * DELIVERY
+
+
 PRODUCTS = {
-    "berezovye":  {"name": "Берёзовые колотые дрова", "short": "Берёзовые", "price": 2300, "slug": "drova-berezovye-ekaterinburg"},
-    "smeshannye": {"name": "Смешанные колотые дрова", "short": "Смешанные", "price": 1800, "slug": "drova-smeshannye-ekaterinburg"},
-    "hvoynye":    {"name": "Хвойные колотые дрова",   "short": "Хвойные",   "price": 1700, "slug": "drova-hvoynye-ekaterinburg"},
-    "osina":      {"name": "Осиновые колотые дрова",  "short": "Осиновые",  "price": 1900, "slug": "drova-osinovye-ekaterinburg"},
-    "olha":       {"name": "Ольховые колотые дрова",  "short": "Ольховые",  "price": 2700, "slug": "drova-olhovye-ekaterinburg"},
-    "suhie":      {"name": "Сухие берёзовые дрова",   "short": "Сухие для камина", "price": 3500, "slug": "drova-suhie-ekaterinburg"},
-    "churki":     {"name": "Берёзовые дрова чурками", "short": "Чурками (неколотые)", "price": 1900, "slug": "drova-churkami-ekaterinburg"},
-    "gorbyl":     {"name": "Горбыль на дрова",        "short": "Горбыль",   "price": 900,  "slug": "gorbyl-ekaterinburg"},
+    "berezovye":  {"name": "Берёзовые колотые дрова", "short": "Берёзовые", "slug": "drova-berezovye-ekaterinburg"},
+    "smeshannye": {"name": "Смешанные колотые дрова", "short": "Смешанные", "slug": "drova-smeshannye-ekaterinburg"},
+    "hvoynye":    {"name": "Хвойные колотые дрова",   "short": "Хвойные",   "slug": "drova-hvoynye-ekaterinburg"},
+    "osina":      {"name": "Осиновые колотые дрова",  "short": "Осиновые",  "slug": "drova-osinovye-ekaterinburg"},
+    "olha":       {"name": "Ольховые колотые дрова",  "short": "Ольховые",  "slug": "drova-olhovye-ekaterinburg"},
+    "suhie":      {"name": "Сухие берёзовые дрова",   "short": "Сухие для камина", "slug": "drova-suhie-ekaterinburg"},
+    "churki":     {"name": "Берёзовые дрова чурками", "short": "Чурками (неколотые)", "slug": "drova-churkami-ekaterinburg"},
+    "gorbyl":     {"name": "Горбыль на дрова",        "short": "Горбыль",   "slug": "gorbyl-ekaterinburg"},
 }
+for _k, _p in PRODUCTS.items():
+    _p["wood"] = _WOOD[_k]
+    _p["price"] = round(total(_k, REF_VOL) / REF_VOL / 50) * 50   # ₽/м³ с доставкой при машине
+    _p["t1"] = total(_k, 1)
+    _p["t3"] = total(_k, 3)
+    _p["t10"] = total(_k, 10)
 ORDER = ["berezovye", "smeshannye", "hvoynye", "osina", "olha", "suhie", "churki", "gorbyl"]
 
-# Другое топливо (владелец: «продаём вообще всё»). Цена не за куб, поэтому
-# в калькулятор дров не идёт, только в таблицы цен. Цены — средние по рынку
-# Екатеринбурга, «от».
+# Другое топливо (владелец: «продаём вообще всё»). Цена не за куб и БЕЗ
+# доставки (решение владельца): доставка отдельно, вместе с дровами — одним
+# рейсом. В калькулятор дров не идёт. Цены — средние по рынку, «от».
 FUEL = {
     "brikety":     {"name": "Топливные брикеты", "price": 11000, "unit": "т", "slug": "toplivnye-brikety-ekaterinburg"},
     "pellety":     {"name": "Пеллеты древесные", "price": 9000,  "unit": "т", "slug": "pellety-ekaterinburg"},
-    "ugol":        {"name": "Каменный уголь",    "price": 9500,  "unit": "т", "slug": "ugol-kamennyy-ekaterinburg"},
+    # Уголь частники берут мешками: главная цена — за мешок 25 кг, тонна навалом — второй строкой.
+    "ugol":        {"name": "Каменный уголь",    "price": 400,   "unit": "мешок", "unit_long": "мешок 25 кг", "price_t": 9500, "slug": "ugol-kamennyy-ekaterinburg"},
     "drev-ugol":   {"name": "Древесный уголь",   "price": 70,    "unit": "кг", "slug": "ugol-drevesnyy-ekaterinburg"},
 }
 FUEL_ORDER = ["brikety", "pellety", "ugol", "drev-ugol"]
