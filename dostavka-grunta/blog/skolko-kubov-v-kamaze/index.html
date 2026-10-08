@@ -451,7 +451,7 @@
     });
     return best || o.dataset.base;
   }
-  function ru(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
+  function ru(n){ return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ' '); }
   // Дробные значения по-русски пишутся через запятую.
   function round(v){ return String(v < 10 ? Math.round(v * 10) / 10 : Math.round(v)).replace('.', ','); }
   function plural(n, one, few, many){
@@ -469,9 +469,9 @@
     // Названия совпадают с блоком «На чём привозим»: небольшая машина до
     // 4 м³, КамАЗ и самосвал. Новую
     // машину добавлять и сюда, и туда, иначе подписи разойдутся.
-    if(v <= 4) return 'небольшая машина до 4 м³';
+    if(v <= 4) return 'небольшая машина до 4 м³';
     if(v <= 10) return '1 КамАЗ';
-    if(v <= 26) return 'самосвал до 26 м³';
+    if(v <= 26) return 'самосвал до 26 м³';
     var n = Math.ceil(v / 26);
     return n + ' ' + plural(n, 'рейс', 'рейса', 'рейсов') + ' самосвала';
   }
@@ -552,16 +552,16 @@
     // точно, и округление давало расхождение в полсотни рублей за одно и
     // то же. Цены и так подписаны как «от».
     var material = Math.round(billed * price);
-    oMp.textContent = 'от ' + ru(material) + ' ₽';
-    oDl.textContent = 'Доставка, ' + ru(distance) + ' км' + (LEGS > 1 ? ' в один конец' : '')
+    oMp.textContent = 'от ' + ru(material) + ' ₽';
+    oDl.textContent = 'Доставка, ' + ru(distance) + ' км' + (LEGS > 1 ? ' в один конец' : '')
       + (trips > 1 ? ', ' + trips + ' ' + plural(trips, 'рейс', 'рейса', 'рейсов') : '');
     // Пустое поле километров, это не «доставка бесплатно»: пока плечо не
     // задано, итог и цену за куб не показываем вовсе.
-    oD.textContent = distance > 0 ? ru(ride) + ' ₽' : '—';
-    oC.textContent = distance > 0 ? 'от ' + ru(material + ride) + ' ₽' : '—';
+    oD.textContent = distance > 0 ? ru(ride) + ' ₽' : '—';
+    oC.textContent = distance > 0 ? 'от ' + ru(material + ride) + ' ₽' : '—';
     // Делим на оплачиваемый объём, а не на введённый: при заказе меньше
     // минимума человек платит за минимум, и честная цифра именно такая.
-    oPer.textContent = distance > 0 ? ru(Math.round((material + ride) / billed)) + ' ₽' : '—';
+    oPer.textContent = distance > 0 ? ru(Math.round((material + ride) / billed)) + ' ₽' : '—';
     oMin.hidden = m3 >= MIN_M3;
     if(!oMin.hidden){
       oMin.textContent = 'Это меньше минимального заказа. Цена посчитана по минимальному объёму, '
@@ -574,7 +574,7 @@
     // с данными, противоречащими тому, что он только что посчитал.
     last = {chip: o.dataset.chip, matName: o.text, billed: billed,
             shown: shown, km: distance, total: distance > 0 ? material + ride : 0};
-    if(ctaLabel) ctaLabel.textContent = 'Оставить заявку на ' + ru(round(billed)) + ' м³';
+    if(ctaLabel) ctaLabel.textContent = 'Оставить заявку на ' + ru(round(billed)) + ' м³';
   }
   [mat, area, depth, shrink].forEach(function(el){
     el.addEventListener('input', calc); el.addEventListener('change', calc);

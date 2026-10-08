@@ -197,10 +197,10 @@
   <script>
   (function(){
     var k=document.getElementById('dc-kind'), v=document.getElementById('dc-vol'), s=document.getElementById('dc-sum');
-    function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+    function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
     var per=document.getElementById('dc-per'), D=3500, T=12;
     function upd(){ var n=parseFloat(v.value)||0;
-      if(n>0){ var t=n*parseFloat(k.value)+Math.ceil(n/T)*D; s.textContent='от '+fmt(t)+' ₽'; per.textContent='(≈ '+fmt(t/n)+' ₽/м³)'; }
+      if(n>0){ var t=n*parseFloat(k.value)+Math.ceil(n/T)*D; s.textContent='от '+fmt(t)+' ₽'; per.textContent='(≈ '+fmt(t/n)+' ₽/⁠м³)'; }
       else { s.textContent='—'; per.textContent=''; } }
     k.addEventListener('change',upd); v.addEventListener('input',upd); upd();
     document.getElementById('dc-go').addEventListener('click',function(){
