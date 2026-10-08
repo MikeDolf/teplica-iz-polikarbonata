@@ -33,6 +33,10 @@ import drova_cities2 as DC2
 D.CITIES = D.CITIES + DC2.NEW
 D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC2.NEW})
 DC.C.update(DC2.C)
+import drova_cities3 as DC3
+D.CITIES = D.CITIES + DC3.NEW
+D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC3.NEW})
+DC.C.update(DC3.C)
 DC.C["pervouralsk"]["villages"] += ", Новоуткинск, Прогресс, Коуровка, Слобода, Каменка, Нижнее Село, Трёка, Волыны, Староуткинск, Сабик, Чусовое, Мартьяново"
 DC.C["pervouralsk"]["local"] = DC.C["pervouralsk"]["local"] + [
     "Отдельно возим дрова вверх по Чусовой — в Новоуткинск, Коуровку, Слободу, Волыны, Трёку, Староуткинск, Чусовое и Мартьяново. В этих посёлках газа почти нет, дома топят печами, и дрова нужны круглый год. Дрова для этих мест есть всегда, в том числе зимой и весной, когда у других продавцов запасы заканчиваются.",
