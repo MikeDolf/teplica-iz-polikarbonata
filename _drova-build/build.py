@@ -238,8 +238,8 @@ PROD_LINKS = [{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"
               {"url": "/drova-nedorogo-ekaterinburg/", "text": "Недорогие дрова"}] + \
              [{"url": f'/{D.FUEL[k]["slug"]}/', "text": D.FUEL[k]["name"] + ", от " + env.filters["ru"](D.FUEL[k]["price"]) + " ₽/" + D.FUEL[k]["unit"]} for k in D.FUEL_ORDER] + \
              [{"url": f'/{M3.EXTRA[k]["slug"]}/', "text": M3.EXTRA[k]["name"] + ", от " + env.filters["ru"](M3.EXTRA[k]["price"]) + " ₽/" + M3.EXTRA[k]["unit"]} for k in M3.EXTRA_ORDER]
-# уголь, брикеты и горбыль по городам: ссылки со страниц городов и общих страниц товара
-_CF_KIND = {"ugol": "Каменный уголь", "brikety": "Топливные брикеты", "gorbyl": "Горбыль"}
+# уголь, брикеты, пеллеты и горбыль по городам: ссылки со страниц городов и общих страниц товара
+_CF_KIND = {"ugol": "Каменный уголь", "brikety": "Топливные брикеты", "gorbyl": "Горбыль", "pellety": "Пеллеты"}
 CF_BY_CITY, CF_BY_KIND = {}, {}
 for _c in M3.CITY_FUEL:
     _prep = [c[2] for c in D.CITIES if c[0] == _c["city"]][0]
@@ -417,7 +417,7 @@ def main():
               [(q, f(a)) for q, a in t["faq"]], preselect=fu["name"], unit=fu["unit"], price_note=note, calc=False, min_text="и мешок, и полную машину",
               links=[l for l in PROD_LINKS if l["url"] != f'/{fu["slug"]}/'], links_title="Дрова и другое топливо",
               links2=CF_BY_KIND.get(k, []) + CITY_LINKS, links2_title="Возим и в другие города")
-    # Уголь, брикеты и горбыль по городам (9 октября, M3.CITY_FUEL)
+    # Уголь, брикеты, пеллеты и горбыль по городам (9 октября, M3.CITY_FUEL)
     for c in M3.CITY_FUEL:
         name, prep, dat = [(x[1], x[2], x[3]) for x in D.CITIES if x[0] == c["city"]][0]
         city_l = [{"url": f'/{D.CITY_SLUG[c["city"]]}/', "text": f"Все дрова {prep}"}] + [l for l in CF_BY_CITY[c["city"]] if l["url"] != f'/{c["slug"]}/'] + \
