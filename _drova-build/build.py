@@ -155,6 +155,8 @@ def _price_token(m):
     p = m.group(1).split(".")
     if p[0] == "deliv":
         v = D.DELIVERY
+    elif p[0] == "x":   # %%x.ugol.price.40%% — 40 мешков угля
+        v = {**D.PRODUCTS, **D.FUEL}[p[1]][p[2]] * int(p[3])
     elif p[0] == "sum":
         v = D.total(p[1], int(p[2]))
     elif p[0] == "per":
@@ -284,6 +286,11 @@ def fuel_answer():
             f"Цены топлива без доставки; вместе с дровами привезём одним рейсом.")
 
 
+def ins_after(sections, after, new):
+    i = [h for h, _ in sections].index(after) + 1
+    return sections[:i] + new + sections[i:]
+
+
 def ru0(n):
     return env.filters["ru"](n)
 
@@ -339,7 +346,7 @@ def main():
           "Берёзовые, смешанные, хвойные, осиновые, ольховые и сухие дрова, горбыль. Привезём по городу и пригороду до 50 км — и один куб, и полную машину.",
           MIN_PRICE, [(h, _ekb[h]) for h in M2.EKB_ORDER] + T.COMMON,
           [("Сколько стоит куб дров в Екатеринбурге?", price_answer()),
-           ("Какие дрова лучше купить?", "Для отопления дома — берёзовые или смешанные, для бани — берёза, ольха или осина, для камина — сухие берёзовые.")] + M2.EKB_FAQ,
+           ("Какие дрова лучше купить?", "Для отопления дома — берёзовые или смешанные, для бани — берёза, ольха или осина, для камина — сухие берёзовые.")] + M2.EKB_FAQ + M2.EKB_FAQ_ADD,
           city_prep="в Екатеринбурге", links2=CITY_LINKS[1:] + ART_LINKS, links2_title="Другие города и статьи", xtables=[cubes])
     # Товары по Екатеринбургу
     for k in D.ORDER:
@@ -368,7 +375,10 @@ def main():
           links2=CITY_LINKS, links2_title="Возим и в другие города")
     # Брикеты, пеллеты, уголь
     for k in D.FUEL_ORDER:
-        fu = D.FUEL[k]; t = FUELT[k]; f = lambda x: x.format(p=ru(fu["price"]), pt=ru(fu.get("price_t") or 0))
+        fu = D.FUEL[k]; t = dict(FUELT[k], **M2.FUEL_META.get(k, {})); f = lambda x: x.format(p=ru(fu["price"]), pt=ru(fu.get("price_t") or 0))
+        if k in M2.FUEL_ADD:   # 9 октября: уголь для мангала, RUF и Pini-Kay, уголь в мешках
+            _after, _secs, _faq = M2.FUEL_ADD[k]
+            t["sections"] = ins_after(t["sections"], _after, _secs); t["faq"] = t["faq"] + _faq
         note = {"т": "Цена за тонну, без доставки.", "кг": "Цена за килограмм, без доставки.",
                 "мешок": f"Цена за мешок 25 кг, без доставки. Тонна навалом — от {ru0(fu.get('price_t') or 0)} ₽."}[fu["unit"]]
         note += " Доставку назовём по адресу, вместе с дровами привезём одним рейсом."
@@ -421,8 +431,8 @@ def main():
     money("/drova-dlya-pechi-ekaterinburg/", "Дрова для печи с доставкой в Екатеринбурге",
           f"Купить дрова для печи в Екатеринбурге — от {ru0(sm)} ₽/м³",
           f"Дрова для печи с доставкой по Екатеринбургу: берёзовые колотые 3 куба — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽, смешанные — от {ru0(sm)} ₽/м³. Полено под вашу топку, без минимального объёма.",
-          "Берёзовые и смешанные колотые дрова для кирпичных, русских и металлических печей. Подберём длину полена под топку и привезём по Екатеринбургу и области.",
-          sm, M2.PECH + T.COMMON, M2.PECH_FAQ, preselect=D.PRODUCTS["berezovye"]["name"],
+          "Берёзовые и смешанные колотые дрова для кирпичных и русских печей, металлических печек и буржуек. Подберём длину полена под топку и привезём по Екатеринбургу и области.",
+          sm, M2.PECH + T.COMMON, M2.PECH_FAQ + M2.PECH_FAQ_ADD, preselect=D.PRODUCTS["berezovye"]["name"],
           links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-pechi-ekaterinburg/"],
           links2=[art("kakie-drova-luchshe-dlya-otopleniya"), art("vlazhnost-drov"), art("skolko-drov-nuzhno-na-zimu"),
                   blog("kak-pravilno-topit-pech", "Как правильно топить печь дровами"), blog("kak-razzhech-pech-i-kamin", "Как разжечь печь и камин"),
@@ -440,9 +450,9 @@ def main():
                     "Это ориентир: тепло зависит от влажности и от того, как плотно дрова легли в кузове. Чурки нужно колоть самим."}
     money("/drova-nedorogo-ekaterinburg/", "Недорогие дрова с доставкой в Екатеринбурге",
           f"Дрова недорого в Екатеринбурге — от {ru0(hv)} ₽/м³",
-          f"Недорогие дрова с доставкой по Екатеринбургу: горбыль — от {ru0(GORBYL)} ₽/м³, хвойные и смешанные колотые — от {ru0(hv)} ₽/м³. Как купить дёшево и не нарваться на недовоз.",
-          "Горбыль, хвойные и смешанные колотые дрова, берёзовые чурки — самые недорогие варианты с доставкой по Екатеринбургу. Подскажем, что выгоднее под вашу печь.",
-          hv, M2.NEDOROGO + T.COMMON, M2.NEDOROGO_FAQ, preselect=D.PRODUCTS["smeshannye"]["name"], ex="hvoynye",
+          f"Недорогие дрова с доставкой по Екатеринбургу: горбыль — от {ru0(GORBYL)} ₽/м³, хвойные и смешанные колотые — от {ru0(hv)}, берёзовые — от {ru0(D.PRODUCTS['berezovye']['price'])} ₽/м³. Как купить дешевле.",
+          "Горбыль, хвойные и смешанные колотые дрова, берёзовые чурки — и способы купить подешевле даже берёзу. Привезём по Екатеринбургу, подскажем, что выгоднее под вашу печь.",
+          hv, ins_after(M2.NEDOROGO, *M2.NEDOROGO_ADD) + T.COMMON, M2.NEDOROGO_FAQ + M2.NEDOROGO_FAQ_ADD, preselect=D.PRODUCTS["smeshannye"]["name"], ex="hvoynye",
           links=[l for l in PROD_LINKS if l["url"] != "/drova-nedorogo-ekaterinburg/"],
           links2=[art("skolko-stoit-kub-drov"), art("skladometr-ili-nasypnoy-kub"), art("skolko-gorbylya-v-kube")] + CITY_LINKS,
           links2_title="Статьи и города", xtables=[heat])
