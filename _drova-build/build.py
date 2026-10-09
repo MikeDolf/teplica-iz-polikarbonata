@@ -161,6 +161,8 @@ def _price_token(m):
     p = m.group(1).split(".")
     if p[0] == "deliv":
         v = D.DELIVERY
+    elif p[0] == "diff":   # %%diff.berezovye.churki.wood%% — насколько колотая берёза дороже чурок
+        v = D.PRODUCTS[p[1]][p[3]] - D.PRODUCTS[p[2]][p[3]]
     elif p[0] == "x":   # %%x.ugol.price.40%% — 40 мешков угля; %%x.berezovye.price.1.5%% — складометр
         k = float(".".join(p[3:]))
         v = {**D.PRODUCTS, **D.FUEL}[p[1]][p[2]] * k
