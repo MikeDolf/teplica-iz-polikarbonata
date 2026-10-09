@@ -213,3 +213,5 @@ from drova_blog5 import POSTS5 as _P5
 POSTS += _P5
 from drova_blog6 import POSTS6 as _P6
 POSTS += _P6
+from drova_blog7 import POSTS7 as _P7
+POSTS += _P7

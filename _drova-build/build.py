@@ -363,11 +363,12 @@ def main():
     # Товары по Екатеринбургу
     for k in D.ORDER:
         pr = D.PRODUCTS[k]
-        t = T.EXTRA["suhie_obsh"] if k == "suhie" else T.P[k]
+        t = dict(T.EXTRA["suhie_obsh"] if k == "suhie" else T.P[k], **M2.PRODUCT_META.get(k, {}))
         f = lambda s: s.format(p=env.filters["ru"](pr["price"]), b=env.filters["ru"](D.PRODUCTS["berezovye"]["price"]),
                                **{x: env.filters["ru"](pr[x]) for x in ("t1", "t3", "t10")})
         money(f'/{pr["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pr["price"],
-              t["about"] + MORE[k]["sections"] + T.COMMON, [(q, f(a)) for q, a in t["faq"]] + MORE[k]["faq"], preselect=pr["name"], ex=k,
+              (ins_after(t["about"] + MORE[k]["sections"], *M2.PRODUCT_ADD[k][:2]) if k in M2.PRODUCT_ADD else t["about"] + MORE[k]["sections"]) + T.COMMON,
+              [(q, f(a)) for q, a in t["faq"]] + MORE[k]["faq"] + (M2.PRODUCT_ADD[k][2] if k in M2.PRODUCT_ADD else []), preselect=pr["name"], ex=k,
               links=[l for l in PROD_LINKS if l["url"] != f'/{pr["slug"]}/'],
               links2=(BEREZA_LINKS if k == "berezovye" else []) + CITY_LINKS,
               links2_title="Берёзовые дрова в городах и другие города" if k == "berezovye" else "Возим и в другие города")
@@ -382,7 +383,7 @@ def main():
     t = T.P["suhie"]; pk = D.PRODUCTS["suhie"]["price"]
     f = lambda x: x.format(p=ru(pk), **{y: ru(D.PRODUCTS["suhie"][y]) for y in ("t1", "t3", "t10")})
     money("/drova-dlya-kamina-ekaterinburg/", t["h1"], f(t["title"]), f(t["desc"]), t["sub"], pk, t["about"] + MORE_INTENT["kamin"] + T.COMMON,
-          [(q, f(a)) for q, a in t["faq"]] + [("Какие дрова нельзя для камина?", "Хвойные — стреляют искрами и коптят, и любые сырые — дымят и пачкают стекло.")],
+          [(q, f(a)) for q, a in t["faq"]] + [("Какие дрова нельзя для камина?", "Хвойные — стреляют искрами и коптят, и любые сырые — дымят и пачкают стекло.")] + M2.KAMIN_FAQ_ADD,
           preselect=D.PRODUCTS["suhie"]["name"], ex="suhie", links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-kamina-ekaterinburg/"],
           links2=CITY_LINKS, links2_title="Возим и в другие города")
     # Брикеты, пеллеты, уголь
