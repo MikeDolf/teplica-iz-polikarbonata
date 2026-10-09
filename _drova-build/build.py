@@ -423,8 +423,30 @@ def main():
                 ensure_ascii=False)))
         write(path, html)
     render_blog()
+    gone()
     sitemaps()
     print(f"Дрова: {len(PAGES)} страниц")
+
+
+# Снятые страницы: адрес уже в поиске, поэтому не 404, а закрытая от индекса
+# заглушка с переходом туда, где человеку помогут. В карту сайта не попадает.
+GONE = {
+    "/drova-mihaylovsk/": "/dostavka-drov/",   # 9 октября: в Михайловск не возим
+}
+
+
+def gone():
+    for path, to in GONE.items():
+        html = (f'<!doctype html>\n<html lang="ru"><head><meta charset="utf-8">\n'
+                f'<meta name="robots" content="noindex, follow">\n'
+                f'<link rel="canonical" href="{DOMAIN}{to}">\n'
+                f'<meta http-equiv="refresh" content="0; url={to}">\n'
+                f'<title>Дрова с доставкой по Екатеринбургу и области</title>\n'
+                f'<script>location.replace("{to}")</script></head>\n'
+                f'<body><p><a href="{to}">Доставка дров по Екатеринбургу и области</a></p></body></html>\n')
+        full = os.path.join(ROOT, path.strip("/"), "index.html")
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        open(full, "w", encoding="utf-8").write(html)
 
 
 BLOG_URL = f"{D.HUB}blog/"
@@ -486,7 +508,8 @@ def sitemaps():
     open(os.path.join(ROOT, "sitemap-dostavka-drov.xml"), "w", encoding="utf-8").write(head + "\n".join(block(u) for u in urls) + "\n</urlset>\n")
     main_p = os.path.join(ROOT, "sitemap.xml"); src = open(main_p, encoding="utf-8").read()
     blocks = re.findall(r"  <url>.*?</url>", src, re.S)
-    foreign = [b for b in blocks if re.search(r"<loc>(.*?)</loc>", b).group(1) not in urls]
+    drop = set(urls) | {DOMAIN + g for g in GONE}   # снятые страницы — вон из карты
+    foreign = [b for b in blocks if re.search(r"<loc>(.*?)</loc>", b).group(1) not in drop]
     open(main_p, "w", encoding="utf-8").write(head + "\n".join(foreign + [block(u) for u in urls]) + "\n</urlset>\n")
     rb = os.path.join(ROOT, "robots.txt"); r = open(rb, encoding="utf-8").read()
     line = f"Sitemap: {DOMAIN}/sitemap-dostavka-drov.xml"
