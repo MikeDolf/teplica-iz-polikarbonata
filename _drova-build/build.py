@@ -73,6 +73,12 @@ for _s, (_after, _secs, _f) in AM6.INS6.items():
     _i = [x[0] for x in AR.A[_s]["body"]].index(_after) + 1   # нет раздела — сборка падает
     AR.A[_s]["body"] = AR.A[_s]["body"][:_i] + _secs + AR.A[_s]["body"][_i:]
     AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
+import drova_art_more7 as AM7   # 9 октября: выгрузки по России — вес N кубов, складометры, хранение…
+for _s, (_ins, _f) in AM7.INS7.items():
+    for _after, _secs in _ins:
+        _i = [x[0] for x in AR.A[_s]["body"]].index(_after) + 1
+        AR.A[_s]["body"] = AR.A[_s]["body"][:_i] + _secs + AR.A[_s]["body"][_i:]
+    AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
 D.ARTICLES = D.ARTICLES + list(AM.NEW)
 
 SITE = copy.deepcopy(_SITE)
@@ -155,8 +161,10 @@ def _price_token(m):
     p = m.group(1).split(".")
     if p[0] == "deliv":
         v = D.DELIVERY
-    elif p[0] == "x":   # %%x.ugol.price.40%% — 40 мешков угля
-        v = {**D.PRODUCTS, **D.FUEL}[p[1]][p[2]] * int(p[3])
+    elif p[0] == "x":   # %%x.ugol.price.40%% — 40 мешков угля; %%x.berezovye.price.1.5%% — складометр
+        k = float(".".join(p[3:]))
+        v = {**D.PRODUCTS, **D.FUEL}[p[1]][p[2]] * k
+        v = int(v) if k == int(k) else round(v / 50) * 50
     elif p[0] == "sum":
         v = D.total(p[1], int(p[2]))
     elif p[0] == "per":
@@ -250,6 +258,8 @@ ART_MONEY = {
 ART_PUB = "2026-10-06"   # раздел и статьи опубликованы 6 октября
 ART_UPD = "2026-10-07"   # статьи дописаны до ~1300-1500 слов
 ART_UPD_X = {"skladometr-ili-nasypnoy-kub": "2026-10-09"}   # + раздел про ГАЗель и КамАЗ
+ART_UPD_X.update({_s: AM7.ART_UPD_7 for _s in AM7.INS7})
+ART_REL_X = {"teplota-sgoraniya-drov": [{"url": "/dostavka-drov/blog/udelnaya-teplota-sgoraniya-drov/", "text": "Удельная теплота сгорания дров: таблица и задачи"}]}
 
 
 def offer_range(price, unit, ex):
@@ -477,7 +487,7 @@ def main():
             title=a["title"], description=a["desc"], canonical=DOMAIN + path, h1=a["h1"], lede=a["lede"],
             body=a["body"], faq=a["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
             date_iso=ART_PUB, date_ru=ru_d(ART_PUB), upd_iso=ART_UPD_X.get(s, ART_UPD), upd_ru=ru_d(ART_UPD_X.get(s, ART_UPD)),
-            related=([ART_MONEY[s]] if s in ART_MONEY else []) + [l for l in ART_LINKS if l["url"] != path] + [{"url": "/drova-ekaterinburg/", "text": "Цены на дрова в Екатеринбурге"}],
+            related=ART_REL_X.get(s, []) + ([ART_MONEY[s]] if s in ART_MONEY else []) + [l for l in ART_LINKS if l["url"] != path] + [{"url": "/drova-ekaterinburg/", "text": "Цены на дрова в Екатеринбурге"}],
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
                 {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": ART_PUB, "dateModified": ART_UPD_X.get(s, ART_UPD),
                  "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
@@ -536,9 +546,9 @@ def render_blog():
                 {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
                 {"@type": "ListItem", "position": 2, "name": "Блог", "item": hub}]}]}, ensure_ascii=False)))
     write(BLOG_URL, html)
-    d = datetime.date.fromisoformat(BLOG_DATE)
     for p in BL.POSTS:
         path = f"{BLOG_URL}{p['slug']}/"
+        pd = p.get("date", BLOG_DATE); d = datetime.date.fromisoformat(pd)
         # По кругу: следующие посты той же рубрики, затем следующие из других —
         # так каждый пост получает примерно поровну входящих ссылок.
         i = [x["url"] for x in nav].index(path)
@@ -550,9 +560,9 @@ def render_blog():
             body=p["body"], faq=p["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
             ads=True, section_url=BLOG_URL, section_name="Блог",
             extra_cta={"url": p["money"][0], "text": p["money"][1] + " →"},
-            date_iso=BLOG_DATE, date_ru=f"{d.day} {MONTHS[d.month-1]} {d.year}", related=rel,
+            date_iso=pd, date_ru=f"{d.day} {MONTHS[d.month-1]} {d.year}", related=rel,
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
-                {"@type": "BlogPosting", "headline": p["h1"], "description": p["desc"], "datePublished": BLOG_DATE, "dateModified": BLOG_DATE,
+                {"@type": "BlogPosting", "headline": p["h1"], "description": p["desc"], "datePublished": pd, "dateModified": pd,
                  "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/img/og-cover.jpg",
                  "isPartOf": {"@type": "Blog", "name": "Блог о дровах", "url": DOMAIN + BLOG_URL}},
