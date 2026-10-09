@@ -39,6 +39,11 @@ import drova_cities3 as DC3
 D.CITIES = D.CITIES + DC3.NEW
 D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC3.NEW})
 DC.C.update(DC3.C)
+import drova_cities4 as DC4
+D.CITIES = D.CITIES + DC4.NEW
+D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC4.NEW})
+DC.C.update(DC4.C)
+import drova_more2 as M2
 # Список городов в «Доставке» и в вопросе «Куда вы возите дрова?» — из D.CITIES,
 # чтобы новый город сам попадал во все страницы.
 _CITY_NAMES = ", ".join(c[1] for c in D.CITIES)
@@ -62,6 +67,11 @@ import drova_art_more4 as AM4
 import drova_art_more5 as AM5
 for _s, (_b, _f) in [*AM2.ADD2.items(), *AM3.ADD3.items(), *AM4.ADD4.items(), *AM5.ADD5.items()]:
     AR.A[_s]["body"] = AR.A[_s]["body"] + _b
+    AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
+import drova_art_more6 as AM6
+for _s, (_after, _secs, _f) in AM6.INS6.items():
+    _i = [x[0] for x in AR.A[_s]["body"]].index(_after) + 1   # нет раздела — сборка падает
+    AR.A[_s]["body"] = AR.A[_s]["body"][:_i] + _secs + AR.A[_s]["body"][_i:]
     AR.A[_s]["faq"] = AR.A[_s]["faq"] + [x for x in _f if x[0] not in {q for q, _ in AR.A[_s]["faq"]}]
 D.ARTICLES = D.ARTICLES + list(AM.NEW)
 
@@ -203,7 +213,9 @@ PROD_LINKS = [{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"
              [{"url": "/drova-kolotye-ekaterinburg/", "text": "Колотые дрова"},
               {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
               {"url": "/drova-dlya-kamina-ekaterinburg/", "text": "Дрова для камина"},
-              {"url": "/drova-dlya-kotla-ekaterinburg/", "text": "Дрова для котла"}] + \
+              {"url": "/drova-dlya-kotla-ekaterinburg/", "text": "Дрова для котла"},
+              {"url": "/drova-dlya-pechi-ekaterinburg/", "text": "Дрова для печи"},
+              {"url": "/drova-nedorogo-ekaterinburg/", "text": "Недорогие дрова"}] + \
              [{"url": f'/{D.FUEL[k]["slug"]}/', "text": D.FUEL[k]["name"] + ", от " + env.filters["ru"](D.FUEL[k]["price"]) + " ₽/" + D.FUEL[k]["unit"]} for k in D.FUEL_ORDER]
 CITY_LINKS = [{"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"}] + \
              [{"url": f"/{D.CITY_SLUG[c[0]]}/", "text": "Дрова " + c[2]} for c in D.CITIES]
@@ -235,6 +247,7 @@ ART_MONEY = {
 
 ART_PUB = "2026-10-06"   # раздел и статьи опубликованы 6 октября
 ART_UPD = "2026-10-07"   # статьи дописаны до ~1300-1500 слов
+ART_UPD_X = {"skladometr-ili-nasypnoy-kub": "2026-10-09"}   # + раздел про ГАЗель и КамАЗ
 
 
 def offer_range(price, unit, ex):
@@ -284,7 +297,7 @@ def ctx(**kw):
 
 
 def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", city_prep="", city_text="",
-          links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None, ex="berezovye", deliv_po=None):
+          links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None, ex="berezovye", deliv_po=None, xtables=None):
     if calc and "₽/м³" in title and "доставк" not in title.lower() and len(title) + 12 <= 70:
         title = title.replace("₽/м³", "₽/м³ с доставкой")
     faq = faq + [x for x in T.COMMON_FAQ if x[0] not in {q for q, _ in faq}]
@@ -297,7 +310,7 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
         ex=D.PRODUCTS[ex], ref_vol=D.REF_VOL, delivery=D.DELIVERY, trip_m3=D.TRIP_M3, **({"deliv_po": deliv_po} if deliv_po else {}),
         **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
-        links2=links2, links2_title=links2_title, is_hub=is_hub,
+        links2=links2, links2_title=links2_title, is_hub=is_hub, xtables=xtables or [],
         schema_json=schema(h1, path, faq, price, crumbs=not is_hub, **offer_range(price, unit, ex))))
     write(path, html)
 
@@ -309,14 +322,25 @@ def main():
           f"Дрова с доставкой: берёза, смешанные, хвойные, осина, ольха, сухие, горбыль. От {ru0(MIN_PRICE)} ₽/м³ с доставкой, 3 куба берёзы — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽. Без минимального объёма.",
           "Свои дрова всех видов: колотые и чурками, естественной влажности и сухие. Возим самосвалами, без минимального объёма — от одного куба до полной машины.",
           MIN_PRICE, MORE_INTENT["hub"] + [x for x in T.COMMON if x[0] != "Насыпной куб и складометр"], [], links_title="Дрова по видам", links2=CITY_LINKS + BEREZA_LINKS + ART_LINKS + [{"url": "/dostavka-drov/blog/", "text": "Блог: топка, колка, заготовка, копчение"}], links2_title="Города и статьи", is_hub=True)
-    # Екатеринбург, главная коммерческая
+    # Екатеринбург, главная коммерческая. 9 октября: под «куб дров» (2,6 тыс.), «цена куба»,
+    # «где купить», «заказать», «ГАЗель дров» — таблица по объёмам и новые разделы; «недорого»
+    # из заголовка ушло на отдельную страницу «Недорогие дрова», чтобы страницы не спорили.
+    _ekb = dict(M2.EKB_NEW, **{h: ps for h, ps in MORE_INTENT["ekb"] if h not in M2.EKB_NEW})
+    _bz = D.PRODUCTS["berezovye"]
+    _kub = lambda v: f"{v} " + ("куб" if v % 10 == 1 and v % 100 != 11 else "куба" if v % 10 in (2, 3, 4) and v % 100 not in (12, 13, 14) else "кубов")
+    cubes = {"title": "Сколько стоит 1, 3, 5 и 10 кубов дров с доставкой",
+             "head": ["Объём", "Берёзовые колотые", "Смешанные колотые"],
+             "rows": [[_kub(v), f"от {ru0(D.total('berezovye', v))} ₽", f"от {ru0(D.total('smeshannye', v))} ₽"] for v in M2.CUBE_VOLS],
+             "note": f"Цены с доставкой по Екатеринбургу. В одну машину входит до {D.TRIP_M3} кубов, и до этого объёма рейс один, поэтому каждый следующий куб дешевле: "
+                     f"1 куб берёзы — от {ru0(_bz['t1'])} ₽, а в машине {D.REF_VOL} кубов — около {ru0(_bz['price'])} ₽ за куб. Больше {D.TRIP_M3} кубов везём двумя рейсами."}
     money("/drova-ekaterinburg/", "Купить дрова в Екатеринбурге с доставкой",
-          f"Купить дрова в Екатеринбурге недорого — от {ru0(MIN_PRICE)} ₽/м³",
-          f"Дрова с доставкой по Екатеринбургу: 3 куба берёзовых колотых — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽, машина — от {ru0(D.PRODUCTS['berezovye']['price'])} ₽/м³. Смешанные, хвойные, ольха, сухие. Без минимального объёма.",
+          f"Купить дрова в Екатеринбурге: цена за куб от {ru0(MIN_PRICE)} ₽ с доставкой",
+          f"Дрова с доставкой по Екатеринбургу: 1 куб берёзы — от {ru0(_bz['t1'])} ₽, 3 куба — от {ru0(_bz['t3'])} ₽, машина — от {ru0(_bz['price'])} ₽/м³. Смешанные, хвойные, ольха, сухие. Без минимального объёма.",
           "Берёзовые, смешанные, хвойные, осиновые, ольховые и сухие дрова, горбыль. Привезём по городу и пригороду до 50 км — и один куб, и полную машину.",
-          MIN_PRICE, MORE_INTENT["ekb"] + T.COMMON, [("Сколько стоят дрова в Екатеринбурге?", price_answer()),
-                                ("Какие дрова лучше купить?", "Для отопления дома — берёзовые или смешанные, для бани — берёза, ольха или осина, для камина — сухие берёзовые.")],
-          city_prep="в Екатеринбурге", links2=CITY_LINKS[1:] + ART_LINKS, links2_title="Другие города и статьи")
+          MIN_PRICE, [(h, _ekb[h]) for h in M2.EKB_ORDER] + T.COMMON,
+          [("Сколько стоит куб дров в Екатеринбурге?", price_answer()),
+           ("Какие дрова лучше купить?", "Для отопления дома — берёзовые или смешанные, для бани — берёза, ольха или осина, для камина — сухие берёзовые.")] + M2.EKB_FAQ,
+          city_prep="в Екатеринбурге", links2=CITY_LINKS[1:] + ART_LINKS, links2_title="Другие города и статьи", xtables=[cubes])
     # Товары по Екатеринбургу
     for k in D.ORDER:
         pr = D.PRODUCTS[k]
@@ -390,6 +414,38 @@ def main():
            ("Сколько дров нужно котлу на зиму?", "Для дома 100 м² — 15-18 насыпных кубов берёзы за сезон."),
            ("Можно ли топить котёл хвойными дровами?", "Можно, если они сухие, но теплообменник придётся чистить чаще.")],
           preselect=D.PRODUCTS["berezovye"]["name"], ex="smeshannye", links=[l for l in PROD_LINKS], links2=CITY_LINKS + [{"url": f"{D.HUB}drova-dlya-kotla-dlitelnogo-goreniya/", "text": "Статья: дрова для котла длительного горения"}], links2_title="Города и статьи")
+    # Дрова для печи (9 октября: «дрова для печи купить» 507, «…екатеринбург» 181)
+    sm = D.PRODUCTS["smeshannye"]["price"]
+    blog = lambda slug, text: {"url": f"{D.HUB}blog/{slug}/", "text": text}
+    art = lambda slug: {"url": f"{D.HUB}{slug}/", "text": AR.A[slug]["h1"]}
+    money("/drova-dlya-pechi-ekaterinburg/", "Дрова для печи с доставкой в Екатеринбурге",
+          f"Купить дрова для печи в Екатеринбурге — от {ru0(sm)} ₽/м³",
+          f"Дрова для печи с доставкой по Екатеринбургу: берёзовые колотые 3 куба — от {ru0(D.PRODUCTS['berezovye']['t3'])} ₽, смешанные — от {ru0(sm)} ₽/м³. Полено под вашу топку, без минимального объёма.",
+          "Берёзовые и смешанные колотые дрова для кирпичных, русских и металлических печей. Подберём длину полена под топку и привезём по Екатеринбургу и области.",
+          sm, M2.PECH + T.COMMON, M2.PECH_FAQ, preselect=D.PRODUCTS["berezovye"]["name"],
+          links=[l for l in PROD_LINKS if l["url"] != "/drova-dlya-pechi-ekaterinburg/"],
+          links2=[art("kakie-drova-luchshe-dlya-otopleniya"), art("vlazhnost-drov"), art("skolko-drov-nuzhno-na-zimu"),
+                  blog("kak-pravilno-topit-pech", "Как правильно топить печь дровами"), blog("kak-razzhech-pech-i-kamin", "Как разжечь печь и камин"),
+                  blog("pochemu-dymit-pech", "Почему дымит печь"), blog("kreozot-v-dymohode", "Креозот в дымоходе")] + CITY_LINKS,
+          links2_title="Статьи о печи и другие города")
+    # Недорогие дрова (9 октября: «дрова недорого» 568, «купить дрова недорого» 532,
+    # «дрова дёшево с доставкой» 509). Таблица «цена тепла» — из долей тепла M2.HEAT.
+    hv = D.PRODUCTS["hvoynye"]["price"]
+    heat = {"title": "Недорогие дрова: цена куба и цена тепла",
+            "head": ["Дрова", "Машина 10 м³ с доставкой", "Тепло куба к берёзе", "Цена тепла*"],
+            "rows": [[{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"]}, f"от {ru0(D.PRODUCTS[k]['t10'])} ₽",
+                      f"{round(lo * 100)}%" if lo == hi else f"{round(lo * 100)}-{round(hi * 100)}%",
+                      f"≈ {ru0(round(D.PRODUCTS[k]['price'] / ((lo + hi) / 2) / 50) * 50)} ₽"] for k, lo, hi in M2.HEAT],
+            "note": "* Сколько стоят дрова, которые дадут столько же тепла, сколько насыпной куб берёзовых колотых, при заказе машины 10 кубов. "
+                    "Это ориентир: тепло зависит от влажности и от того, как плотно дрова легли в кузове. Чурки нужно колоть самим."}
+    money("/drova-nedorogo-ekaterinburg/", "Недорогие дрова с доставкой в Екатеринбурге",
+          f"Дрова недорого в Екатеринбурге — от {ru0(hv)} ₽/м³",
+          f"Недорогие дрова с доставкой по Екатеринбургу: горбыль — от {ru0(GORBYL)} ₽/м³, хвойные и смешанные колотые — от {ru0(hv)} ₽/м³. Как купить дёшево и не нарваться на недовоз.",
+          "Горбыль, хвойные и смешанные колотые дрова, берёзовые чурки — самые недорогие варианты с доставкой по Екатеринбургу. Подскажем, что выгоднее под вашу печь.",
+          hv, M2.NEDOROGO + T.COMMON, M2.NEDOROGO_FAQ, preselect=D.PRODUCTS["smeshannye"]["name"], ex="hvoynye",
+          links=[l for l in PROD_LINKS if l["url"] != "/drova-nedorogo-ekaterinburg/"],
+          links2=[art("skolko-stoit-kub-drov"), art("skladometr-ili-nasypnoy-kub"), art("skolko-gorbylya-v-kube")] + CITY_LINKS,
+          links2_title="Статьи и города", xtables=[heat])
     # Города
     for key, name, prep, dat, text in D.CITIES:
         money(f"/{D.CITY_SLUG[key]}/", f"Купить дрова {prep} с доставкой",
@@ -410,10 +466,10 @@ def main():
         html = env.get_template("drova_article.html").render(**ctx(
             title=a["title"], description=a["desc"], canonical=DOMAIN + path, h1=a["h1"], lede=a["lede"],
             body=a["body"], faq=a["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
-            date_iso=ART_PUB, date_ru=ru_d(ART_PUB), upd_iso=ART_UPD, upd_ru=ru_d(ART_UPD),
+            date_iso=ART_PUB, date_ru=ru_d(ART_PUB), upd_iso=ART_UPD_X.get(s, ART_UPD), upd_ru=ru_d(ART_UPD_X.get(s, ART_UPD)),
             related=([ART_MONEY[s]] if s in ART_MONEY else []) + [l for l in ART_LINKS if l["url"] != path] + [{"url": "/drova-ekaterinburg/", "text": "Цены на дрова в Екатеринбурге"}],
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
-                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": ART_PUB, "dateModified": ART_UPD,
+                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": ART_PUB, "dateModified": ART_UPD_X.get(s, ART_UPD),
                  "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/img/og-cover.jpg"},
                 {"@type": "BreadcrumbList", "itemListElement": [

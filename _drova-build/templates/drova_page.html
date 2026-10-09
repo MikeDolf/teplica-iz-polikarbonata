@@ -75,6 +75,22 @@
         {%- endfor %}
         </tbody>
       </table></div>
+      {#- Доп. таблицы страницы (9 октября 2026): «1, 3, 5, 10 кубов» на странице
+          Екатеринбурга, «цена тепла» на «Недорогих дровах». Ячейка — строка или {url, text}. -#}
+      {%- for xt in xtables|default([]) %}
+      <h3>{{ xt.title }}</h3>
+      <div class="table-wrap table-wrap--compact{% if xt.head|length == 3 %} table-wrap--fit{% endif %}"><table>
+        <thead><tr>{% for h in xt.head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {%- for row in xt.rows %}
+          <tr>{% for c in row %}<td data-label="{{ xt.head[loop.index0] }}">{% if c.url is defined %}<a href="{{ c.url }}">{{ c.text }}</a>{% else %}{{ c }}{% endif %}</td>{% endfor %}</tr>
+        {%- endfor %}
+        </tbody>
+      </table></div>
+      {%- if xt.note %}
+      <p>{{ xt.note }}</p>
+      {%- endif %}
+      {%- endfor %}
       <h3>Брикеты, пеллеты и уголь</h3>
       <div class="table-wrap table-wrap--compact table-wrap--two"><table>
         <thead><tr><th>Топливо</th><th>Цена</th></tr></thead>
