@@ -128,7 +128,7 @@ html{overflow-x:hidden}
 /* faq */
 .faq__list{display:grid;gap:10px;max-width:760px}
 .faq__item{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}
-.faq__item summary{cursor:pointer;padding:16px 18px;font-weight:600;font-size:16.5px;list-style:none;position:relative}
+.faq__item summary{cursor:pointer;padding:16px 46px 16px 18px;font-weight:600;font-size:16.5px;list-style:none;position:relative}
 .faq__item summary::-webkit-details-marker{display:none}
 .faq__item summary::after{content:"+";position:absolute;right:18px;top:50%;transform:translateY(-50%);color:var(--accent);font-size:20px;font-weight:700}
 .faq__item[open] summary::after{content:"–"}
@@ -430,8 +430,10 @@ html{overflow-x:hidden}
     gap:14px;padding:10px 0;border-bottom:1px solid var(--line);text-align:right}
   :where(.ekb tbody tr:last-child td){border-bottom:1px solid var(--line)}
   :where(.ekb tbody td:last-child){border-bottom:0}
+  /* Подпись сжимается и переносится: с flex:none длинная («Итого за 3 м³
+     в Каменске-Уральском») выдавливала цену за край карточки на 320px. */
   .ekb tbody td::before{content:attr(data-label);font-weight:600;color:var(--ink-soft);
-    text-align:left;flex:none;font-size:13.5px}
+    text-align:left;flex:0 1 auto;max-width:60%;font-size:13.5px}
 
   /* Компактный вариант: одна общая рамка на всю таблицу вместо своей
      рамки, тени и отступа у каждой строки. Внутри — тонкая линия между
@@ -451,7 +453,7 @@ html{overflow-x:hidden}
      колонкам ширины хватает — оставляем строку: слева название, справа цена. */
   .ekb .table-wrap--two tbody tr{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
   .ekb .table-wrap--two tbody td{display:block;border:0;padding:8px 0;text-align:left}
-  .ekb .table-wrap--two tbody td:last-child{text-align:right;white-space:nowrap}
+  .ekb .table-wrap--two tbody td:last-child{text-align:right}
   .ekb .table-wrap--two tbody td::before{content:none}
 
   /* Три колонки помещаются в 360-390px обычной таблицей: карточка на
@@ -466,6 +468,12 @@ html{overflow-x:hidden}
   .ekb .table-wrap--fit tbody td{display:table-cell;padding:8px;text-align:left;border-bottom:1px solid var(--line)}
   .ekb .table-wrap--fit tbody tr:last-child td{border-bottom:0}
   .ekb .table-wrap--fit tbody td::before{content:none}
+}
+/* 320px: три колонки с «Свежесрубленные» и «около 70%» не влезали
+   на 10-16px и обрезались справа — чуть мельче шрифт и уже поля. */
+@media (max-width:340px){
+  .ekb .table-wrap--fit table{font-size:13px}
+  .ekb .table-wrap--fit thead th,.ekb .table-wrap--fit tbody td{padding:7px 5px}
 }
 
 /* uses: карточки-плитки вместо голого списка */

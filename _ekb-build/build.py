@@ -44,6 +44,7 @@ from tail_cities import TAIL_CITIES
 from works import WORKS, WORKS_VIDEO  # noqa
 from bagged import BAGGED, BAG_BASE, MIN_BAGS, BAG_ZONE_KM, BAG_ANY  # noqa
 from city_product import CP, CPF, BAGS_ASSUMED  # noqa
+import typo  # noqa
 try:
     from reviews import REVIEWS  # noqa
 except ImportError:
@@ -1279,7 +1280,7 @@ def render(page):
     outdir = os.path.join(ROOT, page["slug"])
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as f:
-        f.write(html)
+        f.write(typo.glue(html))
         check_repeats(html, canonical)
     return page["slug"], canonical, page["slug"] not in NOINDEX
 
@@ -1395,7 +1396,7 @@ def render_hub(all_pages):
     outdir = os.path.join(ROOT, "dostavka-grunta")
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(html)
+        fh.write(typo.glue(html))
         check_repeats(html, canonical)
     return canonical
 
@@ -1484,7 +1485,7 @@ def render_articles():
         outdir = os.path.join(ROOT, base, a["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-            fh.write(html)
+            fh.write(typo.glue(html))
             check_repeats(html, canonical)
         urls.append(canonical)
     return urls
@@ -1540,7 +1541,7 @@ def render_blog():
     outdir = os.path.join(ROOT, "dostavka-grunta", "blog")
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(html)
+        fh.write(typo.glue(html))
         check_repeats(html, hub_canonical)
     urls.append(hub_canonical)
 
@@ -1587,7 +1588,7 @@ def render_blog():
         outdir = os.path.join(ROOT, "dostavka-grunta", "blog", p["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-            fh.write(html)
+            fh.write(typo.glue(html))
             check_repeats(html, canonical)
         urls.append(canonical)
     return urls
@@ -1655,7 +1656,7 @@ def render_privacy():
     outdir = os.path.join(ROOT, "dostavka-grunta", "politika")
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(html)
+        fh.write(typo.glue(html))
         check_repeats(html, canonical)
     return canonical
 
@@ -1716,7 +1717,7 @@ def render_company():
     outdir = os.path.join(ROOT, "dostavka-grunta", "rekvizity")
     os.makedirs(outdir, exist_ok=True)
     with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-        fh.write(html)
+        fh.write(typo.glue(html))
         check_repeats(html, canonical)
     return canonical
 

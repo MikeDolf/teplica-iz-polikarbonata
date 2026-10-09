@@ -20,8 +20,10 @@ ROOT = os.path.dirname(HERE)
 EKB = os.path.join(ROOT, "_ekb-build")
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(EKB, "data"))
+sys.path.insert(1, EKB)
 
 from site_config import SITE as _SITE
+import typo
 from cities import CITIES as EKB_CITIES
 import drova_data as D
 import drova_texts as T
@@ -137,23 +139,6 @@ env.filters["ucfirst"] = lambda v: (v[:1].upper() + v[1:]) if v else v
 PAGES = []   # (path, robots-индекс) для карты
 
 
-_SCRIPT = re.compile(r"(<script\b.*?</script>|<style\b.*?</style>)", re.S)
-
-
-def nobreak_prices(html):
-    """«от 3 500 ₽/м³» — одним куском: в плитках ссылок и таблицах «м³» уезжал
-    на новую строку. Только в видимом тексте <body>, скрипты и стили не трогаем."""
-    head, sep, body = html.partition("<body")
-    parts = _SCRIPT.split(body)
-    for i in range(0, len(parts), 2):
-        t = parts[i]
-        t = re.sub(r"(\d) ₽", "\\1\u00a0₽", t)
-        t = re.sub(r"₽/(м³|т|кг|мешок)", "₽/\u2060\\1", t)
-        t = re.sub(r"(\b[Оо]т|≈) (\d)", "\\1\u00a0\\2", t)
-        parts[i] = t
-    return head + sep + "".join(parts)
-
-
 def _price_token(m):
     """%%berezovye.t3%% — поле товара; %%sum.berezovye.18%% — итог с доставкой за 18 м³;
     %%per.berezovye.3%% — за м³ при 3 м³; %%deliv%% — рейс. Цены — только в drova_data."""
@@ -174,7 +159,7 @@ def _price_token(m):
 def write(path, html):
     html = re.sub(r"%%([\w.-]+)%%", _price_token, html)
     assert "%%" not in html, path
-    html = nobreak_prices(html)
+    html = typo.glue(html)   # «50 км», «3 м³», «₽/м³» — без отрыва единиц
     full = os.path.join(ROOT, path.strip("/"), "index.html")
     os.makedirs(os.path.dirname(full), exist_ok=True)
     open(full, "w", encoding="utf-8").write(html)
