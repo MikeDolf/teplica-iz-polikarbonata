@@ -65,6 +65,7 @@ DC.C["revda"]["villages"] += ", Дружинино, Бисерть"
 from drova_bereza_city import B as BZC
 import drova_more4 as M4   # 10 октября: колка, лесовоз, пеллеты оптом
 import drova_more3 as M3   # 9 октября: берёзовые В.Пышма/Невьянск/Арамиль, уголь/брикеты/горбыль по городам, щепа, сетки
+M3.EXTRA_ORDER = []   # 10 октября: щепу и сетки не продаём (владелец) — страниц, ссылок и пунктов формы нет; адреса в GONE
 BZC.update(M3.BZC_NEW)
 T.BEREZA_CITY = list(T.BEREZA_CITY) + [k for k in M3.BZC_NEW if k not in T.BEREZA_CITY]
 import drova_articles as AR
@@ -243,7 +244,7 @@ PROD_LINKS = [{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"
               {"url": "/drova-nedorogo-ekaterinburg/", "text": "Недорогие дрова"}] + \
              [{"url": f'/{D.FUEL[k]["slug"]}/', "text": D.FUEL[k]["name"] + ", от " + env.filters["ru"](D.FUEL[k]["price"]) + " ₽/" + D.FUEL[k]["unit"]} for k in D.FUEL_ORDER] + \
              [{"url": f'/{M3.EXTRA[k]["slug"]}/', "text": M3.EXTRA[k]["name"] + ", от " + env.filters["ru"](M3.EXTRA[k]["price"]) + " ₽/" + M3.EXTRA[k]["unit"]} for k in M3.EXTRA_ORDER] + \
-             [{"url": "/kolka-drov-ekaterinburg/", "text": "Колка дров у вас во дворе"}, {"url": "/drova-lesovozom-ekaterinburg/", "text": "Дрова лесовозом"}]
+             [{"url": "/gazel-drov-ekaterinburg/", "text": "Газель дров, 3 куба"}, {"url": "/kolka-drov-ekaterinburg/", "text": "Колка дров у вас во дворе"}, {"url": "/drova-lesovozom-ekaterinburg/", "text": "Дрова лесовозом"}]
 # уголь, брикеты, пеллеты и горбыль по городам: ссылки со страниц городов и общих страниц товара
 _CF_KIND = {"ugol": "Каменный уголь", "brikety": "Топливные брикеты", "gorbyl": "Горбыль", "pellety": "Пеллеты"}
 CF_BY_CITY, CF_BY_KIND = {}, {}
@@ -339,7 +340,7 @@ def ctx(**kw):
 
 def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", city_prep="", city_text="",
           links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None, ex="berezovye", deliv_po=None, xtables=None,
-          hero_min=None, common_faq=True):
+          hero_min=None, common_faq=True, offer=None):
     # price=None — цена по заявке (услуги): в герое «по заявке», в разметке без Product/Offer
     if calc and "₽/м³" in title and "доставк" not in title.lower() and len(title) + 12 <= 70:
         title = title.replace("₽/м³", "₽/м³ с доставкой")
@@ -354,7 +355,8 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
         **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), **({"hero_min": hero_min} if hero_min else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
         links2=links2, links2_title=links2_title, is_hub=is_hub, xtables=xtables or [],
-        schema_json=schema(h1, path, faq, price, crumbs=not is_hub, **(offer_range(price, unit, ex) if price else {}))))
+        schema_json=schema(h1, path, faq, (offer or {}).get("low", price), crumbs=not is_hub,
+                           **({k: v for k, v in offer.items() if k != "low"} if offer else (offer_range(price, unit, ex) if price else {})))))
     write(path, html)
 
 
@@ -465,6 +467,16 @@ def main():
               links_title="Дрова и услуги", links2=[{"url": f"{D.HUB}blog/skolko-stoit-raskolot-drova/", "text": "Сколько стоит расколоть дрова"},
               {"url": f"{D.HUB}blog/kak-pravilno-kolot-drova/", "text": "Как правильно колоть дрова"}, {"url": f"{D.HUB}blog/kak-slozhit-polennitsu/", "text": "Как сложить поленницу"},
               {"url": f"{D.HUB}skladometr-ili-nasypnoy-kub/", "text": "Складометр и насыпной куб"}] + CITY_LINKS, links2_title="Статьи и города")
+    # Газель дров (10 октября, M4.GAZEL): цены за 3 куба — в стандартной таблице цен (колонка «3 м³»)
+    g = M4.GAZEL; t3 = {k: D.PRODUCTS[k]["t3"] for k in D.ORDER}
+    hv3 = t3["hvoynye"]
+    money(f'/{g["slug"]}/', g["h1"], f"Газель дров в Екатеринбурге: сколько кубов и цена — от {ru0(hv3)} ₽",
+          f"Сколько дров в ГАЗели: около 3 насыпных кубов. Берёзовые колотые — от {ru0(t3['berezovye'])} ₽, смешанные — от {ru0(t3['smeshannye'])} ₽, хвойные — от {ru0(hv3)} ₽ с доставкой.",
+          g["sub"], hv3, g["sections"] + T.COMMON, g["faq"], preselect=D.PRODUCTS["berezovye"]["name"], unit="3 м³",
+          price_note="ГАЗель — 3 насыпных куба колотых дров, цена с доставкой по Екатеринбургу. Берёзовые — от %%berezovye.t3%% ₽.",
+          offer={"low": min(t3.values()), "high": max(t3.values()), "count": len(t3)},
+          links2=[{"url": f"{D.HUB}skladometr-ili-nasypnoy-kub/", "text": "Сколько кубов в ГАЗели, самосвале и КамАЗе"},
+                  {"url": f"{D.HUB}skolko-stoit-kub-drov/", "text": "Сколько стоит куб дров"}] + CITY_LINKS, links2_title="Статьи и города")
     # Берёзовые колотые в крупных городах
     bz = D.PRODUCTS["berezovye"]["price"]
     for key in T.BEREZA_CITY:
@@ -577,6 +589,8 @@ def main():
 # заглушка с переходом туда, где человеку помогут. В карту сайта не попадает.
 GONE = {
     "/drova-mihaylovsk/": "/dostavka-drov/",   # 9 октября: в Михайловск не возим
+    "/shchepa-dlya-kopcheniya-ekaterinburg/": "/drova-olhovye-ekaterinburg/",   # 10 октября: щепу не продаём
+    "/drova-v-setkah-ekaterinburg/": "/ugol-drevesnyy-ekaterinburg/",          # 10 октября: дрова в сетках не продаём
 }
 
 
