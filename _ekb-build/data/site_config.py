@@ -2,6 +2,10 @@
 # ЕДИНЫЙ конфиг лид-ген раздела. Всё, что меняется при запуске, лежит здесь.
 # Сейчас значения-плейсхолдеры. Заменить перед публикацией.
 
+import os as _os, sys as _sys
+_sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), ".."))
+from cssmin import css_url as _css_url
+
 SITE = {
     "brand": "Грунт Доставка",           # рабочее имя раздела (плейсхолдер)
     "domain": "https://fanline.su",
@@ -100,5 +104,7 @@ SITE = {
     # "R-A-20037656-1" создаются в кабинете РСЯ: Блоки → RTB-блок. Пустой
     # список — места в статьях не выводятся, работает только автоплейсмент.
     "yandex_rtb_blocks": [],
-    "css": "/assets/ekb/style.css?v=97",
+    # Сжатый style.min.css с хешем в адресе, см. _ekb-build/cssmin.py
+    # (править по-прежнему style.css, версию вручную больше не поднимать).
+    "css": _css_url(),
 }

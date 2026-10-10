@@ -784,13 +784,17 @@ def money_meta(product_key, city_key):
     tail = f'Оплата после выгрузки, честный объём, {speed}.'
     # Падеж «где купить», а не «куда везём»: prep даёт «в Балтыме»,
     # а to дало бы «купить в Балтым».
-    head = f'Купить {buy} {city["prep"]} недорого:'
+    # desc_buy — название для описания, если в запросах два написания
+    # («верховой» и «верховый» торф); desc_bag — фасовка, которую ищут
+    # отдельно («конский навоз в мешках»), только в зоне мешков.
+    head = f'Купить {pr.get("desc_buy", buy)} {city["prep"]} недорого:'
+    must = f', {pr["desc_bag"]}' if pr.get("desc_bag") and in_bag_zone(city_key) else ""
     # Хук объясняет, чем этот материал отличается («перепревший, прямо под
     # посадку»), и держит описания непохожими друг на друга. Влезает не
     # везде: у длинных пар «товар + город» отбрасываем его, а не аргументы.
     mv = min_volume_text(city_key)
-    full = f'{head} от {price["m3"]} ₽/м³{bag}, от {mv}, {pr.get("desc_hook", "")}. {tail}'
-    short = f'{head} цена от {price["m3"]} ₽/м³{bag}, от {mv}. {tail}'
+    full = f'{head} от {price["m3"]} ₽/м³{bag}, от {mv}{must}, {pr.get("desc_hook", "")}. {tail}'
+    short = f'{head} цена от {price["m3"]} ₽/м³{bag}, от {mv}{must}. {tail}'
     desc = full if len(full) <= 160 else short
     return title, " ".join(desc.split())
 
@@ -1059,6 +1063,9 @@ def compose_geo(product_key, city_key):
                for q, a in faq]
         about = [apply_1m3_text(p) for p in about]
     mt, md = money_meta(product_key, city_key)
+    # title_tpl может быть списком: первый вариант не длиннее 70 знаков.
+    def fit_title(variants):
+        return next((t for t in variants if len(t) <= 70), variants[-1])
     # title_tpl/desc_tpl/hero_sub в products.py пишутся под общий минимум
     # («от 3 м³», «от трёх кубов», «60-75 мешков») и общие на все города
     # товара. Для куста вокруг площадки в Пышме подменяем через тот же
@@ -1070,7 +1077,8 @@ def compose_geo(product_key, city_key):
     return {
         "slug": slug, "city": city_key, "product": pr["chip"], "kind": "geo",
         "h1": h1,
-        "title": mt or loc(pr["title_tpl"].format(prep=city["prep"], to=city["to"])),
+        "title": mt or fit_title([loc(t.format(prep=city["prep"], to=city["to"])) for t in
+                                  (pr["title_tpl"] if isinstance(pr["title_tpl"], list) else [pr["title_tpl"]])]),
         "description": md or loc(pr["desc_tpl"].format(prep=city["prep"], to=city["to"])),
         "hero_sub": loc(pr["hero_sub"]),
         # уникальный городской текст идёт первым: он задаёт непохожесть страниц
