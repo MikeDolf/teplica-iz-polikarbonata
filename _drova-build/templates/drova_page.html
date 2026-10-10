@@ -29,11 +29,15 @@
         <p class="hero__eyebrow">Доставка дров по {{ site.region_po }}</p>
         <h1>{{ h1 }}</h1>
         <p class="hero__sub">{{ hero_sub }}</p>
+        {%- if hero_min %}
+        <p class="hero__min"><b>{{ hero_min[0] }}</b> — {{ hero_min[1] }}</p>
+        {%- else %}
         <p class="hero__min"><b>Минимального объёма нет</b> — привезём {{ min_text|default("и один куб") }}. Доставка до 50 км от {{ zone_text }}.</p>
+        {%- endif %}
         <div class="hero__price">
           <div class="hero__price__row">
-            <span class="hero__price__label">{% if price_note %}Ориентировочно{% else %}С доставкой{% endif %}</span>
-            <b class="hero__price__num">от {{ price|ru }} ₽/{{ unit|default("м³") }}</b>
+            <span class="hero__price__label">{% if not price %}Цена{% elif price_note %}Ориентировочно{% else %}С доставкой{% endif %}</span>
+            <b class="hero__price__num">{% if price %}от {{ price|ru }} ₽/{{ unit|default("м³") }}{% else %}по заявке{% endif %}</b>
           </div>
           <span class="hero__price__note">{% if price_note %}{{ price_note }}{% else %}За насыпной куб при заказе машины {{ ref_vol }} м³, с доставкой по {{ deliv_po|default("Екатеринбургу") }}. {{ ex.name }}: 1 куб — от {{ ex.t1|ru }} ₽, 3 куба — от {{ ex.t3|ru }} ₽.{% endif %}</span>
         </div>
@@ -50,7 +54,7 @@
         {%- if site.max_url %}
         <p class="nomax-link"><a href="#zayavka" data-nomax>Нет MAX? Оставьте номер — напишем сами</a></p>
         {%- endif %}
-        <p class="hero__note">На заявку {{ site.callback_promise }}. {{ site.hours }}. Оплата после выгрузки.</p>
+        <p class="hero__note">На заявку {{ site.callback_promise }}. {{ site.hours }}.{% if not hero_min %} Оплата после выгрузки.{% endif %}</p>
       </div>
     </div>
   </section>
