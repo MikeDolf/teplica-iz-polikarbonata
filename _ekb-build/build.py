@@ -29,6 +29,8 @@ from products import PRODUCTS, GEO_PAGES, USES, USES_DEFAULT, CITY_ORDER  # noqa
 from articles import ARTICLES  # noqa
 from blog import BLOG  # noqa
 from prices import PRICES, MATERIALS_PRICE, FLEET_VIZ, PRODBAR, DENSITY, CALC_ORDER  # noqa
+import faq_add  # noqa — 10 октября: доп. вопросы FAQ по Вордстату (чернозём, перегной, навоз, торф)
+faq_add.apply(PAGES, PRODUCTS)
 
 # Реальная минимальная стоимость рейса от площадки у Пышмы, названная
 # партнёром (сентябрь 2026): чернозём 8500-9500 ₽, торфогрунт 9500-10000 ₽

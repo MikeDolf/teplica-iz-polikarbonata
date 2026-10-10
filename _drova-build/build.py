@@ -47,6 +47,7 @@ import drova_cities5 as DC5   # 9 октября: дальние города (�
 D.CITIES = D.CITIES + DC5.NEW
 D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC5.NEW})
 DC.C.update(DC5.C)
+import drova_faq_add as FA   # 10 октября: доп. вопросы FAQ по Вордстату
 import drova_cities6 as DC6   # 10 октября: посёлки рядом с Екатеринбургом
 D.CITIES = D.CITIES + DC6.NEW
 D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC6.NEW})
@@ -172,6 +173,7 @@ env.filters["ru"] = lambda n: f"{int(n):,}".replace(",", " ")   # узкий �
 env.filters["ucfirst"] = lambda v: (v[:1].upper() + v[1:]) if v else v
 
 PAGES = []   # (path, robots-индекс) для карты
+FAQ_USED = set()   # страницы, прошедшие через money(): все ключи FA.FAQ_ADD должны в них быть
 
 
 def _price_token(m):
@@ -349,6 +351,9 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
     # price=None — цена по заявке (услуги): в герое «по заявке», в разметке без Product/Offer
     if calc and "₽/м³" in title and "доставк" not in title.lower() and len(title) + 12 <= 70:
         title = title.replace("₽/м³", "₽/м³ с доставкой")
+    # 10 октября: вопросы покупателей из Вордстата (drova_faq_add.py) — до общих.
+    FAQ_USED.add(path)
+    faq = faq + [x for x in FA.FAQ_ADD.get(path, []) if x[0] not in {q for q, _ in faq}]
     faq = faq + ([x for x in T.COMMON_FAQ if x[0] not in {q for q, _ in faq}] if common_faq else [])
     _seen = set(); faq = [x for x in faq if not (x[0] in _seen or _seen.add(x[0]))]
     html = env.get_template("drova_page.html").render(**ctx(
@@ -585,6 +590,7 @@ def main():
                 ensure_ascii=False)))
         write(path, html)
     render_blog()
+    assert not set(FA.FAQ_ADD) - FAQ_USED, set(FA.FAQ_ADD) - FAQ_USED
     gone()
     sitemaps()
     print(f"Дрова: {len(PAGES)} страниц")
