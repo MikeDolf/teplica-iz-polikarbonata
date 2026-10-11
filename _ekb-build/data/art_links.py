@@ -13,14 +13,14 @@ BY_PRODUCT = {
     "chernozem": ["chem-zamenit-chernozem", "peregnoy-ili-chernozem", "chernozem-ili-plodorodnyy-grunt", "skolko-stoit-chernozem"],
     "plodorodnyy-grunt": ["chernozem-ili-plodorodnyy-grunt", "zemlya-pod-gazon-podgotovka", "vysokie-i-teplye-gryadki", "blog/chem-podnyat-uchastok"],
     "peregnoy": ["kak-ispolzovat-peregnoy", "peregnoy-osenyu", "kompost-ili-peregnoy", "skolko-stoit-peregnoy"],
-    "navoz": ["kakoy-navoz-luchshe", "kogda-vnosit-navoz", "navoz-ili-peregnoy-chto-luchshe", "skolko-stoit-navoz"],
+    "navoz": ["navoz-polza-i-vred", "kakoy-navoz-luchshe", "kogda-vnosit-navoz", "skolko-stoit-navoz"],
     "navoz-koroviy": ["kak-primenyat-koroviy-navoz", "kakoy-navoz-luchshe", "kogda-vnosit-navoz", "nastoy-iz-navoza"],
     "navoz-konskiy": ["kak-primenyat-konskiy-navoz", "konskiy-navoz-dlya-klubniki", "vysokie-i-teplye-gryadki", "zhidkiy-konskiy-navoz"],
     "torf": ["verhovoy-ili-nizinnyy-torf", "torf-ili-chernozem", "torf-dlya-rassady", "frezernyy-torf"],
     "kislyy-torf": ["kislyy-torf-dlya-kakih-rasteniy", "grunt-dlya-golubiki", "grunt-dlya-gortenzii", "neytralizovannyy-torf"],
-    "torfogrunt": ["torf-dlya-rassady", "kakoy-grunt-nuzhen-dlya-teplicy", "zemlya-pod-gazon-podgotovka", "verhovoy-ili-nizinnyy-torf"],
+    "torfogrunt": ["pochvogrunt", "torf-dlya-rassady", "kakoy-grunt-nuzhen-dlya-teplicy", "zemlya-pod-gazon-podgotovka"],
     "opilki": ["uteplenie-opilkami", "opilki-na-uchastke", "mulchirovanie", "kak-sdelat-kompost"],
-    "zemlya-v-meshkah": ["kakoy-grunt-nuzhen-dlya-teplicy", "torf-dlya-rassady", "chernozem-ili-plodorodnyy-grunt", "chem-zamenit-chernozem"],
+    "zemlya-v-meshkah": ["pochvogrunt", "kakoy-grunt-nuzhen-dlya-teplicy", "torf-dlya-rassady", "chernozem-ili-plodorodnyy-grunt"],
 }
 
 BY_PAGE = {

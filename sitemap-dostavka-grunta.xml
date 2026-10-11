@@ -1999,7 +1999,19 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fanline.su/dostavka-grunta/navoz-polza-i-vred/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fanline.su/dostavka-grunta/kakoy-navoz-luchshe/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/pochvogrunt/</loc>
     <lastmod>2026-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>

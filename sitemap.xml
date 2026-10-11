@@ -3134,7 +3134,19 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://fanline.su/dostavka-grunta/navoz-polza-i-vred/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://fanline.su/dostavka-grunta/kakoy-navoz-luchshe/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-grunta/pochvogrunt/</loc>
     <lastmod>2026-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
@@ -4629,6 +4641,12 @@
   </url>
   <url>
     <loc>https://fanline.su/dostavka-drov/blog/udelnaya-teplota-sgoraniya-kamennogo-uglya/</loc>
+    <lastmod>2026-10-11</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://fanline.su/dostavka-drov/blog/udelnaya-teplota-sgoraniya-torfa/</loc>
     <lastmod>2026-10-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
