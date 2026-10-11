@@ -3,6 +3,10 @@ Allow: /
 
 Disallow: /docs/
 Disallow: /_ekb-build/
+Disallow: /_drova-build/
+Disallow: /_climate-build/
+Disallow: /_redirects-build/
+Disallow: /_preview/
 
 Sitemap: https://fanline.su/sitemap.xml
 Sitemap: https://fanline.su/sitemap-dostavka-grunta.xml
