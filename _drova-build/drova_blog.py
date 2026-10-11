@@ -215,3 +215,5 @@ from drova_blog6 import POSTS6 as _P6
 POSTS += _P6
 from drova_blog7 import POSTS7 as _P7
 POSTS += _P7
+from drova_blog8 import POSTS8 as _P8   # 11 октября: теплота сгорания каменного угля
+POSTS += _P8

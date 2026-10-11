@@ -1487,14 +1487,15 @@ def render_articles():
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
             schema_json=schema, metrika_placeholder=True, og_type="article",
             prodbar=PRODBAR, current_slug="", photos=PHOTOS,
-            calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
-            calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
-            calc_base=BASES[base_of("chernozem", "ekaterinburg")],
+            # calc — материал калькулятора статьи (по умолчанию чернозём).
+            calc_materials=CALC_MATERIALS, calc_preselect=a.get("calc", "chernozem"),
+            calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", a.get("calc", "chernozem")),
+            calc_base=BASES[base_of(a.get("calc", "chernozem"), "ekaterinburg")],
         calc_bases_json=CALC_BASES_JSON,
         ride_floor_json=RIDE_FLOOR_JSON,
         min_volume=min_volume_text("ekaterinburg"),
         min_volume_note=min_volume_note("ekaterinburg"),
-            delivery_min=delivery_min_rub("ekaterinburg", "chernozem"), bag_note=bag_note("chernozem", "ekaterinburg"),
+            delivery_min=delivery_min_rub("ekaterinburg", a.get("calc", "chernozem")), bag_note=bag_note(a.get("calc", "chernozem"), "ekaterinburg"),
             cover=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])),
             hero_photo=(lambda c: c if c in PHOTOS else None)(ARTICLE_COVER.get(a["slug"])))
         outdir = os.path.join(ROOT, base, a["slug"])
