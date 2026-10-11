@@ -282,6 +282,9 @@
   {%- if related %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
   {% with band_tone = ns.t %}{% include "partials/related.html" %}{% endwith %}
 
+  {%- if art_cards %}{% set ns.t = "white" if ns.t == "tint" else "tint" %}{% endif %}
+  {% with band_tone = ns.t %}{% include "partials/art_cards.html" %}{% endwith %}
+
   {%- set ns.t = "white" if ns.t == "tint" else "tint" %}
   {% with band_tone = ns.t %}{% include "partials/faq.html" %}{% endwith %}
 

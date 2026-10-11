@@ -1,0 +1,15 @@
+{#- «Статьи по теме» (11 октября 2026): 3-4 статьи по товару страницы,
+    список в data/art_links.py. Карточка — заголовок статьи и первая фраза
+    её описания. -#}
+{%- if art_cards %}
+<section class="artrel band band--{{ band_tone|default('white') }}" aria-labelledby="artrel-title">
+  <div class="wrap">
+    <h2 id="artrel-title" class="sec-h">Статьи по теме</h2>
+    <ul class="artrel__list">
+      {%- for a in art_cards %}
+      <li><a href="{{ a.url }}"><b>{{ a.text }}</b><span>{{ a.desc }}</span></a></li>
+      {%- endfor %}
+    </ul>
+  </div>
+</section>
+{%- endif %}

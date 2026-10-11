@@ -1219,3 +1219,12 @@ html{overflow-x:hidden}
     rgba(28,16,8,.30) 0%, rgba(28,16,8,.62) 45%, #1c1008 100%)}
   .hero--drova h1,.hero--drova .hero__sub,.hero--drova .hero__eyebrow{text-shadow:0 2px 14px rgba(0,0,0,.85)}
 }
+
+/* «Статьи по теме» на страницах товаров грунта (11 октября 2026),
+   partials/art_cards.html: карточки в сетку, на телефоне — столбиком. */
+.artrel{padding:clamp(30px,5vw,52px) 20px}
+.artrel__list{list-style:none;margin:0;padding:0;display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(230px,1fr))}
+.artrel__list a{display:block;height:100%;padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;text-decoration:none;color:var(--ink)}
+.artrel__list a:hover{border-color:var(--accent)}
+.artrel__list b{display:block;color:var(--accent);font-size:16px;line-height:1.35;margin-bottom:6px}
+.artrel__list span{display:block;color:var(--ink-soft);font-size:14px;line-height:1.45}

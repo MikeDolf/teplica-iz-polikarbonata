@@ -1219,6 +1219,27 @@ def dedup_faq(faq):
     return out
 
 
+import art_links as ARTL  # noqa — 11 октября: блок «Статьи по теме» на страницах товаров
+
+
+def article_cards(page):
+    """3-4 статьи по товару страницы: заголовок и первая фраза описания."""
+    from articles import ARTICLES as _A
+    from blog import BLOG as _B
+    idx = {a["slug"]: (f'/dostavka-grunta/{a["slug"]}/', a) for a in _A}
+    idx.update({f'blog/{b["slug"]}': (f'/dostavka-grunta/blog/{b["slug"]}/', b) for b in _B})
+    slugs = ARTL.BY_PAGE.get(page["slug"])
+    if slugs is None:
+        pk = max((k for k in ARTL.BY_PRODUCT if page["slug"].startswith(k + "-")), key=len, default=None)
+        slugs = ARTL.BY_PRODUCT.get(pk, [])
+    out = []
+    for s in slugs:
+        url, a = idx[s]   # KeyError — статью переименовали или удалили: поправить art_links.py
+        first = re.split(r"(?<=[.!?])\s", a["description"])[0]
+        out.append({"url": url, "text": a["h1"], "desc": first})
+    return out
+
+
 def render(page):
     page = {**page, "faq": dedup_faq(page.get("faq", []))}
     city = CITIES[page["city"]]
@@ -1241,6 +1262,7 @@ def render(page):
         metrika_placeholder=True,
         robots=("noindex, follow" if page["slug"] in NOINDEX else "index, follow"),
         related=page.get("related", []),
+        art_cards=article_cards(page),
         product_gen=PRODUCT_GEN.get(page.get("product",""), "грунт"),
         price=PRICES.get(page.get("product","")),
         reviews=REVIEWS,
