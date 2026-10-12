@@ -142,7 +142,7 @@ def overrides():
     lf = must_sub(r'"Сайт доставки грунта"', '"Сайт доставки дров"', lf)
     lf = must_sub(r'\(form\.product\.value\|\|"грунт"\)', '(form.product.value||"дрова")', lf)
     lf = must_sub(r'value="\{\{ min_volume\.split\(\' \'\)\[0\] \}\}"', 'value="3"', lf)
-    units = {D.FUEL[k]["name"]: {"мешок": "мешков"}.get(D.FUEL[k]["unit"], D.FUEL[k]["unit"]) for k in D.FUEL_ORDER}
+    units = {D.FUEL[k]["name"]: {"мешок": "мешков", "упаковка": "упаковок"}.get(D.FUEL[k]["unit"], D.FUEL[k]["unit"]) for k in D.FUEL_ORDER}
     units.update({M3.EXTRA[k]["name"]: {"сетка": "сеток"}.get(M3.EXTRA[k]["unit"], M3.EXTRA[k]["unit"]) for k in M3.EXTRA_ORDER})
     lf = must_sub(r'<label class="field__label" for="lead-volume">Объём, м³</label>',
                   '<label class="field__label" for="lead-volume">Объём, <span id="lead-unit">м³</span></label>', lf)
@@ -249,7 +249,7 @@ PROD_LINKS = [{"url": f'/{D.PRODUCTS[k]["slug"]}/', "text": D.PRODUCTS[k]["name"
               {"url": "/drova-dlya-kotla-ekaterinburg/", "text": "Дрова для котла"},
               {"url": "/drova-dlya-pechi-ekaterinburg/", "text": "Дрова для печи"},
               {"url": "/drova-nedorogo-ekaterinburg/", "text": "Недорогие дрова"}] + \
-             [{"url": f'/{D.FUEL[k]["slug"]}/', "text": D.FUEL[k]["name"] + ", от " + env.filters["ru"](D.FUEL[k]["price"]) + " ₽/" + D.FUEL[k]["unit"]} for k in D.FUEL_ORDER] + \
+             [{"url": f'/{D.FUEL[k]["slug"]}/', "text": D.FUEL[k]["name"] + ", от " + env.filters["ru"](D.FUEL[k]["price"]) + " ₽/" + D.FUEL[k].get("per", D.FUEL[k]["unit"])} for k in D.FUEL_ORDER] + \
              [{"url": f'/{M3.EXTRA[k]["slug"]}/', "text": M3.EXTRA[k]["name"] + ", от " + env.filters["ru"](M3.EXTRA[k]["price"]) + " ₽/" + M3.EXTRA[k]["unit"]} for k in M3.EXTRA_ORDER] + \
              [{"url": "/gazel-drov-ekaterinburg/", "text": "Газель дров, 3 куба"}, {"url": "/kolka-drov-ekaterinburg/", "text": "Колка дров у вас во дворе"}, {"url": "/drova-lesovozom-ekaterinburg/", "text": "Дрова лесовозом"}]
 # уголь, брикеты, пеллеты и горбыль по городам: ссылки со страниц городов и общих страниц товара
@@ -324,7 +324,7 @@ def price_answer(prep="в Екатеринбурге", near=True):
 def fuel_answer():
     u, br, pe = D.FUEL["ugol"], D.FUEL["brikety"], D.FUEL["pellety"]
     return (f"Да. Каменный уголь — от {ru0(u['price'])} ₽ за мешок 25 кг или от {ru0(u['price_t'])} ₽ за тонну, "
-            f"топливные брикеты — от {ru0(br['price'])} ₽ за тонну, пеллеты — от {ru0(pe['price'])} ₽ за тонну. "
+            f"топливные брикеты — {ru0(br['price'])} ₽ за упаковку 12 шт., пеллеты — {ru0(pe['price'])} ₽ за мешок 30 кг. "
             f"Цены топлива без доставки; вместе с дровами привезём одним рейсом.")
 
 
@@ -432,7 +432,7 @@ def main():
             t["sections"] = ins_after(t["sections"], M4.PELLETY_OPT[0], M4.PELLETY_OPT[1]); t["faq"] = t["faq"] + M4.PELLETY_OPT[2]; t["h1"] = M4.PELLETY_H1
         if k == "brikety":   # евродрова — другое название древесных брикетов
             t["desc"] = t["desc"].replace("Топливные брикеты RUF", "Топливные брикеты (евродрова) RUF", 1); t["faq"] = t["faq"] + M3.BRIKETY_EVRO_FAQ
-        note = {"т": "Цена за тонну, без доставки.", "кг": "Цена за килограмм, без доставки.",
+        note = fu.get("note") or {"т": "Цена за тонну, без доставки.", "кг": "Цена за килограмм, без доставки.",
                 "мешок": f"Цена за мешок 25 кг, без доставки. Тонна навалом — от {ru0(fu.get('price_t') or 0)} ₽."}[fu["unit"]]
         note += " Доставку назовём по адресу, вместе с дровами привезём одним рейсом."
         money(f'/{fu["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], fu["price"], t["sections"] + T.COMMON[1:],
@@ -452,7 +452,7 @@ def main():
                   links_title="Ещё дрова", links2=[l for l in CITY_LINKS if l["url"] != city_l[0]["url"]], links2_title="Другие города")
         else:
             fu = D.FUEL[c["kind"]]; fmt = lambda x: x.format(p=ru(fu["price"]), pt=ru(fu.get("price_t") or 0))
-            note = {"т": "Цена за тонну, без доставки.", "мешок": f"Цена за мешок 25 кг, без доставки. Тонна навалом — от {ru0(fu.get('price_t') or 0)} ₽."}[fu["unit"]]
+            note = fu.get("note") or {"т": "Цена за тонну, без доставки.", "мешок": f"Цена за мешок 25 кг, без доставки. Тонна навалом — от {ru0(fu.get('price_t') or 0)} ₽."}[fu["unit"]]
             note += " Доставку назовём по адресу, вместе с дровами привезём одним рейсом."
             money(f'/{c["slug"]}/', c["h1"], fmt(c["title"]), fmt(c["desc"]), c["sub"], fu["price"],
                   [(f'{_CF_KIND[c["kind"]]} {prep}', [c["intro"]])] + c["sections"] + T.COMMON[1:], c["faq"], preselect=fu["name"],
