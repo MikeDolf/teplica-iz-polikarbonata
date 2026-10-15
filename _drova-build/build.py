@@ -52,6 +52,29 @@ import drova_cities6 as DC6   # 10 октября: посёлки рядом с 
 D.CITIES = D.CITIES + DC6.NEW
 D.CITY_SLUG.update({c[0]: f"drova-{c[0]}" for c in DC6.NEW})
 DC.C.update(DC6.C)
+# Срок в заголовке формы (15 октября), как у грунта: до 50 км от Екатеринбурга —
+# «привезём в день заказа», дальше — «на ближайшие дни», в дальних городах партнёров
+# (drova_cities5) — «согласуем срок доставки». Раньше все страницы дров, вплоть до
+# Серова и Тавды, обещали «в день заказа». Расстояния — из cities.py грунта, остальные
+# примерно по дороге от Екатеринбурга: важно только, больше ли 50 км.
+KM = {k: v["distance_km"] for k, v in EKB_CITIES.items()}
+KM.update({"asbest": 85, "novouralsk": 70, "nevyansk": 90, "bilimbay": 60, "kirovgrad": 95, "bisert": 95, "shalya": 130,
+           "nizhnie-sergi": 110, "verhniy-tagil": 100, "chernoistochinsk": 150, "rezh": 85, "suhoy-log": 120, "koltsovo": 15})
+PARTNER = {c[0] for c in DC5.NEW}
+
+
+def term_city(key):
+    if key in PARTNER:
+        return {"local_partner": True}
+    assert key in KM, f"нет расстояния до города {key}: добавьте в KM"
+    return {"distance_km": KM[key]}
+
+
+assert all(c[0] in PARTNER or c[0] in KM for c in D.CITIES), [c[0] for c in D.CITIES if c[0] not in PARTNER and c[0] not in KM]
+import drova_reviews as RV   # 15 октября: отзывы на страницах дров
+from reviews import REVIEWS as GRUNT_REVIEWS
+REV = RV.REVIEWS or GRUNT_REVIEWS
+REV_TITLE, REV_NOTE = (RV.TITLE, "") if RV.REVIEWS else (RV.TITLE_GRUNT, RV.NOTE_GRUNT)
 import drova_more2 as M2
 # Список городов в «Доставке» и в вопросе «Куда вы возите дрова?» — из D.CITIES,
 # чтобы новый город сам попадал во все страницы.
@@ -148,6 +171,12 @@ def overrides():
                   '<label class="field__label" for="lead-volume">Объём, <span id="lead-unit">м³</span></label>', lf)
     lf = must_sub(r"var volumeText = form\.volume\.value \? form\.volume\.value \+ ' м³' : 'объём не указан';",
                   "var volumeText = form.volume.value ? form.volume.value + ' ' + leadUnit() : 'объём не указан';", lf)
+    # 15 октября: срок в заголовке формы — по городу страницы (lead_city, см. term_city).
+    # Не через city: с ним шапка, подвал и нижняя панель переключились бы на партнёра.
+    lf = must_sub(r"\{%- set c = city\|default\(\{\}\) %\}", "{%- set c = lead_city|default(city|default({})) %}", lf)
+    # Свой заголовок формы у услуг: колка и лесовоз не «привезём в день заказа».
+    lf = must_sub(r"\{%- if c\.local_partner %\}",
+                  '{%- if lead_title %}\n      <h2 class="lead__title" id="lead-title">{{ lead_title }}</h2>\n      {%- elif c.local_partner %}', lf)
     lf = must_sub(r"var ENDPOINT = ",
                   "var UNITS = " + json.dumps(units, ensure_ascii=False) + ";\n  function leadUnit(){ var f=document.getElementById('lead-product'); return (f && UNITS[f.value]) || 'м³'; }\n"
                   "  (function(){ var f=document.getElementById('lead-product'), u=document.getElementById('lead-unit'), v=document.getElementById('lead-volume');\n"
@@ -158,6 +187,20 @@ def overrides():
     mf = ekb_src("partials/max_fallback.html")
     mf = must_sub(r"'Сайт доставки грунта'", "'Сайт доставки дров'", mf)
     o["partials/max_fallback.html"] = mf
+    # Короткая заявка после цен (15 октября): полная форма на телефоне — через 17 экранов.
+    # Форма та же, что у грунта, свой только текст.
+    cm = ekb_src("partials/cta_mid.html")
+    cm = must_sub(r'<h2 class="ctamid__title" id="ctamid-title">.*?</h2>',
+                  '<h2 class="ctamid__title" id="ctamid-title">Напишем точную цену с доставкой до вашего адреса</h2>', cm)
+    cm = must_sub(r'\{%- if city\.local_partner %\}.*?\{%- endif %\}',
+                  '<p class="ctamid__sub">{% if calc %}Калькулятор выше считает по нижней цене. {% else %}В таблице — цены «от». {% endif %}'
+                  'Оставьте номер — напишем точную сумму под ваш объём и адрес. Работаем {{ site.hours|lower }}, {{ site.callback_promise }}.</p>', cm, re.S)
+    cm = must_sub(r'"Сайт доставки грунта"', '"Сайт доставки дров"', cm)
+    cm = must_sub(r'subject: "Быстрая заявка: \{\{ preselect_product \}\}"', 'subject: "Быстрая заявка: " + {{ (preselect_product or "дрова")|tojson }}', cm)
+    cm = must_sub(r'product: "\{\{ preselect_product \}\}"', 'product: {{ (preselect_product or "дрова")|tojson }}', cm)
+    cm = must_sub(r'district: "\{\{ city\.name \}\}"', 'district: {{ (city_prep or "")|tojson }}', cm)
+    cm = must_sub(r'<b>Заявка принята\.</b> Ответим на указанный номер\.', '<b>Заявка принята.</b> Напишем вам, {{ site.callback_promise }}.', cm)
+    o["partials/cta_mid.html"] = cm
     fc = ekb_src("partials/floatcta.html")
     fc = must_sub(r"Калькулятор посчитает объём и рейс до вашего адреса — можно прикинуть заранее",
                   "Калькулятор посчитает стоимость дров вместе с доставкой — можно прикинуть заранее", fc)
@@ -347,8 +390,13 @@ def ctx(**kw):
 
 def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", city_prep="", city_text="",
           links=None, links_title="Какие дрова привезём", links2=None, links2_title="", is_hub=False, unit="м³", price_note=None, calc=True, min_text=None, ex="berezovye", deliv_po=None, xtables=None,
-          hero_min=None, common_faq=True, offer=None):
+          hero_min=None, common_faq=True, offer=None, lead_city=None, lead_title=None):
     # price=None — цена по заявке (услуги): в герое «по заявке», в разметке без Product/Offer
+    # Первый экран (15 октября): крупно 3 куба вида ex. Если «от … ₽/м³» страницы — цена
+    # другого вида (хвойные на сводных страницах), он назван отдельно строкой ниже.
+    cheap = None
+    if price and unit == "м³" and not price_note and price != D.PRODUCTS[ex]["price"]:
+        cheap = next((D.PRODUCTS[k] for k in D.ORDER if D.PRODUCTS[k]["price"] == price), {"short": "Самые недорогие"})
     if calc and "₽/м³" in title and "доставк" not in title.lower() and len(title) + 12 <= 70:
         title = title.replace("₽/м³", "₽/м³ с доставкой")
     # 10 октября: вопросы покупателей из Вордстата (drova_faq_add.py) — до общих.
@@ -365,6 +413,7 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
         **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), **({"hero_min": hero_min} if hero_min else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
         links2=links2, links2_title=links2_title, is_hub=is_hub, xtables=xtables or [],
+        cheap=cheap, lead_city=lead_city or {}, lead_title=lead_title or "", reviews=REV, reviews_title=REV_TITLE, reviews_note=REV_NOTE,
         schema_json=schema(h1, path, faq, (offer or {}).get("low", price), crumbs=not is_hub,
                            **({k: v for k, v in offer.items() if k != "low"} if offer else (offer_range(price, unit, ex) if price else {})))))
     write(path, html)
@@ -436,7 +485,7 @@ def main():
                 "мешок": f"Цена за мешок 25 кг, без доставки. Тонна навалом — от {ru0(fu.get('price_t') or 0)} ₽."}[fu["unit"]]
         note += " Доставку назовём по адресу, вместе с дровами привезём одним рейсом."
         money(f'/{fu["slug"]}/', t["h1"], f(t["title"]), f(t["desc"]), t["sub"], fu["price"], t["sections"] + T.COMMON[1:],
-              [(q, f(a)) for q, a in t["faq"]], preselect=fu["name"], unit=fu["unit"], price_note=note, calc=False, min_text="и мешок, и полную машину",
+              [(q, f(a)) for q, a in t["faq"]], preselect=fu["name"], unit=fu.get("per", fu["unit"]), price_note=note, calc=False, min_text="и мешок, и полную машину",
               links=[l for l in PROD_LINKS if l["url"] != f'/{fu["slug"]}/'], links_title="Дрова и другое топливо",
               links2=CF_BY_KIND.get(k, []) + CITY_LINKS, links2_title="Возим и в другие города")
     # Уголь, брикеты, пеллеты и горбыль по городам (9 октября, M3.CITY_FUEL)
@@ -449,16 +498,16 @@ def main():
             money(f'/{c["slug"]}/', c["h1"], fmt(c["title"]), fmt(c["desc"]), c["sub"], g["price"],
                   [(f"Горбыль {prep}", [c["intro"]])] + c["sections"] + T.COMMON, c["faq"], preselect=g["name"], ex="gorbyl",
                   city_prep=prep, deliv_po=dat, links=city_l + [{"url": "/gorbyl-ekaterinburg/", "text": "Горбыль в Екатеринбурге"}] + PROD_LINKS,
-                  links_title="Ещё дрова", links2=[l for l in CITY_LINKS if l["url"] != city_l[0]["url"]], links2_title="Другие города")
+                  links_title="Ещё дрова", links2=[l for l in CITY_LINKS if l["url"] != city_l[0]["url"]], links2_title="Другие города", lead_city=term_city(c["city"]))
         else:
             fu = D.FUEL[c["kind"]]; fmt = lambda x: x.format(p=ru(fu["price"]), pt=ru(fu.get("price_t") or 0))
             note = fu.get("note") or {"т": "Цена за тонну, без доставки.", "мешок": f"Цена за мешок 25 кг, без доставки. Тонна навалом — от {ru0(fu.get('price_t') or 0)} ₽."}[fu["unit"]]
             note += " Доставку назовём по адресу, вместе с дровами привезём одним рейсом."
             money(f'/{c["slug"]}/', c["h1"], fmt(c["title"]), fmt(c["desc"]), c["sub"], fu["price"],
                   [(f'{_CF_KIND[c["kind"]]} {prep}', [c["intro"]])] + c["sections"] + T.COMMON[1:], c["faq"], preselect=fu["name"],
-                  unit=fu["unit"], price_note=note, calc=False, min_text="и мешок, и полную машину", city_prep=prep,
+                  unit=fu.get("per", fu["unit"]), price_note=note, calc=False, min_text="и мешок, и полную машину", city_prep=prep,
                   links=city_l + [{"url": f'/{fu["slug"]}/', "text": f'{fu["name"]} в Екатеринбурге'}] + PROD_LINKS, links_title="Дрова и другое топливо",
-                  links2=[l for l in CITY_LINKS if l["url"] != city_l[0]["url"]], links2_title="Другие города")
+                  links2=[l for l in CITY_LINKS if l["url"] != city_l[0]["url"]], links2_title="Другие города", lead_city=term_city(c["city"]))
     # Щепа для копчения и дрова в сетках
     for k in M3.EXTRA_ORDER:
         ex_ = M3.EXTRA[k]; t = M3.EXTRA_PAGES[k]; fmt = lambda x: x.format(p=ru(ex_["price"]))
@@ -473,6 +522,7 @@ def main():
         t = M4.SERVICES[k]; path = f'/{t["slug"]}/'
         kl = [{"url": "/drova-churkami-ekaterinburg/", "text": "Берёзовые дрова чурками"}, {"url": "/drova-kolotye-ekaterinburg/", "text": "Колотые дрова"}]
         money(path, t["h1"], t["title"], t["desc"], t["sub"], None, t["sections"], t["faq"], price_note=t["price_note"], calc=False,
+              lead_title="Рассчитаем стоимость и согласуем удобный день" if "kolka" in path else "Рассчитаем стоимость и согласуем срок доставки",
               hero_min=t["hero_min"], common_faq=False, links=kl + [l for l in PROD_LINKS if l["url"] != path and l["url"] not in {x["url"] for x in kl}],
               links_title="Дрова и услуги", links2=[{"url": f"{D.HUB}blog/skolko-stoit-raskolot-drova/", "text": "Сколько стоит расколоть дрова"},
               {"url": f"{D.HUB}blog/kak-pravilno-kolot-drova/", "text": "Как правильно колоть дрова"}, {"url": f"{D.HUB}blog/kak-slozhit-polennitsu/", "text": "Как сложить поленницу"},
@@ -501,7 +551,7 @@ def main():
                ("Есть ли сухие берёзовые дрова?", f"Да, 3 куба сухих с доставкой — от {ru(D.PRODUCTS['suhie']['t3'])} ₽.")],
               preselect=D.PRODUCTS["berezovye"]["name"], city_prep=prep, city_text=text, deliv_po=dat,
               links=[{"url": f"/{D.CITY_SLUG[key]}/", "text": f"Все дрова {prep}"}] + CF_BY_CITY.get(key, []) + PROD_LINKS, links_title="Ещё дрова",
-              links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"], links2_title="Другие города")
+              links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"], links2_title="Другие города", lead_city=term_city(key))
     # Дрова для бани
     bk_ = min(("berezovye", "osina", "olha"), key=lambda k: D.PRODUCTS[k]["price"]); bp = D.PRODUCTS[bk_]["price"]
     money("/drova-dlya-bani-ekaterinburg/", "Дрова для бани с доставкой в Екатеринбурге",
@@ -570,7 +620,7 @@ def main():
               city_prep=prep, city_text=text, deliv_po=dat,
               links=([{"url": f"/drova-berezovye-{key}/", "text": f"Берёзовые колотые {prep}"}] if key in T.BEREZA_CITY else []) + CF_BY_CITY.get(key, []) + PROD_LINKS,
               links2=[l for l in CITY_LINKS if l["url"] != f"/{D.CITY_SLUG[key]}/"],
-              links2_title="Другие города", **{})
+              links2_title="Другие города", lead_city=term_city(key))
     # Статьи
     for i, s in enumerate(D.ARTICLES):
         a = AR.A[s]; path = f"{D.HUB}{s}/"

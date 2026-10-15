@@ -32,7 +32,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=75676f1a"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=47529fc7"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -1083,7 +1083,7 @@
         <span>Согласен на обработку контактных данных. <a href="/dostavka-grunta/politika/" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
       </label>
       <p class="ctamid__alt">Проще в мессенджере? <a href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener">MAX</a></p>
-      <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p>
+      <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p><p class="ctamid__fail" id="ctamid-fail" hidden role="alert"><b>Заявка не отправилась</b> — похоже, подвела связь. Нажмите «Узнать цену» ещё раз или <a href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener" data-nopanel>напишите в MAX</a>. Почта: <a href="mailto:mezdudelom73@gmail.com">mezdudelom73@gmail.com</a></p>
     </form>
   </div>
 </section>
@@ -1094,6 +1094,7 @@
   var err = document.getElementById('ctamid-error');
   var btn = form.querySelector('.ctamid__submit');
   var done = document.getElementById('ctamid-done');
+  var fail = document.getElementById('ctamid-fail');
   var consent = document.getElementById('ctamid-consent');
   var consentErr = document.getElementById('ctamid-consent-error');
   function digits(s){ return (s.match(/\d/g)||[]).length; }
@@ -1139,15 +1140,20 @@
       note: "Короткая форма в середине страницы",
       page: location.pathname, ref: document.referrer||'', ts: new Date().toISOString()
     };
-    btn.disabled = true;
-    fetch("https://api.web3forms.com/submit", { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
-    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    btn.disabled = true; fail.hidden = true;
+    var ctl = window.AbortController ? new AbortController() : null;
+    var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : 0;
+    fetch("https://api.web3forms.com/submit", { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data), signal: ctl ? ctl.signal : undefined })
+    .then(function(r){ clearTimeout(tm); if(!r.ok) throw new Error('bad status'); })
     .then(function(){
       form.querySelectorAll('.ctamid__row, .ctamid__label, .ctamid__consent').forEach(function(el){ el.style.display='none'; });
       done.hidden = false;
       if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead'); }
     })
-    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на mezdudelom73@gmail.com'); });
+    .catch(function(){
+      clearTimeout(tm); btn.disabled = false; fail.hidden = false;
+      if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead_fail'); }
+    });
   });
 })();
 </script><section class="guar band band--dark" aria-labelledby="guar-title">
@@ -1301,7 +1307,7 @@
       </div><div class="field field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
-        <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому перезвонить</span>
+        <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому вам ответить</span>
       </div><input type="hidden" id="lead-note" name="note" value="">
       <div class="field field--full consent">
         <label class="consent__row">
@@ -1314,7 +1320,11 @@
         <span class="lead__submit-label">Оставить заявку</span>
         <svg class="lead__spinner" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="42 42"/></svg>
       </button>
-      <p class="lead__reassure">Заявка ни к чему не обязывает. Сначала называем цену, потом решаете.</p>
+      <p class="lead__reassure">Заявка ни к чему не обязывает. Сначала называем цену, потом решаете.</p><div class="lead__fail" id="lead-fail" hidden role="alert">
+        <p><b>Заявка не отправилась</b> — похоже, подвела связь. Нажмите кнопку ещё раз или напишите нам в MAX, ответим за 15 минут.</p>
+        <a class="lead__fail-max" href="https://max.ru/u/f9LHodD0cOIgiq2N2buCj7oU32e1sbUDdW834GzM718dViUBpco7KXS8n10" target="_blank" rel="nofollow noopener" data-nopanel>Написать в MAX</a>
+        <p class="lead__fail-mail">Почта: <a href="mailto:mezdudelom73@gmail.com">mezdudelom73@gmail.com</a></p>
+      </div>
       <div class="lead__done" id="lead-done" hidden role="status">
         <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/></svg>
         <p><b>Заявка принята.</b> Свяжемся по указанному телефону. Если удобнее письмом, напишите на mezdudelom73@gmail.com.</p>
@@ -1333,6 +1343,7 @@
   var consentErr = document.getElementById('lead-consent-error');
   var btn = form.querySelector('.lead__submit');
   var done = document.getElementById('lead-done');
+  var fail = document.getElementById('lead-fail');
   function digits(s){ return (s.match(/\d/g)||[]).length; }
   // Маска +7 999 111-22-33: плейсхолдер обещал формат, но ввод не форматировался.
   function mask(el){
@@ -1379,15 +1390,23 @@
       phone:phone.value.trim(), note:form.note.value.trim(),
       page:location.pathname, ref:document.referrer||'', ts:new Date().toISOString()
     };
-    btn.disabled = true;
-    fetch(ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
-    .then(function(r){ if(!r.ok) throw new Error('bad status'); return r; })
+    btn.disabled = true; fail.hidden = true;
+    // При плохой связи запрос может висеть минутами, а кнопка — крутиться:
+    // через 20 секунд обрываем и показываем запасные пути.
+    var ctl = window.AbortController ? new AbortController() : null;
+    var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : 0;
+    fetch(ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data), signal: ctl ? ctl.signal : undefined })
+    .then(function(r){ clearTimeout(tm); if(!r.ok) throw new Error('bad status'); return r; })
     .then(function(){
       form.querySelectorAll('.field, .lead__submit, .lead__reassure').forEach(function(el){ el.style.display='none'; });
       done.hidden = false; done.scrollIntoView({behavior:'smooth', block:'center'});
       if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead'); }
     })
-    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на mezdudelom73@gmail.com'); });
+    .catch(function(){
+      clearTimeout(tm); btn.disabled = false; fail.hidden = false;
+      fail.scrollIntoView({behavior:'smooth', block:'nearest'});
+      if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead_fail'); }
+    });
   });
 })();
 </script>
@@ -1787,6 +1806,7 @@
       <input type="checkbox" id="nomax-consent" required>
       <span>Согласен на обработку контактных данных. <a href="/dostavka-grunta/politika/" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
     </label>
+    <p class="nomax__fail" id="nomax-fail" hidden role="alert"><b>Не отправилось</b> — похоже, подвела связь. Попробуйте ещё раз или напишите на почту <a href="mailto:mezdudelom73@gmail.com">mezdudelom73@gmail.com</a>.</p>
   </form>
   <p class="nomax__done" id="nomax-done" hidden role="status"><b>Номер получили.</b> Напишем вам, ответим за 15 минут.</p>
 </div>
@@ -1797,7 +1817,7 @@
   var form = document.getElementById('nomax-form'), phone = document.getElementById('nomax-phone');
   var err = document.getElementById('nomax-error'), consent = document.getElementById('nomax-consent');
   var consentErr = document.getElementById('nomax-consent-error'), done = document.getElementById('nomax-done');
-  var btn = form.querySelector('.nomax__submit');
+  var btn = form.querySelector('.nomax__submit'), fail = document.getElementById('nomax-fail');
   function goal(id){ if(window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', id); } }
   // sessionStorage бывает недоступен (запрет cookie, встроенные браузеры
   // соцсетей) и тогда бросает исключение — просто показываем как обычно.
@@ -1818,6 +1838,9 @@
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !box.hidden) close(); });
   document.addEventListener('click', function(e){
     var a = e.target.closest && e.target.closest('a,button'); if(!a) return;
+    // MAX из блока «Заявка не отправилась»: форма только что не ушла, и
+    // панель с той же отправкой номера сверху была бы лишней.
+    if(a.hasAttribute('data-nopanel')) return;
     if(a.hasAttribute('data-nomax')){ e.preventDefault(); open('link', true); return; }
     if(a.tagName === 'A' && a.href === MAX && !seen()){
       // Небольшая задержка: мессенджер успевает открыться, а панель
@@ -1846,8 +1869,10 @@
     if(form.company.value) return;
     if((phone.value.match(/\d/g) || []).length < 11){ err.hidden = false; phone.focus(); return; }
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
-    btn.disabled = true;
-    fetch("https://api.web3forms.com/submit", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+    btn.disabled = true; fail.hidden = true;
+    var ctl = window.AbortController ? new AbortController() : null;
+    var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : 0;
+    fetch("https://api.web3forms.com/submit", { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl ? ctl.signal : undefined, body: JSON.stringify({
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
       subject: 'Нет MAX — написать клиенту' + ("\u041d\u0430\u0432\u043e\u0437 \u043a\u043e\u0440\u043e\u0432\u0438\u0439" ? ': ' + "\u041d\u0430\u0432\u043e\u0437 \u043a\u043e\u0440\u043e\u0432\u0438\u0439" : ''),
       from_name: 'Сайт доставки грунта',
@@ -1857,12 +1882,12 @@
                            : 'Нажал «Нет MAX? Оставьте номер»: написать ему самим, не звонить',
       page: location.pathname, ref: document.referrer || '', ts: new Date().toISOString()
     }) })
-    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    .then(function(r){ clearTimeout(tm); if(!r.ok) throw new Error('bad status'); })
     .then(function(){
       form.hidden = true; done.hidden = false; seen(true);
       goal('max_fallback_lead'); goal('lead');
     })
-    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на mezdudelom73@gmail.com'); });
+    .catch(function(){ clearTimeout(tm); btn.disabled = false; fail.hidden = false; goal('lead_fail'); });
   });
 })();
 </script>

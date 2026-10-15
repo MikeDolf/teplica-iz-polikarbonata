@@ -26,7 +26,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=75676f1a"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=47529fc7"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -241,6 +241,7 @@
       <input type="checkbox" id="nomax-consent" required>
       <span>Согласен на обработку контактных данных. <a href="/dostavka-grunta/politika/" target="_blank" rel="noopener">Как мы их обрабатываем</a></span>
     </label>
+    <p class="nomax__fail" id="nomax-fail" hidden role="alert"><b>Не отправилось</b> — похоже, подвела связь. Попробуйте ещё раз или напишите на почту <a href="mailto:mezdudelom73@gmail.com">mezdudelom73@gmail.com</a>.</p>
   </form>
   <p class="nomax__done" id="nomax-done" hidden role="status"><b>Номер получили.</b> Напишем вам, ответим за 15 минут.</p>
 </div>
@@ -251,7 +252,7 @@
   var form = document.getElementById('nomax-form'), phone = document.getElementById('nomax-phone');
   var err = document.getElementById('nomax-error'), consent = document.getElementById('nomax-consent');
   var consentErr = document.getElementById('nomax-consent-error'), done = document.getElementById('nomax-done');
-  var btn = form.querySelector('.nomax__submit');
+  var btn = form.querySelector('.nomax__submit'), fail = document.getElementById('nomax-fail');
   function goal(id){ if(window.ym && window.__ymid){ ym(window.__ymid, 'reachGoal', id); } }
   // sessionStorage бывает недоступен (запрет cookie, встроенные браузеры
   // соцсетей) и тогда бросает исключение — просто показываем как обычно.
@@ -272,6 +273,9 @@
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape' && !box.hidden) close(); });
   document.addEventListener('click', function(e){
     var a = e.target.closest && e.target.closest('a,button'); if(!a) return;
+    // MAX из блока «Заявка не отправилась»: форма только что не ушла, и
+    // панель с той же отправкой номера сверху была бы лишней.
+    if(a.hasAttribute('data-nopanel')) return;
     if(a.hasAttribute('data-nomax')){ e.preventDefault(); open('link', true); return; }
     if(a.tagName === 'A' && a.href === MAX && !seen()){
       // Небольшая задержка: мессенджер успевает открыться, а панель
@@ -300,8 +304,10 @@
     if(form.company.value) return;
     if((phone.value.match(/\d/g) || []).length < 11){ err.hidden = false; phone.focus(); return; }
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
-    btn.disabled = true;
-    fetch("https://api.web3forms.com/submit", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({
+    btn.disabled = true; fail.hidden = true;
+    var ctl = window.AbortController ? new AbortController() : null;
+    var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : 0;
+    fetch("https://api.web3forms.com/submit", { method: 'POST', headers: { 'Content-Type': 'application/json' }, signal: ctl ? ctl.signal : undefined, body: JSON.stringify({
       access_key: "4c17cc27-0b22-40b7-bea5-47ff348ef6c8",
       subject: 'Нет MAX — написать клиенту' + ("" ? ': ' + "" : ''),
       from_name: 'Сайт доставки дров',
@@ -311,12 +317,12 @@
                            : 'Нажал «Нет MAX? Оставьте номер»: написать ему самим, не звонить',
       page: location.pathname, ref: document.referrer || '', ts: new Date().toISOString()
     }) })
-    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    .then(function(r){ clearTimeout(tm); if(!r.ok) throw new Error('bad status'); })
     .then(function(){
       form.hidden = true; done.hidden = false; seen(true);
       goal('max_fallback_lead'); goal('lead');
     })
-    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на mezdudelom73@gmail.com'); });
+    .catch(function(){ clearTimeout(tm); btn.disabled = false; fail.hidden = false; goal('lead_fail'); });
   });
 })();
 </script>

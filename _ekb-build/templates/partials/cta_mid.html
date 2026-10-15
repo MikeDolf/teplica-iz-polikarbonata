@@ -33,6 +33,8 @@
       <p class="ctamid__alt">Проще в мессенджере? <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">MAX</a></p>
       {%- endif %}
       <p class="ctamid__done" id="ctamid-done" hidden role="status"><b>Заявка принята.</b> Ответим на указанный номер.</p>
+      {#- Не ушла — MAX и почта прямо тут, а не окно браузера (см. lead_form.html). -#}
+      <p class="ctamid__fail" id="ctamid-fail" hidden role="alert"><b>Заявка не отправилась</b> — похоже, подвела связь. Нажмите «Узнать цену» ещё раз{% if site.max_url %} или <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener" data-nopanel>напишите в MAX</a>{% endif %}. Почта: <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
     </form>
   </div>
 </section>
@@ -43,6 +45,7 @@
   var err = document.getElementById('ctamid-error');
   var btn = form.querySelector('.ctamid__submit');
   var done = document.getElementById('ctamid-done');
+  var fail = document.getElementById('ctamid-fail');
   var consent = document.getElementById('ctamid-consent');
   var consentErr = document.getElementById('ctamid-consent-error');
   function digits(s){ return (s.match(/\d/g)||[]).length; }
@@ -88,15 +91,20 @@
       note: "Короткая форма в середине страницы",
       page: location.pathname, ref: document.referrer||'', ts: new Date().toISOString()
     };
-    btn.disabled = true;
-    fetch("{{ site.form_endpoint }}", { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
-    .then(function(r){ if(!r.ok) throw new Error('bad status'); })
+    btn.disabled = true; fail.hidden = true;
+    var ctl = window.AbortController ? new AbortController() : null;
+    var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : 0;
+    fetch("{{ site.form_endpoint }}", { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data), signal: ctl ? ctl.signal : undefined })
+    .then(function(r){ clearTimeout(tm); if(!r.ok) throw new Error('bad status'); })
     .then(function(){
       form.querySelectorAll('.ctamid__row, .ctamid__label, .ctamid__consent').forEach(function(el){ el.style.display='none'; });
       done.hidden = false;
       if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead'); }
     })
-    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на {{ site.contact_email }}'); });
+    .catch(function(){
+      clearTimeout(tm); btn.disabled = false; fail.hidden = false;
+      if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead_fail'); }
+    });
   });
 })();
 </script>

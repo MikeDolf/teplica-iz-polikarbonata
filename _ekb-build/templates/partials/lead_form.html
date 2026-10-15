@@ -80,7 +80,7 @@
       <div class="field field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
-        <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому перезвонить</span>
+        <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому вам ответить</span>
       </div>
       {#- Поле комментария убрано из вида: спрашивать «любые детали» у
           человека, который просто хочет узнать цену, значит удлинять форму
@@ -100,6 +100,17 @@
         <svg class="lead__spinner" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="42 42"/></svg>
       </button>
       <p class="lead__reassure">Заявка ни к чему не обязывает. Сначала называем цену, потом решаете.</p>
+      {#- Если заявка не ушла (сервис форм недоступен, плохая связь), раньше
+          всплывало окно браузера с адресом почты: его закрывают не читая, и
+          человек терялся. Теперь под кнопкой — MAX и почта, а в Метрику
+          уходит цель lead_fail, чтобы такие потери было видно (15 октября). -#}
+      <div class="lead__fail" id="lead-fail" hidden role="alert">
+        <p><b>Заявка не отправилась</b> — похоже, подвела связь. Нажмите кнопку ещё раз{% if site.max_url %} или напишите нам в MAX, {{ site.callback_promise }}{% endif %}.</p>
+        {%- if site.max_url %}
+        <a class="lead__fail-max" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener" data-nopanel>Написать в MAX</a>
+        {%- endif %}
+        <p class="lead__fail-mail">Почта: <a href="mailto:{{ site.contact_email }}">{{ site.contact_email }}</a></p>
+      </div>
       <div class="lead__done" id="lead-done" hidden role="status">
         <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" d="M4 12.5l5 5L20 6.5"/></svg>
         <p><b>Заявка принята.</b> Свяжемся по указанному телефону. Если удобнее письмом, напишите на {{ site.contact_email }}.</p>
@@ -118,6 +129,7 @@
   var consentErr = document.getElementById('lead-consent-error');
   var btn = form.querySelector('.lead__submit');
   var done = document.getElementById('lead-done');
+  var fail = document.getElementById('lead-fail');
   function digits(s){ return (s.match(/\d/g)||[]).length; }
   // Маска +7 999 111-22-33: плейсхолдер обещал формат, но ввод не форматировался.
   function mask(el){
@@ -164,15 +176,23 @@
       phone:phone.value.trim(), note:form.note.value.trim(),
       page:location.pathname, ref:document.referrer||'', ts:new Date().toISOString()
     };
-    btn.disabled = true;
-    fetch(ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) })
-    .then(function(r){ if(!r.ok) throw new Error('bad status'); return r; })
+    btn.disabled = true; fail.hidden = true;
+    // При плохой связи запрос может висеть минутами, а кнопка — крутиться:
+    // через 20 секунд обрываем и показываем запасные пути.
+    var ctl = window.AbortController ? new AbortController() : null;
+    var tm = ctl ? setTimeout(function(){ ctl.abort(); }, 20000) : 0;
+    fetch(ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data), signal: ctl ? ctl.signal : undefined })
+    .then(function(r){ clearTimeout(tm); if(!r.ok) throw new Error('bad status'); return r; })
     .then(function(){
       form.querySelectorAll('.field, .lead__submit, .lead__reassure').forEach(function(el){ el.style.display='none'; });
       done.hidden = false; done.scrollIntoView({behavior:'smooth', block:'center'});
       if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead'); }
     })
-    .catch(function(){ btn.disabled = false; alert('Не получилось отправить. Напишите нам, пожалуйста, на {{ site.contact_email }}'); });
+    .catch(function(){
+      clearTimeout(tm); btn.disabled = false; fail.hidden = false;
+      fail.scrollIntoView({behavior:'smooth', block:'nearest'});
+      if(window.ym && window.__ymid){ ym(window.__ymid,'reachGoal','lead_fail'); }
+    });
   });
 })();
 </script>

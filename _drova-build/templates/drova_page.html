@@ -39,11 +39,24 @@
         <p class="hero__min"><b>Минимального объёма нет</b> — привезём {{ min_text|default("и один куб") }}. Доставка до 50 км от {{ zone_text }}.</p>
         {%- endif %}
         <div class="hero__price">
+          {%- if price and not price_note and unit|default("м³") == "м³" %}
+          {#- 15 октября: крупно — типовой заказ, 3 куба вида страницы с доставкой.
+              Раньше крупно стояло «от 2 700 ₽/м³» — цена хвойных при машине
+              10 кубов, а человек приходил за 3 кубами берёзы и слышал 13 100 ₽
+              (владелец: «люди видят одну цену, а я называю другую»). Цена за
+              куб при заказе машины никуда не делась — строкой ниже. -#}
+          <div class="hero__price__row">
+            <span class="hero__price__label">3 куба {{ ex.gen }} с доставкой</span>
+            <b class="hero__price__num">от {{ ex.t3|ru }} ₽</b>
+          </div>
+          <span class="hero__price__note">По {{ deliv_po|default("Екатеринбургу") }}: 1 куб&nbsp;— от {{ ex.t1|ru }} ₽, машина {{ ref_vol }} м³&nbsp;— от {{ ex.t10|ru }} ₽{% if cheap %}. {{ cheap.short }}&nbsp;— от {{ price|ru }} ₽ за куб при заказе машины.{% else %}, это от {{ ex.price|ru }} ₽ за куб.{% endif %}</span>
+          {%- else %}
           <div class="hero__price__row">
             <span class="hero__price__label">{% if not price or price_note %}Цена{% else %}С доставкой{% endif %}</span>
             <b class="hero__price__num">{% if price %}от {{ price|ru }} ₽/{{ unit|default("м³") }}{% else %}по заявке{% endif %}</b>
           </div>
           <span class="hero__price__note">{% if price_note %}{{ price_note }}{% else %}За насыпной куб при заказе машины {{ ref_vol }} м³, с доставкой по {{ deliv_po|default("Екатеринбургу") }}. {{ ex.name }}: 1 куб — от {{ ex.t1|ru }} ₽, 3 куба — от {{ ex.t3|ru }} ₽.{% endif %}</span>
+          {%- endif %}
         </div>
         <div class="hero__cta">
           {%- if calc %}
@@ -135,7 +148,7 @@
     function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
     var per=document.getElementById('dc-per'), D={{ delivery }}, T={{ trip_m3 }};
     function upd(){ var n=parseFloat(v.value)||0;
-      if(n>0){ var t=n*parseFloat(k.value)+Math.ceil(n/T)*D; s.textContent='от '+fmt(t)+' ₽'; per.textContent='(≈ '+fmt(t/n)+' ₽/⁠м³)'; }
+      if(n>0){ var t=n*parseFloat(k.value)+Math.ceil(n/T)*D; s.textContent='от '+fmt(t)+' ₽'; per.textContent='(от '+fmt(Math.round(t/n/10)*10)+' ₽/⁠м³)'; }
       else { s.textContent='—'; per.textContent=''; } }
     k.addEventListener('change',upd); v.addEventListener('input',upd); upd();
     document.getElementById('dc-go').addEventListener('click',function(){
@@ -149,6 +162,14 @@
   </script>
 {%- endif %}
 
+  {#- 15 октября: отзывы и короткая заявка сразу после цен и калькулятора.
+      Полная форма на телефоне — через 17 экранов прокрутки, до неё доходят
+      немногие. Отзывы — см. drova_reviews.py. -#}
+  {%- if reviews %}
+  {% with band_tone = "plain" if calc else "tint" %}{% include "partials/reviews.html" %}{% endwith %}
+  {%- endif %}
+  {% include "partials/cta_mid.html" %}
+
   {%- for sec in sections %}
   <section class="about band band--{{ loop.cycle('plain','tint') }}">
     <div class="wrap">
@@ -158,20 +179,42 @@
   </section>
   {%- endfor %}
 
+  {#- 15 октября: на телефоне эти списки занимали 5–6 экранов перед вопросами
+      и формой заявки. Там видны первые 6 ссылок каждого списка, остальные —
+      по кнопке. Ссылки остаются в HTML для поисковиков; без JS и на
+      компьютере списки открыты целиком. -#}
   <section class="band band--plain" aria-labelledby="links-title">
     <div class="wrap">
       <h2 class="sec-h" id="links-title">{{ links_title }}</h2>
-      <ul class="dlinks">
+      <ul class="dlinks" data-fold>
       {%- for l in links %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}
       </ul>
+      {%- if links|length > 8 %}
+      <button type="button" class="dlinks__more" hidden>Показать весь список ({{ links|length }})</button>
+      {%- endif %}
       {%- if links2 %}
       <h3>{{ links2_title }}</h3>
-      <ul class="dlinks">
+      <ul class="dlinks" data-fold>
       {%- for l in links2 %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}
       </ul>
+      {%- if links2|length > 8 %}
+      <button type="button" class="dlinks__more" hidden>Показать весь список ({{ links2|length }})</button>
+      {%- endif %}
       {%- endif %}
     </div>
   </section>
+  <script>
+  (function(){
+    if(!window.matchMedia || !matchMedia('(max-width: 700px)').matches) return;
+    var uls = document.querySelectorAll('.dlinks[data-fold]');
+    for(var i = 0; i < uls.length; i++){ (function(ul){
+      var b = ul.nextElementSibling;
+      if(!b || !b.classList.contains('dlinks__more')) return;
+      ul.classList.add('dlinks--folded'); b.hidden = false;
+      b.addEventListener('click', function(){ ul.classList.remove('dlinks--folded'); b.hidden = true; });
+    })(uls[i]); }
+  })();
+  </script>
 
   {% include "partials/faq.html" %}
   {% include "partials/lead_form.html" %}

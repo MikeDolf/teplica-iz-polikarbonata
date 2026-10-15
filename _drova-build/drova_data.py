@@ -39,15 +39,16 @@ def total(key, vol):
     return _WOOD[key] * vol + math.ceil(vol / TRIP_M3) * DELIVERY
 
 
+# "gen" — для первого экрана: «3 куба берёзы с доставкой — от 13 100 ₽».
 PRODUCTS = {
-    "berezovye":  {"name": "Берёзовые колотые дрова", "short": "Берёзовые", "slug": "drova-berezovye-ekaterinburg"},
-    "smeshannye": {"name": "Смешанные колотые дрова", "short": "Смешанные", "slug": "drova-smeshannye-ekaterinburg"},
-    "hvoynye":    {"name": "Хвойные колотые дрова",   "short": "Хвойные",   "slug": "drova-hvoynye-ekaterinburg"},
-    "osina":      {"name": "Осиновые колотые дрова",  "short": "Осиновые",  "slug": "drova-osinovye-ekaterinburg"},
-    "olha":       {"name": "Ольховые колотые дрова",  "short": "Ольховые",  "slug": "drova-olhovye-ekaterinburg"},
-    "suhie":      {"name": "Сухие берёзовые дрова",   "short": "Сухие для камина", "slug": "drova-suhie-ekaterinburg"},
-    "churki":     {"name": "Берёзовые дрова чурками", "short": "Чурками (неколотые)", "slug": "drova-churkami-ekaterinburg"},
-    "gorbyl":     {"name": "Горбыль на дрова",        "short": "Горбыль",   "slug": "gorbyl-ekaterinburg"},
+    "berezovye":  {"name": "Берёзовые колотые дрова", "short": "Берёзовые", "gen": "берёзы", "slug": "drova-berezovye-ekaterinburg"},
+    "smeshannye": {"name": "Смешанные колотые дрова", "short": "Смешанные", "gen": "смешанных", "slug": "drova-smeshannye-ekaterinburg"},
+    "hvoynye":    {"name": "Хвойные колотые дрова",   "short": "Хвойные",   "gen": "хвойных", "slug": "drova-hvoynye-ekaterinburg"},
+    "osina":      {"name": "Осиновые колотые дрова",  "short": "Осиновые",  "gen": "осины", "slug": "drova-osinovye-ekaterinburg"},
+    "olha":       {"name": "Ольховые колотые дрова",  "short": "Ольховые",  "gen": "ольхи", "slug": "drova-olhovye-ekaterinburg"},
+    "suhie":      {"name": "Сухие берёзовые дрова",   "short": "Сухие для камина", "gen": "сухой берёзы", "slug": "drova-suhie-ekaterinburg"},
+    "churki":     {"name": "Берёзовые дрова чурками", "short": "Чурками (неколотые)", "gen": "берёзы чурками", "slug": "drova-churkami-ekaterinburg"},
+    "gorbyl":     {"name": "Горбыль на дрова",        "short": "Горбыль",   "gen": "горбыля", "slug": "gorbyl-ekaterinburg"},
 }
 for _k, _p in PRODUCTS.items():
     _p["wood"] = _WOOD[_k]
