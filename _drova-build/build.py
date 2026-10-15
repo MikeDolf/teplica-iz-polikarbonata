@@ -73,6 +73,10 @@ def term_city(key):
 assert all(c[0] in PARTNER or c[0] in KM for c in D.CITIES), [c[0] for c in D.CITIES if c[0] not in PARTNER and c[0] not in KM]
 import drova_reviews as RV   # 15 октября: отзывы на страницах дров
 import drova_works as WK     # 15 октября: фото владельца
+import drova_promo as PR     # 15 октября: акции (осенняя цена — до PR.UNTIL)
+PROMO = {"until_iso": PR.UNTIL.isoformat(), "until_ru": PR.UNTIL_RU, "t3": PR.AUTUMN_T3,
+         "regular_t3": D.PRODUCTS["berezovye"]["t3"]} if datetime.date.today() <= PR.UNTIL else None
+assert not PROMO or PROMO["t3"] < PROMO["regular_t3"], "осенняя цена не ниже обычной — проверьте drova_promo"
 from reviews import REVIEWS as GRUNT_REVIEWS
 REV = RV.REVIEWS or sorted(GRUNT_REVIEWS, key=lambda r: RV.ORDER_GRUNT.index(r["name"]))
 assert RV.REVIEWS or len(REV) == len(RV.ORDER_GRUNT), "новый отзыв грунта: добавьте имя в drova_reviews.ORDER_GRUNT"
@@ -415,7 +419,7 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
         **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), **({"hero_min": hero_min} if hero_min else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
         links2=links2, links2_title=links2_title, is_hub=is_hub, xtables=xtables or [],
-        trust_wood=bool(price) and unit.endswith("м³"), lead_city=lead_city or {}, lead_title=lead_title or "", works=WK.for_page(path), works_title=WK.TITLE, reviews=REV, reviews_title=REV_TITLE, reviews_note=REV_NOTE,
+        trust_wood=bool(price) and unit.endswith("м³"), promo=PROMO, lead_city=lead_city or {}, lead_title=lead_title or "", works=WK.for_page(path), works_title=WK.TITLE, reviews=REV, reviews_title=REV_TITLE, reviews_note=REV_NOTE,
         schema_json=schema(h1, path, faq, (offer or {}).get("low", price), crumbs=not is_hub,
                            **({k: v for k, v in offer.items() if k != "low"} if offer else (offer_range(price, unit, ex) if price else {})))))
     write(path, html)

@@ -1213,6 +1213,20 @@ html{overflow-x:hidden}
 .callbar__badge{position:absolute;top:-7px;right:-3px;padding:1px 6px;border-radius:999px;background:#f3c46f;color:#2b200b;font-size:11.5px;font-weight:800;line-height:1.4}
 .tstrip__i--max{text-decoration:none;color:inherit}
 .tstrip__i--max b{color:var(--accent)}
+/* Дрова, 15 октября: акции */
+.promo-rib{background:#fff3d6;border-bottom:1px solid #f0d5a2;color:#3d2e12}
+.promo-rib__in{padding-top:11px;padding-bottom:11px;font-size:15px;line-height:1.45}
+.promo-rib__in b{color:#7a4b00}
+.promo-rib__in a{color:inherit;font-weight:700;white-space:nowrap}
+.akcii__grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.akcii__card{display:block;padding:16px 18px;border-radius:14px;background:#fff;border:1px solid var(--line);color:inherit;text-decoration:none}
+.akcii__card b{display:block;font-size:16.5px;margin-bottom:6px}
+.akcii__card p{margin:0;line-height:1.5;color:var(--ink-soft)}
+.akcii__card--hot{background:#fff8ec;border-color:#f0d5a2}
+.akcii__card--hot b{color:#7a4b00}
+.akcii__card--max b{color:var(--accent)}
+.akcii__card--max:hover{border-color:var(--accent)}
+.akcii__note{margin:12px 0 0;font-size:14px;color:var(--ink-soft)}
 .dlinks--folded li:nth-child(n+7){display:none}
 .dlinks__more{display:block;width:100%;margin:-6px 0 22px;min-height:46px;padding:11px 14px;font:inherit;font-size:15.5px;font-weight:700;color:var(--accent,#2f7d46);background:transparent;border:1.5px dashed var(--l-line,#c9d6cd);border-radius:10px;cursor:pointer}
 .dlinks__more:focus-visible{outline:3px solid var(--focus,#f0a814);outline-offset:2px}

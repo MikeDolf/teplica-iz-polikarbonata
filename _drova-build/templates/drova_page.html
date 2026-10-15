@@ -76,6 +76,13 @@
     </div>
   </section>
   {% include "partials/drova_trust.html" %}
+  {#- Осенняя цена (drova_promo.py) — полосой сразу под полосой доверия, на
+      страницах дров кубами. После даты её прячет скрипт в блоке «Акции». -#}
+  {%- if promo and trust_wood %}
+  <div class="promo-rib" data-until="{{ promo.until_iso }}">
+    <div class="wrap promo-rib__in"><b>Осенняя цена до {{ promo.until_ru }}:</b> 3 куба берёзы с доставкой&nbsp;— от {{ promo.t3|ru }} ₽. <a href="#akcii">Все акции</a></div>
+  </div>
+  {%- endif %}
 
   {%- if city_text %}
   <section class="about band band--tint">
@@ -184,6 +191,48 @@
   {%- if reviews %}
   {% with band_tone = "tint" if calc else "white" %}{% include "partials/reviews.html" %}{% endwith %}
   {%- endif %}
+  {#- Акции и скидки (drova_promo.py) — прямо перед короткой заявкой. -#}
+  <section class="akcii band band--{{ 'white' if calc else 'tint' }}" id="akcii" aria-labelledby="akcii-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="akcii-title">Акции и скидки</h2>
+      <div class="akcii__grid">
+        {%- if promo %}
+        <div class="akcii__card akcii__card--hot" data-until="{{ promo.until_iso }}">
+          <b>Осенняя цена до {{ promo.until_ru }}</b>
+          <p>3 куба берёзы с доставкой по Екатеринбургу и до 50 км&nbsp;— от {{ promo.t3|ru }} ₽. Обычно&nbsp;— от {{ promo.regular_t3|ru }} ₽.</p>
+        </div>
+        {%- endif %}
+        <div class="akcii__card">
+          <b>Соседям&nbsp;— доставка пополам</b>
+          <p>Закажите дрова вместе с соседом одной машиной&nbsp;— каждый заплатит за рейс {{ (delivery // 2)|ru }} ₽ вместо {{ delivery|ru }} ₽.</p>
+        </div>
+        {%- if site.max_url %}
+        <a class="akcii__card akcii__card--max" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">
+          <b>Скидка 5% в MAX</b>
+          <p>Оформите заказ через MAX&nbsp;— скидка 5%.</p>
+        </a>
+        {%- endif %}
+        <div class="akcii__card">
+          <b>Пенсионерам&nbsp;— 5%</b>
+          <p>Скажите при заказе, что вы пенсионер,&nbsp;— сделаем скидку 5%.</p>
+        </div>
+        <div class="akcii__card">
+          <b>Постоянным клиентам&nbsp;— 5%</b>
+          <p>Со второго заказа&nbsp;— скидка 5%: дрова нужны каждый сезон.</p>
+        </div>
+      </div>
+      <p class="akcii__note">Скидки не суммируются&nbsp;— действует самая выгодная для вас.</p>
+    </div>
+  </section>
+  <script>
+  (function(){
+    // Осенняя цена: если сайт не пересобрали после даты окончания, прячем её здесь.
+    var now = new Date(), els = document.querySelectorAll('[data-until]');
+    for(var i = 0; i < els.length; i++){
+      if(now > new Date(els[i].getAttribute('data-until') + 'T23:59:59+05:00')) els[i].hidden = true;
+    }
+  })();
+  </script>
   {% include "partials/cta_mid.html" %}
 
   {%- for sec in sections %}
