@@ -479,9 +479,10 @@ html{overflow-x:hidden}
 @media (max-width:340px){
   .ekb .table-wrap--fit table{font-size:13px}
   .ekb .table-wrap--fit thead th,.ekb .table-wrap--fit tbody td{padding:7px 5px}
-  /* 15 октября: в таблице про пеллеты «индустриальные» и «автоматические» не влезали
-     на 320 px, и рамка обрезала край текста. Длинное слово переносим, а не режем. */
-  .ekb .table-wrap--fit thead th,.ekb .table-wrap--fit tbody td{hyphens:auto;overflow-wrap:anywhere}
+  /* 15 октября: таблица про пеллеты на 320 px была шире рамки на 4 px, и рамка
+     обрезала край текста. Переносим длинные слова только в заголовках столбцов
+     («Зольность»): в ячейках перенос «где угодно» рвал «30-40%» и «до 0,7%». */
+  .ekb .table-wrap--fit thead th{hyphens:auto;overflow-wrap:anywhere}
 }
 
 /* uses: карточки-плитки вместо голого списка */
