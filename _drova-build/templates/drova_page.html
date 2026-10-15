@@ -40,16 +40,16 @@
         {%- endif %}
         <div class="hero__price">
           {%- if price and not price_note and unit|default("м³") == "м³" %}
-          {#- 15 октября: крупно — типовой заказ, 3 куба вида страницы с доставкой.
-              Раньше крупно стояло «от 2 700 ₽/м³» — цена хвойных при машине
-              10 кубов, а человек приходил за 3 кубами берёзы и слышал 13 100 ₽
-              (владелец: «люди видят одну цену, а я называю другую»). Цена за
-              куб при заказе машины никуда не делась — строкой ниже. -#}
+          {#- 15 октября. Крупно — цена дров за насыпной куб (у берёзы от 2 990 ₽,
+              владелец: «цену укажи от 2990 рублей»), рейс отдельно. Сразу под
+              ней — итоги с доставкой за 1 и 3 куба и машину: 12 октября владелец
+              жаловался, что люди видят на сайте одну цену, а слышат другую. До
+              этого крупно стояло «от 2 700 ₽/м³» — хвойные при машине 10 кубов. -#}
           <div class="hero__price__row">
-            <span class="hero__price__label">3 куба {{ ex.gen }} с доставкой</span>
-            <b class="hero__price__num">от {{ ex.t3|ru }} ₽</b>
+            <span class="hero__price__label">Куб {{ ex.gen }}</span>
+            <b class="hero__price__num">от {{ ex.wood|ru }} ₽</b>
           </div>
-          <span class="hero__price__note">По {{ deliv_po|default("Екатеринбургу") }}: 1 куб&nbsp;— от {{ ex.t1|ru }} ₽, машина {{ ref_vol }} м³&nbsp;— от {{ ex.t10|ru }} ₽{% if cheap %}. {{ cheap.short }}&nbsp;— от {{ price|ru }} ₽ за куб при заказе машины.{% else %}, это от {{ ex.price|ru }} ₽ за куб.{% endif %}</span>
+          <span class="hero__price__note">Плюс доставка от {{ delivery|ru }} ₽ за рейс. С доставкой по {{ deliv_po|default("Екатеринбургу") }}: 1 куб&nbsp;— от {{ ex.t1|ru }} ₽, 3 куба&nbsp;— от {{ ex.t3|ru }} ₽, машина {{ ref_vol }} м³&nbsp;— от {{ ex.t10|ru }} ₽.</span>
           {%- else %}
           <div class="hero__price__row">
             <span class="hero__price__label">{% if not price or price_note %}Цена{% else %}С доставкой{% endif %}</span>
