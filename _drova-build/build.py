@@ -320,7 +320,8 @@ ART_LINKS = [{"url": f"{D.HUB}{s}/", "text": AR.A[s]["h1"]} for s in D.ARTICLES]
 FOOTER = [{"url": D.HUB, "text": "Доставка дров"}, {"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"},
           {"url": "/drova-berezovye-ekaterinburg/", "text": "Берёзовые дрова"}, {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
           {"url": "/gorbyl-ekaterinburg/", "text": "Горбыль"}, {"url": "/toplivnye-brikety-ekaterinburg/", "text": "Топливные брикеты"},
-          {"url": "/ugol-kamennyy-ekaterinburg/", "text": "Каменный уголь"}, {"url": "/dostavka-drov/blog/", "text": "Блог о дровах"}, {"url": "/dostavka-grunta/", "text": "Доставка грунта"}]
+          {"url": "/ugol-kamennyy-ekaterinburg/", "text": "Каменный уголь"}, {"url": "/dostavka-drov/blog/", "text": "Блог о дровах"}, {"url": "/dostavka-grunta/", "text": "Доставка грунта"},
+          {"url": "/dostavka-shchebnya-i-peska/", "text": "Доставка щебня и песка"}]
 
 
 def city_secs(key, name, prep, dat):

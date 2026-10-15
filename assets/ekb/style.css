@@ -1078,6 +1078,11 @@ html{overflow-x:hidden}
 @media (max-width:374px){
   .ekb .hdr__max .hdr__pre{display:none}
 }
+/* «Щебень Доставка» шире «Дрова Доставка»: на 375–400px (большинство телефонов)
+   кнопка MAX уезжала за край экрана на 2–17px */
+@media (max-width:400px){
+  .ekb .hdr__logo--nerud ~ .hdr__side .hdr__max .hdr__pre{display:none}
+}
 /* ===== видео с выгрузки рядом с лентой «Наши доставки» =====
    На компьютере — справа от ленты и той же высоты (ширина из 3:4), на
    телефоне — под лентой, не шире 300px, чтобы не занять весь экран. */
@@ -1201,6 +1206,7 @@ html{overflow-x:hidden}
 .dcalc .field{display:flex;flex-direction:column;gap:6px}
 .dcalc__res{grid-column:1/-1;margin:4px 0 0;font-size:20px}
 .dcalc__res b{font-size:26px}
+.dcalc__res b,.dcalc__res span{white-space:nowrap}   /* «от 10 800 ₽» из скрипта — с обычными пробелами, не рвём */
 .dcalc__note{grid-column:1/-1;margin:0;color:var(--l-muted,#5b6b61);font-size:15px}
 .dcalc .btn{grid-column:1/-1;justify-self:start}
 .dlinks{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px 18px}
@@ -1261,6 +1267,18 @@ html{overflow-x:hidden}
   .hero--drova .heropic::after{background:linear-gradient(180deg,
     rgba(28,16,8,.30) 0%, rgba(28,16,8,.62) 45%, #1c1008 100%)}
   .hero--drova h1,.hero--drova .hero__sub,.hero--drova .hero__eyebrow{text-shadow:0 2px 14px rgba(0,0,0,.85)}
+}
+
+/* Первый экран раздела щебня и песка (15 октября 2026): вёрстка дров
+   (.hero--drova), цвета холоднее — серый камень вместо тёплого коричневого.
+   На фото самосвал высыпает щебень; на телефоне видна куча и кузов. */
+.hero--nerud .heropic::after{background:linear-gradient(100deg,
+  rgba(13,40,26,.96) 0%, rgba(17,27,30,.90) 30%, rgba(20,26,32,.58) 58%, rgba(20,26,32,.16) 100%)}
+@media (max-width:900px){
+  .hero--nerud{background:#151a1f}
+  .hero--nerud .heropic img{object-position:60% 45%}
+  .hero--nerud .heropic::after{background:linear-gradient(180deg,
+    rgba(21,26,31,.28) 0%, rgba(21,26,31,.62) 45%, #151a1f 100%)}
 }
 
 /* «Статьи по теме» на страницах товаров грунта (11 октября 2026),

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">{{ schema_json|safe }}</script>
+{% endblock %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="/dostavka-shchebnya-i-peska/">Главная</a></li>
+    <li><span aria-current="page">{{ h1 }}</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  <article class="art wrap">
+    <h1>{{ h1 }}</h1>
+    <p class="art__dates"><time datetime="{{ date_iso }}">Опубликовано {{ date_ru }}</time>{% if upd_iso and upd_iso != date_iso %} · <time datetime="{{ upd_iso }}">обновлено {{ upd_ru }}</time>{% endif %}</p>
+    <p class="art__lede">{{ lede }}</p>
+    {%- for sec in body %}
+    <h2>{{ sec[0] }}</h2>
+    {%- for p in sec[1] %}<p>{{ p }}</p>{% endfor %}
+    {%- if sec|length > 2 and sec[2] %}
+    <div class="table-wrap table-wrap--compact{% if sec[2].head|length == 2 %} table-wrap--two{% elif sec[2].head|length == 3 %} table-wrap--fit{% endif %}"><table>
+      {%- if sec[2].caption %}<caption>{{ sec[2].caption }}</caption>{% endif %}
+      <thead><tr>{% for h in sec[2].head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+      <tbody>{% for row in sec[2].rows %}<tr>{% for c in row %}<td data-label="{{ sec[2].head[loop.index0] }}">{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+    </table></div>
+    {%- endif %}
+    {%- endfor %}
+    <aside class="art__cta">
+      <p class="art__cta-title"><b>Щебень и песок с доставкой по Екатеринбургу и области</b></p>
+      <p>Щебень всех ходовых фракций, карьерный и речной песок, отсев, ПГС, ЩПС, керамзит и другие сыпучие материалы. По Екатеринбургу рейс от {{ delivery|ru }} ₽, щебень 20–40 — от %%m.shcheben-20-40.price%% ₽ за куб без доставки, 10 м³ с доставкой — от %%sum.shcheben-20-40.10%% ₽.</p>
+      <div class="art__cta-actions">
+        <a class="btn btn--call art__cta-link" href="{{ cta_url|default('/shcheben-ekaterinburg/') }}">{{ cta_text|default('Цены на щебень') }}</a>
+        {%- if site.max_url %}<a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX<span class="btn__badge">−5%</span></a>{% endif %}
+      </div>
+    </aside>
+    <h2>Читайте также</h2>
+    <ul class="dlinks">{% for l in related %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}</ul>
+  </article>
+  {% include "partials/faq.html" %}
+{% endblock %}

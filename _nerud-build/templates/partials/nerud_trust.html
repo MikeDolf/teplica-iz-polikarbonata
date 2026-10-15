@@ -1,0 +1,38 @@
+{#- Полоса доверия под первым экраном страниц щебня и песка (15 октября 2026).
+    Та же вёрстка .tstrip, что у дров (drova_trust.html), свои факты: объём
+    по кузову, который видно до выгрузки, оплата после выгрузки, фракция как
+    в заявке и скидка 5% в MAX (владелец: «да, как на дровах»). -#}
+<section class="tstrip" aria-label="Почему у нас спокойно">
+  <div class="wrap tstrip__in">
+    <div class="tstrip__i">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h13l3-6H6z"/><circle cx="7" cy="18.5" r="1.5"/><circle cx="16" cy="18.5" r="1.5"/><path d="M8 11l2-4h5"/></svg>
+      </span>
+      <b>Объём по кузову</b>
+      <span>видно до выгрузки</span>
+    </div>
+    <div class="tstrip__i">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </span>
+      <b>Оплата после выгрузки</b>
+      <span>предоплату не берём</span>
+    </div>
+    <div class="tstrip__i">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+      </span>
+      <b>Фракция как в заявке</b>
+      <span>без подмены материала</span>
+    </div>
+    {%- if site.max_url %}
+    <a class="tstrip__i tstrip__i--max" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M9.5 9.5h.01M14.5 14.5h.01M15 9l-6 6"/></svg>
+      </span>
+      <b>Скидка 5% в MAX</b>
+      <span>при заказе через MAX</span>
+    </a>
+    {%- endif %}
+  </div>
+</section>

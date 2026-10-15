@@ -71,24 +71,15 @@ def ru_number(n):
 env.filters["ru"] = ru_number
 
 
-# Контекстные ссылки на второй сайт владельца (ursdom.ru: щебень, песок,
-# ПГС, дренаж). Ставятся прямо в предложение, на слова о материале, по одной
+# Контекстные ссылки на второй сайт владельца (ursdom.ru: дренаж; ссылки на
+# его щебень и песок с 15 октября 2026 ведут на свой раздел — см. ILINKS).
+# Ставятся прямо в предложение, на слова о материале, по одной
 # на страницу — сквозных блоков нет. Ключ — путь страницы fanline, значение —
 # (точный фрагмент текста, адрес). Если фрагмент из текста пропадёт при
 # правке статьи, сборка упадёт в check_xlinks() и назовёт страницу.
 XLINKS = {
-    "/dostavka-grunta/blog/skolko-vesit-kub-zemli/": ("Нерудные материалы заметно тяжелее", "https://ursdom.ru/dostavka/stati/skolko-vesit-kub/"),
-    "/dostavka-grunta/blog/chem-podnyat-uchastok/": ("песок и ПГС", "https://ursdom.ru/dostavka/stati/chem-otsypat-uchastok/"),
     "/dostavka-grunta/blog/drenazh-uchastka/": ("глубинный дренаж", "https://ursdom.ru/drenazh/drenazh-uchastka-svoimi-rukami/"),
     "/dostavka-grunta/blog/posadka-pionov/": ("крупный щебень", "https://ursdom.ru/drenazh/shcheben-dlya-drenazha/"),
-    "/dostavka-grunta/grunt-dlya-gortenzii/": ("слой щебня", "https://ursdom.ru/dostavka/shcheben/frakciya-20-40/"),
-    "/dostavka-grunta/grunt-dlya-tui-i-hvoynyh/": ("кладут щебень", "https://ursdom.ru/dostavka/shcheben/"),
-    "/dostavka-grunta/grunt-dlya-golubiki/": ("одна часть песка", "https://ursdom.ru/dostavka/stati/kakoy-pesok-vybrat/"),
-    "/dostavka-grunta/opilki-na-uchastke/": ("дорожки из опила", "https://ursdom.ru/dostavka/stati/dorozhki-na-uchastke/"),
-    "/dostavka-grunta/zemlya-pod-gazon-podgotovka/": ("добавляют песок", "https://ursdom.ru/dostavka/stati/pesok-pod-gazon/"),
-    "/dostavka-grunta/vysokie-i-teplye-gryadki/": ("немного песка", "https://ursdom.ru/dostavka/pesok/v-meshkah/"),
-    "/plodorodnyy-grunt-bolshoy-istok/": ("песок или ПГС", "https://ursdom.ru/dostavka/pesok/bolshoy-istok/"),
-    "/plodorodnyy-grunt-bobrovskiy/": ("в основание насыпи нужен песок", "https://ursdom.ru/dostavka/pesok/bobrovskiy/"),
 }
 XLINKS_DONE = set()
 
@@ -97,6 +88,17 @@ XLINKS_DONE = set()
 # у этих страниц мало входящих ссылок, а статья про лук под зиму собирает
 # 30 тысяч показов за две недели. Тот же механизм, что и XLINKS.
 ILINKS = {
+    # 15 октября 2026: бывшие ссылки на ursdom.ru/dostavka/ — теперь на свой раздел щебня и песка.
+    "/dostavka-grunta/blog/skolko-vesit-kub-zemli/": ("Нерудные материалы заметно тяжелее", "/dostavka-shchebnya-i-peska/ves-kuba-shchebnya-i-peska/"),
+    "/dostavka-grunta/blog/chem-podnyat-uchastok/": ("песок и ПГС", "/pgs-ekaterinburg/"),
+    "/dostavka-grunta/grunt-dlya-gortenzii/": ("слой щебня", "/shcheben-20-40-ekaterinburg/"),
+    "/dostavka-grunta/grunt-dlya-tui-i-hvoynyh/": ("кладут щебень", "/shcheben-ekaterinburg/"),
+    "/dostavka-grunta/grunt-dlya-golubiki/": ("одна часть песка", "/pesok-ekaterinburg/"),
+    "/dostavka-grunta/opilki-na-uchastke/": ("дорожки из опила", "/dostavka-shchebnya-i-peska/dorozhki-iz-shchebnya-i-otseva/"),
+    "/dostavka-grunta/zemlya-pod-gazon-podgotovka/": ("добавляют песок", "/pesok-karernyy-ekaterinburg/"),
+    "/dostavka-grunta/vysokie-i-teplye-gryadki/": ("немного песка", "/pesok-v-meshkah-ekaterinburg/"),
+    "/plodorodnyy-grunt-bolshoy-istok/": ("песок или ПГС", "/pgs-ekaterinburg/"),
+    "/plodorodnyy-grunt-bobrovskiy/": ("в основание насыпи нужен песок", "/pesok-karernyy-ekaterinburg/"),
     "/dostavka-grunta/blog/posadka-luka-pod-zimu/": ("мульчируют перегноем", "/dostavka-grunta/peregnoy-osenyu/"),
     "/dostavka-grunta/blog/posadka-maliny-osenyu/": ("Замульчируйте перегноем", "/dostavka-grunta/peregnoy-osenyu/"),
     "/dostavka-grunta/blog/posadka-chesnoka-osenyu/": ("свежий навоз под чеснок не кладут", "/dostavka-grunta/kogda-vnosit-navoz/"),
@@ -197,14 +199,12 @@ TAIL_NAME = {
     "kislyy-torf":"кислый торф", "zemlya-v-meshkah":"землю в мешках",
 }
 
-# Нерудные материалы ведёт отдельный сайт владельца (ursdom.ru).
-# Держим страницы живыми для прямых заходов, но вне индекса, чтобы два
-# сайта одного владельца не конкурировали за одни запросы в одном регионе
-# (риск аффилиат-фильтра Яндекса).
-OTHER_SITE = {
-    "shcheben-ekaterinburg", "pesok-ekaterinburg",
-    "otsev-ekaterinburg", "pgs-ekaterinburg",
-}
+# Нерудные материалы раньше вёл ursdom.ru, а здесь их страницы стояли вне
+# индекса. 15 октября 2026 владелец перенёс доставку щебня и песка на этот
+# сайт — раздел _nerud-build, и четыре адреса (щебень, песок, отсев, ПГС по
+# Екатеринбургу) теперь пишет он. Множество оставлено пустым: механизм NOINDEX
+# общий.
+OTHER_SITE = set()
 
 # Пусто по решению владельца от 08.08.2026: раздел доводится до полной
 # сетки 11 товаров x 15 городов, включая сочетания с нулевым спросом по
@@ -334,12 +334,9 @@ CROSSLINK_BY_PRODUCT = {
     "opilki": {"bags": True, "title":"Нужно совсем немного опила?","text":"Тогда смотрите фасовку: мешок 50 литров, 450 рублей, минимальный заказ 5 мешков. Мелкий берут под мульчу, крупный на подстилку животным. На объём от куба выгоднее навалом — 1000 рублей за куб против 9000 за те же 20 мешков, — но если нужно донести руками до пары грядок, мешки удобнее.","url":"/opilki-v-meshkah-ekaterinburg/","anchor":"Опил в мешках, 450 ₽ за мешок"},
 }
 
-MOVED_TO = {
-    "shcheben-ekaterinburg": {"title":"Щебень возит наш профильный проект","text":"Мы сосредоточились на органике: чернозём, перегной, навоз и торф. Щебень всех фракций, песок, ПГС и отсев с доставкой по Екатеринбургу и области возит наш второй проект «Щебень-Урал».","url":"https://ursdom.ru/dostavka/shcheben/","anchor":"Цены на щебень за куб"},
-    "pesok-ekaterinburg": {"title":"Песок возит наш профильный проект","text":"На этом сайте мы возим органику для грядок и газона. Карьерный и мытый речной песок с доставкой смотрите у нашего проекта «Щебень-Урал».","url":"https://ursdom.ru/dostavka/","anchor":"Песок и другие нерудные материалы"},
-    "otsev-ekaterinburg": {"title":"Отсев возит наш профильный проект","text":"Мы возим чернозём, перегной, навоз и торф. Отсев под дорожки и площадки с доставкой по области возит наш проект «Щебень-Урал».","url":"https://ursdom.ru/dostavka/","anchor":"Отсев и нерудные материалы"},
-    "pgs-ekaterinburg": {"title":"ПГС возит наш профильный проект","text":"На этом сайте органика для участка. Песчано-гравийную смесь под основания и отсыпку возит наш проект «Щебень-Урал».","url":"https://ursdom.ru/dostavka/","anchor":"ПГС и нерудные материалы"},
-}
+# Блок «возит наш профильный проект» на страницах нерудных — снят 15 октября
+# 2026: щебень и песок теперь в разделе _nerud-build этого же сайта.
+MOVED_TO = {}
 
 FOOTER_LINKS = [
     {"url": "/dostavka-grunta/", "text": "Доставка грунта"},
@@ -355,6 +352,8 @@ FOOTER_LINKS = [
     # а на дрова держится. Сквозная ссылка помогает новому разделу
     # быстрее попасть в индекс.
     {"url": "/dostavka-drov/", "text": "Доставка дров"},
+    # 15 октября 2026: третий раздел — щебень, песок и другие сыпучие.
+    {"url": "/dostavka-shchebnya-i-peska/", "text": "Доставка щебня и песка"},
 ]
 
 BUSINESS_ID = SITE["domain"] + "/dostavka-grunta/#business"

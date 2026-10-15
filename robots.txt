@@ -4,6 +4,7 @@ Allow: /
 Disallow: /docs/
 Disallow: /_ekb-build/
 Disallow: /_drova-build/
+Disallow: /_nerud-build/
 Disallow: /_climate-build/
 Disallow: /_redirects-build/
 Disallow: /_preview/
@@ -11,3 +12,4 @@ Disallow: /_preview/
 Sitemap: https://fanline.su/sitemap.xml
 Sitemap: https://fanline.su/sitemap-dostavka-grunta.xml
 Sitemap: https://fanline.su/sitemap-dostavka-drov.xml
+Sitemap: https://fanline.su/sitemap-dostavka-shchebnya.xml

@@ -1,0 +1,248 @@
+{% extends "base.html" %}
+{% block schema %}
+  <script type="application/ld+json">{{ schema_json|safe }}</script>
+{% endblock %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="/dostavka-shchebnya-i-peska/">Главная</a></li>
+    {%- if parent %}<li><a href="{{ parent.url }}">{{ parent.text }}</a></li>{% endif %}
+    {%- if not is_hub %}<li><span aria-current="page">{{ h1 }}</span></li>{% endif %}
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  <section class="hero hero--drova hero--nerud">
+    {#- Первый экран раздела щебня и песка (15 октября 2026): настоящее фото
+        владельца — самосвал высыпает гранитный щебень у забора. Вёрстка та же,
+        что у дров (.hero--drova), цвета свои — холодный серый вместо тёплого
+        коричневого (.hero--nerud в style.css). До 480px — отдельный кадр -m-900. -#}
+    <div class="heropic">
+      <picture>
+        <source type="image/webp" media="(max-width: 480px)" srcset="/assets/ekb/photo/{{ hero_photo }}-m-900.webp">
+        <source type="image/webp" sizes="(max-width: 900px) 800px, 100vw"
+                srcset="/assets/ekb/photo/{{ hero_photo }}-800.webp 800w, /assets/ekb/photo/{{ hero_photo }}-1400.webp 1400w">
+        <img src="/assets/ekb/photo/{{ hero_photo }}-1400.jpg" alt="{{ hero_alt }}"
+             loading="eager" fetchpriority="high" decoding="async" width="1400" height="788">
+      </picture>
+    </div>
+    <div class="wrap hero__in">
+      <div class="hero__text">
+        <p class="hero__eyebrow">Доставка щебня и песка по {{ site.region_po }}</p>
+        <h1>{{ h1 }}</h1>
+        <p class="hero__sub">{{ hero_sub }}</p>
+        <p class="hero__min"><b>{{ hero_min[0] }}</b> — {{ hero_min[1] }}</p>
+        <div class="hero__price">
+          <div class="hero__price__row">
+            <span class="hero__price__label">{{ hero_price.label }}</span>
+            <b class="hero__price__num">{{ hero_price.num }}</b>
+          </div>
+          <span class="hero__price__note">{{ hero_price.note }}</span>
+        </div>
+        <div class="hero__cta">
+          {%- if calc %}
+          <a class="btn btn--call" href="#calc-title">{% with size=20 %}{% include "partials/icon_calc.html" %}{% endwith %}Калькулятор</a>
+          {%- else %}
+          <a class="btn btn--call" href="#zayavka">Оставить заявку</a>
+          {%- endif %}
+          {%- if site.max_url %}
+          <a class="btn btn--wa" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">Написать в MAX<span class="btn__badge">−5%</span></a>
+          {%- endif %}
+        </div>
+        {%- if site.max_url %}
+        <p class="nomax-link"><a href="#zayavka" data-nomax>Нет MAX? Оставьте номер — напишем сами</a></p>
+        {%- endif %}
+        <p class="hero__note">На заявку {{ site.callback_promise }}. {{ site.hours }}. Оплата после выгрузки.</p>
+      </div>
+    </div>
+  </section>
+  {% include "partials/nerud_trust.html" %}
+
+  {%- if city_text %}
+  <section class="about band band--tint">
+    <div class="wrap">
+      <h2 class="sec-h">{{ city_text_title }}</h2>
+      {%- for p in city_text %}<p>{{ p }}</p>{% endfor %}
+    </div>
+  </section>
+  {%- endif %}
+
+  <section class="band band--plain" aria-labelledby="price-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="price-title">{{ price_title }}</h2>
+      <div class="table-wrap table-wrap--compact table-wrap--fit"><table>
+        <thead><tr><th>Материал</th><th>Цена без доставки</th><th>{{ price_col3 }}</th></tr></thead>
+        <tbody>
+        {%- for p in price_rows %}
+          <tr><td data-label="Материал">{% if p.url and p.url != self_path %}<a href="{{ p.url }}">{{ p.name }}</a>{% else %}{{ p.name }}{% endif %}</td><td data-label="Без доставки">{{ p.price_text }}</td><td data-label="{{ price_col3 }}">{{ p.t10_text }}</td></tr>
+        {%- endfor %}
+        </tbody>
+      </table></div>
+      {%- for xt in xtables|default([]) %}
+      <h3>{{ xt.title }}</h3>
+      <div class="table-wrap table-wrap--compact{% if xt.head|length == 3 %} table-wrap--fit{% elif xt.head|length == 2 %} table-wrap--two{% endif %}"><table>
+        <thead><tr>{% for h in xt.head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+        <tbody>
+        {%- for row in xt.rows %}
+          <tr>{% for c in row %}<td data-label="{{ xt.head[loop.index0] }}">{% if c.url is defined %}<a href="{{ c.url }}">{{ c.text }}</a>{% else %}{{ c }}{% endif %}</td>{% endfor %}</tr>
+        {%- endfor %}
+        </tbody>
+      </table></div>
+      {%- if xt.note %}
+      <p>{{ xt.note }}</p>
+      {%- endif %}
+      {%- endfor %}
+      <p>{{ price_note }}</p>
+      {#- Как сравнивать цены — как у дров (15 октября): человек видит у других
+          «щебень от 500 ₽» и уходит, не заметив, что это без доставки и за
+          целую машину. Без названий конкурентов. -#}
+      <div class="dcmp">
+        <p class="dcmp__t">Как сравнивать цены на щебень и песок</p>
+        <p>Сравнивайте итог за ваш объём с доставкой до участка. Цена «за куб» на сайтах обычно указана без доставки, а рейс самосвала добавляет к ней несколько тысяч рублей. {{ compare_line }}</p>
+        <p>И сравнивайте объём: кубы считаем по кузову, и вы видите его до выгрузки. Платите после выгрузки, когда материал уже у вас.{% if site.max_url %} При заказе через <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">MAX</a>&nbsp;— скидка 5%.{% endif %}</p>
+      </div>
+    </div>
+  </section>
+
+{%- if dims_calc %}
+  {#- Калькулятор объёма по размерам — на странице калькулятора (запрос
+      «сколько щебня» 3 334): длина × ширина × слой × запас на уплотнение,
+      вес по насыпной плотности. Кнопка переносит объём в калькулятор стоимости. -#}
+  <section class="calc band band--plain" id="dims" aria-labelledby="dims-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="dims-title">Сколько кубов нужно</h2>
+      <div class="dcalc">
+        <label class="field"><span class="field__label">Материал</span>
+          <select class="field__input" id="dm-kind">
+          {%- for c in dims_items %}<option value="{{ c.key }}" data-dens="{{ c.dens }}" data-comp="{{ c.comp }}">{{ c.name }}</option>{% endfor %}
+          </select></label>
+        <label class="field"><span class="field__label">Длина, м</span>
+          <input class="field__input" id="dm-l" type="number" inputmode="decimal" min="0" step="0.1" value="6"></label>
+        <label class="field"><span class="field__label">Ширина, м</span>
+          <input class="field__input" id="dm-w" type="number" inputmode="decimal" min="0" step="0.1" value="4"></label>
+        <label class="field"><span class="field__label">Толщина слоя, см</span>
+          <input class="field__input" id="dm-h" type="number" inputmode="decimal" min="0" step="1" value="15"></label>
+        <p class="dcalc__res" aria-live="polite">Нужно: <b id="dm-vol">—</b> <span id="dm-t"></span></p>
+        <p class="dcalc__note">С запасом на уплотнение: щебень при трамбовке садится на 10–30%, песок и отсев — на 10–15%. Вес — по насыпной плотности.</p>
+        <a class="btn btn--call" href="#calc-title" id="dm-go">Посчитать стоимость с доставкой</a>
+      </div>
+    </div>
+  </section>
+  <script>
+  (function(){
+    var k=document.getElementById('dm-kind'), l=document.getElementById('dm-l'), w=document.getElementById('dm-w'), h=document.getElementById('dm-h');
+    var out=document.getElementById('dm-vol'), t=document.getElementById('dm-t'), vol=0;
+    function n(el){ return parseFloat(String(el.value).replace(',', '.'))||0; }
+    function fmt(x){ return String(x).replace('.', ','); }
+    function upd(){ var o=k.options[k.selectedIndex], c=parseFloat(o.getAttribute('data-comp')), d=parseFloat(o.getAttribute('data-dens'));
+      vol=n(l)*n(w)*n(h)/100*c;
+      if(vol>0){ var v=Math.ceil(vol*10)/10; out.textContent=fmt(v)+' м³'; t.textContent=d?'(около '+fmt(Math.round(v*d*10)/10)+' т)':''; }
+      else { out.textContent='—'; t.textContent=''; } }
+    [k,l,w,h].forEach(function(el){ el.addEventListener('input',upd); el.addEventListener('change',upd); }); upd();
+    document.getElementById('dm-go').addEventListener('click',function(){
+      var dv=document.getElementById('dc-vol'), dk=document.getElementById('dc-kind'), key=k.value;
+      if(dv && vol>0){ dv.value=Math.max(1, Math.ceil(vol)); dv.dispatchEvent(new Event('input')); }
+      if(dk){ for(var i=0;i<dk.options.length;i++){ if(dk.options[i].getAttribute('data-key')===key){ dk.selectedIndex=i; dk.dispatchEvent(new Event('change')); } } }
+    });
+  })();
+  </script>
+{%- endif %}
+
+{%- if calc %}
+  <section class="calc band band--tint" id="calc" aria-labelledby="calc-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="calc-title">{{ calc_title|default("Калькулятор стоимости с доставкой") }}</h2>
+      <div class="dcalc">
+        <label class="field"><span class="field__label">Материал</span>
+          <select class="field__input" id="dc-kind">
+          {%- for c in calc_items %}<option value="{{ c.price }}" data-key="{{ c.key }}" data-name="{{ c.name }}"{% if c.key == calc_pre %} selected{% endif %}>{{ c.name }}</option>{% endfor %}
+          </select></label>
+        <label class="field"><span class="field__label">Сколько кубов</span>
+          <input class="field__input" id="dc-vol" type="number" inputmode="decimal" min="1" step="1" value="{{ calc_vol|default(10) }}"></label>
+        <p class="dcalc__res" aria-live="polite">Итого с доставкой: <b id="dc-sum">—</b> <span id="dc-per"></span></p>
+        <p class="dcalc__note">Ориентир по нижней цене: материал плюс рейс от {{ delivery|ru }} ₽ по Екатеринбургу и до 50 км, в КамАЗ входит до {{ trip_m3 }} кубов, больший объём — следующим рейсом или большим самосвалом.{% if calc_lots %} У щебня 5–20, 20–40 и 40–70 учтены готовые объёмы с доставкой по Екатеринбургу.{% endif %} Точную сумму назовём по адресу.</p>
+        <a class="btn btn--call" href="#zayavka" id="dc-go">Оставить заявку с этим расчётом</a>
+      </div>
+    </div>
+  </section>
+  <script>
+  (function(){
+    var k=document.getElementById('dc-kind'), v=document.getElementById('dc-vol'), s=document.getElementById('dc-sum');
+    var per=document.getElementById('dc-per'), D={{ delivery }}, T={{ trip_m3 }}, L={{ lots_json|safe }};
+    function fmt(n){ return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g,' '); }
+    function upd(){ var n=parseFloat(v.value)||0, key=k.options[k.selectedIndex].getAttribute('data-key');
+      if(n>0){ var t=n*parseFloat(k.value)+Math.ceil(n/T)*D, lot=L[key]||{};
+        for(var q in lot){ if(+q>=n && lot[q]<t) t=lot[q]; }
+        s.textContent='от '+fmt(t)+' ₽'; per.textContent='(от '+fmt(Math.round(t/n/10)*10)+' ₽/⁠м³)'; }
+      else { s.textContent='—'; per.textContent=''; } }
+    k.addEventListener('change',upd); v.addEventListener('input',upd); upd();
+    document.getElementById('dc-go').addEventListener('click',function(){
+      var note=document.getElementById('lead-note'), pr=document.getElementById('lead-product'), vol=document.getElementById('lead-volume');
+      var name=k.options[k.selectedIndex].getAttribute('data-name');
+      if(note) note.value='Калькулятор: '+name+', '+v.value+' м³, с доставкой '+s.textContent;
+      if(vol) vol.value=v.value;
+      if(pr){ for(var i=0;i<pr.options.length;i++){ if(pr.options[i].value===name){ pr.selectedIndex=i; } } }
+    });
+  })();
+  </script>
+{%- endif %}
+
+  {%- if works %}
+  {% with band_tone = "white" if calc else "tint" %}{% include "partials/works.html" %}{% endwith %}
+  {%- endif %}
+  {%- if reviews %}
+  {% with band_tone = "tint" if calc else "white" %}{% include "partials/reviews.html" %}{% endwith %}
+  {%- endif %}
+  {% include "partials/cta_mid.html" %}
+
+  {%- for sec in sections %}
+  <section class="about band band--{{ loop.cycle('plain','tint') }}">
+    <div class="wrap">
+      <h2 class="sec-h">{{ sec[0] }}</h2>
+      {%- for p in sec[1] %}<p>{{ p }}</p>{% endfor %}
+      {%- if sec|length > 2 and sec[2] %}
+      <div class="table-wrap table-wrap--compact{% if sec[2].head|length == 2 %} table-wrap--two{% elif sec[2].head|length == 3 %} table-wrap--fit{% endif %}"><table>
+        <thead><tr>{% for h in sec[2].head %}<th>{{ h }}</th>{% endfor %}</tr></thead>
+        <tbody>{% for row in sec[2].rows %}<tr>{% for c in row %}<td data-label="{{ sec[2].head[loop.index0] }}">{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
+      </table></div>
+      {%- endif %}
+    </div>
+  </section>
+  {%- endfor %}
+
+  <section class="band band--plain" aria-labelledby="links-title">
+    <div class="wrap">
+      <h2 class="sec-h" id="links-title">{{ links_title }}</h2>
+      <ul class="dlinks" data-fold>
+      {%- for l in links %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}
+      </ul>
+      {%- if links|length > 8 %}
+      <button type="button" class="dlinks__more" hidden>Показать весь список ({{ links|length }})</button>
+      {%- endif %}
+      {%- if links2 %}
+      <h3>{{ links2_title }}</h3>
+      <ul class="dlinks" data-fold>
+      {%- for l in links2 %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}
+      </ul>
+      {%- if links2|length > 8 %}
+      <button type="button" class="dlinks__more" hidden>Показать весь список ({{ links2|length }})</button>
+      {%- endif %}
+      {%- endif %}
+    </div>
+  </section>
+  <script>
+  (function(){
+    if(!window.matchMedia || !matchMedia('(max-width: 700px)').matches) return;
+    var uls = document.querySelectorAll('.dlinks[data-fold]');
+    for(var i = 0; i < uls.length; i++){ (function(ul){
+      var b = ul.nextElementSibling;
+      if(!b || !b.classList.contains('dlinks__more')) return;
+      ul.classList.add('dlinks--folded'); b.hidden = false;
+      b.addEventListener('click', function(){ ul.classList.remove('dlinks--folded'); b.hidden = true; });
+    })(uls[i]); }
+  })();
+  </script>
+
+  {% include "partials/faq.html" %}
+  {% include "partials/lead_form.html" %}
+{% endblock %}
