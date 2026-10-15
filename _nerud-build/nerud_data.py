@@ -152,16 +152,29 @@ CITIES = {
     "rezh":             ("Реж", "в Реже", "Режу", 85),
     "sysert":           ("Сысерть", "в Сысерти", "Сысерти", 50),
     "aramil":           ("Арамиль", "в Арамиле", "Арамилю", 25),
+    # вторая волна (15 октября): расстояния — из данных ursdom (geo_matrix.CITY_FACTS)
+    "serov":            ("Серов", "в Серове", "Серову", 340),
+    "irbit":            ("Ирбит", "в Ирбите", "Ирбиту", 200),
+    "kachkanar":        ("Качканар", "в Качканаре", "Качканару", 250),
+    "krasnoturinsk":    ("Краснотурьинск", "в Краснотурьинске", "Краснотурьинску", 380),
+    "nevyansk":         ("Невьянск", "в Невьянске", "Невьянску", 75),
+    "beloyarskiy":      ("Белоярский", "в Белоярском", "Белоярскому", 40),
+    "krasnoufimsk":     ("Красноуфимск", "в Красноуфимске", "Красноуфимску", 200),
+    "artemovskiy":      ("Артёмовский", "в Артёмовском", "Артёмовскому", 120),
 }
 
 # Какие материалы по каким городам — только там, где есть спрос (Вордстат,
 # ursdom/audit: dostavka-sverdlovsk.csv, bukvarix-geo.csv).
 CITY_PAGES = {
     "shcheben": ["nizhniy-tagil", "pervouralsk", "kamensk-uralskiy", "polevskoy", "revda", "asbest",
-                 "novouralsk", "berezovskiy", "verhnyaya-pyshma", "rezh", "sysert", "aramil"],
-    "pesok":    ["nizhniy-tagil", "kamensk-uralskiy", "berezovskiy", "asbest", "pervouralsk", "polevskoy", "revda"],
-    "otsev":    ["nizhniy-tagil", "berezovskiy", "pervouralsk"],
-    "keramzit": ["nizhniy-tagil", "pervouralsk", "kamensk-uralskiy"],
+                 "novouralsk", "berezovskiy", "verhnyaya-pyshma", "rezh", "sysert", "aramil",
+                 # вторая волна (15 октября, nerud_cities3.py)
+                 "serov", "irbit", "kachkanar", "krasnoturinsk", "nevyansk", "beloyarskiy", "krasnoufimsk", "artemovskiy"],
+    "pesok":    ["nizhniy-tagil", "kamensk-uralskiy", "berezovskiy", "asbest", "pervouralsk", "polevskoy", "revda",
+                 "aramil", "verhnyaya-pyshma", "irbit", "beloyarskiy", "krasnoturinsk"],
+    "otsev":    ["nizhniy-tagil", "berezovskiy", "pervouralsk",
+                 "verhnyaya-pyshma", "kamensk-uralskiy", "nevyansk", "rezh", "irbit", "asbest"],
+    "keramzit": ["nizhniy-tagil", "pervouralsk", "kamensk-uralskiy", "irbit", "revda"],
 }
 
 
