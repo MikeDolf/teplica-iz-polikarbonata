@@ -162,11 +162,14 @@
   </script>
 {%- endif %}
 
-  {#- 15 октября: отзывы и короткая заявка сразу после цен и калькулятора.
-      Полная форма на телефоне — через 17 экранов прокрутки, до неё доходят
-      немногие. Отзывы — см. drova_reviews.py. -#}
+  {#- 15 октября: фото владельца, отзывы и короткая заявка сразу после цен и
+      калькулятора. Полная форма на телефоне — через 17 экранов прокрутки, до
+      неё доходят немногие. Фото — drova_works.py, отзывы — drova_reviews.py. -#}
+  {%- if works %}
+  {% with band_tone = "white" if calc else "tint" %}{% include "partials/works.html" %}{% endwith %}
+  {%- endif %}
   {%- if reviews %}
-  {% with band_tone = "plain" if calc else "tint" %}{% include "partials/reviews.html" %}{% endwith %}
+  {% with band_tone = "tint" if calc else "white" %}{% include "partials/reviews.html" %}{% endwith %}
   {%- endif %}
   {% include "partials/cta_mid.html" %}
 
