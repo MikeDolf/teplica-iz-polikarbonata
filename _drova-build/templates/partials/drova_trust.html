@@ -1,0 +1,52 @@
+{#- Полоса доверия сразу под первым экраном страниц дров (15 октября 2026).
+    Владелец: «дрова мы возим очень плотной укладкой, без обмана и подлога,
+    всё честно, за качество ручаемся» и «скидка 5% при заказе через MAX».
+    Вёрстка — та же .tstrip, что у грунта (partials/trustbar.html): факт в
+    три слова, подробности — в блоке «Как сравнивать цены» у таблицы цен.
+    Плотная укладка — только там, где продаём дрова кубами (trust_wood); на
+    страницах угля, брикетов и услуг вместо неё режим работы. -#}
+<section class="tstrip" aria-label="Почему у нас спокойно">
+  <div class="wrap tstrip__in">
+    {%- if trust_wood %}
+    <div class="tstrip__i">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8" cy="9" r="2"/><circle cx="14" cy="9" r="2"/><circle cx="11" cy="15" r="2"/><circle cx="17" cy="15" r="2"/></svg>
+      </span>
+      <b>Плотная укладка</b>
+      <span>без пустот — объём честный</span>
+    </div>
+    {%- endif %}
+    <div class="tstrip__i">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+      </span>
+      <b>Оплата после выгрузки</b>
+      <span>{% if trust_wood %}сначала смотрите дрова{% else %}предоплату не берём{% endif %}</span>
+    </div>
+    <div class="tstrip__i">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3z"/><path d="m9 12 2 2 4-4"/></svg>
+      </span>
+      <b>За качество ручаемся</b>
+      <span>без обмана и подлога</span>
+    </div>
+    {%- if not trust_wood %}
+    <div class="tstrip__i">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      </span>
+      <b>{{ site.hours }}</b>
+      <span>{{ site.callback_promise }}</span>
+    </div>
+    {%- endif %}
+    {%- if site.max_url %}
+    <a class="tstrip__i tstrip__i--max" href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">
+      <span class="tstrip__ic" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z"/><path d="M9.5 9.5h.01M14.5 14.5h.01M15 9l-6 6"/></svg>
+      </span>
+      <b>Скидка 5% в MAX</b>
+      <span>при заказе через MAX</span>
+    </a>
+    {%- endif %}
+  </div>
+</section>

@@ -157,6 +157,8 @@ def overrides():
     o["base.html"] = bs
     cb = ekb_src("partials/callbar.html")
     cb = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", cb)
+    cb = must_sub(r'aria-label="Написать в MAX">', 'aria-label="Написать в MAX, скидка 5%">', cb)
+    cb = must_sub(r'(<span class="callbar__short">MAX</span>)', r'\1<span class="callbar__badge" aria-hidden="true">−5%</span>', cb)
     o["partials/callbar.html"] = cb
     lf = ekb_src("partials/lead_form.html")
     names = [D.PRODUCTS[k]["name"] for k in D.ORDER] + [D.FUEL[k]["name"] for k in D.FUEL_ORDER] + [M3.EXTRA[k]["name"] for k in M3.EXTRA_ORDER]
@@ -179,6 +181,8 @@ def overrides():
     # Свой заголовок формы у услуг: колка и лесовоз не «привезём в день заказа».
     lf = must_sub(r"\{%- if c\.local_partner %\}",
                   '{%- if lead_title %}\n      <h2 class="lead__title" id="lead-title">{{ lead_title }}</h2>\n      {%- elif c.local_partner %}', lf)
+    # 15 октября, владелец: «скидка 5% при заказе через MAX» — у кнопок MAX.
+    lf = must_sub(r'<span>Написать в <b>MAX</b></span>', '<span>Написать в <b>MAX</b> — скидка 5%</span>', lf)
     lf = must_sub(r"var ENDPOINT = ",
                   "var UNITS = " + json.dumps(units, ensure_ascii=False) + ";\n  function leadUnit(){ var f=document.getElementById('lead-product'); return (f && UNITS[f.value]) || 'м³'; }\n"
                   "  (function(){ var f=document.getElementById('lead-product'), u=document.getElementById('lead-unit'), v=document.getElementById('lead-volume');\n"
@@ -202,6 +206,7 @@ def overrides():
     cm = must_sub(r'product: "\{\{ preselect_product \}\}"', 'product: {{ (preselect_product or "дрова")|tojson }}', cm)
     cm = must_sub(r'district: "\{\{ city\.name \}\}"', 'district: {{ (city_prep or "")|tojson }}', cm)
     cm = must_sub(r'<b>Заявка принята\.</b> Ответим на указанный номер\.', '<b>Заявка принята.</b> Напишем вам, {{ site.callback_promise }}.', cm)
+    cm = must_sub(r'<p class="ctamid__alt">Проще в мессенджере\? (<a [^>]*>MAX</a>)</p>', r'<p class="ctamid__alt">Закажите в \1 — скидка 5%</p>', cm)
     o["partials/cta_mid.html"] = cm
     fc = ekb_src("partials/floatcta.html")
     fc = must_sub(r"Калькулятор посчитает объём и рейс до вашего адреса — можно прикинуть заранее",
@@ -410,7 +415,7 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
         **({"price_note": price_note} if price_note else {}), **({} if calc else {"calc_base": "/drova-ekaterinburg/"}), **({"min_text": min_text} if min_text else {}), **({"hero_min": hero_min} if hero_min else {}), self_path=path, preselect_product=preselect,
         city_prep=city_prep, city_text=city_text, links=links or PROD_LINKS, links_title=links_title,
         links2=links2, links2_title=links2_title, is_hub=is_hub, xtables=xtables or [],
-        lead_city=lead_city or {}, lead_title=lead_title or "", works=WK.for_page(path), works_title=WK.TITLE, reviews=REV, reviews_title=REV_TITLE, reviews_note=REV_NOTE,
+        trust_wood=bool(price) and unit.endswith("м³"), lead_city=lead_city or {}, lead_title=lead_title or "", works=WK.for_page(path), works_title=WK.TITLE, reviews=REV, reviews_title=REV_TITLE, reviews_note=REV_NOTE,
         schema_json=schema(h1, path, faq, (offer or {}).get("low", price), crumbs=not is_hub,
                            **({k: v for k, v in offer.items() if k != "low"} if offer else (offer_range(price, unit, ex) if price else {})))))
     write(path, html)

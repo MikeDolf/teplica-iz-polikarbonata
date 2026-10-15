@@ -1202,6 +1202,17 @@ html{overflow-x:hidden}
 .dlinks{list-style:none;padding:0;margin:0 0 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px 18px}
 .dlinks a{display:block;padding:10px 14px;border:1px solid var(--l-line,#dfe6e1);border-radius:10px;text-decoration:none;min-height:44px}
 .dlinks a:hover{border-color:currentColor}
+/* Дрова, 15 октября: «Как сравнивать цены», −5% в MAX */
+.dcmp{margin:22px 0 4px;padding:16px 18px;border-radius:14px;background:#fff8ec;border:1.5px solid #f0d5a2;color:#3d2e12}
+.dcmp p{margin:0 0 8px;line-height:1.55}
+.dcmp p:last-child{margin-bottom:0}
+.dcmp__t{font-weight:800;font-size:17px;color:#2b200b}
+.dcmp a{color:inherit;font-weight:700}
+.btn__badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:#08301a;color:#fff;font-size:13px;font-weight:800;line-height:1.35;vertical-align:1px}
+.callbar__phone{position:relative}
+.callbar__badge{position:absolute;top:-7px;right:-3px;padding:1px 6px;border-radius:999px;background:#f3c46f;color:#2b200b;font-size:11.5px;font-weight:800;line-height:1.4}
+.tstrip__i--max{text-decoration:none;color:inherit}
+.tstrip__i--max b{color:var(--accent)}
 .dlinks--folded li:nth-child(n+7){display:none}
 .dlinks__more{display:block;width:100%;margin:-6px 0 22px;min-height:46px;padding:11px 14px;font:inherit;font-size:15.5px;font-weight:700;color:var(--accent,#2f7d46);background:transparent;border:1.5px dashed var(--l-line,#c9d6cd);border-radius:10px;cursor:pointer}
 .dlinks__more:focus-visible{outline:3px solid var(--focus,#f0a814);outline-offset:2px}
