@@ -422,10 +422,10 @@ def main():
             title=a["title"], description=a["desc"], canonical=DOMAIN + path, h1=a["h1"], lede=a["lede"],
             body=a["body"], faq=a["faq"], og_type="article", delivery=D.DELIVERY, cta_base="/shcheben-ekaterinburg/",
             cta_url=a.get("cta", ("/shcheben-ekaterinburg/", "Цены на щебень"))[0], cta_text=a.get("cta", ("/shcheben-ekaterinburg/", "Цены на щебень"))[1],
-            date_iso=ART_PUB, date_ru=ru_d(ART_PUB), upd_iso=ART_PUB, upd_ru=ru_d(ART_PUB),
+            date_iso=a.get("date", ART_PUB), date_ru=ru_d(a.get("date", ART_PUB)), upd_iso=a.get("date", ART_PUB), upd_ru=ru_d(a.get("date", ART_PUB)),
             related=a.get("related", []) + [l for l in ART_LINKS if l["url"] != path] + [CALC_LINK, {"url": D.HUB, "text": "Доставка щебня и песка"}],
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
-                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": ART_PUB, "dateModified": ART_PUB,
+                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": a.get("date", ART_PUB), "dateModified": a.get("date", ART_PUB),
                  "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/assets/ekb/photo/hero-shcheben-1400.jpg"},
                 {"@type": "BreadcrumbList", "itemListElement": [
