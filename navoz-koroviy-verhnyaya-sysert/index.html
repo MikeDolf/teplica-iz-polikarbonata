@@ -32,7 +32,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=ba75f7f2"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=15dce985"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -748,7 +748,10 @@
     raf = requestAnimationFrame(update);
   }, { passive: true });
   window.addEventListener('resize', update);
-  update();
+  // 4 ноября: при загрузке лента стоит на первом отзыве — состояние ставим
+  // без замеров (update() читал scrollLeft и вызывал лишний пересчёт вёрстки).
+  prev.disabled = true; next.disabled = false;
+  if (dotEls[0]) dotEls[0].classList.add('rev__dot--on');
 (function(){
     if(n <= 1) return;
     var DELAY = 5000, QUIET = 5000, SLIDE = 700;
@@ -977,7 +980,9 @@
     raf = requestAnimationFrame(update);
   }, { passive: true });
   window.addEventListener('resize', update);
-  update();
+  // 4 ноября: стартовое состояние без замеров (см. reviews.html) — лента на первом фото.
+  prev.disabled = true; next.disabled = n <= 1;
+  if (dotEls[0]) dotEls[0].classList.add('works__dot--on');
 (function(){
     if(n <= 1) return;
     var DELAY = 3000, QUIET = 5000, SLIDE = 700;
@@ -1887,20 +1892,32 @@
     var hero=document.querySelector('.hero'), form=document.getElementById('zayavka');
     el.hidden=false;
     var shown=false;
+    el.querySelector('.fcta__close').addEventListener('click', function(){
+      el.classList.remove('is-on'); store('fctaHidden','1');
+    });
+    function set(want){ if (want!==shown){ shown=want; el.classList.toggle('is-on', want); } }
+    // 4 ноября: раньше upd() сразу при загрузке звал getBoundingClientRect —
+    // браузер посреди разбора страницы пересчитывал всю вёрстку (~200 мс
+    // блокировки на телефоне, Lighthouse). IntersectionObserver отдаёт
+    // те же «шапка ушла / форма видна» без принудительных замеров.
+    if ('IntersectionObserver' in window) {
+      var heroGone = false, formIn = false;
+      var apply = function(){ set((hero ? heroGone : window.scrollY > 700) && !formIn); };
+      if (hero) new IntersectionObserver(function(es){ es.forEach(function(e){ heroGone = !e.isIntersecting && e.boundingClientRect.bottom < 0; }); apply(); }).observe(hero);
+      else addEventListener('scroll', apply, {passive:true});
+      if (form) new IntersectionObserver(function(es){ es.forEach(function(e){ formIn = e.isIntersecting; }); apply(); }, {rootMargin: '0px 0px -10% 0px'}).observe(form);
+      return;
+    }
     function upd(){
       var past = hero ? (hero.getBoundingClientRect().bottom < 0) : (window.scrollY > 700);
       var atForm = form && form.getBoundingClientRect().top < window.innerHeight*0.9
                         && form.getBoundingClientRect().bottom > 0;
-      var want = past && !atForm;
-      if (want!==shown){ shown=want; el.classList.toggle('is-on', want); }
+      set(past && !atForm);
     }
     var tick=false;
     addEventListener('scroll', function(){ if(!tick){ tick=true; requestAnimationFrame(function(){ upd(); tick=false; }); } }, {passive:true});
     addEventListener('resize', upd, {passive:true});
-    el.querySelector('.fcta__close').addEventListener('click', function(){
-      el.classList.remove('is-on'); store('fctaHidden','1');
-    });
-    upd();
+    requestAnimationFrame(upd);
   })();
   </script>
   <script>

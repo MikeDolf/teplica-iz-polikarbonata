@@ -462,6 +462,7 @@ def main():
     render_author([{"title": "Статьи о щебне, песке и стройке", "links": ART_LINKS + [CALC_LINK]}])
     sitemaps()
     print(f"Щебень и песок: {len(PAGES)} страниц")
+    import make_feed; make_feed.main()   # 4 ноября: прайс для Яндекс Бизнеса (/price/yandex-business.xml) — с теми же ценами
 
 
 def sitemaps():

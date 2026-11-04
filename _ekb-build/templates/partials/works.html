@@ -123,7 +123,9 @@
     raf = requestAnimationFrame(update);
   }, { passive: true });
   window.addEventListener('resize', update);
-  update();
+  // 4 ноября: стартовое состояние без замеров (см. reviews.html) — лента на первом фото.
+  prev.disabled = true; next.disabled = n <= 1;
+  if (dotEls[0]) dotEls[0].classList.add('works__dot--on');
 {% with delay = 3000 %}{% include "partials/carousel_autoplay.html" %}{% endwith %}
 })();
 </script>

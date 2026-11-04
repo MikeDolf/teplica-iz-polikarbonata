@@ -92,7 +92,10 @@
     raf = requestAnimationFrame(update);
   }, { passive: true });
   window.addEventListener('resize', update);
-  update();
+  // 4 ноября: при загрузке лента стоит на первом отзыве — состояние ставим
+  // без замеров (update() читал scrollLeft и вызывал лишний пересчёт вёрстки).
+  prev.disabled = true; next.disabled = false;
+  if (dotEls[0]) dotEls[0].classList.add('rev__dot--on');
 {% with delay = 5000 %}{% include "partials/carousel_autoplay.html" %}{% endwith %}
 })();
 </script>

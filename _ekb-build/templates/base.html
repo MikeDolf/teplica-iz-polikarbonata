@@ -109,20 +109,32 @@
     var hero=document.querySelector('.hero'), form=document.getElementById('zayavka');
     el.hidden=false;
     var shown=false;
+    el.querySelector('.fcta__close').addEventListener('click', function(){
+      el.classList.remove('is-on'); store('fctaHidden','1');
+    });
+    function set(want){ if (want!==shown){ shown=want; el.classList.toggle('is-on', want); } }
+    // 4 ноября: раньше upd() сразу при загрузке звал getBoundingClientRect —
+    // браузер посреди разбора страницы пересчитывал всю вёрстку (~200 мс
+    // блокировки на телефоне, Lighthouse). IntersectionObserver отдаёт
+    // те же «шапка ушла / форма видна» без принудительных замеров.
+    if ('IntersectionObserver' in window) {
+      var heroGone = false, formIn = false;
+      var apply = function(){ set((hero ? heroGone : window.scrollY > 700) && !formIn); };
+      if (hero) new IntersectionObserver(function(es){ es.forEach(function(e){ heroGone = !e.isIntersecting && e.boundingClientRect.bottom < 0; }); apply(); }).observe(hero);
+      else addEventListener('scroll', apply, {passive:true});
+      if (form) new IntersectionObserver(function(es){ es.forEach(function(e){ formIn = e.isIntersecting; }); apply(); }, {rootMargin: '0px 0px -10% 0px'}).observe(form);
+      return;
+    }
     function upd(){
       var past = hero ? (hero.getBoundingClientRect().bottom < 0) : (window.scrollY > 700);
       var atForm = form && form.getBoundingClientRect().top < window.innerHeight*0.9
                         && form.getBoundingClientRect().bottom > 0;
-      var want = past && !atForm;
-      if (want!==shown){ shown=want; el.classList.toggle('is-on', want); }
+      set(past && !atForm);
     }
     var tick=false;
     addEventListener('scroll', function(){ if(!tick){ tick=true; requestAnimationFrame(function(){ upd(); tick=false; }); } }, {passive:true});
     addEventListener('resize', upd, {passive:true});
-    el.querySelector('.fcta__close').addEventListener('click', function(){
-      el.classList.remove('is-on'); store('fctaHidden','1');
-    });
-    upd();
+    requestAnimationFrame(upd);
   })();
   </script>
   <script>

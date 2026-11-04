@@ -695,6 +695,7 @@ def main():
     gone()
     sitemaps()
     print(f"Дрова: {len(PAGES)} страниц")
+    import make_feed; make_feed.main()   # 4 ноября: прайс для Яндекс Бизнеса (/price/yandex-business.xml) — с теми же ценами
 
 
 # Снятые страницы: адрес уже в поиске, поэтому не 404, а закрытая от индекса

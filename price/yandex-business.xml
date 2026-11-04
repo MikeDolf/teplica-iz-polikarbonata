@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<yml_catalog date="2026-11-04T21:01:40+05:00">
+  <shop>
+    <name>Доставка дров, грунта, щебня и песка</name>
+    <company>Копырин Михаил Евгеньевич</company>
+    <url>https://fanline.su/</url>
+    <currencies><currency id="RUB" rate="1"/></currencies>
+    <categories>
+      <category id="1">Дрова</category>
+      <category id="2">Брикеты, пеллеты и уголь</category>
+      <category id="3">Грунт и органика</category>
+      <category id="4">Щебень</category>
+      <category id="5">Песок</category>
+      <category id="6">Другие сыпучие материалы</category>
+    </categories>
+    <offers>
+      <offer id="berezovye-1" available="true">
+        <name>Берёзовые колотые дрова, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-berezovye-ekaterinburg/</url>
+        <price>6490</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/drova-berezovye-churki-ploshchadka-800.jpg</picture>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 490 ₽, 3 м³ — от 12 470 ₽, машина 10 м³ — от 33 400 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="berezovye-3" available="true">
+        <name>Берёзовые колотые дрова, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-berezovye-ekaterinburg/</url>
+        <price>12470</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/drova-berezovye-churki-ploshchadka-800.jpg</picture>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 490 ₽, 3 м³ — от 12 470 ₽, машина 10 м³ — от 33 400 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="berezovye-10" available="true">
+        <name>Берёзовые колотые дрова, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-berezovye-ekaterinburg/</url>
+        <price>33400</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/drova-berezovye-churki-ploshchadka-800.jpg</picture>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 490 ₽, 3 м³ — от 12 470 ₽, машина 10 м³ — от 33 400 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="smeshannye-1" available="true">
+        <name>Смешанные колотые дрова, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-smeshannye-ekaterinburg/</url>
+        <price>5850</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 5 850 ₽, 3 м³ — от 10 550 ₽, машина 10 м³ — от 27 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="smeshannye-3" available="true">
+        <name>Смешанные колотые дрова, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-smeshannye-ekaterinburg/</url>
+        <price>10550</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 5 850 ₽, 3 м³ — от 10 550 ₽, машина 10 м³ — от 27 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="smeshannye-10" available="true">
+        <name>Смешанные колотые дрова, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-smeshannye-ekaterinburg/</url>
+        <price>27000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 5 850 ₽, 3 м³ — от 10 550 ₽, машина 10 м³ — от 27 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="hvoynye-1" available="true">
+        <name>Хвойные колотые дрова, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-hvoynye-ekaterinburg/</url>
+        <price>5700</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 5 700 ₽, 3 м³ — от 10 100 ₽, машина 10 м³ — от 25 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="hvoynye-3" available="true">
+        <name>Хвойные колотые дрова, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-hvoynye-ekaterinburg/</url>
+        <price>10100</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 5 700 ₽, 3 м³ — от 10 100 ₽, машина 10 м³ — от 25 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="hvoynye-10" available="true">
+        <name>Хвойные колотые дрова, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-hvoynye-ekaterinburg/</url>
+        <price>25500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 5 700 ₽, 3 м³ — от 10 100 ₽, машина 10 м³ — от 25 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="osina-1" available="true">
+        <name>Осиновые колотые дрова, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-osinovye-ekaterinburg/</url>
+        <price>6000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 000 ₽, 3 м³ — от 11 000 ₽, машина 10 м³ — от 28 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="osina-3" available="true">
+        <name>Осиновые колотые дрова, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-osinovye-ekaterinburg/</url>
+        <price>11000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 000 ₽, 3 м³ — от 11 000 ₽, машина 10 м³ — от 28 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="osina-10" available="true">
+        <name>Осиновые колотые дрова, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-osinovye-ekaterinburg/</url>
+        <price>28500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 000 ₽, 3 м³ — от 11 000 ₽, машина 10 м³ — от 28 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="olha-1" available="true">
+        <name>Ольховые колотые дрова, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-olhovye-ekaterinburg/</url>
+        <price>6950</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 950 ₽, 3 м³ — от 13 850 ₽, машина 10 м³ — от 38 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="olha-3" available="true">
+        <name>Ольховые колотые дрова, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-olhovye-ekaterinburg/</url>
+        <price>13850</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 950 ₽, 3 м³ — от 13 850 ₽, машина 10 м³ — от 38 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="olha-10" available="true">
+        <name>Ольховые колотые дрова, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-olhovye-ekaterinburg/</url>
+        <price>38000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 950 ₽, 3 м³ — от 13 850 ₽, машина 10 м³ — от 38 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="suhie-1" available="true">
+        <name>Сухие берёзовые дрова, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-suhie-ekaterinburg/</url>
+        <price>8150</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 8 150 ₽, 3 м³ — от 17 450 ₽, машина 10 м³ — от 50 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="suhie-3" available="true">
+        <name>Сухие берёзовые дрова, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-suhie-ekaterinburg/</url>
+        <price>17450</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 8 150 ₽, 3 м³ — от 17 450 ₽, машина 10 м³ — от 50 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="suhie-10" available="true">
+        <name>Сухие берёзовые дрова, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-suhie-ekaterinburg/</url>
+        <price>50000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 8 150 ₽, 3 м³ — от 17 450 ₽, машина 10 м³ — от 50 000 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="churki-1" available="true">
+        <name>Берёзовые дрова чурками, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-churkami-ekaterinburg/</url>
+        <price>6000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/drova-berezovye-churki-ploshchadka-800.jpg</picture>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 000 ₽, 3 м³ — от 11 000 ₽, машина 10 м³ — от 28 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="churki-3" available="true">
+        <name>Берёзовые дрова чурками, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-churkami-ekaterinburg/</url>
+        <price>11000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/drova-berezovye-churki-ploshchadka-800.jpg</picture>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 000 ₽, 3 м³ — от 11 000 ₽, машина 10 м³ — от 28 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="churki-10" available="true">
+        <name>Берёзовые дрова чурками, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/drova-churkami-ekaterinburg/</url>
+        <price>28500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/drova-berezovye-churki-ploshchadka-800.jpg</picture>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 6 000 ₽, 3 м³ — от 11 000 ₽, машина 10 м³ — от 28 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="gorbyl-1" available="true">
+        <name>Горбыль на дрова, 1 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/gorbyl-ekaterinburg/</url>
+        <price>4700</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 4 700 ₽, 3 м³ — от 7 100 ₽, машина 10 м³ — от 15 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="gorbyl-3" available="true">
+        <name>Горбыль на дрова, 3 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/gorbyl-ekaterinburg/</url>
+        <price>7100</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 4 700 ₽, 3 м³ — от 7 100 ₽, машина 10 м³ — от 15 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="gorbyl-10" available="true">
+        <name>Горбыль на дрова, 10 м³ с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/gorbyl-ekaterinburg/</url>
+        <price>15500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>1</categoryId>
+        <description>В плотной укладке, с доставкой и выгрузкой по Екатеринбургу. 1 м³ — от 4 700 ₽, 3 м³ — от 7 100 ₽, машина 10 м³ — от 15 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="brikety" available="true">
+        <name>Топливные брикеты, упаковка 12 шт.</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/toplivnye-brikety-ekaterinburg/</url>
+        <price>350</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>2</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/brikety-v-gazeli-800.jpg</picture>
+        <description>Цена за упаковку 12 брикетов, около 12 кг, без доставки. Поддон и тонну посчитаем по заявке — оптом дешевле. Доставку назовём по адресу, вместе с дровами привезём одним рейсом.</description>
+      </offer>
+      <offer id="pellety" available="true">
+        <name>Пеллеты древесные, мешок 30 кг</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pellety-ekaterinburg/</url>
+        <price>550</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>2</categoryId>
+        <description>Цена за мешок 30 кг, без доставки. Поддон и тонну посчитаем по заявке — оптом дешевле. Доставку назовём по адресу, вместе с дровами привезём одним рейсом.</description>
+      </offer>
+      <offer id="ugol" available="true">
+        <name>Каменный уголь, мешок 25 кг</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/ugol-kamennyy-ekaterinburg/</url>
+        <price>400</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>2</categoryId>
+        <description>Цена за мешок 25 кг, без доставки. Доставку назовём по адресу, вместе с дровами привезём одним рейсом.</description>
+      </offer>
+      <offer id="ugol-t" available="true">
+        <name>Каменный уголь, 1 тонна навалом</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/ugol-kamennyy-ekaterinburg/</url>
+        <price>9500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>2</categoryId>
+        <description>Тонна навалом, без доставки. Доставку назовём по адресу, вместе с дровами привезём одним рейсом.</description>
+      </offer>
+      <offer id="drev-ugol" available="true">
+        <name>Древесный уголь, 1 кг</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/ugol-drevesnyy-ekaterinburg/</url>
+        <price>70</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>2</categoryId>
+        <description>Цена за килограмм, без доставки. Доставку назовём по адресу, вместе с дровами привезём одним рейсом.</description>
+      </offer>
+      <offer id="chernozem-ekaterinburg" available="true">
+        <name>Чернозём, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/chernozem-ekaterinburg/</url>
+        <price>850</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/vygruzka-uchastok-800.jpg</picture>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="peregnoy-ekaterinburg" available="true">
+        <name>Перегной, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/peregnoy-ekaterinburg/</url>
+        <price>1100</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/dve-kuchi-uchastok-800.jpg</picture>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="torf-ekaterinburg" available="true">
+        <name>Торф, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/torf-ekaterinburg/</url>
+        <price>950</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="plodorodnyy-grunt-ekaterinburg" available="true">
+        <name>Плодородный грунт, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/plodorodnyy-grunt-ekaterinburg/</url>
+        <price>750</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <picture>https://fanline.su/assets/ekb/photo/raboty/dve-kuchi-uchastok-800.jpg</picture>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="torfogrunt-ekaterinburg" available="true">
+        <name>Торфогрунт, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/torfogrunt-ekaterinburg/</url>
+        <price>900</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="kislyy-torf-ekaterinburg" available="true">
+        <name>Кислый торф, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/kislyy-torf-ekaterinburg/</url>
+        <price>950</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="zemlya-v-meshkah-ekaterinburg" available="true">
+        <name>Земля в мешках, 1 мешок</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/zemlya-v-meshkah-ekaterinburg/</url>
+        <price>450</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <description>Цена за мешок. Доставку считаем отдельно, по расстоянию до адреса. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="opilki-ekaterinburg" available="true">
+        <name>Опил, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/opilki-ekaterinburg/</url>
+        <price>1000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="navoz-koroviy-ekaterinburg" available="true">
+        <name>Навоз коровий, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/navoz-koroviy-ekaterinburg/</url>
+        <price>900</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="navoz-konskiy-ekaterinburg" available="true">
+        <name>Навоз конский, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/navoz-konskiy-ekaterinburg/</url>
+        <price>1200</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>3</categoryId>
+        <description>Цена за материал навалом, за 1 м³. Доставку считаем отдельно, по расстоянию до адреса: точную сумму покажет калькулятор на странице. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-5-20" available="true">
+        <name>Щебень 5–20, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-5-20-ekaterinburg/</url>
+        <price>1150</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 11 300 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-20-40" available="true">
+        <name>Щебень 20–40, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-20-40-ekaterinburg/</url>
+        <price>770</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 10 800 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-40-70" available="true">
+        <name>Щебень 40–70, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-40-70-ekaterinburg/</url>
+        <price>770</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 10 800 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-70-120" available="true">
+        <name>Щебень 70–120, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-70-120-ekaterinburg/</url>
+        <price>920</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 12 700 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pesok-karernyy" available="true">
+        <name>Песок карьерный, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pesok-karernyy-ekaterinburg/</url>
+        <price>990</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>5</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 13 400 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pesok-stroitelnyy" available="true">
+        <name>Песок строительный, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pesok-stroitelnyy-ekaterinburg/</url>
+        <price>1000</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>5</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 13 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pesok-rechnoy" available="true">
+        <name>Песок речной мытый, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pesok-rechnoy-ekaterinburg/</url>
+        <price>1450</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>5</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 18 000 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pesok-mytyy" available="true">
+        <name>Песок мытый, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pesok-mytyy-ekaterinburg/</url>
+        <price>1450</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>5</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 18 000 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pesok-peskostruy" available="true">
+        <name>Песок для пескоструя, 1 тонна</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pesok-dlya-peskostruya-ekaterinburg/</url>
+        <price>990</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>5</categoryId>
+        <description>Цена за тонну, без доставки. Доставку назовём по адресу. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="otsev" available="true">
+        <name>Отсев 0–5, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/otsev-ekaterinburg/</url>
+        <price>500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 8 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pgs" available="true">
+        <name>ПГС, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pgs-ekaterinburg/</url>
+        <price>500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 8 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shchps" available="true">
+        <name>ЩПС, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shchps-ekaterinburg/</url>
+        <price>700</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 10 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="graviy" available="true">
+        <name>Гравий, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/graviy-ekaterinburg/</url>
+        <price>900</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 12 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="galka" available="true">
+        <name>Галька, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/galka-ekaterinburg/</url>
+        <price>900</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 12 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="skalnyy-grunt" available="true">
+        <name>Скальный грунт, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/skalnyy-grunt-ekaterinburg/</url>
+        <price>400</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 7 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="keramzit" available="true">
+        <name>Керамзит, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/keramzit-ekaterinburg/</url>
+        <price>1500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 18 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="granitnaya-kroshka" available="true">
+        <name>Гранитная крошка, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/granitnaya-kroshka-ekaterinburg/</url>
+        <price>1600</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 19 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="asfaltovaya-kroshka" available="true">
+        <name>Асфальтовая крошка, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/asfaltovaya-kroshka-ekaterinburg/</url>
+        <price>500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 8 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="butovyy-kamen" available="true">
+        <name>Бутовый камень, 1 м³</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/butovyy-kamen-ekaterinburg/</url>
+        <price>1200</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Цена за 1 м³ без доставки. С доставкой по Екатеринбургу: 10 м³ — от 15 500 ₽, рейс — от 3 500 ₽. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-meshok" available="true">
+        <name>Щебень в мешках, 1 мешок</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-v-meshkah-ekaterinburg/</url>
+        <price>90</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Цена за мешок, без доставки. Доставку назовём по адресу. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pesok-meshok" available="true">
+        <name>Песок в мешках, 1 мешок</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pesok-v-meshkah-ekaterinburg/</url>
+        <price>125</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>5</categoryId>
+        <description>Цена за мешок, без доставки. Доставку назовём по адресу. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-20-40-10" available="true">
+        <name>Щебень 20–40, 10 м³ (КамАЗ) с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-20-40-ekaterinburg/</url>
+        <price>10800</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Полный КамАЗ, 10 м³, с доставкой по Екатеринбургу. Объём видно по кузову до выгрузки. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-5-20-10" available="true">
+        <name>Щебень 5–20, 10 м³ (КамАЗ) с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-5-20-ekaterinburg/</url>
+        <price>11300</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Полный КамАЗ, 10 м³, с доставкой по Екатеринбургу. Объём видно по кузову до выгрузки. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="shcheben-40-70-10" available="true">
+        <name>Щебень 40–70, 10 м³ (КамАЗ) с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/shcheben-40-70-ekaterinburg/</url>
+        <price>10800</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>4</categoryId>
+        <description>Полный КамАЗ, 10 м³, с доставкой по Екатеринбургу. Объём видно по кузову до выгрузки. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pesok-karernyy-10" available="true">
+        <name>Песок карьерный, 10 м³ (КамАЗ) с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pesok-karernyy-ekaterinburg/</url>
+        <price>13400</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>5</categoryId>
+        <description>Полный КамАЗ, 10 м³, с доставкой по Екатеринбургу. Объём видно по кузову до выгрузки. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="pgs-10" available="true">
+        <name>ПГС, 10 м³ (КамАЗ) с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/pgs-ekaterinburg/</url>
+        <price>8500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Полный КамАЗ, 10 м³, с доставкой по Екатеринбургу. Объём видно по кузову до выгрузки. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+      <offer id="otsev-10" available="true">
+        <name>Отсев 0–5, 10 м³ (КамАЗ) с доставкой</name>
+        <vendor>Без бренда</vendor>
+        <url>https://fanline.su/otsev-ekaterinburg/</url>
+        <price>8500</price>
+        <currencyId>RUB</currencyId>
+        <categoryId>6</categoryId>
+        <description>Полный КамАЗ, 10 м³, с доставкой по Екатеринбургу. Объём видно по кузову до выгрузки. Оплата после выгрузки, на месте ничего не добавляем.</description>
+      </offer>
+    </offers>
+  </shop>
+</yml_catalog>

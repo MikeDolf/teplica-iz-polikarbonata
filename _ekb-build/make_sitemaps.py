@@ -98,3 +98,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    import make_feed; make_feed.main()   # 4 ноября: прайс для Яндекс Бизнеса — с теми же ценами, что у грунта
