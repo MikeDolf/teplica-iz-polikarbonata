@@ -1,0 +1,16 @@
+{#- 4 ноября: «Почему 3 куба дров не стоят 5 000 ₽» — вместо «Как сравнивать цены».
+    Тексты и пояснения — drova_texts.HONEST. Без названий конкурентов. -#}
+<div class="hon" id="chestno">
+  <h3 class="hon__t">{{ honest.title }}</h3>
+  <p class="hon__lede">{{ honest.lede }}</p>
+  <ul class="hon__list">
+  {%- for name, bad, good in honest["items"] %}
+    <li class="hon__i">
+      <b class="hon__name">{{ name }}</b>
+      <span class="hon__bad"><span class="hon__tag">Как бывает</span> {{ bad }}</span>
+      <span class="hon__good"><span class="hon__tag">У нас</span> {{ good.format(gen=ex.gen, po=deliv_po|default("Екатеринбургу"), t3=(ex.t3|ru)) }}</span>
+    </li>
+  {%- endfor %}
+  </ul>
+  <p class="hon__check">{{ honest.check }}{% if site.max_url %} При заказе через <a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">MAX</a>&nbsp;— скидка 5%.{% endif %}</p>
+</div>

@@ -58,12 +58,36 @@ PRODUCTS = {
     "churki":     {"name": "Берёзовые дрова чурками", "short": "Чурками (неколотые)", "gen": "берёзы чурками", "slug": "drova-churkami-ekaterinburg"},
     "gorbyl":     {"name": "Горбыль на дрова",        "short": "Горбыль",   "gen": "горбыля", "slug": "gorbyl-ekaterinburg"},
 }
-for _k, _p in PRODUCTS.items():
-    _p["wood"] = _WOOD[_k]
-    _p["price"] = round(total(_k, REF_VOL) / REF_VOL / 10) * 10   # ₽/м³ с доставкой при машине (берёза 3 340, не 3 350)
-    _p["t1"] = total(_k, 1)
-    _p["t3"] = total(_k, 3)
-    _p["t10"] = total(_k, 10)
+def recompute():
+    """Поля товаров с доставкой — от текущего DELIVERY (его меняет на время страницы
+    города build.city_price, см. CITY_KM ниже)."""
+    for _k, _p in PRODUCTS.items():
+        _p["wood"] = _WOOD[_k]
+        _p["price"] = round(total(_k, REF_VOL) / REF_VOL / 10) * 10   # ₽/м³ с доставкой при машине (берёза 3 340, не 3 350)
+        _p["t1"] = total(_k, 1)
+        _p["t3"] = total(_k, 3)
+        _p["t10"] = total(_k, 10)
+
+
+recompute()
+
+# 4 ноября: владелец — в Первоуральске, Полевском и Каменске-Уральском партнёров нет,
+# пишут оттуда много, а по факту 3 куба берёзы с доставкой выходят 13–14 тысяч. Сайт же
+# показывал цену Екатеринбурга (12 470 ₽) и «возим с ближайшей площадки, цена та же» —
+# человек видел одну сумму, слышал другую и уходил. Владелец: «цена должна быть высчитана,
+# а не взята с потолка». Поэтому в этих городах рейс считается открыто: рейс по
+# Екатеринбургу + FAR_PER_KM ₽ за каждый километр от Екатеринбурга (машина идёт оттуда
+# и возвращается пустой), с округлением до 100 ₽. Расстояния — как у грунта (cities.py).
+FAR_PER_KM = 15
+CITY_KM = {"pervouralsk": 45, "polevskoy": 55, "kamensk-uralskiy": 100}
+BASE_DELIVERY = DELIVERY
+
+
+def city_delivery(key):
+    """Рейс в город без своей площадки: 3 500 + 15 ₽/км, до 100 ₽. None — цена как в Екатеринбурге."""
+    if key not in CITY_KM:
+        return None
+    return round((BASE_DELIVERY + FAR_PER_KM * CITY_KM[key]) / 100) * 100
 ORDER = ["berezovye", "smeshannye", "hvoynye", "osina", "olha", "suhie", "churki", "gorbyl"]
 
 # Другое топливо (владелец: «продаём вообще всё»). Цена не за куб и БЕЗ

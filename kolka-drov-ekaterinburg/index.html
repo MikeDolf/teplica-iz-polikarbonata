@@ -33,7 +33,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=12bfeff9"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=32437dab"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -210,7 +210,7 @@
           <tr><td data-label="Топливо"><a href="/ugol-drevesnyy-ekaterinburg/">Древесный уголь</a></td><td data-label="Цена">от 70 ₽/⁠кг</td></tr>
         </tbody>
       </table></div>
-      <p>Цены дров — с доставкой по Екатеринбургу и ближним городам; в других городах возим с ближайшей площадки, цена примерно та же. Минимального заказа нет: можно привезти и один куб. Брикеты, пеллеты и уголь — без доставки: её назовём по адресу, вместе с дровами привезём одним рейсом. Точную цену назовём под объём, вид и влажность.</p>
+      <p>Цены дров — с доставкой по Екатеринбургу и ближним городам; в другие города возим с ближайшей площадки, а где её нет — из Екатеринбурга, и тогда рейс считаем по километрам. Минимального заказа нет: можно привезти и один куб. Брикеты, пеллеты и уголь — без доставки: её назовём по адресу, вместе с дровами привезём одним рейсом. Точную цену назовём под объём, вид и влажность.</p>
     </div>
   </section>
   
@@ -635,10 +635,6 @@
     <div class="wrap">
       <h2 class="sec-h" id="akcii-title">Акции и скидки</h2>
       <div class="akcii__grid">
-        <div class="akcii__card akcii__card--hot" data-until="2026-10-31">
-          <b>Осенняя цена до 31 октября</b>
-          <p>3 куба берёзы с доставкой по Екатеринбургу и до 50 км&nbsp;— от 12 000 ₽. Обычно&nbsp;— от 12 470 ₽.</p>
-        </div>
         <div class="akcii__card">
           <b>Соседям&nbsp;— доставка пополам</b>
           <p>Закажите дрова вместе с соседом одной машиной&nbsp;— каждый заплатит за рейс 1 750 ₽ вместо 3 500 ₽.</p>
@@ -659,15 +655,6 @@
       <p class="akcii__note">Скидки не суммируются&nbsp;— действует самая выгодная для вас.</p>
     </div>
   </section>
-  <script>
-  (function(){
-    // Осенняя цена: если сайт не пересобрали после даты окончания, прячем её здесь.
-    var now = new Date(), els = document.querySelectorAll('[data-until]');
-    for(var i = 0; i < els.length; i++){
-      if(now > new Date(els[i].getAttribute('data-until') + 'T23:59:59+05:00')) els[i].hidden = true;
-    }
-  })();
-  </script>
   <section class="ctamid" aria-labelledby="ctamid-title">
   <div class="wrap ctamid__in">
     <div class="ctamid__l">

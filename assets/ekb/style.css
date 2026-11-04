@@ -1218,6 +1218,25 @@ html{overflow-x:hidden}
 .dcmp p:last-child{margin-bottom:0}
 .dcmp__t{font-weight:800;font-size:17px;color:#2b200b}
 .dcmp a{color:inherit;font-weight:700}
+/* 4 ноября: «Почему 3 куба дров не стоят 5 000 ₽» (partials/drova_honest.html) и расчёт цены
+   в городах без своей площадки (.dcmp--calc). */
+.dcmp--calc .table-wrap{margin:6px 0 10px;background:#fff;border-radius:10px}
+.dcmp--calc td:last-child{text-align:right;white-space:nowrap}
+.hon{margin:26px 0 4px}
+.hon__t{margin:0 0 8px;font-size:21px;line-height:1.25}
+.hon__lede{margin:0 0 14px;line-height:1.55}
+.hon__list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+@media (min-width:760px){.hon__list{grid-template-columns:1fr 1fr}}
+.hon__i{display:flex;flex-direction:column;gap:6px;padding:13px 15px;border:1px solid #e4e9e5;border-radius:12px;background:#fff}
+.hon__name{font-size:16.5px}
+.hon__bad,.hon__good{font-size:15px;line-height:1.45}
+.hon__bad{color:#6b5a55}
+.hon__good{color:#16331f}
+.hon__tag{display:inline-block;margin-right:4px;padding:1px 7px;border-radius:9px;font-size:12px;font-weight:700;letter-spacing:.02em;vertical-align:1px}
+.hon__bad .hon__tag{background:#fbe9e6;color:#9a3324}
+.hon__good .hon__tag{background:#e3f4e8;color:#1f6b38}
+.hon__check{margin:14px 0 0;padding:12px 15px;border-radius:12px;background:#fff8ec;border:1.5px solid #f0d5a2;color:#3d2e12;line-height:1.55}
+.hon__check a{color:inherit;font-weight:700}
 .btn__badge{display:inline-block;margin-left:8px;padding:2px 8px;border-radius:999px;background:#08301a;color:#fff;font-size:13px;font-weight:800;line-height:1.35;vertical-align:1px}
 .callbar__phone{position:relative}
 .callbar__badge{position:absolute;top:-7px;right:-3px;padding:1px 6px;border-radius:999px;background:#f3c46f;color:#2b200b;font-size:11.5px;font-weight:800;line-height:1.4}
