@@ -47,6 +47,7 @@ from works import WORKS, WORKS_VIDEO  # noqa
 from bagged import BAGGED, BAG_BASE, MIN_BAGS, BAG_ZONE_KM, BAG_ANY  # noqa
 from city_product import CP, CPF, BAGS_ASSUMED  # noqa
 import typo  # noqa
+import artseo  # noqa  4 ноября: оглавление статей
 try:
     from reviews import REVIEWS  # noqa
 except ImportError:
@@ -1522,7 +1523,7 @@ def render_articles():
         outdir = os.path.join(ROOT, base, a["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-            fh.write(typo.glue(html))
+            fh.write(typo.glue(artseo.add_toc(html)))
             check_repeats(html, canonical)
         urls.append(canonical)
     return urls
@@ -1625,7 +1626,7 @@ def render_blog():
         outdir = os.path.join(ROOT, "dostavka-grunta", "blog", p["slug"])
         os.makedirs(outdir, exist_ok=True)
         with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
-            fh.write(typo.glue(html))
+            fh.write(typo.glue(artseo.add_toc(html)))
             check_repeats(html, canonical)
         urls.append(canonical)
     return urls

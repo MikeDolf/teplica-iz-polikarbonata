@@ -21,6 +21,7 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "data"))
 
 import build as B
+import lastmod  # 4 ноября: дата — только при изменении текста страницы
 
 SECTION = os.path.join(ROOT, "sitemap-dostavka-grunta.xml")
 MAIN = os.path.join(ROOT, "sitemap.xml")
@@ -53,8 +54,11 @@ def section_urls():
     return set(every), index
 
 
+OLD = lastmod.old_dates(SECTION)
+
+
 def block(url, priority):
-    return (f"  <url>\n    <loc>{url}</loc>\n    <lastmod>{TODAY}</lastmod>\n"
+    return (f"  <url>\n    <loc>{url}</loc>\n    <lastmod>{lastmod.lastmod(url, OLD.get(url))}</lastmod>\n"
             f"    <changefreq>weekly</changefreq>\n    <priority>{priority}</priority>\n  </url>")
 
 
@@ -81,6 +85,7 @@ def main():
     with open(MAIN, "w", encoding="utf-8") as fh:
         fh.write(head + "\n".join(foreign + [block(u, priority_of(u)) for u in index]) + "\n</urlset>\n")
 
+    lastmod.save()
     was = len(blocks) - len(foreign)
     print(f"sitemap-dostavka-grunta.xml: {len(index)} URL")
     print(f"sitemap.xml: {len(foreign)} чужих + {len(index)} раздела = {len(foreign) + len(index)}")

@@ -380,3 +380,7 @@ CALC = dict(
 from nerud_articles2 import A as _A2, ORDER as _O2  # noqa: E402
 A.update(_A2)
 ORDER += _O2
+
+# 4 ноября: дополнения к коротким статьям и фото доставок (nerud_articles_more.py).
+import nerud_articles_more as _MORE  # noqa: E402
+_MORE.apply(A)

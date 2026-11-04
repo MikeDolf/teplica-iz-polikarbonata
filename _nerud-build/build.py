@@ -30,6 +30,8 @@ sys.path.insert(3, DROVA)
 
 from site_config import SITE as _SITE
 import typo
+import artseo   # 4 ноября: оглавление статей (_ekb-build/artseo.py)
+import lastmod  # 4 ноября: lastmod в карте — только при изменении текста
 import nerud_data as D
 import nerud_works as WK
 import nerud_texts as T
@@ -78,11 +80,13 @@ def overrides():
     o = {}
     h = ekb_src("partials/header.html")
     h = must_sub(r'<a class="hdr__logo" href="/dostavka-grunta/">', f'<a class="hdr__logo hdr__logo--nerud" href="{D.HUB}">', h)
+    h = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", h)  # 4 ноября: без калькулятора — на страницу щебня
     o["partials/header.html"] = h
     f = ekb_src("partials/footer.html")
     f = must_sub(r'<p class="ftr__legal">.*?</p>',
                  '<p class="ftr__legal">Доставка щебня, песка, отсева, ПГС, ЩПС, гравия, керамзита и других сыпучих материалов по {{ site.region_po }}. '
                  'Цены «от»: материал — за кубометр без доставки, рейс по Екатеринбургу — отдельно. Точную стоимость назовём по заявке.</p>', f, re.S)
+    f = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", f)  # 4 ноября: без калькулятора — на страницу щебня
     o["partials/footer.html"] = f
     bs = ekb_src("base.html")
     bs = must_sub(r'imagesizes="\(max-width: 900px\) 260px, 100vw"', 'imagesizes="{{ hero_sizes|default(\'(max-width: 900px) 260px, 100vw\') }}"', bs)
@@ -139,6 +143,7 @@ def overrides():
     fc = ekb_src("partials/floatcta.html")
     fc = must_sub(r"Калькулятор посчитает объём и рейс до вашего адреса — можно прикинуть заранее",
                   "Калькулятор посчитает стоимость щебня или песка вместе с доставкой — можно прикинуть заранее", fc)
+    fc = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", fc)  # 4 ноября: без калькулятора — на страницу щебня
     o["partials/floatcta.html"] = fc
     return o
 
@@ -191,7 +196,7 @@ def _token(m):
 def write(path, html):
     html = re.sub(r"%%([\w.-]+)%%", _token, html)
     assert "%%" not in html, path
-    html = typo.glue(html)
+    html = typo.glue(artseo.add_toc(html))
     full = os.path.join(ROOT, path.strip("/"), "index.html")
     os.makedirs(os.path.dirname(full), exist_ok=True)
     open(full, "w", encoding="utf-8").write(html)
@@ -422,12 +427,13 @@ def main():
             title=a["title"], description=a["desc"], canonical=DOMAIN + path, h1=a["h1"], lede=a["lede"],
             body=a["body"], faq=a["faq"], og_type="article", delivery=D.DELIVERY, cta_base="/shcheben-ekaterinburg/",
             cta_url=a.get("cta", ("/shcheben-ekaterinburg/", "Цены на щебень"))[0], cta_text=a.get("cta", ("/shcheben-ekaterinburg/", "Цены на щебень"))[1],
-            date_iso=a.get("date", ART_PUB), date_ru=ru_d(a.get("date", ART_PUB)), upd_iso=a.get("date", ART_PUB), upd_ru=ru_d(a.get("date", ART_PUB)),
+            date_iso=a.get("date", ART_PUB), date_ru=ru_d(a.get("date", ART_PUB)),
+            upd_iso=a.get("upd", a.get("date", ART_PUB)), upd_ru=ru_d(a.get("upd", a.get("date", ART_PUB))), photo=a.get("photo"),
             related=a.get("related", []) + [l for l in ART_LINKS if l["url"] != path] + [CALC_LINK, {"url": D.HUB, "text": "Доставка щебня и песка"}],
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
-                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": a.get("date", ART_PUB), "dateModified": a.get("date", ART_PUB),
+                {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": a.get("date", ART_PUB), "dateModified": a.get("upd", a.get("date", ART_PUB)),
                  "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
-                 "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/assets/ekb/photo/hero-shcheben-1400.jpg"},
+                 "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + (f"/assets/ekb/photo/raboty/{a['photo']['file']}-800.jpg" if a.get("photo") else "/assets/ekb/photo/hero-shcheben-1400.jpg")},
                 {"@type": "BreadcrumbList", "itemListElement": [
                     {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
                     {"@type": "ListItem", "position": 2, "name": a["h1"], "item": DOMAIN + path}]},
@@ -440,15 +446,17 @@ def main():
 
 def sitemaps():
     urls = [DOMAIN + p for p in PAGES]
+    old = lastmod.old_dates(os.path.join(ROOT, "sitemap-dostavka-shchebnya.xml"))
     def block(u):
         pr = "0.9" if u.endswith(D.HUB) else ("0.6" if D.HUB in u else "0.8")
-        return f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{TODAY.isoformat()}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>{pr}</priority>\n  </url>"
+        return f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{lastmod.lastmod(u, old.get(u))}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>{pr}</priority>\n  </url>"
     head = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     open(os.path.join(ROOT, "sitemap-dostavka-shchebnya.xml"), "w", encoding="utf-8").write(head + "\n".join(block(u) for u in urls) + "\n</urlset>\n")
     main_p = os.path.join(ROOT, "sitemap.xml"); src = open(main_p, encoding="utf-8").read()
     blocks = re.findall(r"  <url>.*?</url>", src, re.S)
     foreign = [b for b in blocks if re.search(r"<loc>(.*?)</loc>", b).group(1) not in set(urls)]
     open(main_p, "w", encoding="utf-8").write(head + "\n".join(foreign + [block(u) for u in urls]) + "\n</urlset>\n")
+    lastmod.save()
     rb = os.path.join(ROOT, "robots.txt"); r = open(rb, encoding="utf-8").read()
     line = f"Sitemap: {DOMAIN}/sitemap-dostavka-shchebnya.xml"
     if line not in r:

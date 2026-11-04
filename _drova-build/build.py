@@ -24,6 +24,9 @@ sys.path.insert(1, EKB)
 
 from site_config import SITE as _SITE
 import typo
+import artseo   # 4 ноября: оглавление статей (_ekb-build/artseo.py)
+import drova_topics as TP   # 4 ноября: «Статьи по теме» на коммерческих страницах
+import lastmod  # 4 ноября: lastmod в карте — только при изменении текста
 from cities import CITIES as EKB_CITIES
 import drova_data as D
 import drova_texts as T
@@ -145,11 +148,15 @@ def overrides():
     o = {}
     h = ekb_src("partials/header.html")
     h = must_sub(r'<a class="hdr__logo" href="/dostavka-grunta/">', '<a class="hdr__logo" href="/dostavka-drov/">', h)
+    # 4 ноября: на страницах без калькулятора (брикеты, уголь, пеллеты, колка) кнопки
+    # «Калькулятор» в шапке, подвале и плавающей панели вели на несуществующий #calc-title.
+    h = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", h)
     o["partials/header.html"] = h
     f = ekb_src("partials/footer.html")
     f = must_sub(r'<p class="ftr__legal">.*?</p>',
                  '<p class="ftr__legal">Доставка дров по {{ site.region_po }}: берёзовые, смешанные, хвойные, осиновые, ольховые, сухие, горбыль, топливные брикеты, пеллеты и уголь. '
                  'Цены «от»: дрова — за кубометр в плотной укладке с доставкой, брикеты — за упаковку 12 шт., пеллеты — за мешок 30 кг, уголь — за мешок и тонну, без доставки. Точную стоимость назовём по заявке.</p>', f, re.S)
+    f = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", f)
     o["partials/footer.html"] = f
     bs = ekb_src("base.html")
     bs = must_sub(r'imagesizes="\(max-width: 900px\) 260px, 100vw"', 'imagesizes="{{ hero_sizes|default(\'(max-width: 900px) 260px, 100vw\') }}"', bs)
@@ -215,6 +222,7 @@ def overrides():
     fc = ekb_src("partials/floatcta.html")
     fc = must_sub(r"Калькулятор посчитает объём и рейс до вашего адреса — можно прикинуть заранее",
                   "Калькулятор посчитает стоимость дров вместе с доставкой — можно прикинуть заранее", fc)
+    fc = must_sub(r"\{\{ cta_base\|default\(''\) \}\}#calc-title", "{{ calc_base|default(cta_base|default('')) }}#calc-title", fc)
     o["partials/floatcta.html"] = fc
     return o
 
@@ -256,7 +264,7 @@ def _price_token(m):
 def write(path, html):
     html = re.sub(r"%%([\w.-]+)%%", _price_token, html)
     assert "%%" not in html, path
-    html = typo.glue(html)   # «50 км», «3 м³», «₽/м³» — без отрыва единиц
+    html = typo.glue(artseo.add_toc(html))   # «50 км», «3 м³», «₽/м³» — без отрыва единиц
     full = os.path.join(ROOT, path.strip("/"), "index.html")
     os.makedirs(os.path.dirname(full), exist_ok=True)
     open(full, "w", encoding="utf-8").write(html)
@@ -339,6 +347,10 @@ CITY_LINKS = [{"url": "/drova-ekaterinburg/", "text": "Дрова в Екате�
              [{"url": f"/{D.CITY_SLUG[c[0]]}/", "text": "Дрова " + c[2]} for c in D.CITIES]
 BEREZA_LINKS = [{"url": f"/drova-berezovye-{k}/", "text": "Берёзовые дрова " + [c[2] for c in D.CITIES if c[0] == k][0]} for k in T.BEREZA_CITY]
 ART_LINKS = [{"url": f"{D.HUB}{s}/", "text": AR.A[s]["h1"]} for s in D.ARTICLES]
+# 4 ноября: подписи для «Статей по теме» (drova_topics.py): у статей — H1 до двоеточия, у блога — short
+TOPIC_TEXT = {**{f"{D.HUB}{s}/": AR.A[s]["h1"].split(":")[0] for s in D.ARTICLES},
+              **{f"{D.HUB}blog/{p['slug']}/": p["short"] for p in BL.POSTS}}
+assert all(u in TOPIC_TEXT for v in TP.TOPIC.values() for u in v), [u for v in TP.TOPIC.values() for u in v if u not in TOPIC_TEXT]
 FOOTER = [{"url": D.HUB, "text": "Доставка дров"}, {"url": "/drova-ekaterinburg/", "text": "Дрова в Екатеринбурге"},
           {"url": "/drova-berezovye-ekaterinburg/", "text": "Берёзовые дрова"}, {"url": "/drova-dlya-bani-ekaterinburg/", "text": "Дрова для бани"},
           {"url": "/gorbyl-ekaterinburg/", "text": "Горбыль"}, {"url": "/toplivnye-brikety-ekaterinburg/", "text": "Топливные брикеты"},
@@ -392,7 +404,7 @@ def ru_d(iso):
 def price_answer(prep="в Екатеринбурге", near=True):
     """Ответ «сколько стоят дрова» в модели «цена с доставкой»."""
     b, h, g = D.PRODUCTS["berezovye"], D.PRODUCTS["hvoynye"], D.PRODUCTS["gorbyl"]
-    tail = (f" Это уже с дорогой: своей площадки {prep} нет, везём из Екатеринбурга ({ACTIVE_CITY['km']} км), рейс — {ru0(D.DELIVERY)} ₽. На месте ничего не добавляем."
+    tail = (f" Это уже с доставкой: рейс {prep} — {ru0(D.DELIVERY)} ₽, на месте ничего не добавляем."
             if ACTIVE_CITY else (" Цена примерно та же, что в Екатеринбурге: возим с ближайшей к вам площадки." if not near else ""))
     return (f"С доставкой {prep}: берёзовые колотые — 1 куб от {ru0(b['t1'])} ₽, 3 куба от {ru0(b['t3'])} ₽, "
             f"машина {D.REF_VOL} кубов от {ru0(b['t10'])} ₽ (от {ru0(b['price'])} ₽/м³). Хвойные — машина от {ru0(h['t10'])} ₽, "
@@ -434,8 +446,10 @@ def money(path, h1, title, desc, hero_sub, price, sections, faq, preselect="", c
     faq = faq + [x for x in FA.FAQ_ADD.get(path, []) if x[0] not in {q for q, _ in faq}]
     faq = faq + ([x for x in T.COMMON_FAQ if x[0] not in {q for q, _ in faq}] if common_faq else [])
     _seen = set(); faq = [x for x in faq if not (x[0] in _seen or _seen.add(x[0]))]
+    have = {l["url"] for l in (links or PROD_LINKS) + (links2 or [])}
+    topic_arts = [{"url": u, "text": TOPIC_TEXT[u]} for u in TP.TOPIC.get(path, []) if u not in have]
     html = env.get_template("drova_page.html").render(**ctx(
-        hero_photo="hero-drova", hero_alt="Поленница колотых берёзовых дров на опушке леса",
+        hero_photo="hero-drova", topic_arts=topic_arts, hero_alt="Поленница колотых берёзовых дров на опушке леса",
         hero_sizes="(max-width: 900px) 800px, 100vw",
         title=title, description=desc, canonical=DOMAIN + path, h1=h1, hero_sub=hero_sub, price=price,
         sections=sections, faq=faq, price_rows=price_rows(), fuel_rows=fuel_rows(), unit=unit, calc=calc,
@@ -580,7 +594,7 @@ def main():
                   f"Берёзовые колотые дрова с доставкой {prep} и вокруг: 3 куба — от {ru(D.PRODUCTS['berezovye']['t3'])} ₽, машина — от {ru(bz)} ₽/м³. Естественной влажности и сухие, от одного куба.",
                   f"Берёза колотая, полено 30-40 см — жаркие дрова для печи, бани и котла. Привезём по {dat} и окрестностям, от одного куба.",
                   bz, BZC[key]["sections"] + T.COMMON,
-                  BZC[key]["faq"] + [(f"Сколько стоят берёзовые дрова {prep}?", f"С доставкой {prep}: 1 куб — от {ru(D.PRODUCTS['berezovye']['t1'])} ₽, 3 куба — от {ru(D.PRODUCTS['berezovye']['t3'])} ₽, машина {D.REF_VOL} кубов — от {ru(D.PRODUCTS['berezovye']['t10'])} ₽ (от {ru(bz)} ₽/м³). " + (f"Это уже с дорогой из Екатеринбурга: {ACTIVE_CITY['km']} км, рейс {ru(D.DELIVERY)} ₽, на месте ничего не добавляем." if ACTIVE_CITY else "Цена примерно та же, что в Екатеринбурге: возим с ближайшей площадки.")),
+                  BZC[key]["faq"] + [(f"Сколько стоят берёзовые дрова {prep}?", f"С доставкой {prep}: 1 куб — от {ru(D.PRODUCTS['berezovye']['t1'])} ₽, 3 куба — от {ru(D.PRODUCTS['berezovye']['t3'])} ₽, машина {D.REF_VOL} кубов — от {ru(D.PRODUCTS['berezovye']['t10'])} ₽ (от {ru(bz)} ₽/м³). " + (f"Это уже с доставкой: рейс {ru(D.DELIVERY)} ₽, на месте ничего не добавляем." if ACTIVE_CITY else "Цена примерно та же, что в Екатеринбурге: возим с ближайшей площадки.")),
                    ("Есть ли сухие берёзовые дрова?", f"Да, 3 куба сухих с доставкой — от {ru(D.PRODUCTS['suhie']['t3'])} ₽.")],
                   preselect=D.PRODUCTS["berezovye"]["name"], city_prep=prep, city_text=text, deliv_po=dat,
                   links=[{"url": f"/{D.CITY_SLUG[key]}/", "text": f"Все дрова {prep}"}] + CF_BY_CITY.get(key, []) + PROD_LINKS, links_title="Ещё дрова",
@@ -716,7 +730,7 @@ def render_blog():
     html = env.get_template("drova_blog_index.html").render(**ctx(
         title="Блог о дровах: топка, колка, заготовка, копчение", ads=True,
         description="Статьи о дровах и печах: как топить печь, колоть и пилить дрова, можно ли собирать валежник, чем разжечь мангал и какая щепа лучше для копчения.",
-        canonical=hub, h1="Блог о дровах, печах и заготовке", groups=groups,
+        canonical=hub, h1="Блог о дровах, печах и заготовке", groups=groups, cta_base="/drova-ekaterinburg/",
         lede="Практические статьи для тех, кто топит печь, баню или камин: как колоть и пилить дрова, как правильно топить, что говорит закон о валежнике, чем разжечь мангал и как коптить.",
         schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
             {"@type": "Blog", "name": "Блог о дровах", "url": hub, "inLanguage": "ru-RU"},
@@ -755,9 +769,10 @@ def render_blog():
 
 def sitemaps():
     urls = [DOMAIN + p for p in PAGES]
+    old = lastmod.old_dates(os.path.join(ROOT, "sitemap-dostavka-drov.xml"))
     def block(u):
         pr = "0.9" if u.endswith(D.HUB) else ("0.6" if D.HUB in u else "0.8")
-        return f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{TODAY.isoformat()}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>{pr}</priority>\n  </url>"
+        return f"  <url>\n    <loc>{u}</loc>\n    <lastmod>{lastmod.lastmod(u, old.get(u))}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>{pr}</priority>\n  </url>"
     head = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     open(os.path.join(ROOT, "sitemap-dostavka-drov.xml"), "w", encoding="utf-8").write(head + "\n".join(block(u) for u in urls) + "\n</urlset>\n")
     main_p = os.path.join(ROOT, "sitemap.xml"); src = open(main_p, encoding="utf-8").read()
@@ -765,6 +780,7 @@ def sitemaps():
     drop = set(urls) | {DOMAIN + g for g in GONE}   # снятые страницы — вон из карты
     foreign = [b for b in blocks if re.search(r"<loc>(.*?)</loc>", b).group(1) not in drop]
     open(main_p, "w", encoding="utf-8").write(head + "\n".join(foreign + [block(u) for u in urls]) + "\n</urlset>\n")
+    lastmod.save()
     rb = os.path.join(ROOT, "robots.txt"); r = open(rb, encoding="utf-8").read()
     line = f"Sitemap: {DOMAIN}/sitemap-dostavka-drov.xml"
     if line not in r:

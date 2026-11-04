@@ -25,6 +25,15 @@
       <tbody>{% for row in sec[2].rows %}<tr>{% for c in row %}<td data-label="{{ sec[2].head[loop.index0] }}">{{ c }}</td>{% endfor %}</tr>{% endfor %}</tbody>
     </table></div>
     {%- endif %}
+    {%- if loop.first and photo %}
+    <figure class="artfig{% if photo.h > photo.w %} artfig--tall{% endif %}">
+      <picture>
+        <source type="image/webp" srcset="/assets/ekb/photo/raboty/{{ photo.file }}-400.webp 400w, /assets/ekb/photo/raboty/{{ photo.file }}-800.webp 800w" sizes="(max-width: 760px) 100vw, 720px">
+        <img src="/assets/ekb/photo/raboty/{{ photo.file }}-800.jpg" alt="{{ photo.alt }}" width="{{ photo.w }}" height="{{ photo.h }}" loading="lazy" decoding="async">
+      </picture>
+      <figcaption>{{ photo.caption }}</figcaption>
+    </figure>
+    {%- endif %}
     {%- endfor %}
     <aside class="art__cta">
       <p class="art__cta-title"><b>Щебень и песок с доставкой по Екатеринбургу и области</b></p>
