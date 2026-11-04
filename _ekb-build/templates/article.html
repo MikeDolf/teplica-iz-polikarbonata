@@ -48,7 +48,7 @@
       {%- endif %}
     {%- if date_pub %}
     <p class="art__dates">
-      <time datetime="{{ date_pub_iso }}">Опубликовано {{ date_pub }}</time>{% if date_upd and date_upd_iso != date_pub_iso %}<span> · <time datetime="{{ date_upd_iso }}">обновлено {{ date_upd }}</time></span>{% endif %}
+      <time datetime="{{ date_pub_iso }}">Опубликовано {{ date_pub }}</time>{% if date_upd and date_upd_iso != date_pub_iso %}<span> · <time datetime="{{ date_upd_iso }}">обновлено {{ date_upd }}</time></span>{% endif %}{% if author %}<span> · Автор: <a href="{{ author.url }}" rel="author">{{ author.name }}</a></span>{% endif %}
     </p>
     {%- endif %}
     <p class="art__lede">{{ lede }}</p>
@@ -93,6 +93,7 @@
     {% with n = (loop.index + 1) // 2, wrap = false %}{% include "partials/ad_slot.html" %}{% endwith %}
     {%- endif %}
     {%- endfor %}
+    {% include "partials/author_box.html" %}
 
     <aside class="art__cta">
       <div>

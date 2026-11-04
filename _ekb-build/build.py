@@ -22,6 +22,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "data"))
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from site_config import SITE  # noqa
+import author as AU  # noqa  4 ноября: автор статей — Константин
 from cities import CITIES      # noqa
 from bases import BASES, PRODUCT_BASE, PRODUCT_BASES, PYSHMA_CITIES, DEFAULT_BASE  # noqa
 from pages import PAGES        # noqa
@@ -880,12 +881,43 @@ def blog_buy(post):
     }
 
 
+AUTHOR = dict(name=AU.NAME, role=AU.ROLE, **{k: AU.SECTIONS["grunt"][k] for k in ("url", "home", "short")})
+
+
+def render_author(art_links, blog_links):
+    """Страница автора статей грунта (4 ноября): кто пишет и список его статей."""
+    canonical = SITE["domain"] + AUTHOR["url"]
+    pers = AU.person("grunt", SITE["domain"], SITE["brand"])
+    schema = json.dumps({"@context": "https://schema.org", "@graph": [
+        {"@type": "ProfilePage", "url": canonical, "name": "Автор статей — " + AU.NAME, "mainEntity": pers},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": HOME_URL},
+            {"@type": "ListItem", "position": 2, "name": "Автор статей", "item": canonical}]}]},
+        ensure_ascii=False, separators=(",", ":"))
+    html = env.get_template("author.html").render(
+        schema_json=schema, cta_base="/chernozem-ekaterinburg/",
+        site=SITE, canonical=canonical, robots="index, follow", og_type="profile",
+        title=f"Константин — автор статей о грунте и органике | {SITE['brand']}",
+        description="Кто пишет статьи о чернозёме, перегное, торфе и навозе: Константин, больше 10 лет возит грунт и органику по Екатеринбургу и области. Список его статей.",
+        h1="Константин, автор статей о грунте и огороде", author=AUTHOR,
+        lede=AUTHOR["short"], body=AU.page_body("grunt"),
+        groups=[{"title": "Статьи о грунте и органике", "links": art_links}, {"title": "Блог: огород, рассада, сад", "links": blog_links}],
+        footer_links=FOOTER_LINKS, metrika_placeholder=True,
+        prodbar=PRODBAR, current_slug="", photos=PHOTOS, related=[])
+    outdir = os.path.join(ROOT, "dostavka-grunta", "avtor")
+    os.makedirs(outdir, exist_ok=True)
+    with open(os.path.join(outdir, "index.html"), "w", encoding="utf-8") as fh:
+        fh.write(typo.glue(html))
+        check_repeats(html, canonical)
+    return canonical
+
+
 def article_node(a, canonical, cover, kind="Article"):
     """Узел Article с датами, картинкой и автором.
 
     Без datePublished в сниппете нет даты, а для информационных статей
-    свежесть заметно влияет на клик. Автором ставим организацию: живого
-    подписанта у текстов нет, и выдумывать его нельзя.
+    свежесть заметно влияет на клик. Автор — Константин (author.py,
+    4 ноября: владелец назвал его сам); раньше стояла организация.
     """
     img = (SITE["domain"] + f"/assets/ekb/photo/{cover}-1400.jpg") if cover else \
           (SITE["domain"] + "/assets/ekb/photo/hero-default-1400.jpg")
@@ -896,8 +928,7 @@ def article_node(a, canonical, cover, kind="Article"):
         "inLanguage": "ru-RU",
         "mainEntityOfPage": canonical,
         "image": img,
-        "author": {"@type": "Organization", "name": SITE["brand"],
-                   "url": SITE["domain"] + "/dostavka-grunta/"},
+        "author": AU.person("grunt", SITE["domain"], SITE["brand"]),
         "publisher": publisher_node(),
     }
     if a.get("date"):
@@ -1507,7 +1538,7 @@ def render_articles():
             # теме и их надо развести, чтобы они не тянули один запрос.
             crosslink=a.get("crosslink"),
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
-            schema_json=schema, metrika_placeholder=True, og_type="article",
+            schema_json=schema, metrika_placeholder=True, og_type="article", author=AUTHOR,
             prodbar=PRODBAR, current_slug="", photos=PHOTOS,
             # calc — материал калькулятора статьи (по умолчанию чернозём).
             calc_materials=CALC_MATERIALS, calc_preselect=a.get("calc", "chernozem"),
@@ -1612,7 +1643,7 @@ def render_blog():
             lede=p["lede"], body=p["body"], faq=p["faq"], cta=p["cta"], early_cta=p.get("early_cta"),
             related=related, footer_links=FOOTER_LINKS, cta_price=None,
             preselect_product="Пока не решил", district_ph="Напр. Академический, Верхняя Пышма",
-            schema_json=schema, metrika_placeholder=True, og_type="article",
+            schema_json=schema, metrika_placeholder=True, og_type="article", author=AUTHOR,
             crosslink=p.get("crosslink"), sources=p.get("sources"),
             calc_materials=CALC_MATERIALS, calc_preselect="chernozem",
             calc_cities=CALC_CITIES, calc_city="ekaterinburg", calc_km=km_to("ekaterinburg", "chernozem"),
@@ -1780,10 +1811,15 @@ if __name__ == "__main__":
     if not only:
         render_privacy()   # noindex, в карту сайта не идёт
         company_url = render_company()
+        from articles import ARTICLES as _AR
+        from blog import BLOG as _BL
+        author_url = render_author([{"url": f'/dostavka-grunta/{a["slug"]}/', "text": a["short"]} for a in _AR],
+                                   [{"url": f'/dostavka-grunta/blog/{b["slug"]}/', "text": b["short"]} for b in _BL])
     index_urls = [u for (sl, u, idx) in done if idx]
     if hub_url: index_urls.insert(0, hub_url)
     index_urls += article_urls
     if company_url: index_urls.append(company_url)
+    if not only: index_urls.append(author_url)
     for slug, url, idx in done:
         print(("index " if idx else "NOIDX "), slug, "->", url)
     if not only:

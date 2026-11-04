@@ -1,0 +1,11 @@
+{#- 4 ноября: карточка «Об авторе» в конце статьи (данные — _ekb-build/author.py). Без фото: его нет, придумывать нельзя. -#}
+{%- if author %}
+    <aside class="author" aria-label="Об авторе">
+      <span class="author__ava" aria-hidden="true">{{ author.name[:1] }}</span>
+      <div class="author__txt">
+        <p class="author__name">Автор — <a href="{{ author.url }}" rel="author">{{ author.name }}</a></p>
+        <p class="author__role">{{ author.role }}</p>
+        <p class="author__bio">{{ author.short }}</p>
+      </div>
+    </aside>
+{%- endif %}

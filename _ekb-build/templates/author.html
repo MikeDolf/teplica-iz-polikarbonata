@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{#- 4 ноября: страница автора статей раздела (author.py). data-notoc — без оглавления artseo. -#}
+{% block schema %}
+  <script type="application/ld+json">{{ schema_json|safe }}</script>
+{% endblock %}
+{% block breadcrumbs %}
+<nav class="crumbs wrap" aria-label="Хлебные крошки">
+  <ol>
+    <li><a href="{{ author.home }}">Главная</a></li>
+    <li><span aria-current="page">Автор статей</span></li>
+  </ol>
+</nav>
+{% endblock %}
+{% block content %}
+  <article class="art wrap" data-notoc>
+    <div class="author author--head">
+      <span class="author__ava author__ava--lg" aria-hidden="true">{{ author.name[:1] }}</span>
+      <div class="author__txt">
+        <h1>{{ h1 }}</h1>
+        <p class="author__role">{{ author.role }}</p>
+      </div>
+    </div>
+    <p class="art__lede">{{ lede }}</p>
+    {%- for h, ps in body %}
+    <h2>{{ h }}</h2>
+    {%- for p in ps %}<p>{{ p }}</p>{% endfor %}
+    {%- endfor %}
+    <h2>Нашли неточность?</h2>
+    <p>Если в статье чего-то не хватает или цифра расходится с вашим опытом, {% if site.max_url %}<a href="{{ site.max_url }}" target="_blank" rel="nofollow noopener">напишите нам в MAX</a>{% else %}<a href="mailto:{{ site.contact_email }}">напишите на почту</a>{% endif %}. Проверим и поправим, а дату обновления поставим в начале статьи.</p>
+    {%- for g in groups %}
+    <h2>{{ g.title }}</h2>
+    <ul class="dlinks">{% for l in g.links %}<li><a href="{{ l.url }}">{{ l.text }}</a></li>{% endfor %}</ul>
+    {%- endfor %}
+  </article>
+{% endblock %}

@@ -32,6 +32,7 @@ from site_config import SITE as _SITE
 import typo
 import artseo   # 4 ноября: оглавление статей (_ekb-build/artseo.py)
 import lastmod  # 4 ноября: lastmod в карте — только при изменении текста
+import author as AU  # 4 ноября: автор статей (_ekb-build/author.py)
 import nerud_data as D
 import nerud_works as WK
 import nerud_texts as T
@@ -273,6 +274,24 @@ def ctx(**kw):
     return base
 
 
+# 4 ноября: автор статей — Константин (_ekb-build/author.py)
+AUTHOR = dict(name=AU.NAME, role=AU.ROLE, **{k: AU.SECTIONS["nerud"][k] for k in ("url", "home", "short")})
+
+
+def render_author(groups):
+    path = AUTHOR["url"]; canonical = DOMAIN + path
+    schema_json = json.dumps({"@context": "https://schema.org", "@graph": [
+        {"@type": "ProfilePage", "url": canonical, "name": "Автор статей — " + AU.NAME, "mainEntity": AU.person("nerud", DOMAIN, SITE["brand"])},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
+            {"@type": "ListItem", "position": 2, "name": "Автор статей", "item": canonical}]}]}, ensure_ascii=False)
+    html = env.get_template("author.html").render(**ctx(
+        title=f"Константин — автор статей о щебне и песке | {SITE['brand']}", description="Кто пишет статьи о щебне, песке, ПГС и керамзите: Константин, больше 10 лет возит сыпучие материалы по Екатеринбургу и области. Список его статей.",
+        canonical=canonical, og_type="profile", h1="Константин, автор статей о щебне, песке и стройке на участке", author=AUTHOR, lede=AUTHOR["short"],
+        body=AU.page_body("nerud"), groups=groups, schema_json=schema_json, hero_photo=None))
+    write(path, html)
+
+
 def hero_price(ref, mode="ekb", city_dat=None):
     """Крупно на первом экране: «Куб щебня 20–40 — от 770 ₽» и итоги с доставкой."""
     m = D.M[ref]
@@ -425,14 +444,14 @@ def main():
         a = AR.A[s]; path = f"{D.HUB}{s}/"
         html = env.get_template("nerud_article.html").render(**ctx(
             title=a["title"], description=a["desc"], canonical=DOMAIN + path, h1=a["h1"], lede=a["lede"],
-            body=a["body"], faq=a["faq"], og_type="article", delivery=D.DELIVERY, cta_base="/shcheben-ekaterinburg/",
+            body=a["body"], faq=a["faq"], og_type="article", author=AUTHOR, delivery=D.DELIVERY, cta_base="/shcheben-ekaterinburg/",
             cta_url=a.get("cta", ("/shcheben-ekaterinburg/", "Цены на щебень"))[0], cta_text=a.get("cta", ("/shcheben-ekaterinburg/", "Цены на щебень"))[1],
             date_iso=a.get("date", ART_PUB), date_ru=ru_d(a.get("date", ART_PUB)),
             upd_iso=a.get("upd", a.get("date", ART_PUB)), upd_ru=ru_d(a.get("upd", a.get("date", ART_PUB))), photo=a.get("photo"),
             related=a.get("related", []) + [l for l in ART_LINKS if l["url"] != path] + [CALC_LINK, {"url": D.HUB, "text": "Доставка щебня и песка"}],
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
                 {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": a.get("date", ART_PUB), "dateModified": a.get("upd", a.get("date", ART_PUB)),
-                 "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
+                 "mainEntityOfPage": DOMAIN + path, "author": AU.person("nerud", DOMAIN, SITE["brand"]),
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + (f"/assets/ekb/photo/raboty/{a['photo']['file']}-800.jpg" if a.get("photo") else "/assets/ekb/photo/hero-shcheben-1400.jpg")},
                 {"@type": "BreadcrumbList", "itemListElement": [
                     {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
@@ -440,6 +459,7 @@ def main():
                 {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": x}} for q, x in a["faq"]]}]},
                 ensure_ascii=False)))
         write(path, html)
+    render_author([{"title": "Статьи о щебне, песке и стройке", "links": ART_LINKS + [CALC_LINK]}])
     sitemaps()
     print(f"Щебень и песок: {len(PAGES)} страниц")
 

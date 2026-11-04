@@ -26,6 +26,7 @@ from site_config import SITE as _SITE
 import typo
 import artseo   # 4 ноября: оглавление статей (_ekb-build/artseo.py)
 import drova_topics as TP   # 4 ноября: «Статьи по теме» на коммерческих страницах
+import author as AU   # 4 ноября: автор статей (_ekb-build/author.py)
 import lastmod  # 4 ноября: lastmod в карте — только при изменении текста
 from cities import CITIES as EKB_CITIES
 import drova_data as D
@@ -674,12 +675,12 @@ def main():
         a = AR.A[s]; path = f"{D.HUB}{s}/"
         html = env.get_template("drova_article.html").render(**ctx(
             title=a["title"], description=a["desc"], canonical=DOMAIN + path, h1=a["h1"], lede=a["lede"],
-            body=a["body"], faq=a["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
+            body=a["body"], faq=a["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article", author=AUTHOR,
             date_iso=ART_PUB, date_ru=ru_d(ART_PUB), upd_iso=ART_UPD_X.get(s, ART_UPD), upd_ru=ru_d(ART_UPD_X.get(s, ART_UPD)),
             related=ART_REL_X.get(s, []) + ([ART_MONEY[s]] if s in ART_MONEY else []) + [l for l in ART_LINKS if l["url"] != path] + [{"url": "/drova-ekaterinburg/", "text": "Цены на дрова в Екатеринбурге"}],
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
                 {"@type": "Article", "headline": a["h1"], "description": a["desc"], "datePublished": ART_PUB, "dateModified": ART_UPD_X.get(s, ART_UPD),
-                 "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
+                 "mainEntityOfPage": DOMAIN + path, "author": AU.person("drova", DOMAIN, SITE["brand"]),
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/img/og-cover.jpg"},
                 {"@type": "BreadcrumbList", "itemListElement": [
                     {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
@@ -688,6 +689,8 @@ def main():
                 ensure_ascii=False)))
         write(path, html)
     render_blog()
+    render_author([{"title": "Статьи о выборе и покупке дров", "links": ART_LINKS},
+                   {"title": "Блог: топка, колка, заготовка", "links": [{"url": f"{BLOG_URL}{p['slug']}/", "text": p["short"]} for p in BL.POSTS]}])
     assert not set(FA.FAQ_ADD) - FAQ_USED, set(FA.FAQ_ADD) - FAQ_USED
     gone()
     sitemaps()
@@ -721,6 +724,24 @@ BLOG_URL = f"{D.HUB}blog/"
 BLOG_DATE = "2026-10-07"
 
 
+# 4 ноября: автор статей — Константин (_ekb-build/author.py)
+AUTHOR = dict(name=AU.NAME, role=AU.ROLE, **{k: AU.SECTIONS["drova"][k] for k in ("url", "home", "short")})
+
+
+def render_author(groups):
+    path = AUTHOR["url"]; canonical = DOMAIN + path
+    schema_json = json.dumps({"@context": "https://schema.org", "@graph": [
+        {"@type": "ProfilePage", "url": canonical, "name": "Автор статей — " + AU.NAME, "mainEntity": AU.person("drova", DOMAIN, SITE["brand"])},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Главная", "item": DOMAIN + D.HUB},
+            {"@type": "ListItem", "position": 2, "name": "Автор статей", "item": canonical}]}]}, ensure_ascii=False)
+    html = env.get_template("author.html").render(**ctx(
+        title=f"Константин — автор статей о дровах и печах | {SITE['brand']}", description="Кто пишет статьи о дровах, печах, брикетах и угле: Константин, больше 10 лет возит дрова и топливо по Екатеринбургу и области. Список его статей.",
+        canonical=canonical, og_type="profile", h1="Константин, автор статей о дровах, печах и топливе", author=AUTHOR, lede=AUTHOR["short"],
+        body=AU.page_body("drova"), groups=groups, schema_json=schema_json, hero_photo=None))
+    write(path, html)
+
+
 def render_blog():
     """Блог дров: /dostavka-drov/blog/ и посты. Реклама РСЯ — только здесь (ads=True)."""
     nav = [{"url": f"{BLOG_URL}{p['slug']}/", "text": p["short"], "desc": re.split(r"(?<=[.!?])\s", p["lede"])[0], "group": p["group"]} for p in BL.POSTS]
@@ -749,13 +770,13 @@ def render_blog():
         rel = (same + [x for x in ring if x not in same])[:6] + [{"url": p["money"][0], "text": p["money"][1]}]
         html = env.get_template("drova_article.html").render(**ctx(
             title=p["title"], description=p["desc"], canonical=DOMAIN + path, h1=p["h1"], lede=p["lede"],
-            body=p["body"], faq=p["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article",
+            body=p["body"], faq=p["faq"], min_price=MIN_PRICE, cta_base="/drova-ekaterinburg/", og_type="article", author=AUTHOR,
             ads=True, section_url=BLOG_URL, section_name="Блог",
             extra_cta={"url": p["money"][0], "text": p["money"][1] + " →"},
             date_iso=pd, date_ru=f"{d.day} {MONTHS[d.month-1]} {d.year}", related=rel,
             schema_json=json.dumps({"@context": "https://schema.org", "@graph": [
                 {"@type": "BlogPosting", "headline": p["h1"], "description": p["desc"], "datePublished": pd, "dateModified": pd,
-                 "mainEntityOfPage": DOMAIN + path, "author": {"@type": "Organization", "name": SITE["brand"]},
+                 "mainEntityOfPage": DOMAIN + path, "author": AU.person("drova", DOMAIN, SITE["brand"]),
                  "publisher": {"@type": "Organization", "name": SITE["brand"]}, "image": DOMAIN + "/img/og-cover.jpg",
                  "isPartOf": {"@type": "Blog", "name": "Блог о дровах", "url": DOMAIN + BLOG_URL}},
                 {"@type": "BreadcrumbList", "itemListElement": [

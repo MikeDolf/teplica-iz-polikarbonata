@@ -716,6 +716,17 @@ html{overflow-x:hidden}
 /* обложка статьи */
 .artcover{margin:0 0 26px;border-radius:var(--radius);overflow:hidden;background:var(--paper)}
 .artcover img{display:block;width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+/* 4 ноября: автор статьи (author.py) — без фото, буква вместо него */
+.author{display:flex;gap:14px;align-items:flex-start;margin:28px 0 8px;padding:16px 18px;background:var(--paper);border:1px solid var(--line);border-radius:var(--radius)}
+.author__ava{flex:0 0 auto;width:48px;height:48px;border-radius:50%;background:#12331f;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:21px}
+.author__ava--lg{width:64px;height:64px;font-size:28px}
+.author__txt{min-width:0}
+.art .author p{margin:0 0 4px;font-size:15px;line-height:1.5}
+.art .author .author__name{font-weight:700;font-size:16px}
+.art .author .author__role{color:var(--ink-soft);font-size:14px}
+.art .author .author__bio{margin:6px 0 0}
+.author--head{background:none;border:0;padding:0;margin:0 0 18px;align-items:center}
+.author--head h1{margin:0 0 4px}
 /* 4 ноября: реальное фото доставки внутри статьи щебня */
 .artfig{margin:6px 0 24px;max-width:720px}
 .artfig img{display:block;width:100%;height:auto;border-radius:var(--radius);background:var(--paper)}

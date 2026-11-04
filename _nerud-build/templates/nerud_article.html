@@ -13,7 +13,7 @@
 {% block content %}
   <article class="art wrap">
     <h1>{{ h1 }}</h1>
-    <p class="art__dates"><time datetime="{{ date_iso }}">Опубликовано {{ date_ru }}</time>{% if upd_iso and upd_iso != date_iso %} · <time datetime="{{ upd_iso }}">обновлено {{ upd_ru }}</time>{% endif %}</p>
+    <p class="art__dates"><time datetime="{{ date_iso }}">Опубликовано {{ date_ru }}</time>{% if upd_iso and upd_iso != date_iso %} · <time datetime="{{ upd_iso }}">обновлено {{ upd_ru }}</time>{% endif %}{% if author %} · Автор: <a href="{{ author.url }}" rel="author">{{ author.name }}</a>{% endif %}</p>
     <p class="art__lede">{{ lede }}</p>
     {%- for sec in body %}
     <h2>{{ sec[0] }}</h2>
@@ -35,6 +35,7 @@
     </figure>
     {%- endif %}
     {%- endfor %}
+    {% include "partials/author_box.html" %}
     <aside class="art__cta">
       <p class="art__cta-title"><b>Щебень и песок с доставкой по Екатеринбургу и области</b></p>
       <p>Щебень всех ходовых фракций, карьерный и речной песок, отсев, ПГС, ЩПС, керамзит и другие сыпучие материалы. По Екатеринбургу рейс от {{ delivery|ru }} ₽, щебень 20–40 — от %%m.shcheben-20-40.price%% ₽ за куб без доставки, 10 м³ с доставкой — от %%sum.shcheben-20-40.10%% ₽.</p>

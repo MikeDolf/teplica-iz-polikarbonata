@@ -47,6 +47,10 @@ def section_urls():
     u = f'{B.SITE["domain"]}/dostavka-grunta/rekvizity/'
     every.append(u)
     index.append(u)
+    # 4 ноября: страница автора статей
+    u = f'{B.SITE["domain"]}/dostavka-grunta/avtor/'
+    every.append(u)
+    index.append(u)
     from blog import BLOG
     for u in [f'{B.SITE["domain"]}/dostavka-grunta/blog/'] + [f'{B.SITE["domain"]}/dostavka-grunta/blog/{b["slug"]}/' for b in BLOG]:
         every.append(u)
