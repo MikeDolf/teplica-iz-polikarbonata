@@ -381,6 +381,12 @@ from nerud_articles2 import A as _A2, ORDER as _O2  # noqa: E402
 A.update(_A2)
 ORDER += _O2
 
+# 5 ноября: третья партия по Вордстату — дренаж, геотекстиль, столбы забора (индексы 18–20).
+from nerud_articles3 import A as _A3, ORDER as _O3  # noqa: E402
+A.update(_A3)
+ORDER += _O3
+
 # 4 ноября: дополнения к коротким статьям и фото доставок (nerud_articles_more.py).
 import nerud_articles_more as _MORE  # noqa: E402
 _MORE.apply(A)
+_MORE.apply_calc(CALC)   # 5 ноября: «щебень на 1 м²» на странице калькулятора

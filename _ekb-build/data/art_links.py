@@ -11,12 +11,13 @@
 
 BY_PRODUCT = {
     "chernozem": ["chem-zamenit-chernozem", "peregnoy-ili-chernozem", "chernozem-ili-plodorodnyy-grunt", "skolko-stoit-chernozem"],
-    "plodorodnyy-grunt": ["chernozem-ili-plodorodnyy-grunt", "zemlya-pod-gazon-podgotovka", "vysokie-i-teplye-gryadki", "blog/chem-podnyat-uchastok"],
-    "peregnoy": ["kak-ispolzovat-peregnoy", "peregnoy-osenyu", "kompost-ili-peregnoy", "skolko-stoit-peregnoy"],
+    "plodorodnyy-grunt": ["chernozem-ili-plodorodnyy-grunt", "kak-uluchshit-pochvu", "zemlya-pod-gazon-podgotovka", "blog/chem-podnyat-uchastok"],
+    "peregnoy": ["kak-ispolzovat-peregnoy", "torf-ili-peregnoy", "kak-uluchshit-pochvu", "skolko-stoit-peregnoy"],
     "navoz": ["navoz-polza-i-vred", "kakoy-navoz-luchshe", "kogda-vnosit-navoz", "skolko-stoit-navoz"],
     "navoz-koroviy": ["kak-primenyat-koroviy-navoz", "kakoy-navoz-luchshe", "kogda-vnosit-navoz", "nastoy-iz-navoza"],
     "navoz-konskiy": ["kak-primenyat-konskiy-navoz", "konskiy-navoz-dlya-klubniki", "vysokie-i-teplye-gryadki", "zhidkiy-konskiy-navoz"],
-    "torf": ["verhovoy-ili-nizinnyy-torf", "torf-ili-chernozem", "torf-dlya-rassady", "frezernyy-torf"],
+    # 5 ноября: «торф для огорода» 1 467 и «торф или перегной» 296 в Вордстате — первыми
+    "torf": ["torf-dlya-ogoroda", "torf-ili-peregnoy", "verhovoy-ili-nizinnyy-torf", "torf-dlya-rassady"],
     "kislyy-torf": ["kislyy-torf-dlya-kakih-rasteniy", "grunt-dlya-golubiki", "grunt-dlya-gortenzii", "neytralizovannyy-torf"],
     "torfogrunt": ["pochvogrunt", "torf-dlya-rassady", "kakoy-grunt-nuzhen-dlya-teplicy", "zemlya-pod-gazon-podgotovka"],
     "opilki": ["uteplenie-opilkami", "opilki-na-uchastke", "mulchirovanie", "kak-sdelat-kompost"],

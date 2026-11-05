@@ -4531,3 +4531,12 @@ ARTICLES = [{'slug': 'kak-primenyat-konskiy-navoz',
           'text': 'На одну-две грядки удобнее перегной в мешках: 20-25 литров, 450 рублей, от 5 мешков, по Екатеринбургу и району Верхней Пышмы. Под новую грядку на тяжёлой земле — плодородный грунт навалом от одного куба.',
           'url': '/peregnoy-v-meshkah-ekaterinburg/',
           'link': 'Перегной в мешках'}}]
+
+# 5 ноября 2026: статьи по выгрузке Вордстата (articles_nov.py) и раздел про свиной навоз.
+from articles_nov import ARTICLES_NOV as _NOV, SWINE as _SWINE  # noqa: E402
+for _a in ARTICLES:
+    if _a["slug"] == _SWINE["slug"]:
+        _a["body"] = _a["body"][:-1] + [_SWINE["section"]] + _a["body"][-1:]
+        _a["faq"] = _a["faq"] + _SWINE["faq"]
+        _a["updated"] = "2026-11-05"
+ARTICLES += _NOV
