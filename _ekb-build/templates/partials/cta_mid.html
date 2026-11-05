@@ -23,7 +23,7 @@
                placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
         <button class="ctamid__submit" type="submit">Узнать цену</button>
       </div>
-      <span class="ctamid__error" id="ctamid-error" hidden>Впишите номер, по которому ответить</span>
+      <span class="ctamid__error" id="ctamid-error" hidden>Впишите номер полностью: +7 и ещё 10 цифр</span>
       <span class="ctamid__error" id="ctamid-consent-error" hidden>Без согласия на обработку данных заявку отправить нельзя</span>
       <label class="ctamid__consent">
         <input type="checkbox" id="ctamid-consent" required>
@@ -73,12 +73,12 @@
     el.addEventListener('blur', function(){ if(el.value === '+7') el.value = ''; });
   }
   mask(phone);
-  phone.addEventListener('input', function(){ if(digits(phone.value) >= 10) err.hidden = true; });
+  phone.addEventListener('input', function(){ if(digits(phone.value) >= 11) err.hidden = true; });
   consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(form.company.value){ return; }
-    if(digits(phone.value) < 10){ err.hidden = false; phone.focus(); return; }
+    if(digits(phone.value) < 11){ /* 5 ноября: +7 и 10 цифр номера — раньше хватало 10 вместе с семёркой, и номер без последней цифры уходил в заявку */ err.hidden = false; phone.focus(); return; }
     // Молчаливый выход по неотмеченному согласию выглядел как сломанная кнопка.
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
     consentErr.hidden = true;

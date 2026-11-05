@@ -26,7 +26,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=15dce985"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=1e3e41f0"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -705,7 +705,7 @@
       </div><div class="field field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
-        <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому вам ответить</span>
+        <span class="field__error" id="lead-phone-error" hidden>Впишите номер полностью: +7 и ещё 10 цифр</span>
       </div><input type="hidden" id="lead-note" name="note" value="">
       <div class="field field--full consent">
         <label class="consent__row">
@@ -768,13 +768,13 @@
   }
   mask(phone);
   phone.addEventListener('input', function(){
-    if(digits(phone.value) >= 10){ phoneField.classList.remove('invalid'); phoneErr.hidden = true; }
+    if(digits(phone.value) >= 11){ phoneField.classList.remove('invalid'); phoneErr.hidden = true; }
   });
   consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(form.company.value){ return; }
-    if(digits(phone.value) < 10){ phoneField.classList.add('invalid'); phoneErr.hidden = false; phone.focus(); return; }
+    if(digits(phone.value) < 11){ /* 5 ноября: +7 и 10 цифр номера — раньше хватало 10 вместе с семёркой, и номер без последней цифры уходил в заявку */ phoneField.classList.add('invalid'); phoneErr.hidden = false; phone.focus(); return; }
     // Раньше при неотмеченном согласии просто уводили фокус на чекбокс:
     // визуально не менялось ничего, и кнопка выглядела нерабочей.
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }

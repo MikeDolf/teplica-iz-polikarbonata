@@ -55,7 +55,7 @@
               Что уже входит в цену — прямо у цифры, на первом экране телефона; подробности —
               в блоке #chestno под таблицей цен. Только подтверждённые владельцем обещания. -#}
           <ul class="hero__incl">
-            <li>Доставка и выгрузка уже в цене</li>
+            <li>В итог с доставкой уже входит выгрузка</li>
             <li>Плотная укладка — объём видно до выгрузки</li>
             <li>Без доплат на месте, оплата после выгрузки</li>
           </ul>
@@ -66,7 +66,7 @@
             <span class="hero__price__label">{% if not price or price_note %}Цена{% else %}С доставкой{% endif %}</span>
             <b class="hero__price__num">{% if price %}от {{ price|ru }} ₽/{{ unit|default("м³") }}{% else %}по заявке{% endif %}</b>
           </div>
-          <span class="hero__price__note">{% if price_note %}{{ price_note }}{% else %}За насыпной куб при заказе машины {{ ref_vol }} м³, с доставкой по {{ deliv_po|default("Екатеринбургу") }}. {{ ex.name }}: 1 куб — от {{ ex.t1|ru }} ₽, 3 куба — от {{ ex.t3|ru }} ₽.{% endif %}</span>
+          <span class="hero__price__note">{% if price_note %}{{ price_note }}{% else %}За куб в плотной укладке при заказе машины {{ ref_vol }} м³, с доставкой по {{ deliv_po|default("Екатеринбургу") }}. {{ ex.name }}: 1 куб — от {{ ex.t1|ru }} ₽, 3 куба — от {{ ex.t3|ru }} ₽.{% endif %}</span>
           {%- endif %}
         </div>
         <div class="hero__cta">

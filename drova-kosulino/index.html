@@ -33,7 +33,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/img/favicon-120.png" type="image/png" sizes="120x120">
   <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=15dce985"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
+  <link rel="stylesheet" href="/assets/ekb/style.min.css?v=1e3e41f0"><script>try{if(Intl.DateTimeFormat().resolvedOptions().timeZone==='Asia/Yekaterinburg')document.documentElement.classList.add('tz-ekb')}catch(e){}</script><script type="text/javascript">
     window.__ymid = 110303165;
     (function(m,e,i,r){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
     m[i].l=1*new Date();
@@ -140,7 +140,7 @@
             <b class="hero__price__num">от 2 990 ₽</b>
           </div>
           <span class="hero__price__note">Плюс доставка от 3 500 ₽ за рейс. С доставкой по Косулино: 1 куб&nbsp;— от 6 490 ₽, 3 куба&nbsp;— от 12 470 ₽, машина 10 м³&nbsp;— от 33 400 ₽.</span><ul class="hero__incl">
-            <li>Доставка и выгрузка уже в цене</li>
+            <li>В итог с доставкой уже входит выгрузка</li>
             <li>Плотная укладка — объём видно до выгрузки</li>
             <li>Без доплат на месте, оплата после выгрузки</li>
           </ul>
@@ -760,7 +760,7 @@
                placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
         <button class="ctamid__submit" type="submit">Узнать цену</button>
       </div>
-      <span class="ctamid__error" id="ctamid-error" hidden>Впишите номер, по которому ответить</span>
+      <span class="ctamid__error" id="ctamid-error" hidden>Впишите номер полностью: +7 и ещё 10 цифр</span>
       <span class="ctamid__error" id="ctamid-consent-error" hidden>Без согласия на обработку данных заявку отправить нельзя</span>
       <label class="ctamid__consent">
         <input type="checkbox" id="ctamid-consent" required>
@@ -806,12 +806,12 @@
     el.addEventListener('blur', function(){ if(el.value === '+7') el.value = ''; });
   }
   mask(phone);
-  phone.addEventListener('input', function(){ if(digits(phone.value) >= 10) err.hidden = true; });
+  phone.addEventListener('input', function(){ if(digits(phone.value) >= 11) err.hidden = true; });
   consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(form.company.value){ return; }
-    if(digits(phone.value) < 10){ err.hidden = false; phone.focus(); return; }
+    if(digits(phone.value) < 11){ /* 5 ноября: +7 и 10 цифр номера — раньше хватало 10 вместе с семёркой, и номер без последней цифры уходил в заявку */ err.hidden = false; phone.focus(); return; }
     // Молчаливый выход по неотмеченному согласию выглядел как сломанная кнопка.
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
     consentErr.hidden = true;
@@ -998,7 +998,7 @@
       </div><div class="field field--req">
         <label class="field__label" for="lead-phone">Телефон <span class="field__req">обязательно</span></label>
         <input class="field__input" id="lead-phone" name="phone" type="tel" inputmode="tel" required placeholder="+7 ___ ___-__-__" autocomplete="tel" pattern="[0-9+()\s-]{10,20}">
-        <span class="field__error" id="lead-phone-error" hidden>Впишите номер, по которому вам ответить</span>
+        <span class="field__error" id="lead-phone-error" hidden>Впишите номер полностью: +7 и ещё 10 цифр</span>
       </div><input type="hidden" id="lead-note" name="note" value="">
       <div class="field field--full consent">
         <label class="consent__row">
@@ -1067,13 +1067,13 @@
   }
   mask(phone);
   phone.addEventListener('input', function(){
-    if(digits(phone.value) >= 10){ phoneField.classList.remove('invalid'); phoneErr.hidden = true; }
+    if(digits(phone.value) >= 11){ phoneField.classList.remove('invalid'); phoneErr.hidden = true; }
   });
   consent.addEventListener('change', function(){ if(consent.checked) consentErr.hidden = true; });
   form.addEventListener('submit', function(e){
     e.preventDefault();
     if(form.company.value){ return; }
-    if(digits(phone.value) < 10){ phoneField.classList.add('invalid'); phoneErr.hidden = false; phone.focus(); return; }
+    if(digits(phone.value) < 11){ /* 5 ноября: +7 и 10 цифр номера — раньше хватало 10 вместе с семёркой, и номер без последней цифры уходил в заявку */ phoneField.classList.add('invalid'); phoneErr.hidden = false; phone.focus(); return; }
     // Раньше при неотмеченном согласии просто уводили фокус на чекбокс:
     // визуально не менялось ничего, и кнопка выглядела нерабочей.
     if(!consent.checked){ consentErr.hidden = false; consent.focus(); return; }
